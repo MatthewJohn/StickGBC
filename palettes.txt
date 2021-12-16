@@ -1,0 +1,14 @@
+Palettes
+ - 0 - House/grass
+ - 1 - road/path
+
+Tiles
+ - 0 Background
+ - 1 Pavement
+ - 2 OUter pavement bottom
+ - 3 Road
+ - 4 Road lines horizontal
+ - 5 Grass
+ - 6 Outer pavement side
+ - 7 Outer pavement corner
+ - 8 Road lines vetical
