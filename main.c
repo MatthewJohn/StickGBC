@@ -60,6 +60,9 @@ void set_background_tiles()
                background_palette_itx_y != frame_buffer_tile_max_y;
                background_palette_itx_y ++)
         {
+            // Temp Test
+            current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
+
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
             // next bit is vertical flip
@@ -72,22 +75,16 @@ void set_background_tiles()
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[
-                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index.
-                 ]
+                 &background_tile_map[current_tile_itx]
             );
             
             VBK_REG = 1;
             
             tile_data = background_tile_palette[  // From the palette map
                 // Lookup tile from background tile map
-                background_tile_map[
-                    (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index
-                ]
+                background_tile_map[current_tile_itx]
             ];
             
-            // Temp Test
-            current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
 
             // Check if current tile is flipped
             for (main_map_vertical_flip_itx = 0;
