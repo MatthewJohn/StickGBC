@@ -24,8 +24,8 @@ void set_background_tiles()
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
 
-
     VBK_REG = 1;
+    //set_bkg_data(0, 8, background_tile_palette);
     for (background_palette_itx_x = 0; background_palette_itx_x < mainmapWidth; background_palette_itx_x ++)
     {
         for (background_palette_itx_y = 0; background_palette_itx_y < mainmapHeight; background_palette_itx_y ++)
@@ -35,7 +35,7 @@ void set_background_tiles()
                 background_palette_itx_x, 
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
-                background_tile_palette[  // From the palette map
+                &background_tile_palette[  // From the palette map
                     // Lookup tile from background tile map
                     background_tile_map[
                         background_palette_itx_x + (background_palette_itx_y * mainmapWidth)  // Calculate index based on X, y index
