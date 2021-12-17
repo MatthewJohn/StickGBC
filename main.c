@@ -7,6 +7,7 @@
 #include <gb/gb.h>
 /*#include <gb/drawing.h>*/
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "main_map_tileset.c"
 #include "main_map.c"
@@ -19,6 +20,8 @@
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
 
+unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
 unsigned char *background_tile_palette;
@@ -29,17 +32,13 @@ unsigned int FRAME_BUFFER_TILE_POS_X;
 unsigned int FRAME_BUFFER_TILE_POS_Y;
 
 
-
-unsigned long MAIN_MAP_VERTICAL_FLIP_TILES[] = {
-    // Left hand road, buttom of road marking
-    0x0502, 0x0503, 0x0505, 0x0506, 0x0508, 0x0509, 0x050b, 0x050c, 0x050e, 0x050f,
-    0x0511, 0x0512, 0x0514, 0x0515, 0x0517, 0x0518, 0x051a, 0x051b, 0x051d, 0x051e
-};
-unsigned int MAIN_MAP_VERICAL_FLIP_COUNT;
-
 void init_map_variables()
 {
-    MAIN_MAP_VERICAL_FLIP_COUNT = (sizeof(MAIN_MAP_VERTICAL_FLIP_TILES) / sizeof(MAIN_MAP_VERTICAL_FLIP_TILES[0]));
+    // Setup vertical flipped tiles
+    //  -Left hand road, buttom of road marking
+    MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
+    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xff;
+    
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
 }
@@ -52,7 +51,7 @@ void set_background_tiles()
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
     unsigned int current_tile_itx = 0;
     unsigned char tile_data = 0x00;
-    unsigned int main_map_vertical_flip_itx;
+
 
     //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
     VBK_REG = 0;
@@ -92,15 +91,16 @@ void set_background_tiles()
             ];
             
             // Check if current tile is flipped
-            for (main_map_vertical_flip_itx = 0;
-                  main_map_vertical_flip_itx != MAIN_MAP_VERICAL_FLIP_COUNT;
-                  main_map_vertical_flip_itx ++)
-                if (current_tile_itx == MAIN_MAP_VERTICAL_FLIP_TILES[main_map_vertical_flip_itx])
-                {
+            if (
+                (MAIN_MAP_VERTICAL_FLIP_TILES[
+                    // Bit shift current tile ITX by 3 (dividing by 8) to obtain byte
+                    // of flip data that contains this tile's flip and compare to 
+                    current_tile_itx >> 3
+                // Shift 1 by the last byte of the current tile idx and 'and' compare with
+                // tile shift data bit
+                ] & (1 << (current_tile_itx & 0xFF))))
                     tile_data |= S_FLIPY;
-                    break;
-                }
-   
+
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 background_palette_itx_x, 
