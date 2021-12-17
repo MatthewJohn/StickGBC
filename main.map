@@ -221,7 +221,7 @@ MODULES
 	FILE C:\GBDK\lib/small/asxxxx/gb/crt0.o
 		NAME Runtime
 	FILE main.o
-		NAME lcc32720
+		NAME lcc22760
 LIBRARIES
 	LIBRARY C:\GBDK\lib/small/asxxxx/gb/gb.lib
 		MODULE scroll_b.o

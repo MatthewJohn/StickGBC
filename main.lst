@@ -1,9 +1,9 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : FreeWare ANSI-C Compiler
-                              3 ; Version 2.2.1 Fri Dec 17 14:09:23 2021
+                              3 ; Version 2.2.1 Fri Dec 17 14:13:52 2021
                               4 
                               5 ;--------------------------------------------------------
-                              6 	.module lcc32720
+                              6 	.module lcc22760
                               7 	
                               8 ;--------------------------------------------------------
                               9 ; Public variables in this module
@@ -83,7 +83,7 @@
                              83 	.area _GSINIT
                              84 	.area _GSFINAL
                              85 	.area _GSINIT
-                             86 ;	main.c 73
+                             86 ;	main.c 78
                              87 ; genAssign (pointer)
    0000 11 00 00             88 	ld	de,#_mainmaptilesCGB + 0
    0003 3E 00                89 	ld	a,#0x00
@@ -148,7 +148,7 @@
                             148 ; genAssign (pointer)
    003F 3E 00               149 	ld	a,#0x00
    0041 12                  150 	ld	(de),a
-                            151 ;	main.c 73
+                            151 ;	main.c 78
                             152 ; genAssign (pointer)
    0042 11 0B 00            153 	ld	de,#_mainmaptiles + 0
    0045 3E 00               154 	ld	a,#0x00
@@ -1203,7 +1203,7 @@
                            1203 ; genAssign (pointer)
    045F 3E FF              1204 	ld	a,#0xFF
    0461 12                 1205 	ld	(de),a
-                           1206 ;	main.c 73
+                           1206 ;	main.c 78
                            1207 ; genAssign (pointer)
    0462 11 BB 00           1208 	ld	de,#_mainmap + 0
    0465 3E 00              1209 	ld	a,#0x00
@@ -27611,7 +27611,7 @@
                           27611 ; code
                           27612 ;--------------------------------------------------------
                           27613 	.area _CODE
-                          27614 ;	main.c 15
+                          27614 ;	main.c 20
                           27615 ; genLabel
                           27616 ; genFunction
                           27617 ;	---------------------------------
@@ -27621,7 +27621,7 @@
    0000                   27621 _set_background_tiles:
    0000 C5                27622 	push	bc
    0001 E8 F6             27623 	lda	sp,-10(sp)
-                          27624 ;	main.c 17
+                          27624 ;	main.c 22
                           27625 ; genIpush
                           27626 ; AOP_HL for _background_tile_map
    0003 21 EB 11          27627 	ld	hl,#_background_tile_map + 0
@@ -27648,13 +27648,13 @@
                           27648 ; genCall
    001A CD 00 00          27649 	call	_set_bkg_tiles
    001D E8 06             27650 	lda	sp,6(sp)
-                          27651 ;	main.c 18
+                          27651 ;	main.c 23
                           27652 ; genAssign
    001F 11 4F FF          27653 	ld	de,#0xFF4F
                           27654 ; genAssign (pointer)
    0022 3E 00             27655 	ld	a,#0x00
    0024 12                27656 	ld	(de),a
-                          27657 ;	main.c 19
+                          27657 ;	main.c 24
                           27658 ; genIpush
                           27659 ; AOP_HL for _background_tiles
    0025 21 ED 11          27660 	ld	hl,#_background_tiles + 0
@@ -27673,13 +27673,13 @@
                           27673 ; genCall
    0034 CD 00 00          27674 	call	_set_bkg_data
    0037 E8 04             27675 	lda	sp,4(sp)
-                          27676 ;	main.c 21
+                          27676 ;	main.c 26
                           27677 ; genAssign
    0039 11 4F FF          27678 	ld	de,#0xFF4F
                           27679 ; genAssign (pointer)
    003C 3E 01             27680 	ld	a,#0x01
    003E 12                27681 	ld	(de),a
-                          27682 ;	main.c 23
+                          27682 ;	main.c 28
                           27683 ; genAssign
                           27684 ; AOP_HL for _background_palette_itx_x
    003F 21 F1 11          27685 	ld	hl,#_background_palette_itx_x + 0
@@ -27694,10 +27694,10 @@
    004A 5E                27694 	ld	e,(hl)
    004B 23                27695 	inc	hl
    004C 56                27696 	ld	d,(hl)
-   004D 21 B0 FF          27697 	ld	hl,#0xFFB0
+   004D 21 E1 FF          27697 	ld	hl,#0xFFE1
    0050 19                27698 	add	hl,de
    0051 DA 05 01          27699 	jp	c,00108$
-                          27700 ;	main.c 25
+                          27700 ;	main.c 30
                           27701 ; genAssign
                           27702 ; AOP_HL for _background_palette_itx_y
    0054 21 F3 11          27703 	ld	hl,#_background_palette_itx_y + 0
@@ -27713,7 +27713,7 @@
    005F 5E                27713 	ld	e,(hl)
    0060 23                27714 	inc	hl
    0061 56                27715 	ld	d,(hl)
-   0062 21 C9 FF          27716 	ld	hl,#0xFFC9
+   0062 21 E1 FF          27716 	ld	hl,#0xFFE1
    0065 19                27717 	add	hl,de
    0066 3E 00             27718 	ld	a,#0x00
    0068 17                27719 	rla
@@ -27726,7 +27726,7 @@
    006E AF                27726 	xor	a,a
    006F B6                27727 	or	a,(hl)
    0070 CA FA 00          27728 	jp	z,00107$
-                          27729 ;	main.c 35
+                          27729 ;	main.c 40
                           27730 ; genIpush
    0073 21 50 00          27731 	ld	hl,#0x0050
    0076 E5                27732 	push	hl
@@ -27802,7 +27802,7 @@
    00BA F8 03             27802 	lda	hl,3(sp)
    00BC 22                27803 	ld	(hl+),a
    00BD 72                27804 	ld	(hl),d
-                          27805 ;	main.c 30
+                          27805 ;	main.c 35
                           27806 ; genCast
                           27807 ; AOP_HL for _background_palette_itx_y
                           27808 ; AOP_STK for _set_background_tiles_sloc4_1_0
@@ -27810,7 +27810,7 @@
    00C1 7E                27810 	ld	a,(hl)
    00C2 F8 02             27811 	lda	hl,2(sp)
    00C4 77                27812 	ld	(hl),a
-                          27813 ;	main.c 29
+                          27813 ;	main.c 34
                           27814 ; genCast
                           27815 ; AOP_HL for _background_palette_itx_x
                           27816 ; AOP_STK for _set_background_tiles_sloc5_1_0
@@ -27848,7 +27848,7 @@
                           27848 ; genCall
    00E2 CD 00 00          27849 	call	_set_bkg_tiles
    00E5 E8 06             27850 	lda	sp,6(sp)
-                          27851 ;	main.c 25
+                          27851 ;	main.c 30
                           27852 ; genPlus
                           27853 ; AOP_HL for _background_palette_itx_y
                           27854 ; genPlusIncr
@@ -27874,7 +27874,7 @@
    00F7 C3 5C 00          27874 	jp	00101$
                           27875 ; genLabel
    00FA                   27876 00107$:
-                          27877 ;	main.c 23
+                          27877 ;	main.c 28
                           27878 ; genPlus
                           27879 ; AOP_HL for _background_palette_itx_x
                           27880 ; genPlusIncr
@@ -27888,7 +27888,7 @@
    0102 C3 47 00          27888 	jp	00105$
                           27889 ; genLabel
    0105                   27890 00108$:
-                          27891 ;	main.c 43
+                          27891 ;	main.c 48
                           27892 ; genAssign
    0105 11 4F FF          27893 	ld	de,#0xFF4F
                           27894 ; genAssign (pointer)
@@ -27934,7 +27934,7 @@
    0149 E7 22             27934 	.dw #0x22E7
    014B C4 19             27935 	.dw #0x19C4
    014D E0 14             27936 	.dw #0x14E0
-                          27937 ;	main.c 46
+                          27937 ;	main.c 51
                           27938 ; genLabel
                           27939 ; genFunction
                           27940 ;	---------------------------------
@@ -27944,7 +27944,7 @@
    014F                   27944 _main:
    014F C5                27945 	push	bc
    0150 E8 FE             27946 	lda	sp,-2(sp)
-                          27947 ;	main.c 55
+                          27947 ;	main.c 60
                           27948 ; genIpush
    0152 21 0F 01          27949 	ld	hl,#_bgpal + 0
    0155 E5                27950 	push	hl
@@ -27959,7 +27959,7 @@
                           27959 ; genCall
    015E CD 00 00          27960 	call	_set_bkg_palette
    0161 E8 04             27961 	lda	sp,4(sp)
-                          27962 ;	main.c 58
+                          27962 ;	main.c 63
                           27963 ; genAddrOf
                           27964 ; AOP_HL for _background_tile_map
    0163 11 BB 00          27965 	ld	de,#_mainmap
@@ -27967,7 +27967,7 @@
    0169 73                27967 	ld	(hl),e
    016A 23                27968 	inc	hl
    016B 72                27969 	ld	(hl),d
-                          27970 ;	main.c 59
+                          27970 ;	main.c 64
                           27971 ; genAddrOf
                           27972 ; AOP_HL for _background_tiles
    016C 11 0B 00          27973 	ld	de,#_mainmaptiles
@@ -27975,7 +27975,7 @@
    0172 73                27975 	ld	(hl),e
    0173 23                27976 	inc	hl
    0174 72                27977 	ld	(hl),d
-                          27978 ;	main.c 60
+                          27978 ;	main.c 65
                           27979 ; genAddrOf
                           27980 ; AOP_HL for _background_tile_palette
    0175 11 00 00          27981 	ld	de,#_mainmaptilesCGB
@@ -27983,13 +27983,13 @@
    017B 73                27983 	ld	(hl),e
    017C 23                27984 	inc	hl
    017D 72                27985 	ld	(hl),d
-                          27986 ;	main.c 61
+                          27986 ;	main.c 66
                           27987 ; genCall
    017E CD 00 00          27988 	call	_set_background_tiles
-                          27989 ;	main.c 63
+                          27989 ;	main.c 68
                           27990 ; genCall
    0181 CD 00 00          27991 	call	_wait_vbl_done
-                          27992 ;	main.c 64
+                          27992 ;	main.c 69
                           27993 ; genAssign
                           27994 ; AOP_STK for _main_sloc0_1_0
    0184 F8 00             27995 	lda	hl,0(sp)
@@ -28015,7 +28015,7 @@
    0197 56                28015 	ld	d,(hl)
    0198 79                28016 	ld	a,c
    0199 12                28017 	ld	(de),a
-                          28018 ;	main.c 65
+                          28018 ;	main.c 70
                           28019 ; genAssign
                           28020 ; AOP_STK for _main_sloc0_1_0
    019A 2B                28021 	dec	hl
@@ -28041,13 +28041,13 @@
    01AC 56                28041 	ld	d,(hl)
    01AD 79                28042 	ld	a,c
    01AE 12                28043 	ld	(de),a
-                          28044 ;	main.c 67
+                          28044 ;	main.c 72
                           28045 ; genLabel
    01AF                   28046 00102$:
-                          28047 ;	main.c 68
+                          28047 ;	main.c 73
                           28048 ; genCall
    01AF CD 00 00          28049 	call	_wait_vbl_done
-                          28050 ;	main.c 69
+                          28050 ;	main.c 74
                           28051 ; genIpush
    01B2 3E 00             28052 	ld	a,#0x00
    01B4 F5                28053 	push	af
@@ -28059,7 +28059,7 @@
                           28059 ; genCall
    01BA CD 00 00          28060 	call	_scroll_bkg
    01BD E8 02             28061 	lda	sp,2(sp)
-                          28062 ;	main.c 70
+                          28062 ;	main.c 75
                           28063 ; genIpush
    01BF 21 64 00          28064 	ld	hl,#0x0064
    01C2 E5                28065 	push	hl
