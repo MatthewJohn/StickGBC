@@ -21,31 +21,55 @@ unsigned char *background_tiles;
 unsigned char *background_tile_palette;
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
+unsigned char TILE_TRANSFER;
 
 
 void set_background_tiles()
 {
-    set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
+    //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
 
-    VBK_REG = 1;
-    //set_bkg_data(0, 8, background_tile_palette);
     for (background_palette_itx_x = 0; background_palette_itx_x < BACKGROUND_BUFFER_SIZE_X; background_palette_itx_x ++)
     {
         for (background_palette_itx_y = 0; background_palette_itx_y < BACKGROUND_BUFFER_SIZE_Y; background_palette_itx_y ++)
         {
-            // Set palette data in VBK_REG1 for tile
+            // Map data is 2 bytes per tile.
+            // First byte's first 7 bits are tile number
+            // next bit is vertical flip
+            // first bit of second byte is horizontal flip
+    
+           VBK_REG = 0; 
+           // Set map data
+           TILE_TRANSFER = background_tile_map[
+                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index. Times by two due to two chars (bytes) per tile
+                 ] & 0x7FU; // Mask last bit, as only first 7 bits are tile
+
             set_bkg_tiles(
                 background_palette_itx_x, 
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
-                &background_tile_palette[  // From the palette map
+                 // Lookup tile from background tile map
+                 &TILE_TRANSFER
+            )
+            
+            VBK_REG = 1;
+            // Set palette data in VBK_REG1 for tile
+            TILE_TRANSFER = background_tile_palette[  // From the palette map
                     // Lookup tile from background tile map
                     background_tile_map[
-                        background_palette_itx_x + (background_palette_itx_y * mainmapWidth)  // Calculate index based on X, y index
+                        (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index
                     ]
-                ]
+            ];
+            // XOR with vertical bit flip from last bit of background tile map
+            TILE_TRANSFER |= (background_tile_map[
+                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index. Times by two due to two chars (bytes) per tile
+                 ] & 0x80U) << 3; // Mask last bit and bit shift to position bit 9 (2nd of second byte)
+            set_bkg_tiles(
+                background_palette_itx_x, 
+                background_palette_itx_y,
+                1, 1,  // Only setting 1 tile
+                &TILE_TRANSFER
             );
         }
     }
@@ -56,11 +80,11 @@ void set_background_tiles()
 
 void main()
 {
-/*        printf("Welcome to GAMEBOY\nProgramming");
-        printf("\nPress Start");
-        waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
-        printf("\nIsn't it easy!");
-  */      
+//        printf("Welcome to GAMEBOY\nProgramming");
+//        printf("\nPress Start");
+//        waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
+//        printf("\nIsn't it easy!");
+        
 
     // Load color palette
     set_bkg_palette(0, 8, &bgpal);

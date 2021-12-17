@@ -15,7 +15,7 @@
    Bank          : 0
    Map size      : 80 x 55
    Tile set      : C:\GBDK\games\stickrpg\main_tiles.gbr
-   Plane count   : 1 plane (8 bits)
+   Plane count   : 2 planes (16 bits)
    Plane order   : Tiles are continues
    Tile offset   : 0
    Split data    : No
