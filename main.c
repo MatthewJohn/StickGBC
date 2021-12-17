@@ -13,8 +13,10 @@
 #include "main_map_palette.c"
 
 
-#define BACKGROUND_BUFFER_SIZE_X 0x1FU
-#define BACKGROUND_BUFFER_SIZE_Y 0x1FU
+// Max address if 0x1F, set to 0x20 for loops that loop whilst
+// less than the value (or rather !=)
+#define BACKGROUND_BUFFER_SIZE_X 0x20U
+#define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
 
 unsigned char *background_tile_map;
@@ -29,7 +31,9 @@ unsigned int FRAME_BUFFER_TILE_POS_Y;
 
 
 unsigned long MAIN_MAP_VERTICAL_FLIP_TILES[] = {
-    0x0502, 0x0503
+    // Left hand road, buttom of road marking
+    0x0502, 0x0503, 0x0505, 0x0506, 0x0508, 0x0509, 0x050b, 0x050c, 0x050e, 0x050f,
+    0x0511, 0x0512, 0x0514, 0x0515, 0x0517, 0x0518, 0x051a, 0x051b, 0x051d, 0x051e
 };
 unsigned int MAIN_MAP_VERICAL_FLIP_COUNT;
 
@@ -42,9 +46,11 @@ void init_map_variables()
 
 void set_background_tiles()
 {
-    unsigned int frame_buffer_tile_max_x = BACKGROUND_BUFFER_SIZE_X + FRAME_BUFFER_TILE_POS_X;
-    unsigned int frame_buffer_tile_max_y = BACKGROUND_BUFFER_SIZE_Y + FRAME_BUFFER_TILE_POS_Y;
-    unsigned int current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
+    unsigned int frame_buffer_tile_max_x = FRAME_BUFFER_TILE_POS_X + BACKGROUND_BUFFER_SIZE_X;
+    unsigned int frame_buffer_tile_max_y = FRAME_BUFFER_TILE_POS_Y + BACKGROUND_BUFFER_SIZE_Y;
+    // @TODO Fix the increment
+    //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
+    unsigned int current_tile_itx = 0;
     unsigned char tile_data = 0x00;
     unsigned int main_map_vertical_flip_itx;
 
@@ -85,14 +91,16 @@ void set_background_tiles()
                 background_tile_map[current_tile_itx]
             ];
             
-
             // Check if current tile is flipped
             for (main_map_vertical_flip_itx = 0;
                   main_map_vertical_flip_itx != MAIN_MAP_VERICAL_FLIP_COUNT;
                   main_map_vertical_flip_itx ++)
                 if (current_tile_itx == MAIN_MAP_VERTICAL_FLIP_TILES[main_map_vertical_flip_itx])
+                {
                     tile_data |= S_FLIPY;
-    
+                    break;
+                }
+   
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 background_palette_itx_x, 
@@ -101,11 +109,12 @@ void set_background_tiles()
                 &tile_data
             );
 
-            current_tile_itx ++;
+            // @TODO Fix this
+            //current_tile_itx ++;
         }
         
         // Add remainig undrawn tiles to itx of tiles
-        current_tile_itx += (mainmapWidth - BACKGROUND_BUFFER_SIZE_Y);
+        //current_tile_itx += (mainmapWidth - BACKGROUND_BUFFER_SIZE_Y);
     }
 
     // Reset VKG_REG to original value
