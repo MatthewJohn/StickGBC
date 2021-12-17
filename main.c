@@ -28,14 +28,19 @@ unsigned int FRAME_BUFFER_TILE_POS_X;
 unsigned int FRAME_BUFFER_TILE_POS_Y;
 unsigned int FRAME_BUFFER_TILE_MAX_X;
 unsigned int FRAME_BUFFER_TILE_MAX_Y;
+unsigned int CURRENT_TILE_ITX;
+unsigned char TILE_PALETTE_DATA;
 
 
-//unsigned long MAIN_MAP_VERTICAL_FLIP_TILES[] = {
-//    0xff
-//};
+unsigned long MAIN_MAP_VERTICAL_FLIP_TILES[] = {
+    0x0502, 0x0503
+};
+unsigned int MAIN_MAP_VERICAL_FLIP_COUNT;
+unsigned int MAIN_MAP_VERICAL_FLIP_ITX;
 
 void init_map_variables()
 {
+    MAIN_MAP_VERICAL_FLIP_COUNT = (sizeof(MAIN_MAP_VERTICAL_FLIP_TILES) / sizeof(MAIN_MAP_VERTICAL_FLIP_TILES[0]));
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
 }
@@ -47,6 +52,7 @@ void set_background_tiles()
     set_bkg_data(0, 8, background_tiles);
     FRAME_BUFFER_TILE_MAX_X = BACKGROUND_BUFFER_SIZE_X + FRAME_BUFFER_TILE_POS_X;
     FRAME_BUFFER_TILE_MAX_Y = BACKGROUND_BUFFER_SIZE_Y + FRAME_BUFFER_TILE_POS_Y;
+    CURRENT_TILE_ITX = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
 
     for (background_palette_itx_x = FRAME_BUFFER_TILE_POS_X;
            background_palette_itx_x != FRAME_BUFFER_TILE_MAX_X;
@@ -74,19 +80,37 @@ void set_background_tiles()
             );
             
             VBK_REG = 1;
+            
+            TILE_PALETTE_DATA = background_tile_palette[  // From the palette map
+                // Lookup tile from background tile map
+                background_tile_map[
+                    (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index
+                ]
+            ];
+            
+            // Temp Test
+            CURRENT_TILE_ITX = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
+
+            // Check if current tile is flipped
+            for (MAIN_MAP_VERICAL_FLIP_ITX = 0;
+                  MAIN_MAP_VERICAL_FLIP_ITX != MAIN_MAP_VERICAL_FLIP_COUNT;
+                  MAIN_MAP_VERICAL_FLIP_ITX ++)
+                if (CURRENT_TILE_ITX == MAIN_MAP_VERTICAL_FLIP_TILES[MAIN_MAP_VERICAL_FLIP_ITX])
+                    TILE_PALETTE_DATA |= S_FLIPY;
+    
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 background_palette_itx_x, 
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
-                &background_tile_palette[  // From the palette map
-                    // Lookup tile from background tile map
-                    background_tile_map[
-                        (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index
-                    ]
-                ]
+                &TILE_PALETTE_DATA
             );
+
+            CURRENT_TILE_ITX ++;
         }
+        
+        // Add remainig undrawn tiles to itx of tiles
+        CURRENT_TILE_ITX += (mainmapWidth - BACKGROUND_BUFFER_SIZE_Y);
     }
 
     // Reset VKG_REG to original value
