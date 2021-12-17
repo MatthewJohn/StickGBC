@@ -40,36 +40,29 @@ void set_background_tiles()
             // first bit of second byte is horizontal flip
     
            VBK_REG = 0; 
-           // Set map data
-           TILE_TRANSFER = background_tile_map[
-                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index. Times by two due to two chars (bytes) per tile
-                 ] & 0x7FU; // Mask last bit, as only first 7 bits are tile
-
+            // Set map data
             set_bkg_tiles(
                 background_palette_itx_x, 
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &TILE_TRANSFER
+                 &background_tile_map[
+                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index.
+                 ]
             );
             
             VBK_REG = 1;
             // Set palette data in VBK_REG1 for tile
-            TILE_TRANSFER = background_tile_palette[  // From the palette map
-                    // Lookup tile from background tile map
-                    background_tile_map[
-                        (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index
-                    ]
-            ];
-            // XOR with vertical bit flip from last bit of background tile map
-            TILE_TRANSFER |= (background_tile_map[
-                     (background_palette_itx_x + (background_palette_itx_y * mainmapWidth)) * 2  // Calculate index based on X, y index. Times by two due to two chars (bytes) per tile
-                 ] & 0x80U) << 3; // Mask last bit and bit shift to position bit 9 (2nd of second byte)
             set_bkg_tiles(
                 background_palette_itx_x, 
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
-                &TILE_TRANSFER
+                &background_tile_palette[  // From the palette map
+                    // Lookup tile from background tile map
+                    background_tile_map[
+                        (background_palette_itx_x + (background_palette_itx_y * mainmapWidth))  // Calculate index based on X, y index
+                    ]
+                ]
             );
         }
     }
