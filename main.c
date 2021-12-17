@@ -12,11 +12,16 @@
 #include "main_map.c"
 #include "main_map_palette.c"
 
+
+#define BACKGROUND_BUFFER_SIZE_X 0x1FU
+#define BACKGROUND_BUFFER_SIZE_Y 0x1FU
+
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
 unsigned char *background_tile_palette;
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
+
 
 void set_background_tiles()
 {
@@ -26,9 +31,9 @@ void set_background_tiles()
 
     VBK_REG = 1;
     //set_bkg_data(0, 8, background_tile_palette);
-    for (background_palette_itx_x = 0; background_palette_itx_x < mainmapWidth; background_palette_itx_x ++)
+    for (background_palette_itx_x = 0; background_palette_itx_x < BACKGROUND_BUFFER_SIZE_X; background_palette_itx_x ++)
     {
-        for (background_palette_itx_y = 0; background_palette_itx_y < mainmapHeight; background_palette_itx_y ++)
+        for (background_palette_itx_y = 0; background_palette_itx_y < BACKGROUND_BUFFER_SIZE_Y; background_palette_itx_y ++)
         {
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
