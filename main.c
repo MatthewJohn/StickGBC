@@ -19,8 +19,8 @@
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
-unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
+unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
 
 
 unsigned char *background_tile_map;
@@ -35,9 +35,13 @@ unsigned int FRAME_BUFFER_TILE_POS_Y;
 
 void init_map_variables()
 {
+    malloc_init();
+    MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+    MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+
     // Setup flipped tiles
     //  -Left hand road, buttom of road marking
-    //MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
+    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
     MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
     MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
     MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
