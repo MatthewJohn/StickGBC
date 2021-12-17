@@ -19,8 +19,9 @@
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
-
 unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+
 
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
@@ -34,12 +35,15 @@ unsigned int FRAME_BUFFER_TILE_POS_Y;
 
 void init_map_variables()
 {
-    // Setup vertical flipped tiles
+    // Setup flipped tiles
     //  -Left hand road, buttom of road marking
+    //MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
     MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
     MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
     MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
     MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
+    
+    
     
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
@@ -102,6 +106,12 @@ void set_background_tiles()
                 // tile shift data bit
                 ] & (1 << (current_tile_itx & 0x07))))
                     tile_data |= S_FLIPY;
+
+            if (
+                (MAIN_MAP_HORIZONTAL_FLIP_TILES[
+                    current_tile_itx >> 3
+                ] & (1 << (current_tile_itx & 0x07))))
+                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
