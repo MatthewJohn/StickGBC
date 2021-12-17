@@ -1,2 +1,4 @@
 main.gb
 main.o
+main.lst
+main.map
