@@ -37,7 +37,9 @@ void init_map_variables()
     // Setup vertical flipped tiles
     //  -Left hand road, buttom of road marking
     MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
-    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xff;
+    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
+    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
+    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
     
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
