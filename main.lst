@@ -1,9 +1,9 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : FreeWare ANSI-C Compiler
-                              3 ; Version 2.2.1 Fri Dec 17 12:39:22 2021
+                              3 ; Version 2.2.1 Fri Dec 17 12:44:07 2021
                               4 
                               5 ;--------------------------------------------------------
-                              6 	.module lcc24840
+                              6 	.module lcc29240
                               7 	
                               8 ;--------------------------------------------------------
                               9 ; Public variables in this module
@@ -62,7 +62,7 @@
                              62 	.area _GSINIT
                              63 	.area _GSFINAL
                              64 	.area _GSINIT
-                             65 ;	main.c 32
+                             65 ;	main.c 63
                              66 ; genAssign (pointer)
    0000 11 00 00             67 	ld	de,#_mainmaptiles + 0
    0003 3E 00                68 	ld	a,#0x00
@@ -1117,7 +1117,7 @@
                            1117 ; genAssign (pointer)
    041D 3E FF              1118 	ld	a,#0xFF
    041F 12                 1119 	ld	(de),a
-                           1120 ;	main.c 32
+                           1120 ;	main.c 63
                            1121 ; genAssign (pointer)
    0420 11 B0 00           1122 	ld	de,#_mainmap + 0
    0423 3E 00              1123 	ld	a,#0x00
@@ -27525,7 +27525,7 @@
                           27525 ; code
                           27526 ;--------------------------------------------------------
                           27527 	.area _CODE
-                          27528 ;	main.c 12
+                          27528 ;	main.c 43
                           27529 ; genLabel
                           27530 ; genFunction
                           27531 ;	---------------------------------
@@ -27535,12 +27535,12 @@
    0000                   27535 _main:
    0000 C5                27536 	push	bc
    0001 E8 FE             27537 	lda	sp,-2(sp)
-                          27538 ;	main.c 19
+                          27538 ;	main.c 50
                           27539 ; genIpush
    0003 21 86 00          27540 	ld	hl,#_bgpal + 0
    0006 E5                27541 	push	hl
                           27542 ; genIpush
-   0007 3E 04             27543 	ld	a,#0x04
+   0007 3E 08             27543 	ld	a,#0x08
    0009 F5                27544 	push	af
    000A 33                27545 	inc	sp
                           27546 ; genIpush
@@ -27550,7 +27550,7 @@
                           27550 ; genCall
    000F CD 00 00          27551 	call	_set_bkg_palette
    0012 E8 04             27552 	lda	sp,4(sp)
-                          27553 ;	main.c 20
+                          27553 ;	main.c 51
                           27554 ; genIpush
    0014 21 00 00          27555 	ld	hl,#_mainmaptiles + 0
    0017 E5                27556 	push	hl
@@ -27565,7 +27565,7 @@
                           27565 ; genCall
    0020 CD 00 00          27566 	call	_set_bkg_data
    0023 E8 04             27567 	lda	sp,4(sp)
-                          27568 ;	main.c 22
+                          27568 ;	main.c 53
                           27569 ; genIpush
    0025 21 B0 00          27570 	ld	hl,#_mainmap + 0
    0028 E5                27571 	push	hl
@@ -27588,7 +27588,7 @@
                           27588 ; genCall
    0039 CD 00 00          27589 	call	_set_bkg_tiles
    003C E8 06             27590 	lda	sp,6(sp)
-                          27591 ;	main.c 24
+                          27591 ;	main.c 55
                           27592 ; genAssign
                           27593 ; AOP_STK for _main_sloc0_1_0
    003E F8 00             27594 	lda	hl,0(sp)
@@ -27614,7 +27614,7 @@
    0051 56                27614 	ld	d,(hl)
    0052 79                27615 	ld	a,c
    0053 12                27616 	ld	(de),a
-                          27617 ;	main.c 25
+                          27617 ;	main.c 56
                           27618 ; genAssign
                           27619 ; AOP_STK for _main_sloc0_1_0
    0054 2B                27620 	dec	hl
@@ -27640,10 +27640,10 @@
    0066 56                27640 	ld	d,(hl)
    0067 79                27641 	ld	a,c
    0068 12                27642 	ld	(de),a
-                          27643 ;	main.c 27
+                          27643 ;	main.c 58
                           27644 ; genLabel
    0069                   27645 00102$:
-                          27646 ;	main.c 28
+                          27646 ;	main.c 59
                           27647 ; genIpush
    0069 3E 00             27648 	ld	a,#0x00
    006B F5                27649 	push	af
@@ -27655,7 +27655,7 @@
                           27655 ; genCall
    0071 CD 00 00          27656 	call	_scroll_bkg
    0074 E8 02             27657 	lda	sp,2(sp)
-                          27658 ;	main.c 29
+                          27658 ;	main.c 60
                           27659 ; genIpush
    0076 21 64 00          27660 	ld	hl,#0x0064
    0079 E5                27661 	push	hl
@@ -27676,7 +27676,35 @@
    0088 4A 29             27676 	.dw #0x294A
    008A CE 04             27677 	.dw #0x04CE
    008C EE 03             27678 	.dw #0x03EE
-                          27679 	.area _CODE
+   008E BC 17             27679 	.dw #0x17BC
+   0090 D6 5A             27680 	.dw #0x5AD6
+   0092 AD 35             27681 	.dw #0x35AD
+   0094 00 00             27682 	.dw #0x0000
+   0096 BC 17             27683 	.dw #0x17BC
+   0098 E7 22             27684 	.dw #0x22E7
+   009A C4 19             27685 	.dw #0x19C4
+   009C E0 14             27686 	.dw #0x14E0
+   009E BC 17             27687 	.dw #0x17BC
+   00A0 E7 22             27688 	.dw #0x22E7
+   00A2 C4 19             27689 	.dw #0x19C4
+   00A4 E0 14             27690 	.dw #0x14E0
+   00A6 BC 17             27691 	.dw #0x17BC
+   00A8 E7 22             27692 	.dw #0x22E7
+   00AA C4 19             27693 	.dw #0x19C4
+   00AC E0 14             27694 	.dw #0x14E0
+   00AE BC 17             27695 	.dw #0x17BC
+   00B0 E7 22             27696 	.dw #0x22E7
+   00B2 C4 19             27697 	.dw #0x19C4
+   00B4 E0 14             27698 	.dw #0x14E0
+   00B6 BC 17             27699 	.dw #0x17BC
+   00B8 E7 22             27700 	.dw #0x22E7
+   00BA C4 19             27701 	.dw #0x19C4
+   00BC E0 14             27702 	.dw #0x14E0
+   00BE BC 17             27703 	.dw #0x17BC
+   00C0 E7 22             27704 	.dw #0x22E7
+   00C2 C4 19             27705 	.dw #0x19C4
+   00C4 E0 14             27706 	.dw #0x14E0
+                          27707 	.area _CODE
 ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
 
 Symbol Table
@@ -27702,7 +27730,7 @@ Symbol Table
 
 Area Table
 
-   0 _CODE                              size   8E   flags 0
+   0 _CODE                              size   C6   flags 0
    1 _DATA                              size 11E0   flags 0
    2 _OVERLAY                           size    0   flags 0
    3 _ISEG                              size    0   flags 0
