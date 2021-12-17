@@ -1,9 +1,9 @@
                               1 ;--------------------------------------------------------
                               2 ; File Created by SDCC : FreeWare ANSI-C Compiler
-                              3 ; Version 2.2.1 Fri Dec 17 12:51:15 2021
+                              3 ; Version 2.2.1 Fri Dec 17 13:08:36 2021
                               4 
                               5 ;--------------------------------------------------------
-                              6 	.module lcc17760
+                              6 	.module lcc24000
                               7 	
                               8 ;--------------------------------------------------------
                               9 ; Public variables in this module
@@ -63,7 +63,7 @@
                              63 	.area _GSINIT
                              64 	.area _GSFINAL
                              65 	.area _GSINIT
-                             66 ;	main.c 65
+                             66 ;	main.c 32
                              67 ; genAssign (pointer)
    0000 11 00 00             68 	ld	de,#_mainmaptiles + 0
    0003 3E 00                69 	ld	a,#0x00
@@ -1118,7 +1118,7 @@
                            1118 ; genAssign (pointer)
    041D 3E FF              1119 	ld	a,#0xFF
    041F 12                 1120 	ld	(de),a
-                           1121 ;	main.c 65
+                           1121 ;	main.c 32
                            1122 ; genAssign (pointer)
    0420 11 B0 00           1123 	ld	de,#_mainmap + 0
    0423 3E 00              1124 	ld	a,#0x00
@@ -27526,7 +27526,7 @@
                           27526 ; code
                           27527 ;--------------------------------------------------------
                           27528 	.area _CODE
-                          27529 ;	main.c 43
+                          27529 ;	main.c 10
                           27530 ; genLabel
                           27531 ; genFunction
                           27532 ;	---------------------------------
@@ -27536,7 +27536,7 @@
    0000                   27536 _main:
    0000 C5                27537 	push	bc
    0001 E8 FE             27538 	lda	sp,-2(sp)
-                          27539 ;	main.c 50
+                          27539 ;	main.c 17
                           27540 ; genIpush
    0003 21 00 00          27541 	ld	hl,#_mainmaptiles + 0
    0006 E5                27542 	push	hl
@@ -27551,12 +27551,12 @@
                           27551 ; genCall
    000F CD 00 00          27552 	call	_set_bkg_data
    0012 E8 04             27553 	lda	sp,4(sp)
-                          27554 ;	main.c 52
+                          27554 ;	main.c 19
                           27555 ; genIpush
    0014 21 8C 00          27556 	ld	hl,#_bgpal + 0
    0017 E5                27557 	push	hl
                           27558 ; genIpush
-   0018 3E 01             27559 	ld	a,#0x01
+   0018 3E 08             27559 	ld	a,#0x08
    001A F5                27560 	push	af
    001B 33                27561 	inc	sp
                           27562 ; genIpush
@@ -27566,7 +27566,7 @@
                           27566 ; genCall
    0020 CD 00 00          27567 	call	_set_bkg_palette
    0023 E8 04             27568 	lda	sp,4(sp)
-                          27569 ;	main.c 54
+                          27569 ;	main.c 21
                           27570 ; genIpush
    0025 21 B0 00          27571 	ld	hl,#_mainmap + 0
    0028 E5                27572 	push	hl
@@ -27589,10 +27589,10 @@
                           27589 ; genCall
    0039 CD 00 00          27590 	call	_set_bkg_tiles
    003C E8 06             27591 	lda	sp,6(sp)
-                          27592 ;	main.c 55
+                          27592 ;	main.c 22
                           27593 ; genCall
    003E CD 00 00          27594 	call	_wait_vbl_done
-                          27595 ;	main.c 56
+                          27595 ;	main.c 23
                           27596 ; genAssign
                           27597 ; AOP_STK for _main_sloc0_1_0
    0041 F8 00             27598 	lda	hl,0(sp)
@@ -27618,7 +27618,7 @@
    0054 56                27618 	ld	d,(hl)
    0055 79                27619 	ld	a,c
    0056 12                27620 	ld	(de),a
-                          27621 ;	main.c 57
+                          27621 ;	main.c 24
                           27622 ; genAssign
                           27623 ; AOP_STK for _main_sloc0_1_0
    0057 2B                27624 	dec	hl
@@ -27644,13 +27644,13 @@
    0069 56                27644 	ld	d,(hl)
    006A 79                27645 	ld	a,c
    006B 12                27646 	ld	(de),a
-                          27647 ;	main.c 59
+                          27647 ;	main.c 26
                           27648 ; genLabel
    006C                   27649 00102$:
-                          27650 ;	main.c 60
+                          27650 ;	main.c 27
                           27651 ; genCall
    006C CD 00 00          27652 	call	_wait_vbl_done
-                          27653 ;	main.c 61
+                          27653 ;	main.c 28
                           27654 ; genIpush
    006F 3E 00             27655 	ld	a,#0x00
    0071 F5                27656 	push	af
@@ -27662,7 +27662,7 @@
                           27662 ; genCall
    0077 CD 00 00          27663 	call	_scroll_bkg
    007A E8 02             27664 	lda	sp,2(sp)
-                          27665 ;	main.c 62
+                          27665 ;	main.c 29
                           27666 ; genIpush
    007C 21 64 00          27667 	ld	hl,#0x0064
    007F E5                27668 	push	hl
