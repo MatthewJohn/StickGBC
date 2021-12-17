@@ -98,7 +98,7 @@ void set_background_tiles()
                     current_tile_itx >> 3
                 // Shift 1 by the last byte of the current tile idx and 'and' compare with
                 // tile shift data bit
-                ] & (1 << (current_tile_itx & 0xFF))))
+                ] & (1 << (current_tile_itx & 0x07))))
                     tile_data |= S_FLIPY;
 
             // Set palette data in VBK_REG1 for tile
