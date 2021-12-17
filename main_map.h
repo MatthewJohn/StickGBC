@@ -15,7 +15,7 @@
    Bank          : 0
    Map size      : 80 x 55
    Tile set      : C:\GBDK\games\stickrpg\main_tiles.gbr
-   Plane count   : 0.5 plane (4 bits)
+   Plane count   : 1 plane (8 bits)
    Plane order   : Tiles are continues
    Tile offset   : 0
    Split data    : No
@@ -24,10 +24,10 @@
 
 */
 
-#define MainMapWidth 80
-#define MainMapHeight 55
-#define MainMapBank 0
+#define mainmapWidth 80
+#define mainmapHeight 55
+#define mainmapBank 0
 
-extern unsigned char MainMap[];
+extern unsigned char mainmap[];
 
 /* End of MAIN_MAP.H */

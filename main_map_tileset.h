@@ -12,15 +12,15 @@
 
  Info:
   Form                 : All tiles as one unit.
-  Format               : Byte per color.
+  Format               : Gameboy 4 color.
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 0
+  Tiles                : 0 to 10
 
-  Palette colors       : Included.
+  Palette colors       : None.
   SGB Palette          : None.
-  CGB Palette          : Constant per entry.
+  CGB Palette          : None.
 
   Convert to metatiles : No.
 
@@ -30,83 +30,8 @@
 
 
 /* Bank of tiles. */
-#define MainMapTilesBank 0
-
-/* Super Gameboy palette 0 */
-#define MainMapTilesSGBPal0c0 6076
-#define MainMapTilesSGBPal0c1 8935
-#define MainMapTilesSGBPal0c2 6596
-#define MainMapTilesSGBPal0c3 5344
-
-/* Super Gameboy palette 1 */
-#define MainMapTilesSGBPal1c0 6076
-#define MainMapTilesSGBPal1c1 8935
-#define MainMapTilesSGBPal1c2 6596
-#define MainMapTilesSGBPal1c3 5344
-
-/* Super Gameboy palette 2 */
-#define MainMapTilesSGBPal2c0 6076
-#define MainMapTilesSGBPal2c1 8935
-#define MainMapTilesSGBPal2c2 6596
-#define MainMapTilesSGBPal2c3 5344
-
-/* Super Gameboy palette 3 */
-#define MainMapTilesSGBPal3c0 6076
-#define MainMapTilesSGBPal3c1 8935
-#define MainMapTilesSGBPal3c2 6596
-#define MainMapTilesSGBPal3c3 5344
-
-/* Gameboy Color palette 0 */
-#define MainMapTilesCGBPal0c0 23254
-#define MainMapTilesCGBPal0c1 10570
-#define MainMapTilesCGBPal0c2 1230
-#define MainMapTilesCGBPal0c3 1006
-
-/* Gameboy Color palette 1 */
-#define MainMapTilesCGBPal1c0 6076
-#define MainMapTilesCGBPal1c1 23254
-#define MainMapTilesCGBPal1c2 13741
-#define MainMapTilesCGBPal1c3 0
-
-/* Gameboy Color palette 2 */
-#define MainMapTilesCGBPal2c0 6076
-#define MainMapTilesCGBPal2c1 8935
-#define MainMapTilesCGBPal2c2 6596
-#define MainMapTilesCGBPal2c3 5344
-
-/* Gameboy Color palette 3 */
-#define MainMapTilesCGBPal3c0 6076
-#define MainMapTilesCGBPal3c1 8935
-#define MainMapTilesCGBPal3c2 6596
-#define MainMapTilesCGBPal3c3 5344
-
-/* Gameboy Color palette 4 */
-#define MainMapTilesCGBPal4c0 6076
-#define MainMapTilesCGBPal4c1 8935
-#define MainMapTilesCGBPal4c2 6596
-#define MainMapTilesCGBPal4c3 5344
-
-/* Gameboy Color palette 5 */
-#define MainMapTilesCGBPal5c0 6076
-#define MainMapTilesCGBPal5c1 8935
-#define MainMapTilesCGBPal5c2 6596
-#define MainMapTilesCGBPal5c3 5344
-
-/* Gameboy Color palette 6 */
-#define MainMapTilesCGBPal6c0 6076
-#define MainMapTilesCGBPal6c1 8935
-#define MainMapTilesCGBPal6c2 6596
-#define MainMapTilesCGBPal6c3 5344
-
-/* Gameboy Color palette 7 */
-#define MainMapTilesCGBPal7c0 6076
-#define MainMapTilesCGBPal7c1 8935
-#define MainMapTilesCGBPal7c2 6596
-#define MainMapTilesCGBPal7c3 5344
-
-/* CGB palette entries. */
-#define MainMapTilesCGB0 0
+#define mainmaptilesBank 0
 /* Start of tile array. */
-extern unsigned char MainMapTiles[];
+extern unsigned char mainmaptiles[];
 
 /* End of MAIN_MAP_TILESET.H */
