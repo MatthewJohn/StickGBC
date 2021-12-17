@@ -20,7 +20,7 @@
 
   Palette colors       : None.
   SGB Palette          : None.
-  CGB Palette          : None.
+  CGB Palette          : 1 Byte per entry.
 
   Convert to metatiles : No.
 
@@ -28,6 +28,12 @@
 
 */
 
+/* CGBpalette entries. */
+unsigned char mainmaptilesCGB[] =
+{
+  0x00,0x01,0x01,0x01,0x01,0x00,0x01,0x01,
+  0x01,0x00,0x00
+};
 /* Start of tile array. */
 unsigned char mainmaptiles[] =
 {
