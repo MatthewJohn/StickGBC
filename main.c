@@ -51,7 +51,7 @@ void set_background_tiles()
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &TILE_TRANSFER
-            )
+            );
             
             VBK_REG = 1;
             // Set palette data in VBK_REG1 for tile
