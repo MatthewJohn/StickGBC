@@ -12,7 +12,38 @@
 #include "main_map.c"
 
 const UWORD bgpal[] = {
-    RGB(22,  22, 22), RGB(10, 10, 10), RGB(14, 6, 1), RGB(14, 31, 0)
+    RGB(22, 22, 22),
+    RGB(10, 10, 10),
+    RGB(14, 6, 1),
+    RGB(14, 31, 0),
+    RGB(28, 29, 5),
+    RGB(22, 22, 22),
+    RGB(13, 13, 13),
+    RGB(0, 0, 0),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5),
+    RGB(28, 29, 5),
+    RGB(7, 23, 8),
+    RGB(4, 14, 6),
+    RGB(0, 7, 5)
 };
 
 void main()
@@ -22,7 +53,7 @@ void main()
         waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
         printf("\nIsn't it easy!");
   */      
-        set_bkg_palette(0, 4, &bgpal);
+        set_bkg_palette(0, 8, &bgpal);
         set_bkg_data(0, 11, mainmaptiles);
 
         set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, mainmap);
