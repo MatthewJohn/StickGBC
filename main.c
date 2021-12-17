@@ -22,7 +22,7 @@ void main()
   */      
         set_bkg_data(0, 11, mainmaptiles);
 
-      set_bkg_palette(0, 1, &bgpal);
+      set_bkg_palette(0, 8, &bgpal);
 
         set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, mainmap);
  wait_vbl_done();
