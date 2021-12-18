@@ -13,14 +13,17 @@
 #include "main_map.c"
 #include "main_map_palette.c"
 
+#include "sprite_tileset.c"
+
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
-unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
-unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
+unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
+//unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
 
 
 unsigned char *background_tile_map;
@@ -35,8 +38,8 @@ unsigned int FRAME_BUFFER_TILE_POS_Y;
 
 void init_map_variables()
 {
-    malloc_init();
-    MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+    //malloc_init();
+    //MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
     //MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 
     // Setup flipped tiles
@@ -51,6 +54,10 @@ void init_map_variables()
     
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
+}
+
+void setup_sprite()
+{
 }
 
 void set_background_tiles()
@@ -117,14 +124,14 @@ void set_background_tiles()
 //                    current_tile_itx >> 3
 //                ] & (1 << (current_tile_itx & 0x07))))
 //                    tile_data |= S_FLIPX;
-//
-//            // Set palette data in VBK_REG1 for tile
-//            set_bkg_tiles(
-//                background_palette_itx_x, 
-//                background_palette_itx_y,
-//                1, 1,  // Only setting 1 tile
-//                &tile_data
-//            );
+
+            // Set palette data in VBK_REG1 for tile
+            set_bkg_tiles(
+                background_palette_itx_x, 
+                background_palette_itx_y,
+                1, 1,  // Only setting 1 tile
+                &tile_data
+            );
 
             // @TODO Fix this
             //current_tile_itx ++;
