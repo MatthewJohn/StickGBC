@@ -37,11 +37,11 @@ void init_map_variables()
 {
     malloc_init();
     MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-    MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+    //MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 
     // Setup flipped tiles
     //  -Left hand road, buttom of road marking
-    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
+//    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
     MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
     MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
     MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
@@ -110,20 +110,21 @@ void set_background_tiles()
                 // tile shift data bit
                 ] & (1 << (current_tile_itx & 0x07))))
                     tile_data |= S_FLIPY;
-
-            if (
-                (MAIN_MAP_HORIZONTAL_FLIP_TILES[
-                    current_tile_itx >> 3
-                ] & (1 << (current_tile_itx & 0x07))))
-                    tile_data |= S_FLIPX;
-
-            // Set palette data in VBK_REG1 for tile
-            set_bkg_tiles(
-                background_palette_itx_x, 
-                background_palette_itx_y,
-                1, 1,  // Only setting 1 tile
-                &tile_data
-            );
+                    
+// Disabled until malloc issues can be sorted.
+//            if (
+//                (MAIN_MAP_HORIZONTAL_FLIP_TILES[
+//                    current_tile_itx >> 3
+//                ] & (1 << (current_tile_itx & 0x07))))
+//                    tile_data |= S_FLIPX;
+//
+//            // Set palette data in VBK_REG1 for tile
+//            set_bkg_tiles(
+//                background_palette_itx_x, 
+//                background_palette_itx_y,
+//                1, 1,  // Only setting 1 tile
+//                &tile_data
+//            );
 
             // @TODO Fix this
             //current_tile_itx ++;
