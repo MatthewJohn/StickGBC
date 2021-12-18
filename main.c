@@ -4,10 +4,11 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#include <gb/gb.h>
+
 /*#include <gb/drawing.h>*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <gb/gb.h>
 
 #include "main_map_tileset.c"
 #include "main_map.c"
@@ -20,9 +21,6 @@
 #define SCREEN_WIDTH 0xA8U
 #define SCREEN_HEIGHT 0xA0U
 
-#define SPRITE_LOCATION_X (SCREEN_WIDTH / 2)
-#define SPRITE_LOCATION_Y (SCREEN_HEIGHT / 2)
-
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
@@ -31,6 +29,15 @@
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
 //unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
+
+// Location of user in world.
+// This is not the sprites position on the screen
+unsigned int user_pos_x;
+unsigned int user_pos_y;
+
+// Determine which way user needs to travel
+signed int travel_x;
+signed int travel_y;
 
 
 unsigned char *background_tile_map;
@@ -56,9 +63,7 @@ void init_map_variables()
 //    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
 //    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
 //    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
-    
-    
-    
+
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
 }
@@ -66,10 +71,12 @@ void init_map_variables()
 void setup_sprite()
 {
     // Load single sprite tile
+    user_pos_x = 0x50U;
+    user_pos_y = 0x50U;
     set_sprite_data(0, 1, spritetiles);
     set_sprite_palette(0, 1, spritetilesCGB);
     set_sprite_tile(0, 0);
-    move_sprite(0, SPRITE_LOCATION_X, SPRITE_LOCATION_Y);
+    move_sprite(0, user_pos_x, user_pos_y);
     SHOW_SPRITES;
 }
 
@@ -158,6 +165,32 @@ void set_background_tiles()
     VBK_REG = 0;
 }
 
+void check_user_input()
+{
+    UINT8 keys = joypad();
+    travel_x = 0;
+    travel_y = 0;
+
+    // Check directional 
+    if (keys & J_UP)
+        travel_y --;
+    if (keys & J_DOWN)
+        travel_y ++;
+    if (keys & J_LEFT)
+        travel_x --;
+    if (keys & J_RIGHT)
+        travel_x ++;
+}
+
+// Called per cycle to update background position and sprite
+void update_graphics()
+{
+    user_pos_x += travel_x;
+    user_pos_y += travel_y;
+    move_sprite(0, user_pos_x, user_pos_y);
+}
+
+
 void main()
 {
 //        printf("Welcome to GAMEBOY\nProgramming");
@@ -182,7 +215,9 @@ void main()
         
         while(1) {
                 wait_vbl_done();
-                scroll_bkg(1, 0);
+
+                check_user_input();
+                update_graphics();
                 delay(100);
         }
 }
