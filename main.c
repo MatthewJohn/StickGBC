@@ -204,26 +204,40 @@ void move_background(unsigned int move_x, unsigned int move_y)
 // Called per cycle to update background position and sprite
 void update_graphics()
 {
+    unsigned short background_moved = 0U;
     unsigned int user_screen_pos_x;
     unsigned int user_screen_pos_y;
 
-    user_pos_x += travel_x;
-    user_pos_y += travel_y;
+    // Set user screen position based on current location
     user_screen_pos_x = user_pos_x - screen_location_x;
     user_screen_pos_y = user_pos_y - screen_location_y;
+
+    user_pos_x += travel_x;
+    user_pos_y += travel_y;
+    
+
     
     // Check if sprite too close to edge of screen
-    
     if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+        // If player hit LHS of screen, move screen to the left
         move_background(-1, 0);
     else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
+        // If player hit RHS of screen, move screen to the right
         move_background(1, 0);
-    else if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+    else
+        // If moving sprite, update user screen position X using new user_pos_x
+        user_screen_pos_x = user_pos_x - screen_location_x;
+        
+    if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
         move_background(0, -1);
     else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
         move_background(0, 1);
     else
-        move_sprite(0, user_screen_pos_x, user_screen_pos_y);
+        // If moving sprite, update user screen position X using new user_pos_x
+        user_screen_pos_y = user_pos_y - screen_location_y;
+        
+    // Move sprite to new location
+    move_sprite(0, user_screen_pos_x, user_screen_pos_y);
     
     // Update flip of sprite tile
     sprite_prop_data = 0x00;
