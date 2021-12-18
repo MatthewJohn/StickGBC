@@ -21,6 +21,8 @@
 #define SCREEN_WIDTH 0xA8U
 #define SCREEN_HEIGHT 0xA0U
 
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20
+
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
@@ -35,9 +37,16 @@
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
+// Location of screen compared to map
+unsigned int screen_location_x;
+unsigned int screen_location_y;
+
 // Determine which way user needs to travel
 signed int travel_x;
 signed int travel_y;
+UINT8 sprite_traveling_x;
+UINT8 sprite_prop_data;
+
 
 
 unsigned char *background_tile_map;
@@ -66,14 +75,18 @@ void init_map_variables()
 
     FRAME_BUFFER_TILE_POS_X = 0;
     FRAME_BUFFER_TILE_POS_Y = 0;
+    
+    screen_location_x = 0;
+    screen_location_y = 0;
 }
 
 void setup_sprite()
 {
     // Load single sprite tile
+    sprite_traveling_x = 0;
     user_pos_x = 0x50U;
     user_pos_y = 0x50U;
-    set_sprite_data(0, 1, spritetiles);
+    set_sprite_data(0, 3, spritetiles);
     set_sprite_palette(0, 1, spritetilesCGB);
     set_sprite_tile(0, 0);
     move_sprite(0, user_pos_x, user_pos_y);
@@ -88,7 +101,6 @@ void set_background_tiles()
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
     unsigned int current_tile_itx = 0;
     unsigned char tile_data = 0x00;
-
 
     //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
     VBK_REG = 0;
@@ -187,7 +199,37 @@ void update_graphics()
 {
     user_pos_x += travel_x;
     user_pos_y += travel_y;
-    move_sprite(0, user_pos_x, user_pos_y);
+    move_sprite(0, user_pos_x - screen_location_x, user_pos_y - screen_location_y);
+    
+    // Update flip of sprite tile
+    sprite_prop_data = 0x00;
+    // Check for just vertical movement 
+    if (travel_y != 0)
+    {
+        if (travel_x == 0)
+        {
+            // If travelling up, flip Y
+            if (travel_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(0, 0);
+        } else {
+            // Handle diagonal movement
+            if (travel_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (travel_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(0, 2);
+        }
+    }
+    else if (travel_x != 0)
+    {
+        set_sprite_tile(0, 1);
+        if (travel_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (travel_x != 0 || travel_y != 0)
+        set_sprite_prop(0, sprite_prop_data);
 }
 
 
@@ -218,6 +260,6 @@ void main()
 
                 check_user_input();
                 update_graphics();
-                delay(100);
+                delay(50);
         }
 }
