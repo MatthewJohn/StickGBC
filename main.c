@@ -21,7 +21,7 @@
 #define SCREEN_WIDTH 0xA8U
 #define SCREEN_HEIGHT 0xA0U
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
@@ -194,12 +194,36 @@ void check_user_input()
         travel_x ++;
 }
 
+void move_background(unsigned int move_x, unsigned int move_y)
+{
+    scroll_bkg(move_x, move_y);
+    screen_location_x += move_x;
+    screen_location_y += move_y;
+}
+
 // Called per cycle to update background position and sprite
 void update_graphics()
 {
+    unsigned int user_screen_pos_x;
+    unsigned int user_screen_pos_y;
+
     user_pos_x += travel_x;
     user_pos_y += travel_y;
-    move_sprite(0, user_pos_x - screen_location_x, user_pos_y - screen_location_y);
+    user_screen_pos_x = user_pos_x - screen_location_x;
+    user_screen_pos_y = user_pos_y - screen_location_y;
+    
+    // Check if sprite too close to edge of screen
+    
+    if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+        move_background(-1, 0);
+    else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
+        move_background(1, 0);
+    else if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+        move_background(0, -1);
+    else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
+        move_background(0, 1);
+    else
+        move_sprite(0, user_screen_pos_x, user_screen_pos_y);
     
     // Update flip of sprite tile
     sprite_prop_data = 0x00;
