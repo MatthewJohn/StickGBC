@@ -16,12 +16,19 @@
 #include "sprite_tileset.c"
 
 
+// Screen size 160x168
+#define SCREEN_WIDTH 0xA8U
+#define SCREEN_HEIGHT 0xA0U
+
+#define SPRITE_LOCATION_X (SCREEN_WIDTH / 2)
+#define SPRITE_LOCATION_Y (SCREEN_HEIGHT / 2)
+
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
-unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
+//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
 //unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
 
@@ -45,10 +52,10 @@ void init_map_variables()
     // Setup flipped tiles
     //  -Left hand road, buttom of road marking
 //    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
-    MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
-    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
-    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
-    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
+//    MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
+//    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
+//    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
+//    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
     
     
     
@@ -58,6 +65,12 @@ void init_map_variables()
 
 void setup_sprite()
 {
+    // Load single sprite tile
+    set_sprite_data(0, 1, spritetiles);
+    set_sprite_palette(0, 1, spritetilesCGB);
+    set_sprite_tile(0, 0);
+    move_sprite(0, SPRITE_LOCATION_X, SPRITE_LOCATION_Y);
+    SHOW_SPRITES;
 }
 
 void set_background_tiles()
@@ -108,15 +121,15 @@ void set_background_tiles()
             ];
             
             // Check if current tile is flipped
-            if (
-                (MAIN_MAP_VERTICAL_FLIP_TILES[
-                    // Bit shift current tile ITX by 3 (dividing by 8) to obtain byte
-                    // of flip data that contains this tile's flip and compare to 
-                    current_tile_itx >> 3
-                // Shift 1 by the last byte of the current tile idx and 'and' compare with
-                // tile shift data bit
-                ] & (1 << (current_tile_itx & 0x07))))
-                    tile_data |= S_FLIPY;
+//            if (
+//                (MAIN_MAP_VERTICAL_FLIP_TILES[
+//                    // Bit shift current tile ITX by 3 (dividing by 8) to obtain byte
+//                    // of flip data that contains this tile's flip and compare to 
+//                    current_tile_itx >> 3
+//                // Shift 1 by the last byte of the current tile idx and 'and' compare with
+//                // tile shift data bit
+//                ] & (1 << (current_tile_itx & 0x07))))
+//                    tile_data |= S_FLIPY;
                     
 // Disabled until malloc issues can be sorted.
 //            if (
@@ -161,6 +174,7 @@ void main()
     background_tiles = &mainmaptiles;
     background_tile_palette = &mainmaptilesCGB;
     set_background_tiles();
+    setup_sprite();
 
     wait_vbl_done();
     SHOW_BKG;
