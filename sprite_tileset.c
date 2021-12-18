@@ -18,7 +18,7 @@
   Tile size            : 8 x 8
   Tiles                : 0 to 0
 
-  Palette colors       : None.
+  Palette colors       : Included.
   SGB Palette          : None.
   CGB Palette          : 1 Byte per entry.
 
