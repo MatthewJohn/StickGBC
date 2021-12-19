@@ -225,6 +225,12 @@ void move_background(unsigned int move_x, unsigned int move_y)
         // current frame buffer size + redraw offset.
         // Mask with vram tile size in X.
         itx_x = ((screen_location_x >> 3) + REDRAW_VRAM_OFFSET_X) & VRAME_SIZE_TILES_X_MASK;
+        
+        // If processing start of tile (screen location & 0xFF == 0) and If itx is 0,
+        // check if wrapped from right side of screen and add farme buffer size to frame buffer tile position,
+        // so that tile is used is a continuation from end of vram buffer
+        if ((screen_location_x & 0x07U) == 0U && itx_x == 0U && move_x == 1U)
+            FRAME_BUFFER_TILE_POS_X += 0x1FU;
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
