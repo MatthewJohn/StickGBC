@@ -239,10 +239,10 @@ void move_background(signed int move_x, signed int move_y)
         // so that tile is used is a continuation from end of vram buffer
         if (itx_x == 0U && screen_location_pixel_count_x == 0U && move_x == 1)
             // If moving right, increment frame buffer pos
-            FRAME_BUFFER_TILE_POS_X += BACKGROUND_BUFFER_MAX_X;
+            FRAME_BUFFER_TILE_POS_X += BACKGROUND_BUFFER_SIZE_X;
         // Otherwise (since we are moving left), if not at 0, decrease
         else if (itx_x == BACKGROUND_BUFFER_MAX_X && screen_location_pixel_count_x == 7U && move_x == -1)
-            FRAME_BUFFER_TILE_POS_X -= BACKGROUND_BUFFER_MAX_X;
+            FRAME_BUFFER_TILE_POS_X -= BACKGROUND_BUFFER_SIZE_X;
 
         direction_tile_offset = FRAME_BUFFER_TILE_POS_X;
         if (move_x == -1)
