@@ -239,8 +239,8 @@ void move_background(unsigned int move_x, unsigned int move_y)
         
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_y_max = FRAME_BUFFER_TILE_POS_Y + (((BACKGROUND_BUFFER_SIZE_Y - 1U) >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
-        for (itx_y = FRAME_BUFFER_TILE_POS_Y + (((BACKGROUND_BUFFER_SIZE_Y - 1U) >> 3) * screen_location_pixel_count_x);
+        itx_y_max = FRAME_BUFFER_TILE_POS_Y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
+        for (itx_y = FRAME_BUFFER_TILE_POS_Y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * screen_location_pixel_count_x);
                itx_y != itx_y_max;
                itx_y ++)
         {
