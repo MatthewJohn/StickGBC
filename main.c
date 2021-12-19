@@ -28,6 +28,14 @@
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 
+#define VRAME_SIZE_TILES_X_MASK 0x1FU
+// From screen left-top-hand position to half way through unused vram
+// x - ( 0x20U (vram width in tiles) - 0x14U (screen width in tiles) / 2) + 0x14U (screen width in tiles)
+#define REDRAW_VRAM_OFFSET_X 0x1AU
+
+unsigned int redraw_x_itx;
+unsigned int redraw_y_itx;
+
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
 //unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
@@ -110,12 +118,19 @@ void set_background_tiles()
            background_palette_itx_x != frame_buffer_tile_max_x;
            background_palette_itx_x ++)
     {
+        // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
+        if (background_palette_itx_x == 0x10U)
+            break;
         for (background_palette_itx_y = FRAME_BUFFER_TILE_POS_Y;
                background_palette_itx_y != frame_buffer_tile_max_y;
                background_palette_itx_y ++)
         {
             // Temp Test
             current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
+            
+            // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
+            if (background_palette_itx_y == 0x10U)
+                break;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
@@ -196,9 +211,66 @@ void check_user_input()
 
 void move_background(unsigned int move_x, unsigned int move_y)
 {
+    unsigned int itx_x;
+    unsigned int itx_y;
+    unsigned int current_tile_itx;
+    unsigned char tile_data;
+    
     scroll_bkg(move_x, move_y);
+
     screen_location_x += move_x;
     screen_location_y += move_y;
+
+    
+    // Redraw tiles in unallocated vram
+    if (move_x != 0)
+    {
+        // Set current redraw in X to current frame buffer size + redraw offset.
+        // Mask with vram tile size in X.
+        itx_x = (screen_location_x + REDRAW_VRAM_OFFSET_X) & VRAME_SIZE_TILES_X_MASK;
+
+        // If moving in X, redraw column.
+        // The iterator is the frame buffer position (not the map position)
+        for (itx_y = FRAME_BUFFER_TILE_POS_Y;
+               itx_y != BACKGROUND_BUFFER_SIZE_Y;
+               itx_y ++)
+        {
+            // Work out current tile - base on tile location in frame buffer plus current map in vram location
+            current_tile_itx = ((itx_y + FRAME_BUFFER_TILE_POS_Y) * mainmapWidth) + itx_x + FRAME_BUFFER_TILE_POS_X;
+
+            // Map data is 2 bytes per tile.
+            // First byte's first 7 bits are tile number
+            // next bit is vertical flip
+            // first bit of second byte is horizontal flip
+
+           VBK_REG = 0; 
+            // Set map data
+            set_bkg_tiles(
+                itx_x, 
+                itx_y,
+                1, 1,  // Only setting 1 tile
+                 // Lookup tile from background tile map
+                 &background_tile_map[current_tile_itx]
+            );
+            
+            VBK_REG = 1;
+            
+            tile_data = background_tile_palette[  // From the palette map
+                // Lookup tile from background tile map
+                background_tile_map[current_tile_itx]
+            ];
+            
+            // TILE FLIP HERE
+
+            // Set palette data in VBK_REG1 for tile
+            set_bkg_tiles(
+                itx_x, 
+                itx_y,
+                1, 1,  // Only setting 1 tile
+                &tile_data
+            );            
+        }
+    }
 }
 
 // Called per cycle to update background position and sprite
@@ -214,8 +286,6 @@ void update_graphics()
 
     user_pos_x += travel_x;
     user_pos_y += travel_y;
-    
-
     
     // Check if sprite too close to edge of screen
     if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
