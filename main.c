@@ -245,8 +245,10 @@ void move_background(signed int move_x, signed int move_y)
             FRAME_BUFFER_TILE_POS_X -= BACKGROUND_BUFFER_SIZE_X;
 
         direction_tile_offset = FRAME_BUFFER_TILE_POS_X;
+        // If moving in negative X, decrement actual tiles used so that  the current
+        // on-screen background is redrawn.
         if (move_x == -1)
-            direction_tile_offset -= 0x20;
+            direction_tile_offset -= BACKGROUND_BUFFER_SIZE_X;
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
