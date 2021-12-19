@@ -208,13 +208,14 @@ void check_user_input()
         travel_x ++;
 }
 
-void move_background(int move_x, int move_y)
+void move_background(signed int move_x, signed int move_y)
 {
     unsigned int itx_x;
     unsigned int itx_y;
     unsigned int current_tile_itx;
     unsigned char tile_data;
     unsigned int itx_y_max;
+    signed int direction_tile_offset;
     
     // Last 3 bits of screen position X
     unsigned int screen_location_pixel_count_x;
@@ -236,11 +237,17 @@ void move_background(int move_x, int move_y)
         // If processing start of tile (screen location & 0xFF == 0) and If itx is 0,
         // check if wrapped from right side of screen and add farme buffer size to frame buffer tile position,
         // so that tile is used is a continuation from end of vram buffer
-        if (screen_location_pixel_count_x == 0U && itx_x == 0U && move_x == 1)
-            FRAME_BUFFER_TILE_POS_X += 0x1FU;
-        if (screen_location_pixel_count_x == 0U && itx_x == BACKGROUND_BUFFER_MAX_X && move_x == -1)
-            FRAME_BUFFER_TILE_POS_X -= 0x1FU;
-        
+        if (itx_x == 0U && screen_location_pixel_count_x == 0U && move_x == 1)
+            // If moving right, increment frame buffer pos
+            FRAME_BUFFER_TILE_POS_X += BACKGROUND_BUFFER_MAX_X;
+        // Otherwise (since we are moving left), if not at 0, decrease
+        else if (itx_x == BACKGROUND_BUFFER_MAX_X && screen_location_pixel_count_x == 7U && move_x == -1)
+            FRAME_BUFFER_TILE_POS_X -= BACKGROUND_BUFFER_MAX_X;
+
+        direction_tile_offset = FRAME_BUFFER_TILE_POS_X;
+        if (move_x == -1)
+            direction_tile_offset -= 0x20;
+
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
         itx_y_max = FRAME_BUFFER_TILE_POS_Y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
@@ -249,7 +256,7 @@ void move_background(int move_x, int move_y)
                itx_y ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
-            current_tile_itx = ((itx_y + FRAME_BUFFER_TILE_POS_Y) * mainmapWidth) + itx_x + FRAME_BUFFER_TILE_POS_X;
+            current_tile_itx = ((itx_y + FRAME_BUFFER_TILE_POS_Y) * mainmapWidth) + itx_x + direction_tile_offset;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
@@ -381,6 +388,7 @@ void main()
 
                 check_user_input();
                 update_graphics();
-                delay(50);
+                // Temporarily remove delay to speed debugging
+                //delay(50);
         }
 }
