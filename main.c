@@ -212,6 +212,10 @@ void move_background(unsigned int move_x, unsigned int move_y)
     unsigned int itx_y;
     unsigned int current_tile_itx;
     unsigned char tile_data;
+    unsigned int itx_y_max;
+    
+    // Last 3 bits of screen position X
+    unsigned int screen_location_pixel_count_x;
     
     scroll_bkg(move_x, move_y);
 
@@ -221,6 +225,7 @@ void move_background(unsigned int move_x, unsigned int move_y)
     // Redraw tiles in unallocated vram
     if (move_x != 0)
     {
+        screen_location_pixel_count_x = screen_location_x & 0x07U;
         // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
         // current frame buffer size + redraw offset.
         // Mask with vram tile size in X.
@@ -229,13 +234,14 @@ void move_background(unsigned int move_x, unsigned int move_y)
         // If processing start of tile (screen location & 0xFF == 0) and If itx is 0,
         // check if wrapped from right side of screen and add farme buffer size to frame buffer tile position,
         // so that tile is used is a continuation from end of vram buffer
-        if ((screen_location_x & 0x07U) == 0U && itx_x == 0U && move_x == 1U)
+        if (screen_location_pixel_count_x == 0U && itx_x == 0U && move_x == 1U)
             FRAME_BUFFER_TILE_POS_X += 0x1FU;
-
+        
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        for (itx_y = FRAME_BUFFER_TILE_POS_Y;
-               itx_y != BACKGROUND_BUFFER_SIZE_Y;
+        itx_y_max = FRAME_BUFFER_TILE_POS_Y + (((BACKGROUND_BUFFER_SIZE_Y - 1U) >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
+        for (itx_y = FRAME_BUFFER_TILE_POS_Y + (((BACKGROUND_BUFFER_SIZE_Y - 1U) >> 3) * screen_location_pixel_count_x);
+               itx_y != itx_y_max;
                itx_y ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
