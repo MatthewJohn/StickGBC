@@ -115,7 +115,7 @@ void set_background_tiles()
            background_palette_itx_x != frame_buffer_tile_max_x;
            background_palette_itx_x ++)
     {
-        // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
+        // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //        if (background_palette_itx_x == 0x10U)
 //            break;
         for (background_palette_itx_y = FRAME_BUFFER_TILE_POS_Y;
@@ -125,7 +125,7 @@ void set_background_tiles()
             // Temp Test
             current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
             
-            // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
+            // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //            if (background_palette_itx_y == 0x10U)
 //                break;
 
