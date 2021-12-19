@@ -116,8 +116,8 @@ void set_background_tiles()
            background_palette_itx_x ++)
     {
         // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
-        if (background_palette_itx_x == 0x10U)
-            break;
+//        if (background_palette_itx_x == 0x10U)
+//            break;
         for (background_palette_itx_y = FRAME_BUFFER_TILE_POS_Y;
                background_palette_itx_y != frame_buffer_tile_max_y;
                background_palette_itx_y ++)
@@ -126,8 +126,8 @@ void set_background_tiles()
             current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
             
             // TEMP DO NOT DRAW BACKGROUND OFF SCREEN
-            if (background_palette_itx_y == 0x10U)
-                break;
+//            if (background_palette_itx_y == 0x10U)
+//                break;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
