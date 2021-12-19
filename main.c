@@ -33,9 +33,6 @@
 // x - ( 0x20U (vram width in tiles) - 0x14U (screen width in tiles) / 2) + 0x14U (screen width in tiles)
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 
-unsigned int redraw_x_itx;
-unsigned int redraw_y_itx;
-
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
 //unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
 //unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
@@ -220,14 +217,14 @@ void move_background(unsigned int move_x, unsigned int move_y)
 
     screen_location_x += move_x;
     screen_location_y += move_y;
-
     
     // Redraw tiles in unallocated vram
     if (move_x != 0)
     {
-        // Set current redraw in X to current frame buffer size + redraw offset.
+        // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
+        // current frame buffer size + redraw offset.
         // Mask with vram tile size in X.
-        itx_x = (screen_location_x + REDRAW_VRAM_OFFSET_X) & VRAME_SIZE_TILES_X_MASK;
+        itx_x = ((screen_location_x >> 3) + REDRAW_VRAM_OFFSET_X) & VRAME_SIZE_TILES_X_MASK;
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
