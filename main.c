@@ -27,6 +27,8 @@
 // less than the value (or rather !=)
 #define BACKGROUND_BUFFER_SIZE_X 0x20U
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
+#define BACKGROUND_BUFFER_MAX_X 0x1FU
+#define BACKGROUND_BUFFER_MAX_Y 0x1FU
 
 #define VRAME_SIZE_TILES_X_MASK 0x1FU
 // From screen left-top-hand position to half way through unused vram
@@ -206,7 +208,7 @@ void check_user_input()
         travel_x ++;
 }
 
-void move_background(unsigned int move_x, unsigned int move_y)
+void move_background(int move_x, int move_y)
 {
     unsigned int itx_x;
     unsigned int itx_y;
@@ -234,8 +236,10 @@ void move_background(unsigned int move_x, unsigned int move_y)
         // If processing start of tile (screen location & 0xFF == 0) and If itx is 0,
         // check if wrapped from right side of screen and add farme buffer size to frame buffer tile position,
         // so that tile is used is a continuation from end of vram buffer
-        if (screen_location_pixel_count_x == 0U && itx_x == 0U && move_x == 1U)
+        if (screen_location_pixel_count_x == 0U && itx_x == 0U && move_x == 1)
             FRAME_BUFFER_TILE_POS_X += 0x1FU;
+        if (screen_location_pixel_count_x == 0U && itx_x == BACKGROUND_BUFFER_MAX_X && move_x == -1)
+            FRAME_BUFFER_TILE_POS_X -= 0x1FU;
         
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
