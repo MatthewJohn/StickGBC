@@ -266,7 +266,7 @@ void move_background(signed int move_x, signed int move_y)
         FRAME_BUFFER_TILE_POS_Y -= BACKGROUND_BUFFER_SIZE_Y;
 
     // Redraw tiles in unallocated vram
-    if (move_x != 0)
+    if (move_x != 0 || move_y != 0)
     {
         direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
         direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
@@ -325,17 +325,15 @@ void move_background(signed int move_x, signed int move_y)
 
             VBK_REG = 0; 
         }
-    }
     
-    // Redraw rows when moving vertically
-    if (move_y != 0)
-    {
+        // Redraw rows when moving vertically
         direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
         direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
         // If moving in negative X, decrement actual tiles used so that  the current
         // on-screen background is redrawn.
         if (move_y == -1)
         {
+//            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
             direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
         }
 
