@@ -55,6 +55,11 @@ signed int travel_x;
 signed int travel_y;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
+// Direction of travel (whether moving or not)
+// 0 - left/up
+// 1 - right/down
+unsigned short last_moving_x;
+unsigned short last_moving_y; 
 
 
 
@@ -87,6 +92,10 @@ void init_map_variables()
     
     screen_location_x = 0;
     screen_location_y = 0;
+    
+    // Setup for forward travel
+    last_moving_x = 1;
+    last_moving_y = 1;
 }
 
 void setup_sprite()
@@ -275,9 +284,9 @@ void move_background(signed int move_x, signed int move_y)
 
     // If moving in negative X, decrement actual tiles used so that  the current
     // on-screen background is redrawn.
-    if (move_x == -1)
+    if (last_moving_x == 0)
         direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
-    if (move_y == -1)
+    if (last_moving_y == 0)
         direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
     
     // Redraw tiles in unallocated vram
@@ -286,8 +295,8 @@ void move_background(signed int move_x, signed int move_y)
         itx_x = base_itx_x;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_y_max = FRAME_BUFFER_TILE_POS_Y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
-        for (itx_y = FRAME_BUFFER_TILE_POS_Y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * screen_location_pixel_count_x);
+        itx_y_max = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
+        for (itx_y = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * screen_location_pixel_count_x);
                itx_y != itx_y_max;
                itx_y ++)
         {
@@ -336,8 +345,8 @@ void move_background(signed int move_x, signed int move_y)
         itx_y = base_itx_y;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = FRAME_BUFFER_TILE_POS_X + ((BACKGROUND_BUFFER_SIZE_X >> 3) * (screen_location_pixel_count_y + 1U)) + 1U;
-        for (itx_x = FRAME_BUFFER_TILE_POS_X + ((BACKGROUND_BUFFER_SIZE_X >> 3) * screen_location_pixel_count_y);
+        itx_x_max = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * (screen_location_pixel_count_y + 1U)) + 1U;
+        for (itx_x = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * screen_location_pixel_count_y);
                itx_x != itx_x_max;
                itx_x ++)
         {
@@ -398,11 +407,17 @@ void update_graphics()
     
     // Check if sprite too close to edge of screen
     if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+    {
         // If player hit LHS of screen, move screen to the left
         move_x = -1;
+        last_moving_x = 0;
+    }
     else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
+    {
         // If player hit RHS of screen, move screen to the right
         move_x = 1;
+        last_moving_x = 1;
+    }
     else
     {
         // If moving sprite, update user screen position X using new user_pos_x
@@ -411,9 +426,15 @@ void update_graphics()
     }
         
     if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+    {
         move_x = -1;
+        last_moving_y = 0;
+    }
     else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
+    {
         move_y = 1;
+        last_moving_y = 1;
+    }
     else
     {
         // If moving sprite, update user screen position X using new user_pos_x
@@ -464,6 +485,7 @@ void main()
 //        printf("\nPress Start");
 //        waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
 //        printf("\nIsn't it easy!");
+    DISPLAY_OFF;
     init_map_variables();
 
     // Load color palette
