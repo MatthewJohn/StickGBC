@@ -282,7 +282,8 @@ void move_background(signed int move_x, signed int move_y)
         itx_x = base_itx_x;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_y_max = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U)) + 1U;
+        // Use screen_location_pixel_count_x to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
+        itx_y_max = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U));
         for (itx_y = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * screen_location_pixel_count_x);
                itx_y != itx_y_max;
                itx_y ++)
@@ -335,27 +336,20 @@ void move_background(signed int move_x, signed int move_y)
         // on-screen background is redrawn.
         if (move_y == -1)
         {
-            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
             direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
         }
-
 
         itx_y = base_itx_y;
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * (screen_location_pixel_count_y + 1U)) + 1U;
+        itx_x_max = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * (screen_location_pixel_count_y + 1U));
         for (itx_x = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * screen_location_pixel_count_y);
                itx_x != itx_x_max;
                itx_x ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
             current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x;
-
-            // Map data is 2 bytes per tile.
-            // First byte's first 7 bits are tile number
-            // next bit is vertical flip
-            // first bit of second byte is horizontal flip
 
             // Set map data
             set_bkg_tiles(
