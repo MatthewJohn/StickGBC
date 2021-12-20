@@ -279,19 +279,19 @@ void move_background(signed int move_x, signed int move_y)
     else if (base_itx_y == BACKGROUND_BUFFER_MAX_Y && screen_location_pixel_count_y == 7U && move_y == -1)
         FRAME_BUFFER_TILE_POS_Y -= BACKGROUND_BUFFER_SIZE_Y;
 
-    direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
-    direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
-
-    // If moving in negative X, decrement actual tiles used so that  the current
-    // on-screen background is redrawn.
-    if (last_moving_x == 0)
-        direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
-    if (last_moving_y == 0)
-        direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
-    
     // Redraw tiles in unallocated vram
     if (move_x != 0)
     {
+    direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
+    direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
+        // If moving in negative X, decrement actual tiles used so that  the current
+        // on-screen background is redrawn.
+        if (move_x == -1)
+        {
+            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
+            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
+        }
+
         itx_x = base_itx_x;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
@@ -342,6 +342,16 @@ void move_background(signed int move_x, signed int move_y)
     // Redraw rows when moving vertically
     if (move_y != 0)
     {
+        direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
+        direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
+        // If moving in negative X, decrement actual tiles used so that  the current
+        // on-screen background is redrawn.
+        if (move_y == -1)
+        {
+            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
+            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
+        }
+
         itx_y = base_itx_y;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
