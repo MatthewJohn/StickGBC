@@ -229,7 +229,7 @@ void move_background(signed int move_x, signed int move_y)
 
     if (move_x == 0 && move_y == 0)
     {
-        delay(100);
+        delay(20);
         return;
     }
 
