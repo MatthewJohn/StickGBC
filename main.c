@@ -224,12 +224,15 @@ void move_background(signed int move_x, signed int move_y)
     // Last 3 bits of screen position X
     unsigned int screen_location_pixel_count_x;
     unsigned int screen_location_pixel_count_y;
-    
+
+    if (move_x == 0 && move_y == 0)
+        return;
+
     scroll_bkg(move_x, move_y);
 
     screen_location_x += move_x;
     screen_location_y += move_y;
-    
+
     screen_location_pixel_count_x = screen_location_x & 0x07U;
     // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
     // current frame buffer size + redraw offset.
