@@ -244,6 +244,7 @@ void move_background(signed int move_x, signed int move_y)
     base_itx_x = screen_location_x >> 3;
     if (move_x == 1)
         // If moving to right, start redraw tile after
+        // Calulate entire width of screen, plus one tile either side.
         base_itx_x += (SCREEN_TILE_MAX_X + 2U);
     else if (move_x == -1)
         // If moving left, redraw tile before
