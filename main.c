@@ -437,7 +437,7 @@ void update_graphics()
         
     if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
     {
-        move_x = -1;
+        move_y = -1;
         last_moving_y = 0;
     }
     else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
