@@ -55,12 +55,6 @@ signed int travel_x;
 signed int travel_y;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
-// Direction of travel (whether moving or not)
-// 0 - left/up
-// 1 - right/down
-unsigned short last_moving_x;
-unsigned short last_moving_y; 
-
 
 
 unsigned char *background_tile_map;
@@ -92,10 +86,6 @@ void init_map_variables()
     
     screen_location_x = 0;
     screen_location_y = 0;
-    
-    // Setup for forward travel
-    last_moving_x = 1;
-    last_moving_y = 1;
 }
 
 void setup_sprite()
@@ -286,7 +276,7 @@ void move_background(signed int move_x, signed int move_y)
         if (move_x == -1)
         {
             direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
-            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
+//            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
         }
 
         itx_x = base_itx_x;
@@ -419,13 +409,11 @@ void update_graphics()
     {
         // If player hit LHS of screen, move screen to the left
         move_x = -1;
-        last_moving_x = 0;
     }
     else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
     {
         // If player hit RHS of screen, move screen to the right
         move_x = 1;
-        last_moving_x = 1;
     }
     else
     {
@@ -437,12 +425,10 @@ void update_graphics()
     if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
     {
         move_y = -1;
-        last_moving_y = 0;
     }
     else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
     {
         move_y = 1;
-        last_moving_y = 1;
     }
     else
     {
