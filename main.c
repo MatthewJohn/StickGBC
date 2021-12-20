@@ -21,6 +21,12 @@
 #define SCREEN_WIDTH 0xA8U
 #define SCREEN_HEIGHT 0xA0U
 
+#define SCREEN_TILE_MAX_X 0x13U
+#define SCREEN_TILE_MAX_Y 0x11U
+#define SCREEN_WIDTH_TILES 0x14U
+#define SCREEN_HEIGHT_TILES 0x12U
+
+
 #define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
@@ -221,7 +227,7 @@ void move_background(signed int move_x, signed int move_y)
     unsigned int itx_y_max;
     signed int direction_tile_offset_x;
     signed int direction_tile_offset_y;
-    
+
     // Last 3 bits of screen position X
     unsigned int screen_location_pixel_count_x;
     unsigned int screen_location_pixel_count_y;
@@ -241,22 +247,37 @@ void move_background(signed int move_x, signed int move_y)
     // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
     // current frame buffer size + redraw offset.
     // Mask with vram tile size in X, as a form of cheap modulus (which we can do as it is a power of 2)
-    base_itx_x = ((screen_location_x >> 3) + REDRAW_VRAM_OFFSET_X) & VRAME_SIZE_TILES_X_MASK;
- 
-    // If processing start of tile (screen location & 0xFF == 0) and If itx is 0,
-    // check if wrapped from right side of screen and add farme buffer size to frame buffer tile position,
-    // so that tile is used is a continuation from end of vram buffer
+    base_itx_x = screen_location_x >> 3;
+    if (move_x == 1)
+        // If moving to right, start redraw tile after
+        base_itx_x += (SCREEN_TILE_MAX_X + 2U);
+    else if (move_x == -1)
+        // If moving left, redraw tile before
+        base_itx_x -= 1U;
+    // Mask any bits outside of screen buffer size
+    base_itx_x &= BACKGROUND_BUFFER_MAX_X;
+
     if (base_itx_x == 0U && screen_location_pixel_count_x == 0U && move_x == 1)
-        // If moving right, increment frame buffer pos
+        // If moving down, increment frame buffer pos
         FRAME_BUFFER_TILE_POS_X += BACKGROUND_BUFFER_SIZE_X;
-    // Otherwise (since we are moving left), if not at 0, decrease
-    else if (base_itx_x == BACKGROUND_BUFFER_MAX_X && screen_location_pixel_count_x == 7U && move_x == -1)
+    // Otherwise, if moving up and not at 0, decrease
+    else if (base_itx_x == BACKGROUND_BUFFER_MAX_Y && screen_location_pixel_count_x == 7U && move_x == -1)
         FRAME_BUFFER_TILE_POS_X -= BACKGROUND_BUFFER_SIZE_X;
-    
+
+
     screen_location_pixel_count_y = screen_location_y & 0x07U;
+
     // See X alternative
-    base_itx_y = ((screen_location_y >> 3) + REDRAW_VRAM_OFFSET_Y) & VRAME_SIZE_TILES_Y_MASK;
-        
+    base_itx_y = screen_location_y >> 3;
+    if (move_y == 1)
+        // If moving to right, start redraw tile after
+        base_itx_y += (SCREEN_TILE_MAX_Y + 2U);
+    else if (move_y == -1)
+        // If moving left, redraw tile before
+        base_itx_y -= 1U;
+    // Mask any bits outside of screen buffer size
+    base_itx_y &= BACKGROUND_BUFFER_MAX_Y;
+
     // See X alternative
     if (base_itx_y == 0U && screen_location_pixel_count_y == 0U && move_y == 1)
         // If moving down, increment frame buffer pos
@@ -266,30 +287,29 @@ void move_background(signed int move_x, signed int move_y)
         FRAME_BUFFER_TILE_POS_Y -= BACKGROUND_BUFFER_SIZE_Y;
 
     // Redraw tiles in unallocated vram
-    if (move_x != 0 || move_y != 0)
+    if (move_x != 0)
     {
         direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
         direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
 
         // If moving in negative X, decrement actual tiles used so that  the current
         // on-screen background is redrawn.
-        if (move_x == -1)
-        {
-            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
-//            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
-        }
+//        if (move_x == -1)
+//        {
+//            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
+//        }
 
         itx_x = base_itx_x;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
         // Use screen_location_pixel_count_x to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
-        itx_y_max = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * (screen_location_pixel_count_x + 1U));
-        for (itx_y = direction_tile_offset_y + ((BACKGROUND_BUFFER_SIZE_Y >> 3) * screen_location_pixel_count_x);
+        itx_y_max = base_itx_y + (3U * (screen_location_pixel_count_x + 1U)) + 1U;
+        for (itx_y = base_itx_y + (3U * screen_location_pixel_count_x) - 1U;
                itx_y != itx_y_max;
                itx_y ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
-            current_tile_itx = (itx_y * mainmapWidth) + itx_x + direction_tile_offset_x;
+            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x + direction_tile_offset_x;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
@@ -325,29 +345,32 @@ void move_background(signed int move_x, signed int move_y)
 
             VBK_REG = 0; 
         }
-    
+    }
+
+    if (move_y != 0)
+    {
         // Redraw rows when moving vertically
         direction_tile_offset_x = FRAME_BUFFER_TILE_POS_X;
         direction_tile_offset_y = FRAME_BUFFER_TILE_POS_Y;
         // If moving in negative X, decrement actual tiles used so that  the current
         // on-screen background is redrawn.
-        if (move_y == -1)
-        {
-//            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
-            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
-        }
+//        if (move_y == -1)
+//        {
+////            direction_tile_offset_x -= BACKGROUND_BUFFER_SIZE_X;
+//            direction_tile_offset_y -= BACKGROUND_BUFFER_SIZE_Y;
+//        }
 
         itx_y = base_itx_y;
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * (screen_location_pixel_count_y + 1U));
-        for (itx_x = direction_tile_offset_x + ((BACKGROUND_BUFFER_SIZE_X >> 3) * screen_location_pixel_count_y);
+        itx_x_max = base_itx_x + (3U * (screen_location_pixel_count_y + 1U)) + 1U;
+        for (itx_x = base_itx_x + (3U * screen_location_pixel_count_y) - 1U;
                itx_x != itx_x_max;
                itx_x ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
-            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x;
+            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x + direction_tile_offset_x;
 
             // Set map data
             set_bkg_tiles(
