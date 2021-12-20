@@ -298,7 +298,7 @@ void move_background(signed int move_x, signed int move_y)
                itx_y ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
-            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x + direction_tile_offset_x;
+            current_tile_itx = (itx_y * mainmapWidth) + itx_x + direction_tile_offset_x;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
@@ -360,7 +360,7 @@ void move_background(signed int move_x, signed int move_y)
                itx_x ++)
         {
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
-            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x + direction_tile_offset_x;
+            current_tile_itx = ((itx_y + direction_tile_offset_y) * mainmapWidth) + itx_x;
 
             // Map data is 2 bytes per tile.
             // First byte's first 7 bits are tile number
