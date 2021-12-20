@@ -407,7 +407,12 @@ void update_graphics()
         move_y = 0;
     }
 
-    move_background(move_x, move_y);
+    // Temporary fix to help with diagonal movement
+    // move_background(0, move_y);
+    if (move_x != 0)
+        move_background(move_x, 0);
+    if (move_y != 0)
+        move_background(0, move_y);
 
     // Move sprite to new location
     move_sprite(0, user_screen_pos_x, user_screen_pos_y);
