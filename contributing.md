@@ -11,5 +11,4 @@ P.s. I'm not vein enough to expect that anyone _will_ want to contribute.. this 
  * Do not pass variables to functions and try to make global,
  * Store a value in memory rather than performing a calculation twice (this may change is memory becomes an issue :D)
  * Try to use bit shifting as much as possible rather multiplication and division (several core components use values with exponents of 2, which makes it easy)
- * Use const where possible
-
+ 
