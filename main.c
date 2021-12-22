@@ -358,6 +358,33 @@ void move_background(signed int move_x, signed int move_y)
     }
 }
 
+// Check if next position will hit a boundary
+void check_boundary_hit()
+{
+    unsigned int new_x;
+    unsigned int new_y;
+    unsigned int new_tile_itx;
+    
+    new_x = user_pos_x + travel_x;
+    new_y = user_pos_y + travel_y;
+    // Check if traveling to new tile
+    if ((travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
+        (travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
+        (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
+        (travel_y == -1 && (new_y & 0x07U) == 0x07U))
+        {
+            new_tile_itx = ((new_y >> 3) * mainmapWidth) + (new_x >> 3);
+            // Check if new tile is a boundary
+            if (MAIN_MAP_BOUNDARIES[new_tile_itx >> 3] & (new_tile_itx & 0x07U) != 0U)
+            {
+                // Reset travel directions, acting as if user is not moving.
+                travel_x = 0;
+                travel_y = 0;
+            }
+        }
+        
+}
+
 // Called per cycle to update background position and sprite
 void update_graphics()
 {
@@ -367,11 +394,11 @@ void update_graphics()
     signed int move_x;
     signed int move_y;
 
+    check_boundary_hit();
+
     // Set user screen position based on current location
     user_screen_pos_x = user_pos_x - screen_location_x;
     user_screen_pos_y = user_pos_y - screen_location_y;
-
-    //check_boundary_hit( );
 
     user_pos_x += travel_x;
     user_pos_y += travel_y;
