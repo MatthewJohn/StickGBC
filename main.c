@@ -375,17 +375,16 @@ void check_boundary_hit()
         (travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
         (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
         (travel_y == -1 && (new_y & 0x07U) == 0x07U))
-        {
+    {
             new_tile_itx = ((new_y >> 3) * mainmapWidth) + (new_x >> 3);
             // Check if new tile is a boundary
-            if ((MAIN_MAP_BOUNDARIES[new_tile_itx >> 3] & (1 << (new_tile_itx & 0x07U))))
+            if (MAIN_MAP_BOUNDARIES[new_tile_itx >> 3] & (1 << (new_tile_itx & 0x07U)))
             {
                 // Reset travel directions, acting as if user is not moving.
                 travel_x = 0;
                 travel_y = 0;
             }
-        }
-        
+    }
 }
 
 // Called per cycle to update background position and sprite
