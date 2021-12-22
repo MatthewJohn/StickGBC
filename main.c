@@ -13,7 +13,7 @@
 #include "main_map_tileset.c"
 #include "main_map.h"
 #include "main_map_palette.c"
-#include "main_map_boundaries.c"
+#include "main_map_boundaries.h"
 #include "sprite_tileset.c"
 
 
