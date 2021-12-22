@@ -11,9 +11,9 @@
 #include <gb/gb.h>
 
 #include "main_map_tileset.c"
-#include "main_map.c"
+#include "main_map.h"
 #include "main_map_palette.c"
-
+#include "main_map_boundaries.c"
 #include "sprite_tileset.c"
 
 
@@ -370,6 +370,8 @@ void update_graphics()
     // Set user screen position based on current location
     user_screen_pos_x = user_pos_x - screen_location_x;
     user_screen_pos_y = user_pos_y - screen_location_y;
+
+    //check_boundary_hit( );
 
     user_pos_x += travel_x;
     user_pos_y += travel_y;
