@@ -26,6 +26,10 @@
 #define SCREEN_WIDTH_TILES 0x14U
 #define SCREEN_HEIGHT_TILES 0x12U
 
+// Manually calculated by putting sprite into corner of screen and setting until middle
+// of character is at 0,0 location
+#define SPRITE_OFFSET_X 0x04U
+#define SPRITE_OFFSET_Y 0x0dU
 
 #define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
 
@@ -97,7 +101,6 @@ void setup_sprite()
     set_sprite_data(0, 3, spritetiles);
     set_sprite_palette(0, 1, spritetilesCGB);
     set_sprite_tile(0, 0);
-    move_sprite(0, user_pos_x, user_pos_y);
     SHOW_SPRITES;
 }
 
@@ -444,7 +447,11 @@ void update_graphics()
         move_background(0, move_y);
 
     // Move sprite to new location
-    move_sprite(0, user_screen_pos_x, user_screen_pos_y);
+    move_sprite(
+        0,
+        user_screen_pos_x + SPRITE_OFFSET_X,
+        user_screen_pos_y + SPRITE_OFFSET_Y
+    );
 
     // Update flip of sprite tile
     sprite_prop_data = 0x00;
