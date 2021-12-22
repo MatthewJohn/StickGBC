@@ -378,7 +378,7 @@ void check_boundary_hit()
         {
             new_tile_itx = ((new_y >> 3) * mainmapWidth) + (new_x >> 3);
             // Check if new tile is a boundary
-            if (MAIN_MAP_BOUNDARIES[new_tile_itx >> 3] & (new_tile_itx & 0x07U) != 0U)
+            if (MAIN_MAP_BOUNDARIES[new_tile_itx >> 8] & (new_tile_itx & 0xffU) != 0U)
             {
                 // Reset travel directions, acting as if user is not moving.
                 travel_x = 0;
