@@ -8,9 +8,7 @@
 /*#include <gb/drawing.h>*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <gb/gb.h>
-
 
 #include "main_map_tileset.c"
 #include "main_map.h"
@@ -148,22 +146,17 @@ void set_background_tiles()
             
             VBK_REG = 1;
             
-            tile_data = 0x00U;
-            memcpy(
-                &tile_data,
-                &background_tile_palette[  // From the palette map
+            tile_data = background_tile_palette[  // From the palette map
                 // Lookup tile from background tile map
-                    background_tile_map[current_tile_itx]
-                ],
-                sizeof(background_tile_map[0])
-            );
+                background_tile_map[current_tile_itx]
+            ];
 
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                tile_data |= S_FLIPX;
+                    tile_data |= S_FLIPX;
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -300,15 +293,10 @@ void move_background(signed int move_x, signed int move_y)
             
             VBK_REG = 1;
             
-            tile_data = 0x00U;
-            memcpy(
-                &tile_data,
-                &background_tile_palette[  // From the palette map
+            tile_data = background_tile_palette[  // From the palette map
                 // Lookup tile from background tile map
-                    background_tile_map[current_tile_itx]
-                ],
-                sizeof(background_tile_map[0])
-            );
+                background_tile_map[current_tile_itx]
+            ];
             
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
