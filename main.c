@@ -14,6 +14,7 @@
 #include "main_map.h"
 #include "main_map_palette.c"
 #include "main_map_boundaries.h"
+#include "main_map_flip.h"
 #include "sprite_tileset.c"
 
 // Get tile pixel within from map-coordinates
@@ -54,10 +55,6 @@
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 #define REDRAW_VRAM_OFFSET_Y 0x1AU
 
-//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
-//unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
-
 // Location of user in world.
 // This is not the sprites position on the screen
 unsigned int user_pos_x;
@@ -83,18 +80,6 @@ unsigned int background_palette_itx_y;
 
 void init_map_variables()
 {
-    //malloc_init();
-    //MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-    //MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-
-    // Setup flipped tiles
-    //  -Left hand road, buttom of road marking
-//    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
-
     screen_location_x = 0;
     screen_location_y = 0;
 }
@@ -170,12 +155,11 @@ void set_background_tiles()
 #endif
             
             // Check if current tile is flipped
-//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_VERTICAL_FLIP_TILES, current_tile_itx))
-//                tile_data |= S_FLIPY;
-                    
-// Disabled until malloc issues can be sorted.
-//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_HORIZONTAL_FLIP_TILES, current_tile_itx))
-//                    tile_data |= S_FLIPX;
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data |= S_FLIPY;
+
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -309,7 +293,12 @@ void move_background(signed int move_x, signed int move_y)
                 tile_data ++;
 #endif
             
-            // TILE FLIP HERE
+            // Check if current tile is flipped
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data |= S_FLIPY;
+
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -358,7 +347,12 @@ void move_background(signed int move_x, signed int move_y)
                 tile_data ++;
 #endif
 
-            // TILE FLIP HERE
+            // Check if current tile is flipped
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data |= S_FLIPY;
+
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
