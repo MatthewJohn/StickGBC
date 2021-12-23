@@ -25,7 +25,7 @@
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 //#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
-//#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
+#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -365,7 +365,7 @@ void move_background(signed int move_x, signed int move_y)
             ];
 
             // Check if current tile is flipped
-            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)) != 0x00)
+            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
             //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
