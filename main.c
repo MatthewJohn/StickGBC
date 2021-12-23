@@ -25,7 +25,7 @@
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 //#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
-#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
+//#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -303,7 +303,7 @@ void move_background(signed int move_x, signed int move_y)
                 tile_data |= S_FLIPY;
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                    tile_data |= S_FLIPX;
+                tile_data |= S_FLIPX;
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
