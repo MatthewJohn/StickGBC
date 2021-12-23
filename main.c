@@ -301,16 +301,13 @@ void move_background(signed int move_x, signed int move_y)
             ];
             
             // Check if current tile is flipped
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
-            {
-                tile_data |= 0x40U;
-                add_debug(0xff);
-            }
+            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
+            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data |= S_FLIPY;
 
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-            {
-                tile_data |= 0x20U;
-            }
+            if (MAIN_MAP_FLIP_HORIZONTAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
+            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                tile_data |= S_FLIPX;
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -368,10 +365,12 @@ void move_background(signed int move_x, signed int move_y)
             ];
 
             // Check if current tile is flipped
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
+            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+            if (MAIN_MAP_FLIP_HORIZONTAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
+            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data |= S_FLIPX;
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
