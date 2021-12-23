@@ -22,7 +22,7 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
 
-#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
+//#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
