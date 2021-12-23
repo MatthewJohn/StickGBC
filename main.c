@@ -22,6 +22,8 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
 
+#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
+
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
 #define SCREEN_HEIGHT 0xA0U
@@ -161,6 +163,11 @@ void set_background_tiles()
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
             
             // Check if current tile is flipped
 //            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_VERTICAL_FLIP_TILES, current_tile_itx))
@@ -296,6 +303,11 @@ void move_background(signed int move_x, signed int move_y)
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
             
             // TILE FLIP HERE
 
@@ -340,7 +352,12 @@ void move_background(signed int move_x, signed int move_y)
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
-            
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
+
             // TILE FLIP HERE
 
             // Set palette data in VBK_REG1 for tile
