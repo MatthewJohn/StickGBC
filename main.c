@@ -168,19 +168,6 @@ void set_background_tiles()
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data |= S_FLIPX;
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                tile_data ++;
-#endif
-
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 background_palette_itx_x, 
@@ -301,26 +288,15 @@ void move_background(signed int move_x, signed int move_y)
             ];
             
             // Check if current tile is flipped
-            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
-            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
-            if (MAIN_MAP_FLIP_HORIZONTAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
-            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data |= S_FLIPX;
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
+            // Leave random if-statement in place. Without this, the previous if-statement DOES NOT WORK!!
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                tile_data ++;
-#endif
+                user_pos_x = user_pos_x;
 
           VBK_REG = 1;
 
@@ -365,26 +341,15 @@ void move_background(signed int move_x, signed int move_y)
             ];
 
             // Check if current tile is flipped
-            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
-            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
-            if (MAIN_MAP_FLIP_HORIZONTAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
-            //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data |= S_FLIPX;
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
-                tile_data ++;
-#endif
-#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
+            // Leave random if-statement in place. Without this, the previous if-statement DOES NOT WORK!!
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                tile_data ++;
-#endif
+                tile_data = tile_data;
 
             VBK_REG = 1;
 
