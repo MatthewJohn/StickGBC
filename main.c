@@ -11,11 +11,18 @@
 #include <gb/gb.h>
 
 #include "main_map_tileset.c"
-#include "main_map.c"
+#include "main_map.h"
 #include "main_map_palette.c"
-
+#include "main_map_boundaries.h"
 #include "sprite_tileset.c"
 
+// Get tile pixel within from map-coordinates
+#define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
+#define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
+#define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
+#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
+
+//#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -26,6 +33,10 @@
 #define SCREEN_WIDTH_TILES 0x14U
 #define SCREEN_HEIGHT_TILES 0x12U
 
+// Manually calculated by putting sprite into corner of screen and setting until middle
+// of character is at 0,0 location
+#define SPRITE_OFFSET_X 0x04U
+#define SPRITE_OFFSET_Y 0x0dU
 
 #define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
 
@@ -92,12 +103,11 @@ void setup_sprite()
 {
     // Load single sprite tile
     sprite_traveling_x = 0;
-    user_pos_x = 0x50U;
-    user_pos_y = 0x50U;
+    user_pos_x = 0x70U;
+    user_pos_y = 0x70U;
     set_sprite_data(0, 3, spritetiles);
     set_sprite_palette(0, 1, spritetilesCGB);
     set_sprite_tile(0, 0);
-    move_sprite(0, user_pos_x, user_pos_y);
     SHOW_SPRITES;
 }
 
@@ -153,23 +163,18 @@ void set_background_tiles()
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
             
             // Check if current tile is flipped
-//            if (
-//                (MAIN_MAP_VERTICAL_FLIP_TILES[
-//                    // Bit shift current tile ITX by 3 (dividing by 8) to obtain byte
-//                    // of flip data that contains this tile's flip and compare to 
-//                    current_tile_itx >> 3
-//                // Shift 1 by the last byte of the current tile idx and 'and' compare with
-//                // tile shift data bit
-//                ] & (1 << (current_tile_itx & 0x07))))
-//                    tile_data |= S_FLIPY;
+//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_VERTICAL_FLIP_TILES, current_tile_itx))
+//                tile_data |= S_FLIPY;
                     
 // Disabled until malloc issues can be sorted.
-//            if (
-//                (MAIN_MAP_HORIZONTAL_FLIP_TILES[
-//                    current_tile_itx >> 3
-//                ] & (1 << (current_tile_itx & 0x07))))
+//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_HORIZONTAL_FLIP_TILES, current_tile_itx))
 //                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
@@ -298,6 +303,11 @@ void move_background(signed int move_x, signed int move_y)
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
             
             // TILE FLIP HERE
 
@@ -342,7 +352,12 @@ void move_background(signed int move_x, signed int move_y)
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
-            
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
+
             // TILE FLIP HERE
 
             // Set palette data in VBK_REG1 for tile
@@ -358,6 +373,36 @@ void move_background(signed int move_x, signed int move_y)
     }
 }
 
+// Check if next position will hit a boundary
+void check_boundary_hit()
+{
+    unsigned int new_x;
+    unsigned int new_y;
+    unsigned int new_tile_itx;
+    
+    new_x = user_pos_x + travel_x;
+    new_y = user_pos_y + travel_y;
+    // Check if traveling to new tile
+    if ((travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
+        (travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
+        (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
+        (travel_y == -1 && (new_y & 0x07U) == 0x07U))
+    {
+            new_tile_itx = X_Y_TO_TILE_INDEX(
+                PIXEL_LOCATION_TO_TILE_COUNT(new_x),
+                PIXEL_LOCATION_TO_TILE_COUNT(new_y)
+            );
+
+            // Check if new tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
+            {
+                // Reset travel directions, acting as if user is not moving.
+                travel_x = 0;
+                travel_y = 0;
+            }
+    }
+}
+
 // Called per cycle to update background position and sprite
 void update_graphics()
 {
@@ -366,6 +411,8 @@ void update_graphics()
     unsigned int user_screen_pos_y;
     signed int move_x;
     signed int move_y;
+
+    check_boundary_hit();
 
     // Set user screen position based on current location
     user_screen_pos_x = user_pos_x - screen_location_x;
@@ -415,7 +462,11 @@ void update_graphics()
         move_background(0, move_y);
 
     // Move sprite to new location
-    move_sprite(0, user_screen_pos_x, user_screen_pos_y);
+    move_sprite(
+        0,
+        user_screen_pos_x + SPRITE_OFFSET_X,
+        user_screen_pos_y + SPRITE_OFFSET_Y
+    );
 
     // Update flip of sprite tile
     sprite_prop_data = 0x00;

@@ -1,4 +1,4 @@
 main.gb
-main.o
+*.o
 main.lst
 main.map
