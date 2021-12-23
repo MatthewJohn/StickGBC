@@ -16,6 +16,11 @@
 #include "main_map_boundaries.h"
 #include "sprite_tileset.c"
 
+// Get tile pixel within from map-coordinates
+#define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
+#define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
+#define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
+#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -376,9 +381,13 @@ void check_boundary_hit()
         (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
         (travel_y == -1 && (new_y & 0x07U) == 0x07U))
     {
-            new_tile_itx = ((new_y >> 3) * mainmapWidth) + (new_x >> 3);
+            new_tile_itx = X_Y_TO_TILE_INDEX(
+                PIXEL_LOCATION_TO_TILE_COUNT(new_x),
+                PIXEL_LOCATION_TO_TILE_COUNT(new_y)
+            );
+
             // Check if new tile is a boundary
-            if (MAIN_MAP_BOUNDARIES[new_tile_itx >> 3] & (1 << (new_tile_itx & 0x07U)))
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
                 // Reset travel directions, acting as if user is not moving.
                 travel_x = 0;
