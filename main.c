@@ -163,21 +163,11 @@ void set_background_tiles()
             ];
             
             // Check if current tile is flipped
-//            if (
-//                (MAIN_MAP_VERTICAL_FLIP_TILES[
-//                    // Bit shift current tile ITX by 3 (dividing by 8) to obtain byte
-//                    // of flip data that contains this tile's flip and compare to 
-//                    current_tile_itx >> 3
-//                // Shift 1 by the last byte of the current tile idx and 'and' compare with
-//                // tile shift data bit
-//                ] & (1 << (current_tile_itx & 0x07))))
-//                    tile_data |= S_FLIPY;
+//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_VERTICAL_FLIP_TILES, current_tile_itx))
+//                tile_data |= S_FLIPY;
                     
 // Disabled until malloc issues can be sorted.
-//            if (
-//                (MAIN_MAP_HORIZONTAL_FLIP_TILES[
-//                    current_tile_itx >> 3
-//                ] & (1 << (current_tile_itx & 0x07))))
+//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_HORIZONTAL_FLIP_TILES, current_tile_itx))
 //                    tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
