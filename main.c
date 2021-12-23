@@ -21,7 +21,7 @@
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
 #define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
-#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
+#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 //#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
@@ -57,6 +57,9 @@
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 #define REDRAW_VRAM_OFFSET_Y 0x1AU
 
+
+UBYTE * debug_address;
+
 // Location of user in world.
 // This is not the sprites position on the screen
 unsigned int user_pos_x;
@@ -84,6 +87,12 @@ void init_map_variables()
 {
     screen_location_x = 0;
     screen_location_y = 0;
+}
+
+void add_debug(UBYTE val)
+{
+    *debug_address = val;
+    debug_address ++;
 }
 
 void setup_sprite()
@@ -156,7 +165,7 @@ void set_background_tiles()
                 tile_data |= S_FLIPY;
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                    tile_data |= S_FLIPX;
+                tile_data |= S_FLIPX;
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -276,11 +285,6 @@ void move_background(signed int move_x, signed int move_y)
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
             current_tile_itx = (itx_y * mainmapWidth) + itx_x;
 
-            // Map data is 2 bytes per tile.
-            // First byte's first 7 bits are tile number
-            // next bit is vertical flip
-            // first bit of second byte is horizontal flip
-
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
@@ -291,8 +295,6 @@ void move_background(signed int move_x, signed int move_y)
                  &background_tile_map[current_tile_itx]
             );
             
-            VBK_REG = 1;
-            
             tile_data = background_tile_palette[  // From the palette map
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
@@ -300,10 +302,15 @@ void move_background(signed int move_x, signed int move_y)
             
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
-                tile_data |= S_FLIPY;
+            {
+                tile_data |= 0x40U;
+                add_debug(0xff);
+            }
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                tile_data |= S_FLIPX;
+            {
+                tile_data |= 0x20U;
+            }
 
 #ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -317,6 +324,8 @@ void move_background(signed int move_x, signed int move_y)
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data ++;
 #endif
+
+          VBK_REG = 1;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -352,9 +361,7 @@ void move_background(signed int move_x, signed int move_y)
                  // Lookup tile from background tile map
                  &background_tile_map[current_tile_itx]
             );
-            
-            VBK_REG = 1;
-            
+
             tile_data = background_tile_palette[  // From the palette map
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
@@ -379,6 +386,8 @@ void move_background(signed int move_x, signed int move_y)
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                 tile_data ++;
 #endif
+
+            VBK_REG = 1;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -526,6 +535,8 @@ void main()
 //        printf("\nPress Start");
 //        waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
 //        printf("\nIsn't it easy!");
+    debug_address = 0xFFFA;
+
     DISPLAY_OFF;
     init_map_variables();
 
