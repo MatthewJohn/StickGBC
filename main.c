@@ -103,8 +103,8 @@ void setup_sprite()
 {
     // Load single sprite tile
     sprite_traveling_x = 0;
-    user_pos_x = 0x50U;
-    user_pos_y = 0x50U;
+    user_pos_x = 0x70U;
+    user_pos_y = 0x70U;
     set_sprite_data(0, 3, spritetiles);
     set_sprite_palette(0, 1, spritetilesCGB);
     set_sprite_tile(0, 0);
