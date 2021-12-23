@@ -24,7 +24,8 @@
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
-#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
+//#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
+#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -150,17 +151,25 @@ void set_background_tiles()
                 background_tile_map[current_tile_itx]
             ];
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-            
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
                     tile_data |= S_FLIPX;
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
+#ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data ++;
+#endif
+#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                tile_data ++;
+#endif
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -288,23 +297,26 @@ void move_background(signed int move_x, signed int move_y)
                 // Lookup tile from background tile map
                 background_tile_map[current_tile_itx]
             ];
-
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
             
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                    tile_data |= S_FLIPX;
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
 #ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data ++;
 #endif
-
+#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                    tile_data |= S_FLIPX;
+                tile_data ++;
+#endif
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -348,17 +360,25 @@ void move_background(signed int move_x, signed int move_y)
                 background_tile_map[current_tile_itx]
             ];
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-
             // Check if current tile is flipped
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
-                    tile_data |= S_FLIPX;
+                tile_data |= S_FLIPX;
+
+#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                tile_data ++;
+#endif
+#ifdef DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
+                tile_data ++;
+#endif
+#ifdef DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_HORIZONTAL, current_tile_itx))
+                tile_data ++;
+#endif
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
