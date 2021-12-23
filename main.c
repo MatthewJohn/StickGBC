@@ -65,6 +65,8 @@ UBYTE * debug_address;
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
+UBYTE tile_data;
+
 // Location of screen compared to map
 unsigned int screen_location_x;
 unsigned int screen_location_y;
@@ -114,7 +116,6 @@ void set_background_tiles()
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
     unsigned int current_tile_itx = 0;
-    unsigned char tile_data = 0x00;
 
     //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
     VBK_REG = 0;
@@ -224,7 +225,6 @@ void move_background(signed int move_x, signed int move_y)
     unsigned int base_itx_x;
     unsigned int base_itx_y;
     unsigned int current_tile_itx;
-    unsigned char tile_data;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
     signed int direction_tile_offset_x;
@@ -365,7 +365,7 @@ void move_background(signed int move_x, signed int move_y)
             ];
 
             // Check if current tile is flipped
-            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)))
+            if (MAIN_MAP_FLIP_VERTICAL[current_tile_itx >> 3] & (1 << (current_tile_itx & 0x07U)) != 0x00)
             //if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_FLIP_VERTICAL, current_tile_itx))
                 tile_data |= S_FLIPY;
 
