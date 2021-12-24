@@ -5,6 +5,7 @@
  */
 
 
-#include "main_map.c"
-#include "main_map_boundaries.c"
-#include "main_map_flip.c"
+#include "gb/gb.h"
+
+extern const UBYTE MAIN_MAP_FLIP_VERTICAL[];
+extern const UBYTE MAIN_MAP_FLIP_HORIZONTAL[];
