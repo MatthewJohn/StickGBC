@@ -10,3 +10,6 @@
 sed -i 's/^unsigned char mainmap/const unsigned char mainmap/g' main_map.c
 sed -i 's/^extern unsigned char mainmap/extern const unsigned char mainmap/g' main_map.h
 
+sed -i 's/^extern unsigned char/extern const unsigned char/g' main_map_tileset.h
+sed -i 's/^unsigned char/const unsigned char/g' main_map_tileset.c
+
