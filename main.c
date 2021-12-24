@@ -287,8 +287,8 @@ void move_background(signed int move_x, signed int move_y)
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x, 
-                background_palette_itx_y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &background_tile_map[current_tile_data_itx]
@@ -308,7 +308,7 @@ void move_background(signed int move_x, signed int move_y)
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                itx_x & BACKGROUND_BUFFER_MAX_X, 
+                itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
@@ -338,8 +338,8 @@ void move_background(signed int move_x, signed int move_y)
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x, 
-                background_palette_itx_y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &background_tile_map[current_tile_data_itx]
@@ -359,7 +359,7 @@ void move_background(signed int move_x, signed int move_y)
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                itx_x & BACKGROUND_BUFFER_MAX_X, 
+                itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
