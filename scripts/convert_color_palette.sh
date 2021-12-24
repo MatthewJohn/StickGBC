@@ -3,10 +3,12 @@
 # http://creativecommons.org/licenses/by-nc-nd/4.0/.
 
 
-echo 'const UWORD bgpal[] = {' > main_map_palette.c
+for filename in main_map_palette building_menu_palette
+do
+  echo "const UWORD $filename[] = {" > $filename.c
 
-cat color_palette.raw | sed 's/\t/, /g' | sed 's/^/  RGB(/g' | sed 's/$/),/g' >> main_map_palette.c
+  cat $filename.raw | sed 's/\t/, /g' | sed 's/^/  RGB(/g' | sed 's/$/),/g' >> $filename.c
 
-echo >> main_map_palette.c
-echo '};' >> main_map_palette.c
-
+  echo >> $filename.c
+  echo '};' >> $filename.c
+done
