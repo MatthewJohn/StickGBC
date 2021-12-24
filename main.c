@@ -218,9 +218,9 @@ void move_background(signed int move_x, signed int move_y)
     unsigned int itx_y;
     unsigned int base_itx_x;
     unsigned int base_itx_y;
-    unsigned int current_tile_itx;
-    unsigned int current_tile_data_itx;
-    unsigned int current_tile_palette_itx;
+    UINT16 current_tile_itx;
+    UINT16 current_tile_data_itx;
+    UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
     signed int direction_tile_offset_x;
