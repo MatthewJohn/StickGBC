@@ -77,6 +77,7 @@ unsigned int screen_location_y;
 // Determine which way user needs to travel
 signed int travel_x;
 signed int travel_y;
+unsigned short a_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
 
@@ -214,6 +215,7 @@ void check_user_input()
     UINT8 keys = joypad();
     travel_x = 0;
     travel_y = 0;
+    a_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
@@ -224,6 +226,8 @@ void check_user_input()
         travel_x --;
     if (keys & J_RIGHT)
         travel_x ++;
+    if (keys & J_A)
+        a_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y)
@@ -418,6 +422,23 @@ void check_boundary_hit()
     }
 }
 
+// Attempt to 'enter' a building if user is in
+// interaction zone
+void check_building_enter()
+{
+    unsigned int tile_itx = X_Y_TO_TILE_INDEX(
+        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_x),
+        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_y)
+    );
+    
+    // Check for entering 'house'
+    if (tile_itx == 0x321U)
+    {
+        display_off();
+    }
+        
+}
+
 // Called per cycle to update background position and sprite
 void update_graphics()
 {
@@ -548,6 +569,10 @@ void main()
 
                 check_user_input();
                 update_graphics();
+
+                if (a_pressed)
+                    check_building_enter();
+
                 // Temporarily remove delay to speed debugging
                 //delay(50);
         }
