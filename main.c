@@ -20,9 +20,11 @@
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
 #define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
-#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) (mapping[tile_index >> 3] & (1 << (tile_index & 0x07U)))
+#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
+//#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
+#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -54,14 +56,14 @@
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 #define REDRAW_VRAM_OFFSET_Y 0x1AU
 
-//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-//unsigned char *MAIN_MAP_VERTICAL_FLIP_TILES;
-//unsigned char *MAIN_MAP_HORIZONTAL_FLIP_TILES;
+UBYTE * debug_address;
 
 // Location of user in world.
 // This is not the sprites position on the screen
 unsigned int user_pos_x;
 unsigned int user_pos_y;
+
+UBYTE tile_data;
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -83,20 +85,14 @@ unsigned int background_palette_itx_y;
 
 void init_map_variables()
 {
-    //malloc_init();
-    //MAIN_MAP_VERTICAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-    //MAIN_MAP_HORIZONTAL_FLIP_TILES = (unsigned char*) calloc((mainmapWidth * mainmapHeight) / 8, 1);
-
-    // Setup flipped tiles
-    //  -Left hand road, buttom of road marking
-//    MAIN_MAP_HORIZONTAL_FLIP_TILES[159] = 0x48;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[159] = 0x6c;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[160] = 0xdb;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[161] = 0xb6;
-//    MAIN_MAP_VERTICAL_FLIP_TILES[162] = 0x6d;
-
     screen_location_x = 0;
     screen_location_y = 0;
+}
+
+void add_debug(UBYTE val)
+{
+    *debug_address = val;
+    debug_address ++;
 }
 
 void setup_sprite()
@@ -118,7 +114,8 @@ void set_background_tiles()
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
     unsigned int current_tile_itx = 0;
-    unsigned char tile_data = 0x00;
+    unsigned int current_tile_data_itx = 0;
+    unsigned int current_tile_palette_itx = 0;
 
     //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
     VBK_REG = 0;
@@ -147,6 +144,15 @@ void set_background_tiles()
             // next bit is vertical flip
             // first bit of second byte is horizontal flip
 
+            // Tile data is split across two bytes. In the layout:
+            // 0-6 - tile number
+            // 7 - blank
+            // 8-A - palette number
+            // B - vertical flip
+            // C - horizontal flip
+            current_tile_data_itx = current_tile_itx * 2;
+            current_tile_palette_itx = current_tile_data_itx + 1;
+
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
@@ -154,28 +160,20 @@ void set_background_tiles()
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_itx]
+                 &background_tile_map[current_tile_data_itx]
             );
             
             VBK_REG = 1;
-            
-            tile_data = background_tile_palette[  // From the palette map
-                // Lookup tile from background tile map
-                background_tile_map[current_tile_itx]
-            ];
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-            
+            // Lookup tile from background tile map
+            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+
             // Check if current tile is flipped
-//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_VERTICAL_FLIP_TILES, current_tile_itx))
-//                tile_data |= S_FLIPY;
-                    
-// Disabled until malloc issues can be sorted.
-//            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_HORIZONTAL_FLIP_TILES, current_tile_itx))
-//                    tile_data |= S_FLIPX;
+            if (background_tile_map[current_tile_palette_itx] & 0x08)
+                tile_data |= S_FLIPY;
+
+            if (background_tile_map[current_tile_palette_itx] & 0x10)
+                tile_data |= S_FLIPX;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -220,8 +218,9 @@ void move_background(signed int move_x, signed int move_y)
     unsigned int itx_y;
     unsigned int base_itx_x;
     unsigned int base_itx_y;
-    unsigned int current_tile_itx;
-    unsigned char tile_data;
+    UINT16 current_tile_itx;
+    UINT16 current_tile_data_itx;
+    UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
     signed int direction_tile_offset_x;
@@ -282,10 +281,8 @@ void move_background(signed int move_x, signed int move_y)
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
             current_tile_itx = (itx_y * mainmapWidth) + itx_x;
 
-            // Map data is 2 bytes per tile.
-            // First byte's first 7 bits are tile number
-            // next bit is vertical flip
-            // first bit of second byte is horizontal flip
+            current_tile_data_itx = current_tile_itx * 2;
+            current_tile_palette_itx = current_tile_data_itx + 1;
 
            VBK_REG = 0; 
             // Set map data
@@ -294,26 +291,24 @@ void move_background(signed int move_x, signed int move_y)
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_itx]
+                 &background_tile_map[current_tile_data_itx]
             );
-            
-            VBK_REG = 1;
-            
-            tile_data = background_tile_palette[  // From the palette map
-                // Lookup tile from background tile map
-                background_tile_map[current_tile_itx]
-            ];
 
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-            
-            // TILE FLIP HERE
+            // Lookup tile from background tile map
+            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+
+            // Check if current tile is flipped
+            if (background_tile_map[current_tile_palette_itx] & 0x08)
+                tile_data |= S_FLIPY;
+
+            if (background_tile_map[current_tile_palette_itx] & 0x10)
+                tile_data |= S_FLIPX;
+
+          VBK_REG = 1;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                itx_x & BACKGROUND_BUFFER_MAX_X, 
+                itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
@@ -337,32 +332,34 @@ void move_background(signed int move_x, signed int move_y)
             // Work out current tile - base on tile location in frame buffer plus current map in vram location
             current_tile_itx = (itx_y  * mainmapWidth) + itx_x;
 
+            current_tile_data_itx = current_tile_itx * 2;
+            current_tile_palette_itx = current_tile_data_itx + 1;
+
+           VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_itx]
+                 &background_tile_map[current_tile_data_itx]
             );
-            
+
+            // Lookup tile from background tile map
+            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+
+            // Check if current tile is flipped
+            if (background_tile_map[current_tile_palette_itx] & 0x08)
+                tile_data |= S_FLIPY;
+
+            if (background_tile_map[current_tile_palette_itx] & 0x10)
+                tile_data |= S_FLIPX;
+
             VBK_REG = 1;
-            
-            tile_data = background_tile_palette[  // From the palette map
-                // Lookup tile from background tile map
-                background_tile_map[current_tile_itx]
-            ];
-
-#ifdef DEBUG_HIGHLIGHT_TILE_BOUNDARY
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
-                tile_data ++;
-#endif
-
-            // TILE FLIP HERE
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                itx_x & BACKGROUND_BUFFER_MAX_X, 
+                itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
@@ -506,6 +503,8 @@ void main()
 //        printf("\nPress Start");
 //        waitpad(J_START);  // other keys are J_A, J_UP, J_SELECT, etc.
 //        printf("\nIsn't it easy!");
+    debug_address = 0xFFFA;
+
     DISPLAY_OFF;
     init_map_variables();
 
