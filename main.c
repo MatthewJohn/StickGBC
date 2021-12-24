@@ -56,6 +56,10 @@
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 #define REDRAW_VRAM_OFFSET_Y 0x1AU
 
+#define TILE_SCRATCH_1 0x05U
+#define TILE_SCRATCH_2 0x06U
+#define TILE_SCRATCH_3 0x07U
+
 UBYTE * debug_address;
 
 // Location of user in world.
@@ -93,6 +97,12 @@ void add_debug(UBYTE val)
 {
     *debug_address = val;
     debug_address ++;
+}
+
+void load_house_tile_data()
+{
+    // Load house data from tile 8 to tile 
+    set_bkg_data(TILE_SCRATCH_1, 1, &background_tiles[8]);
 }
 
 void setup_sprite()
@@ -517,6 +527,8 @@ void main()
     background_tile_palette = &mainmaptilesCGB;
     set_background_tiles();
     setup_sprite();
+    
+    load_house_tile_data();
 
     wait_vbl_done();
     SHOW_BKG;
