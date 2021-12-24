@@ -56,9 +56,10 @@
 #define REDRAW_VRAM_OFFSET_X 0x1AU
 #define REDRAW_VRAM_OFFSET_Y 0x1AU
 
-#define TILE_SCRATCH_1 0x05U
-#define TILE_SCRATCH_2 0x06U
-#define TILE_SCRATCH_3 0x07U
+#define TILE_PATTERN_INDEX_TO_ARRAY_INDEX(index) (index << 4)
+#define TILE_PATTERN_SCRATCH_1 0x05U
+#define TILE_PATTERN_SCRATCH_2 0x06U
+#define TILE_PATTERN_SCRATCH_3 0x07U
 
 UBYTE * debug_address;
 
@@ -101,8 +102,9 @@ void add_debug(UBYTE val)
 
 void load_house_tile_data()
 {
-    // Load house data from tile 8 to tile 
-    set_bkg_data(TILE_SCRATCH_1, 1, &background_tiles[8]);
+    // Load house data from tile 8 to tile
+    VBK_REG = 0;
+    set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
 }
 
 void setup_sprite()
@@ -163,6 +165,8 @@ void set_background_tiles()
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
@@ -170,7 +174,7 @@ void set_background_tiles()
                 background_palette_itx_y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_data_itx]
+                 &tile_data
             );
             
             VBK_REG = 1;
@@ -294,6 +298,8 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
@@ -301,7 +307,7 @@ void move_background(signed int move_x, signed int move_y)
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_data_itx]
+                 &tile_data
             );
 
             // Lookup tile from background tile map
@@ -345,6 +351,8 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
@@ -352,7 +360,7 @@ void move_background(signed int move_x, signed int move_y)
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &background_tile_map[current_tile_data_itx]
+                 &tile_data
             );
 
             // Lookup tile from background tile map
@@ -522,12 +530,13 @@ void main()
     set_bkg_palette(0, 8, &bgpal);
 
     // Load background tiles
-    background_tile_map = &mainmap;
-    background_tiles = &mainmaptiles;
-    background_tile_palette = &mainmaptilesCGB;
+    background_tile_map = mainmap;
+    background_tiles = mainmaptiles;
+    background_tile_palette = mainmaptilesCGB;
     set_background_tiles();
     setup_sprite();
     
+    // Load buildings at top-left on startup
     load_house_tile_data();
 
     wait_vbl_done();
