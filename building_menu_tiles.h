@@ -30,10 +30,10 @@
 
 
 /* Bank of tiles. */
-#define housemenutilesBank 0
+#define buildingmenutilesBank 0
 /* CGBpalette entries. */
-extern unsigned char housemenutilesCGB[];
+extern const unsigned char buildingmenutilesCGB[];
 /* Start of tile array. */
-extern unsigned char housemenutiles[];
+extern const unsigned char buildingmenutiles[];
 
 /* End of BUILDING_MENU_TILES.H */
