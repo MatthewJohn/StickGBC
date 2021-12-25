@@ -169,11 +169,6 @@ void set_background_tiles()
 //            if (background_palette_itx_y == 0x10U)
 //                break;
 
-            // Map data is 2 bytes per tile.
-            // First byte's first 7 bits are tile number
-            // next bit is vertical flip
-            // first bit of second byte is horizontal flip
-
             // Tile data is split across two bytes. In the layout:
             // 0-6 - tile number
             // 7 - blank
