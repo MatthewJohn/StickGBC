@@ -19,7 +19,7 @@
 #include "building_menu_map.h"
 #include "building_menu_palette.c"
 
-#include "sprite_tileset.c"
+#include "main_map_sprite_tileset.c"
 
 // Get tile pixel within from map-coordinates
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
@@ -86,21 +86,24 @@ unsigned short a_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
 
-
+// Globals used when redrawing map
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
 unsigned char *background_tile_palette;
 unsigned char *background_color_palette;
 unsigned int background_width;
+unsigned char *sprite_tiles;
+unsigned char *sprite_palette;
+unsigned int DRAW_OFFSET_X;
+unsigned int DRAW_OFFSET_Y;
+unsigned int DRAW_MAX_X;
+unsigned int DRAW_MAX_Y;
+// Variables to store current main map location when
+// changing to another map
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
 
 
-void init_map_variables()
-{
-    screen_location_x = 0;
-    screen_location_y = 0;
-}
 
 void add_debug(UBYTE val)
 {
@@ -115,22 +118,27 @@ void load_house_tile_data()
     set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
 }
 
-void setup_sprite()
+void setup_globals()
 {
-    // Load single sprite tile
+    screen_location_x = 0;
+    screen_location_y = 0;
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
-    set_sprite_data(0, 3, spritetiles);
-    set_sprite_palette(0, 1, spritetilesCGB);
+}
+
+void setup_sprite()
+{
+    // Load single sprite tile
+    HIDE_SPRITES;
+    set_sprite_data(0, 3, sprite_tiles);
+    set_sprite_palette(0, 1, sprite_palette);
     set_sprite_tile(0, 0);
     SHOW_SPRITES;
 }
 
 void set_background_tiles()
 {
-    unsigned int frame_buffer_tile_max_x = BACKGROUND_BUFFER_SIZE_X;
-    unsigned int frame_buffer_tile_max_y = BACKGROUND_BUFFER_SIZE_Y;
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
     unsigned int current_tile_itx = 0;
@@ -144,14 +152,14 @@ void set_background_tiles()
     set_bkg_data(0, 8, background_tiles);
 
     for (background_palette_itx_x = 0U;
-           background_palette_itx_x != frame_buffer_tile_max_x;
+           background_palette_itx_x != DRAW_MAX_X;
            background_palette_itx_x ++)
     {
         // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //        if (background_palette_itx_x == 0x10U)
 //            break;
         for (background_palette_itx_y = 0U;
-               background_palette_itx_y != frame_buffer_tile_max_y;
+               background_palette_itx_y != DRAW_MAX_Y;
                background_palette_itx_y ++)
         {
             // Temp Test
@@ -431,7 +439,27 @@ void check_boundary_hit()
     }
 }
 
-void load_building_menu_tiles()
+// Setup globals to draw main map
+void setup_main_map()
+{
+    background_color_palette = main_map_palette;
+    background_tile_map = mainmap;
+    background_tiles = mainmaptiles;
+    background_tile_palette = mainmaptilesCGB;
+    background_width = mainmapWidth;
+    
+    DRAW_OFFSET_X = screen_location_x >> 3;
+    DRAW_OFFSET_Y = screen_location_y >> 3;
+    DRAW_MAX_X = BACKGROUND_BUFFER_SIZE_X;
+    DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
+
+    sprite_tiles = mainmapspritetiles;
+    sprite_palette = mainmapspritetilesCGB;
+    set_background_tiles();
+    setup_sprite();
+}
+
+void setup_building_menu()
 {
     // Update globals for references to map/tile information
     background_tile_map = buildingmenumap;
@@ -439,6 +467,14 @@ void load_building_menu_tiles()
     background_tile_palette = buildingmenutilesCGB;
     background_width = buildingmenumapWidth;
     background_color_palette = building_menu_palette;
+
+    // Draw top left of screen
+    DRAW_OFFSET_X = 0U;
+    DRAW_OFFSET_Y = 0U;
+    DRAW_MAX_X = SCREEN_WIDTH_TILES;
+    DRAW_MAX_Y = SCREEN_HEIGHT_TILES;
+
+    HIDE_SPRITES;
     // Reload background tiles
     set_background_tiles();
 }
@@ -456,7 +492,7 @@ void check_building_enter()
     // TEMP disable check to always enter house to make testing quicket
 //    if (tile_itx == 0x321U)
 //    {
-        load_building_menu_tiles();
+        setup_building_menu();
 //    }
         
 }
@@ -567,16 +603,10 @@ void main()
     debug_address = 0xFFFA;
 
     DISPLAY_OFF;
-    init_map_variables();
+    setup_globals();
 
     // Load background tiles
-    background_color_palette = main_map_palette;
-    background_tile_map = mainmap;
-    background_tiles = mainmaptiles;
-    background_tile_palette = mainmaptilesCGB;
-    background_width = mainmapWidth;
-    set_background_tiles();
-    setup_sprite();
+    setup_main_map();
     
     // Load buildings at top-left on startup
     load_house_tile_data();
