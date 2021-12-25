@@ -14,6 +14,11 @@
 #include "main_map.h"
 #include "main_map_palette.c"
 #include "main_map_boundaries.h"
+
+#include "building_menu_tiles.c"
+#include "building_menu_map.h"
+#include "building_menu_palette.c"
+
 #include "sprite_tileset.c"
 
 // Get tile pixel within from map-coordinates
@@ -85,6 +90,8 @@ UINT8 sprite_prop_data;
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
 unsigned char *background_tile_palette;
+unsigned char *background_color_palette;
+unsigned int background_width;
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
 
@@ -130,7 +137,9 @@ void set_background_tiles()
     unsigned int current_tile_data_itx = 0;
     unsigned int current_tile_palette_itx = 0;
 
-    //set_bkg_tiles(0, 0, mainmapWidth, mainmapHeight, background_tile_map);
+    // Load color palette
+    set_bkg_palette(0, 8, background_color_palette);
+
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
 
@@ -146,7 +155,7 @@ void set_background_tiles()
                background_palette_itx_y ++)
         {
             // Temp Test
-            current_tile_itx = (background_palette_itx_y * mainmapWidth) + background_palette_itx_x;
+            current_tile_itx = (background_palette_itx_y * background_width) + background_palette_itx_x;
             
             // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //            if (background_palette_itx_y == 0x10U)
@@ -422,6 +431,18 @@ void check_boundary_hit()
     }
 }
 
+void load_building_menu_tiles()
+{
+    // Update globals for references to map/tile information
+    background_tile_map = buildingmenumap;
+    background_tiles = buildingmenutiles;
+    background_tile_palette = buildingmenutilesCGB;
+    background_width = buildingmenumapWidth;
+    background_color_palette = building_menu_palette;
+    // Reload background tiles
+    set_background_tiles();
+}
+
 // Attempt to 'enter' a building if user is in
 // interaction zone
 void check_building_enter()
@@ -431,11 +452,12 @@ void check_building_enter()
         PIXEL_LOCATION_TO_TILE_COUNT(user_pos_y)
     );
     
-    // Check for entering 'house'
-    if (tile_itx == 0x321U)
-    {
-        display_off();
-    }
+    // Check for entering house
+    // TEMP disable check to always enter house to make testing quicket
+//    if (tile_itx == 0x321U)
+//    {
+        load_building_menu_tiles();
+//    }
         
 }
 
@@ -547,13 +569,12 @@ void main()
     DISPLAY_OFF;
     init_map_variables();
 
-    // Load color palette
-    set_bkg_palette(0, 8, &bgpal);
-
     // Load background tiles
+    background_color_palette = main_map_palette;
     background_tile_map = mainmap;
     background_tiles = mainmaptiles;
     background_tile_palette = mainmaptilesCGB;
+    background_width = mainmapWidth;
     set_background_tiles();
     setup_sprite();
     
