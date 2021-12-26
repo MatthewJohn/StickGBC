@@ -495,23 +495,14 @@ void load_menu_tiles()
     {
         for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
         {
-            // Since first menu item in Y is always at top, use 0 as the Y
-            // index, otherwise, remove from top of menu, so that they
-            // are displayed 'centred' from bottom
-            if (menu_item_y == 0)
-                itx_y = 0;
-            else
-                itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
+            itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
                 
             // If only 1 column of items, so it in the second column
-            if (menu_config.max_items_x == 1)
-                itx_x = 1;
-            else
-                itx_x = menu_item_x;
+            itx_x = menu_item_x + (MENU_MAX_ITEMS_X - menu_config.max_items_x);
 
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_Y) + itx_x;
-            
+
             for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index])
@@ -528,7 +519,7 @@ void load_menu_tiles()
                     // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
                     tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
                     tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
-                    
+
                     tile_data = TILE_PATTERN_SCRATCH_1;
 
                     VBK_REG = 0; 
