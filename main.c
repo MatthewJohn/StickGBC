@@ -522,13 +522,12 @@ void load_menu_tiles()
                 {
                     tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
                     
-                    tile_data = buildingmenutiles[tile_data_index << 4];
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
                         tile_data_index,
                         1,
-                        &tile_data
+                        &(buildingmenutiles[tile_data_index << 4])
                     );
 
                     // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
