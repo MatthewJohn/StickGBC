@@ -488,6 +488,8 @@ void load_menu_tiles()
     unsigned int tile_data_index;
     unsigned int tile_itx_x;
     unsigned int tile_itx_y;
+    
+    wait_vbl_done();
 
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
@@ -508,22 +510,24 @@ void load_menu_tiles()
 
             for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
-//                if (menu_config.menu_item_tiles[menu_item_index][tile_index])
-//                {
+                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
+                {
                     tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
+                    
+                    tile_data = buildingmenutiles[tile_data_index << 4];
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
-                        tile_data_index,
+                        TILE_PATTERN_SCRATCH_2,
                         1,
-                        &(buildingmenutiles[tile_data_index << 4])
+                        &tile_data
                     );
-                    
+
                     // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
                     tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
                     tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
 
-                    tile_data = tile_data_index;
+                    tile_data = TILE_PATTERN_SCRATCH_2;
 
                     VBK_REG = 0; 
                     // Set map data
@@ -547,7 +551,10 @@ void load_menu_tiles()
                         1, 1,  // Only setting 1 tile
                         &tile_data
                     );
-//                }
+                    
+                    // Wait for VBL so that the same tile can be reused
+                    wait_vbl_done();
+                }
             }
         }
     }
