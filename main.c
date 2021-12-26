@@ -494,9 +494,11 @@ void load_menu_tiles()
 
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
-    for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
+//    for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
+    for (menu_item_x = 0; menu_item_x != 1; menu_item_x ++)
     {
-        for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
+        //for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
+        for (menu_item_y = 1; menu_item_y != 2; menu_item_y ++)
         {
             itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
                 
@@ -518,10 +520,10 @@ void load_menu_tiles()
                 if (tile_index == 7U)
                     second_tile_row = 1U;
 
-                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
-                {
+//                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
+//                {
                     tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
-                    
+
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
@@ -539,7 +541,7 @@ void load_menu_tiles()
                         tile_itx_y ++;
                         tile_itx_x += (tile_index - 7U);
                     } else {
-                        tile_itx_x += tile_index;
+                        tile_itx_x = tile_itx_x + tile_index;
                     }
 
                     tile_data = tile_data_index;
@@ -550,7 +552,6 @@ void load_menu_tiles()
                         tile_itx_x, 
                         tile_itx_y,
                         1, 1,  // Only setting 1 tile
-                        // Lookup tile from background tile map
                         &tile_data
                     );
             
@@ -571,7 +572,7 @@ void load_menu_tiles()
                     wait_vbl_done();
                 }
             }
-        }
+//        }
     }
 }
 
@@ -597,11 +598,11 @@ void setup_building_menu()
     menu_config.current_item_x = 0;
     menu_config.current_item_y = 2;
     menu_config.max_items_x = 1;
-    menu_config.max_items_y = 3;
+    menu_config.max_items_y = 2;
     
-    menu_config.menu_item_tiles[1][0] = 0x1;  // SL
-    menu_config.menu_item_tiles[1][1] = 0x2;  // EE
-    menu_config.menu_item_tiles[1][2] = 0x3;  // P
+    menu_config.menu_item_tiles[1][0] = 0x1U;  // SL
+    menu_config.menu_item_tiles[1][1] = 0x2U;  // EE
+    menu_config.menu_item_tiles[1][2] = 0x3U;  // P
     
     // Number of tiles offset for palette data
     menu_config.tile_offset = 0x10U;
