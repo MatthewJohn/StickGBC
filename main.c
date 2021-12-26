@@ -504,17 +504,17 @@ void load_menu_tiles()
                 itx_x = menu_item_x;
 
             // Work out menu item index, based on co-ords
-            menu_item_index = (itx_y * MENU_MAX_ITEMS_Y) + itx_x;
+            menu_item_index = (menu_item_y * menu_config.max_items_x) + menu_item_x;
 
             for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
-                if (menu_config.menu_item_tiles[menu_item_index][tile_index])
-                {
+//                if (menu_config.menu_item_tiles[menu_item_index][tile_index])
+//                {
                     tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
-                        TILE_PATTERN_SCRATCH_1,
+                        tile_data_index,
                         1,
                         &(buildingmenutiles[tile_data_index << 4])
                     );
@@ -523,7 +523,7 @@ void load_menu_tiles()
                     tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
                     tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
 
-                    tile_data = TILE_PATTERN_SCRATCH_1;
+                    tile_data = tile_data_index;
 
                     VBK_REG = 0; 
                     // Set map data
@@ -547,7 +547,7 @@ void load_menu_tiles()
                         1, 1,  // Only setting 1 tile
                         &tile_data
                     );
-                }
+//                }
             }
         }
     }
