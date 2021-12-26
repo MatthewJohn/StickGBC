@@ -491,14 +491,17 @@ void load_menu_tiles()
 
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
-    for (menu_item_x = 1; menu_item_x != menu_config.max_items_x; menu_item_x ++)
+    for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
     {
         for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
         {
             itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
                 
             // If only 1 column of items, so it in the second column
-            itx_x = menu_item_x + (MENU_MAX_ITEMS_X - menu_config.max_items_x);
+            if (menu_config.max_items_x == 1)
+                itx_x = 1;
+            else
+                itx_x = menu_item_x;
 
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_Y) + itx_x;
