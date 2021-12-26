@@ -152,6 +152,17 @@ void set_background_tiles()
     unsigned int current_tile_itx = 0;
     unsigned int current_tile_data_itx = 0;
     unsigned int current_tile_palette_itx = 0;
+    unsigned int tile_offset_x = 0;
+    unsigned int tile_offset_y = 0;
+    
+    // If loading main map, use screen_location variables
+    // to offset tiles
+    if (game_state.current_building == S_B_NO_BUILDING)
+    {
+        // AND with NOT max buffer size, so that offset is a multiple of the background buffer
+        tile_offset_x = (screen_location_x >> 3) & ~BACKGROUND_BUFFER_MAX_X;
+        tile_offset_y = (screen_location_y >> 3) & ~BACKGROUND_BUFFER_MAX_Y;
+    }
 
     // Load color palette
     set_bkg_palette(0, 8, background_color_palette);
@@ -171,10 +182,10 @@ void set_background_tiles()
                background_palette_itx_y ++)
         {
             // Temp Test
-            current_tile_itx = (background_palette_itx_y * background_width) + background_palette_itx_x;
-            
+            current_tile_itx = ((tile_offset_y + background_palette_itx_y) * background_width) + background_palette_itx_x + tile_offset_x;
+
             // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-//            if (background_palette_itx_y == 0x10U)
+//            if (background_palette_itx_y == 0x10U/)
 //                break;
 
             // Tile data is split across two bytes. In the layout:
@@ -445,6 +456,8 @@ void check_boundary_hit()
 // Setup globals to draw main map
 void setup_main_map()
 {
+    game_state.current_building = S_B_NO_BUILDING;
+
     background_color_palette = main_map_palette;
     background_tile_map = mainmap;
     background_tiles = mainmaptiles;
@@ -740,7 +753,9 @@ void update_state()
         // One tile buffer between each option.
 
         // Check if moving menu item
-//        if ()
+        if (a_pressed)
+            // If exiting menu, load main map
+            setup_main_map();
     }
 }
 
