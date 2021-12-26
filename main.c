@@ -492,6 +492,8 @@ void load_menu_tiles()
     unsigned int tile_itx_y;
     unsigned int second_tile_row;
     
+    move_bkg(0, 0);
+    
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
     for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
