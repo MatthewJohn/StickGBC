@@ -518,7 +518,7 @@ void load_menu_tiles()
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
-                        TILE_PATTERN_SCRATCH_2,
+                        tile_data_index,
                         1,
                         &tile_data
                     );
@@ -527,7 +527,7 @@ void load_menu_tiles()
                     tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
                     tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
 
-                    tile_data = TILE_PATTERN_SCRATCH_2;
+                    tile_data = tile_data_index;
 
                     VBK_REG = 0; 
                     // Set map data

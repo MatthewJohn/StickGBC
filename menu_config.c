@@ -23,10 +23,10 @@ typedef struct {
     unsigned char menu_item_tiles[8][14];
     unsigned char menu_item_palette[8][14];
 
-    unsigned short current_item_x;
-    unsigned short current_item_y;
-    unsigned short max_items_x;
-    unsigned short max_items_y;
+    unsigned int current_item_x;
+    unsigned int current_item_y;
+    unsigned int max_items_x;
+    unsigned int max_items_y;
     
     unsigned int tile_offset;
 } menu_config_t;
