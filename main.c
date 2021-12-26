@@ -456,6 +456,7 @@ void check_boundary_hit()
 // Setup globals to draw main map
 void setup_main_map()
 {
+    DISPLAY_OFF;
     game_state.current_building = S_B_NO_BUILDING;
 
     background_color_palette = main_map_palette;
@@ -479,6 +480,8 @@ void setup_main_map()
         screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
         screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
+    
+    DISPLAY_ON;
 }
 
 void clear_menu_config()
@@ -594,6 +597,7 @@ void load_menu_tiles()
 
 void setup_building_menu()
 {
+    DISPLAY_OFF;
     // Update globals for references to map/tile information
     background_tile_map = buildingmenumap;
     background_tiles = buildingmenutiles;
@@ -628,6 +632,8 @@ void setup_building_menu()
     set_background_tiles();
     
     load_menu_tiles();
+    
+    DISPLAY_ON;
 }
 
 // Attempt to 'enter' a building if user is in
