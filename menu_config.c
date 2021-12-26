@@ -16,7 +16,8 @@
 #define MENU_ITEM_SCREEN_OFFSET_LEFT 0x03U
 #define MENU_ITEM_MARGIN 0x02U
 
-#define MENU_FONT_COLOR_PALETTE 0x01U
+#define MENU_ITEM_DEFAULT_PALETTE 0x01U
+#define MENU_ITEM_SELECTED_PALETTE 0x02U
 
 typedef struct {
     // Menu can contain 8 items each with 12 tiles

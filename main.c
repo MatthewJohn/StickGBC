@@ -576,11 +576,11 @@ void load_menu_tiles()
                         1, 1,  // Only setting 1 tile
                         &tile_data
                     );
-            
+
                     VBK_REG = 1;
 
                     // Lookup tile from background tile map
-                    tile_data = MENU_FONT_COLOR_PALETTE;
+                    tile_data = MENU_ITEM_DEFAULT_PALETTE;
 
                     // Set palette data in VBK_REG1 for tile
                     set_bkg_tiles(
@@ -593,6 +593,33 @@ void load_menu_tiles()
             }
         }
     }
+}
+
+//#define MENU_ITEM_X_TO_MAP_X(map_c, itx) ((map_c.max_items_x == 1U ? 1U : itx) * 8U) + MENU_ITEM_SCREEN_OFFSET_LEFT
+
+void set_menu_item_color(unsigned char palette)
+{
+    unsigned int itx_x, itx_y, current_item_x, current_item_y;
+
+    if (menu_config.max_items_x == 1)
+        current_item_x = 1;
+    else
+        current_item_x = menu_config.current_item_x;
+    current_item_y = menu_config.current_item_y;
+    if (menu_config.current_item_y != 0U)
+    {
+        current_item_y = menu_config.current_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
+    }
+    VBK_REG = 1;
+    for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
+        for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+            set_bkg_tiles(
+                itx_x + MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * current_item_x),
+                itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * current_item_y),
+                1, 1,
+                &palette
+            );
+    VBK_REG = 0;
 }
 
 void setup_building_menu()
@@ -616,7 +643,7 @@ void setup_building_menu()
 
     // Menu has 3 items, default to sleep
     menu_config.current_item_x = 0;
-    menu_config.current_item_y = 2;
+    menu_config.current_item_y = 1;
     menu_config.max_items_x = 1;
     menu_config.max_items_y = 2;
     
@@ -632,7 +659,9 @@ void setup_building_menu()
     set_background_tiles();
     
     load_menu_tiles();
-    
+
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+
     DISPLAY_ON;
 }
 
@@ -647,11 +676,11 @@ void check_building_enter()
     
     // Check for entering house
     // TEMP disable check to always enter house to make testing quicket
-//    if (tile_itx == 0x321U)
-//    {
+    if (tile_itx == 0x321U)
+    {
         game_state.current_building = S_B_HOUSE;
         setup_building_menu();
-//    }
+    }
         
 }
 
@@ -764,10 +793,32 @@ void update_state()
         // Each option is 7 tiles wide and 2 tiles high.
         // One tile buffer between each option.
 
+        if (travel_x != 0 || travel_y != 0)
+        {
+            // Deselect currently selected item
+            set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+            
+            // Check the direction of menu item travel and ensure it doesn't go out of bounds
+            if ((travel_x == 1 && (menu_config.current_item_x + 1) != menu_config.max_items_x) ||
+                    (travel_x == -1 && (menu_config.current_item_x != 0)))
+                menu_config.current_item_x += travel_x;
+            if ((travel_y == 1 && (menu_config.current_item_y + 1) != menu_config.max_items_y) ||
+                    (travel_y == -1 && (menu_config.current_item_y != 0)))
+                menu_config.current_item_y += travel_y;
+                
+            set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+        }
+
         // Check if moving menu item
         if (a_pressed)
-            // If exiting menu, load main map
-            setup_main_map();
+        {
+            // Check if 'exit' selected
+            if (menu_config.current_item_y == 0U &&
+                ((menu_config.max_items_x == 1U && menu_config.current_item_x == 0U) ||
+                (menu_config.max_items_x == 2U && menu_config.current_item_x == 1U)))
+                // If exiting menu, load main map
+                setup_main_map();
+        }
     }
 }
 
