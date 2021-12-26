@@ -56,6 +56,10 @@
 #define BACKGROUND_BUFFER_SIZE_Y 0x20U
 #define BACKGROUND_BUFFER_MAX_X 0x1FU
 #define BACKGROUND_BUFFER_MAX_Y 0x1FU
+#define BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X 0xFFU
+#define BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y 0xFFU
+#define BACKGROUND_BUFFER_SIZE_PIXELS_X 0x100U
+#define BACKGROUND_BUFFER_SIZE_PIXELS_Y 0x100U
 
 #define VRAME_SIZE_TILES_X_MASK 0x1FU
 #define VRAME_SIZE_TILES_Y_MASK 0x1FU
@@ -152,17 +156,13 @@ void set_background_tiles()
     unsigned int current_tile_itx = 0;
     unsigned int current_tile_data_itx = 0;
     unsigned int current_tile_palette_itx = 0;
-    unsigned int tile_offset_x = 0;
-    unsigned int tile_offset_y = 0;
-    
+    unsigned int max_x;
+    unsigned int max_y;
+
     // If loading main map, use screen_location variables
     // to offset tiles
-    if (game_state.current_building == S_B_NO_BUILDING)
-    {
-        // AND with NOT max buffer size, so that offset is a multiple of the background buffer
-        tile_offset_x = (screen_location_x >> 3) & ~BACKGROUND_BUFFER_MAX_X;
-        tile_offset_y = (screen_location_y >> 3) & ~BACKGROUND_BUFFER_MAX_Y;
-    }
+    max_x = DRAW_OFFSET_X + DRAW_MAX_X;
+    max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
     // Load color palette
     set_bkg_palette(0, 8, background_color_palette);
@@ -170,19 +170,19 @@ void set_background_tiles()
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
 
-    for (background_palette_itx_x = 0U;
-           background_palette_itx_x != DRAW_MAX_X;
+    for (background_palette_itx_x = DRAW_OFFSET_X;
+           background_palette_itx_x != max_x;
            background_palette_itx_x ++)
     {
         // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //        if (background_palette_itx_x == 0x10U)
 //            break;
-        for (background_palette_itx_y = 0U;
-               background_palette_itx_y != DRAW_MAX_Y;
+        for (background_palette_itx_y = DRAW_OFFSET_Y;
+               background_palette_itx_y != max_y;
                background_palette_itx_y ++)
         {
             // Temp Test
-            current_tile_itx = ((tile_offset_y + background_palette_itx_y) * background_width) + background_palette_itx_x + tile_offset_x;
+            current_tile_itx = ((background_palette_itx_y) * background_width) + background_palette_itx_x;
 
             // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //            if (background_palette_itx_y == 0x10U/)
@@ -202,8 +202,8 @@ void set_background_tiles()
            VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x, 
-                background_palette_itx_y,
+                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
+                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &tile_data
@@ -223,8 +223,8 @@ void set_background_tiles()
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                background_palette_itx_x, 
-                background_palette_itx_y,
+                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
+                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
             );
@@ -473,6 +473,12 @@ void setup_main_map()
     sprite_palette = mainmapspritetilesCGB;
     set_background_tiles();
     setup_sprite();
+    
+    // Move background to screen location
+    scroll_bkg(
+        screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
+        screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
+    );
 }
 
 void clear_menu_config()
