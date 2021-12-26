@@ -16,11 +16,11 @@
 #define MENU_ITEM_SCREEN_OFFSET_LEFT 0x03U
 #define MENU_ITEM_MARGIN 0x02U
 
-#define MENU_FONT_COLOR_PALETTE 0x02U
+#define MENU_FONT_COLOR_PALETTE 0x01U
 
 typedef struct {
     // Menu can contain 8 items each with 12 tiles
-    unsigned short menu_item_tiles[8][12];
+    unsigned int menu_item_tiles[8][12];
     unsigned char menu_item_palette[8][12];
 
     unsigned int current_item_x;

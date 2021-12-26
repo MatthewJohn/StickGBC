@@ -492,15 +492,11 @@ void load_menu_tiles()
     unsigned int tile_itx_y;
     unsigned int second_tile_row;
     
-    wait_vbl_done();
-
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
-//    for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
-    for (menu_item_x = 0; menu_item_x != 1; menu_item_x ++)
+    for (menu_item_x = 0; menu_item_x != menu_config.max_items_x; menu_item_x ++)
     {
-        //for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
-        for (menu_item_y = 1; menu_item_y != 2; menu_item_y ++)
+        for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
         {
             itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
                 
@@ -523,12 +519,12 @@ void load_menu_tiles()
             {
                 // Once second row of menu item data tiles is reached,
                 // mark as such
-                if (tile_index == 6U)
+                if (tile_index == MENU_ITEM_WIDTH)
                     second_tile_row = 1U;
 
-//                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
-//                {
-                    tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
+                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
+                {
+                    tile_data_index = menu_config.menu_item_tiles[menu_item_index][tile_index];
 
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
@@ -537,12 +533,11 @@ void load_menu_tiles()
                         1,
                         &(buildingmenutiles[tile_data_index << 4])
                     );
-
                     
                     tile_itx_y = tile_start_itx_y + second_tile_row;
                     if (second_tile_row == 1U)
                     {
-                        tile_itx_x = tile_start_itx_x + (tile_index - 6U);
+                        tile_itx_x = tile_start_itx_x + (tile_index - MENU_ITEM_WIDTH);
                     } else {
                         tile_itx_x = tile_start_itx_x + tile_index;
                     }
@@ -570,12 +565,9 @@ void load_menu_tiles()
                         1, 1,  // Only setting 1 tile
                         &tile_data
                     );
-                    
-                    // Wait for VBL so that the same tile can be reused
-                    wait_vbl_done();
                 }
             }
-//        }
+        }
     }
 }
 
