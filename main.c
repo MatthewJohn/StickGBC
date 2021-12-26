@@ -515,16 +515,15 @@ void load_menu_tiles()
 
             second_tile_row = 0U;
 
-
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
             tile_start_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
             tile_start_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
 
-            for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
+            for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
                 // Once second row of menu item data tiles is reached,
                 // mark as such
-                if (tile_index == 7U)
+                if (tile_index == 6U)
                     second_tile_row = 1U;
 
 //                if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
@@ -539,14 +538,13 @@ void load_menu_tiles()
                         &(buildingmenutiles[tile_data_index << 4])
                     );
 
-                    tile_itx_y = tile_start_itx_y;
-                    tile_itx_x = tile_start_itx_x;
-                    if (second_tile_row)
+                    
+                    tile_itx_y = tile_start_itx_y + second_tile_row;
+                    if (second_tile_row == 1U)
                     {
-                        tile_itx_y ++;
-                        tile_itx_x += (tile_index - 7U);
+                        tile_itx_x = tile_start_itx_x + (tile_index - 6U);
                     } else {
-                        tile_itx_x = tile_itx_x + tile_index;
+                        tile_itx_x = tile_start_itx_x + tile_index;
                     }
 
                     tile_data = tile_data_index;
