@@ -488,6 +488,7 @@ void load_menu_tiles()
     unsigned int tile_data_index;
     unsigned int tile_itx_x;
     unsigned int tile_itx_y;
+    unsigned int second_tile_row;
     
     wait_vbl_done();
 
@@ -508,8 +509,15 @@ void load_menu_tiles()
             // Work out menu item index, based on co-ords
             menu_item_index = (menu_item_y * menu_config.max_items_x) + menu_item_x;
 
+            second_tile_row = 0U;
+
             for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
+                // Once second row of menu item data tiles is reached,
+                // mark as such
+                if (tile_index == 7U)
+                    second_tile_row = 1U;
+
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
                 {
                     tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
@@ -526,6 +534,14 @@ void load_menu_tiles()
                     // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
                     tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
                     tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
+                    
+                    if (second_tile_row)
+                    {
+                        tile_itx_y ++;
+                        tile_itx_x += (tile_index - 7U);
+                    } else {
+                        tile_itx_x += tile_index;
+                    }
 
                     tile_data = tile_data_index;
 
