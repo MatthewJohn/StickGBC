@@ -21,6 +21,9 @@
 
 #include "main_map_sprite_tileset.c"
 
+#include "game_state.c"
+#include "menu_config.c"
+
 // Get tile pixel within from map-coordinates
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
 #define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
@@ -86,6 +89,10 @@ unsigned short a_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
 
+// Game state
+game_state_t game_state;
+menu_config_t menu_config;
+
 // Globals used when redrawing map
 unsigned char *background_tile_map;
 unsigned char *background_tiles;
@@ -104,7 +111,6 @@ unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
 
 
-
 void add_debug(UBYTE val)
 {
     *debug_address = val;
@@ -120,6 +126,8 @@ void load_house_tile_data()
 
 void setup_globals()
 {
+    game_state.current_building = S_B_NO_BUILDING;
+
     screen_location_x = 0;
     screen_location_y = 0;
     sprite_traveling_x = 0;
@@ -454,6 +462,103 @@ void setup_main_map()
     setup_sprite();
 }
 
+void clear_menu_config()
+{
+    int itx_x;
+    int itx_y;
+    // Clear tile and palette arrays -
+    // entire array is 8 * 14
+    // Iterate over menu items
+    for (itx_x = 0U; itx_x != 0x8U; itx_x ++)
+        // Iterate over menu item tiles
+        for (itx_y = 0U; itx_y != 0x14U; itx_y ++)
+            menu_config.menu_item_tiles[itx_x][itx_y] = 0U;
+    //memset(menu_config.menu_item_tiles, 0, 112);
+    //memset(menu_config.menu_item_palette, 0, 112);
+}
+
+void load_menu_tiles()
+{
+    unsigned int itx_x;
+    unsigned int itx_y;
+    unsigned int menu_item_x;
+    unsigned int menu_item_y;
+    unsigned int menu_item_index;
+    unsigned int tile_index;
+    unsigned int tile_data_index;
+    unsigned int tile_itx_x;
+    unsigned int tile_itx_y;
+
+    // Iterate over all menu items and load palette data.
+    // Start from 1 , as first item column is 'exit'
+    for (menu_item_x = 1; menu_item_x != menu_config.max_items_x; menu_item_x ++)
+    {
+        for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
+        {
+            // Since first menu item in Y is always at top, use 0 as the Y
+            // index, otherwise, remove from top of menu, so that they
+            // are displayed 'centred' from bottom
+            if (menu_item_y == 0)
+                itx_y = 0;
+            else
+                itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
+                
+            // If only 1 column of items, so it in the second column
+            if (menu_config.max_items_x == 1)
+                itx_x = 1;
+            else
+                itx_x = menu_item_x;
+
+            // Work out menu item index, based on co-ords
+            menu_item_index = (itx_y * MENU_MAX_ITEMS_Y) + itx_x;
+            
+            for (tile_index = 0; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
+            {
+                if (menu_config.menu_item_tiles[menu_item_index][tile_index])
+                {
+                    tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
+                    // Load tile data for menu item based on tile data offset
+                    // in menu config and tile config in menu tile array
+                    set_bkg_data(
+                        TILE_PATTERN_SCRATCH_1,
+                        1,
+                        &(buildingmenutiles[tile_data_index << 4])
+                    );
+                    
+                    // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
+                    tile_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
+                    tile_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
+                    
+                    tile_data = TILE_PATTERN_SCRATCH_1;
+
+                    VBK_REG = 0; 
+                    // Set map data
+                    set_bkg_tiles(
+                        tile_itx_x, 
+                        tile_itx_y,
+                        1, 1,  // Only setting 1 tile
+                        // Lookup tile from background tile map
+                        &tile_data
+                    );
+            
+                    VBK_REG = 1;
+
+                    // Lookup tile from background tile map
+                    tile_data = MENU_FONT_COLOR_PALETTE;
+
+                    // Set palette data in VBK_REG1 for tile
+                    set_bkg_tiles(
+                        tile_itx_x, 
+                        tile_itx_y,
+                        1, 1,  // Only setting 1 tile
+                        &tile_data
+                    );
+                }
+            }
+        }
+    }
+}
+
 void setup_building_menu()
 {
     // Update globals for references to map/tile information
@@ -468,10 +573,28 @@ void setup_building_menu()
     DRAW_OFFSET_Y = 0U;
     DRAW_MAX_X = SCREEN_WIDTH_TILES;
     DRAW_MAX_Y = SCREEN_HEIGHT_TILES;
+    
+    // Setup config for main menu
+    clear_menu_config();
+
+    // Menu has 3 items, default to sleep
+    menu_config.current_item_x = 0;
+    menu_config.current_item_y = 2;
+    menu_config.max_items_x = 1;
+    menu_config.max_items_y = 3;
+    
+    menu_config.menu_item_tiles[1][0] = 0x1;  // SL
+    menu_config.menu_item_tiles[1][1] = 0x2;  // EE
+    menu_config.menu_item_tiles[1][2] = 0x3;  // P
+    
+    // Number of tiles offset for palette data
+    menu_config.tile_offset = 0x10U;
 
     HIDE_SPRITES;
     // Reload background tiles
     set_background_tiles();
+    
+    load_menu_tiles();
 }
 
 // Attempt to 'enter' a building if user is in
@@ -487,13 +610,14 @@ void check_building_enter()
     // TEMP disable check to always enter house to make testing quicket
 //    if (tile_itx == 0x321U)
 //    {
+        game_state.current_building = S_B_HOUSE;
         setup_building_menu();
 //    }
         
 }
 
 // Called per cycle to update background position and sprite
-void update_graphics()
+void update_state()
 {
     unsigned short background_moved = 0U;
     unsigned int user_screen_pos_x;
@@ -501,91 +625,109 @@ void update_graphics()
     signed int move_x;
     signed int move_y;
 
-    check_boundary_hit();
 
-    // Set user screen position based on current location
-    user_screen_pos_x = user_pos_x - screen_location_x;
-    user_screen_pos_y = user_pos_y - screen_location_y;
+    if (game_state.current_building == S_B_NO_BUILDING)
+    {
+        check_boundary_hit();
 
-    user_pos_x += travel_x;
-    user_pos_y += travel_y;
-    
-    // Check if sprite too close to edge of screen
-    if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
-    {
-        // If player hit LHS of screen, move screen to the left
-        move_x = -1;
-    }
-    else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
-    {
-        // If player hit RHS of screen, move screen to the right
-        move_x = 1;
-    }
-    else
-    {
-        // If moving sprite, update user screen position X using new user_pos_x
+        // Set user screen position based on current location
         user_screen_pos_x = user_pos_x - screen_location_x;
-        move_x = 0;
-    }
-        
-    if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
-    {
-        move_y = -1;
-    }
-    else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
-    {
-        move_y = 1;
-    }
-    else
-    {
-        // If moving sprite, update user screen position X using new user_pos_x
         user_screen_pos_y = user_pos_y - screen_location_y;
-        move_y = 0;
-    }
 
-    // Temporary fix to help with diagonal movement
-    // move_background(0, move_y);
-    if (move_x != 0)
-        move_background(move_x, 0);
-    if (move_y != 0)
-        move_background(0, move_y);
-
-    // Move sprite to new location
-    move_sprite(
-        0,
-        user_screen_pos_x + SPRITE_OFFSET_X,
-        user_screen_pos_y + SPRITE_OFFSET_Y
-    );
-
-    // Update flip of sprite tile
-    sprite_prop_data = 0x00;
-    // Check for just vertical movement 
-    if (travel_y != 0)
-    {
-        if (travel_x == 0)
+        user_pos_x += travel_x;
+        user_pos_y += travel_y;
+        
+        // Check if sprite too close to edge of screen
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
         {
-            // If travelling up, flip Y
-            if (travel_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(0, 0);
-        } else {
-            // Handle diagonal movement
-            if (travel_y == 1)
-                sprite_prop_data |= S_FLIPY;
+            // If player hit LHS of screen, move screen to the left
+            move_x = -1;
+        }
+        else if (user_screen_pos_x ==  (SCREEN_WIDTH - CHARACTER_SCREEN_LOCATION_MARGIN))
+        {
+            // If player hit RHS of screen, move screen to the right
+            move_x = 1;
+        }
+        else
+        {
+            // If moving sprite, update user screen position X using new user_pos_x
+            user_screen_pos_x = user_pos_x - screen_location_x;
+            move_x = 0;
+        }
+            
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+        {
+            move_y = -1;
+        }
+        else if (user_screen_pos_y == (SCREEN_HEIGHT - CHARACTER_SCREEN_LOCATION_MARGIN))
+        {
+            move_y = 1;
+        }
+        else
+        {
+            // If moving sprite, update user screen position X using new user_pos_x
+            user_screen_pos_y = user_pos_y - screen_location_y;
+            move_y = 0;
+        }
+
+        // Temporary fix to help with diagonal movement
+        // move_background(0, move_y);
+        if (move_x != 0)
+            move_background(move_x, 0);
+        if (move_y != 0)
+            move_background(0, move_y);
+
+        // Move sprite to new location
+        move_sprite(
+            0,
+            user_screen_pos_x + SPRITE_OFFSET_X,
+            user_screen_pos_y + SPRITE_OFFSET_Y
+        );
+
+        // Update flip of sprite tile
+        sprite_prop_data = 0x00;
+        // Check for just vertical movement 
+        if (travel_y != 0)
+        {
+            if (travel_x == 0)
+            {
+                // If travelling up, flip Y
+                if (travel_y == 1)
+                    sprite_prop_data |= S_FLIPY;
+                set_sprite_tile(0, 0);
+            } else {
+                // Handle diagonal movement
+                if (travel_y == 1)
+                    sprite_prop_data |= S_FLIPY;
+                if (travel_x == -1)
+                    sprite_prop_data |= S_FLIPX;
+                set_sprite_tile(0, 2);
+            }
+        }
+        else if (travel_x != 0)
+        {
+            set_sprite_tile(0, 1);
             if (travel_x == -1)
                 sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(0, 2);
         }
+        // Only update flipping if actually moving
+        if (travel_x != 0 || travel_y != 0)
+            set_sprite_prop(0, sprite_prop_data);
+
+        if (a_pressed)
+            check_building_enter();
+
+    } else {
+        // In a building - move through menu
+
+        // Menu layout:
+        // 3,3 tile offset for top option.
+        // Each option is 7 tiles wide and 2 tiles high.
+        // One tile buffer between each option.
+
+        // Check if moving menu item
+//        if ()
     }
-    else if (travel_x != 0)
-    {
-        set_sprite_tile(0, 1);
-        if (travel_x == -1)
-            sprite_prop_data |= S_FLIPX;
-    }
-    // Only update flipping if actually moving
-    if (travel_x != 0 || travel_y != 0)
-        set_sprite_prop(0, sprite_prop_data);
 }
 
 
@@ -614,10 +756,7 @@ void main()
                 wait_vbl_done();
 
                 check_user_input();
-                update_graphics();
-
-                if (a_pressed)
-                    check_building_enter();
+                update_state();
 
                 // Temporarily remove delay to speed debugging
                 //delay(50);
