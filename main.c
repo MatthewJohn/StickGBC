@@ -524,8 +524,9 @@ void load_menu_tiles()
 
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index] != 0U)
                 {
-                    tile_data_index = menu_config.menu_item_tiles[menu_item_index][tile_index];
+                    tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
 
+                    VBK_REG = 0; 
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
                     set_bkg_data(
@@ -544,7 +545,6 @@ void load_menu_tiles()
 
                     tile_data = tile_data_index;
 
-                    VBK_REG = 0; 
                     // Set map data
                     set_bkg_tiles(
                         tile_itx_x, 
