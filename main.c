@@ -488,12 +488,17 @@ void load_menu_tiles()
     unsigned int tile_data_index;
     unsigned int tile_itx_x;
     unsigned int tile_itx_y;
+    unsigned int menu_item_x_max;
+    unsigned int menu_item_y_max;
+
+    menu_item_x_max = menu_config.max_items_x + 1U;
+    menu_item_y_max = menu_config.max_items_y + 1U;
 
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
-    for (menu_item_x = 1; menu_item_x != menu_config.max_items_x; menu_item_x ++)
+    for (menu_item_x = 1; menu_item_x != menu_item_x_max; menu_item_x ++)
     {
-        for (menu_item_y = 1; menu_item_y != menu_config.max_items_y; menu_item_y ++)
+        for (menu_item_y = 1; menu_item_y != menu_item_y_max; menu_item_y ++)
         {
             itx_y = menu_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
                 
