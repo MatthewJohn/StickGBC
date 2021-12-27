@@ -142,7 +142,9 @@ void load_building_tile_data()
     // Load house data from tile 8 to tile
     VBK_REG = 0;
     if (screen_state.displayed_buildings & SC_HOUSE)
-        set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
+    {
+        set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+    }
     if (screen_state.displayed_buildings & SC_RESTAURANT)
     {
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
