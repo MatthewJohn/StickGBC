@@ -5,7 +5,7 @@ Tile Palette Main
  - 3 - Pavement
  - 5 - scratch for building 1
  - 6 - scratch for building 2
- - 7 - scratch for building 3
+ - 7 - scratch for building 3 - mcstick/castle/university
 
 Tile Palette Building 1
 - 
@@ -19,5 +19,10 @@ Tiles
  - 5 - scratch for building 1
  - 6 - scratch for building 2 
  - 7 - scratch for building 3
- - 12 - house1 (moved into scratch 1)
+ - 13 - house - 1 window (moved into scratch 1)
+ - 14 - house - 2 (unused)
+ - 15 - house - 3 (unused)
+ - 15 - restaurant (mcstick) - 1
+ - 16 - restaurant (mcstick) - 2
+ - 17 - restaurant (mcstick) - 3
  
