@@ -6,7 +6,7 @@
 
 /*
 
- MAIN_MAP_TILESET.H
+ BUILDING_MENU_TILES.H
 
  Include File.
 
@@ -16,7 +16,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 14
+  Tiles                : 0 to 20
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -30,10 +30,10 @@
 
 
 /* Bank of tiles. */
-#define mainmaptilesBank 0
+#define buildingmenutilesBank 0
 /* CGBpalette entries. */
-extern const unsigned char mainmaptilesCGB[];
+extern const unsigned char buildingmenutilesCGB[];
 /* Start of tile array. */
-extern const unsigned char mainmaptiles[];
+extern const unsigned char buildingmenutiles[];
 
-/* End of MAIN_MAP_TILESET.H */
+/* End of BUILDING_MENU_TILES.H */

@@ -5,7 +5,11 @@
  */
 
 
-#include "gb/gb.h"
+#define SC_HOUSE 0x1U
 
-extern const UBYTE MAIN_MAP_FLIP_VERTICAL[];
-extern const UBYTE MAIN_MAP_FLIP_HORIZONTAL[];
+// Show/remove left-hand buildings when screen position passes this point
+#define SC_HOUSE_TRANSITION_X 0x12U
+
+typedef struct {
+    UINT8 displayed_buildings;
+} screen_state_t;
