@@ -6,7 +6,7 @@
 
 /*
 
- SPRITE_TILESET.C
+ MAIN_MAP_SPRITE_TILESET.C
 
  Tile Source File.
 
@@ -29,12 +29,12 @@
 */
 
 /* CGBpalette entries. */
-unsigned char spritetilesCGB[] =
+unsigned char mainmapspritetilesCGB[] =
 {
   0x00,0x00,0x00
 };
 /* Start of tile array. */
-unsigned char spritetiles[] =
+unsigned char mainmapspritetiles[] =
 {
   0x81,0x00,0x99,0x00,0xBD,0x00,0xFF,0x00,
   0x7E,0x00,0x3C,0x00,0x18,0x00,0x00,0x00,
@@ -44,4 +44,4 @@ unsigned char spritetiles[] =
   0x7F,0x00,0x3C,0x00,0x18,0x00,0x00,0x00
 };
 
-/* End of SPRITE_TILESET.C */
+/* End of MAIN_MAP_SPRITE_TILESET.C */

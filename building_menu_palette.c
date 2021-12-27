@@ -4,17 +4,17 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-const UWORD main_map_palette[] = {
-  RGB(2, 31, 31),
-  RGB(10, 10, 10),
-  RGB(1, 0, 0),
-  RGB(25, 18, 0),
-  RGB(10, 10, 10),
-  RGB(28, 29, 5),
+const UWORD building_menu_palette[] = {
+  RGB(31, 31, 31),
+  RGB(22, 22, 22),
+  RGB(18, 18, 18),
+  RGB(14, 14, 14),
+  RGB(31, 31, 31),
+  RGB(0, 0, 0),
   RGB(1, 0, 0),
   RGB(0, 0, 0),
-  RGB(14, 31, 0),
-  RGB(10, 10, 10),
+  RGB(0, 2, 0),
+  RGB(31, 31, 31),
   RGB(1, 0, 0),
   RGB(0, 0, 0),
   RGB(13, 13, 13),
