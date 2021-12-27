@@ -163,10 +163,10 @@ void setup_globals()
 
     screen_state.displayed_buildings = SC_HOUSE;
 
-    screen_location_x = 0;
-    screen_location_x_tiles = 0;
-    screen_location_y = 0;
-    screen_location_y_tiles = 0;
+    screen_location_x = 0x00U;
+    screen_location_x_tiles = 0x00U;
+    screen_location_y = 0x00U;
+    screen_location_y_tiles = 0x00U;
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
