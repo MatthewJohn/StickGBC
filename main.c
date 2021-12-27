@@ -150,7 +150,7 @@ void load_building_tile_data()
         palette_transfer[0] = RGB(0, 0, 0);
         palette_transfer[1] = RGB(31, 22, 8);
         palette_transfer[2] = RGB(31, 24, 0);
-        palette_transfer[3] = RGB(13, 12, 1);
+        palette_transfer[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, &palette_transfer);
     }
 }
@@ -731,26 +731,32 @@ void check_end_game()
 void update_loaded_buildings_x_left()
 {
     // Enable house
-    if (screen_location_x_tile == SC_HOUSE_TRANSITION_X)
+    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    {
         screen_state.displayed_buildings |= SC_HOUSE;
+        load_building_tile_data();
+    }
 }
 void update_loaded_buildings_x_right()
 {
     // Disable house
-    if (screen_location_x_tile == SC_HOUSE_TRANSITION_X)
+    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings &= ~SC_HOUSE;
 }
 void update_loaded_buildings_y_up()
 {
     // Disable restaurant
-    if (screen_location_y_tile == SC_RESTAURANT_TRANSITION_Y)
-        screen_state.displayed_buildings =& ~SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+        screen_state.displayed_buildings &= ~SC_RESTAURANT;
 }
 void update_loaded_buildings_y_down()
 {
     // Enable restaurant
-    if (screen_location_y_tile == SC_RESTAURANT_TRANSITION_Y)
-        screen_state.displayed_buildings |=SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
 }
 
 // Called per cycle to update background position and sprite
