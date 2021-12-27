@@ -601,7 +601,11 @@ void load_menu_tiles()
 
 void set_menu_item_color(unsigned char palette)
 {
-    unsigned int itx_x, itx_y, current_item_x, current_item_y;
+    unsigned int itx_y, current_item_x, current_item_y;
+
+    unsigned char palette_colors[MENU_ITEM_WIDTH] = {
+      palette, palette, palette, palette, palette, palette
+    };
 
     if (menu_config.max_items_x == 1)
         current_item_x = 1;
@@ -613,14 +617,13 @@ void set_menu_item_color(unsigned char palette)
         current_item_y = menu_config.current_item_y + (MENU_MAX_ITEMS_Y - menu_config.max_items_y);
     }
     VBK_REG = 1;
-    for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
-        for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
-            set_bkg_tiles(
-                itx_x + MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * current_item_x),
-                itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * current_item_y),
-                1, 1,
-                &palette
-            );
+     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+        set_bkg_tiles(
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * current_item_y),
+            MENU_ITEM_WIDTH, 1,
+            &palette_colors
+        );
     VBK_REG = 0;
 }
 
