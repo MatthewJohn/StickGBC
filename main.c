@@ -145,7 +145,7 @@ void load_building_tile_data()
         set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
     if (screen_state.displayed_buildings & SC_RESTAURANT)
     {
-        set_bkg_data(15, 3, &(background_tiles[15 << 4]));
+        set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
         // Set palette data
         palette_transfer[0] = RGB(0, 0, 0);
         palette_transfer[1] = RGB(31, 22, 8);
