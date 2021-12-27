@@ -230,7 +230,7 @@ void set_background_tiles()
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
            VBK_REG = 0; 
             // Set map data
@@ -364,7 +364,7 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
            VBK_REG = 0; 
             // Set map data
@@ -417,7 +417,7 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x07;
+            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
            VBK_REG = 0; 
             // Set map data
