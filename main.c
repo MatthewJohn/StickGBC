@@ -23,6 +23,7 @@
 
 #include "game_state.c"
 #include "menu_config.c"
+#include "screen_state.c"
 
 // Get tile pixel within from map-coordinates
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
@@ -85,6 +86,16 @@ UBYTE tile_data;
 // Location of screen compared to map
 unsigned int screen_location_x;
 unsigned int screen_location_y;
+// These are pre-calculated bit shifts of screen_location.
+// DO NOT manually change outside of position updating method.
+// This is the current user position in tiles.
+unsigned int screen_location_x_tiles;
+unsigned int screen_location_y_tiles;
+// These are pre-calculated ANDs of screen_location
+// DO NOT  manually change outside of position updating method.
+// This is the current pixel location of user within current tile.
+unsigned int screen_location_x_tilepixel;
+unsigned int screen_location_y_tilepixel;
 
 // Determine which way user needs to travel
 signed int travel_x;
@@ -96,6 +107,7 @@ UINT8 sprite_prop_data;
 // Game state
 game_state_t game_state;
 menu_config_t menu_config;
+screen_state_t screen_state;
 
 // Globals used when redrawing map
 unsigned char *background_tile_map;
@@ -121,11 +133,12 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
-void load_house_tile_data()
+void load_building_tile_data()
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
-    set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
+    if (screen_state.displayed_buildings & SC_HOUSE)
+        set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
 }
 
 void setup_globals()
@@ -134,8 +147,12 @@ void setup_globals()
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
+    screen_state.displayed_buildings = SC_HOUSE;
+
     screen_location_x = 0;
+    screen_location_x_tiles = 0;
     screen_location_y = 0;
+    screen_location_y_tiles = 0;
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
@@ -277,9 +294,6 @@ void move_background(signed int move_x, signed int move_y)
     signed int direction_tile_offset_x;
     signed int direction_tile_offset_y;
 
-    // Last 3 bits of screen position X
-    unsigned int screen_location_pixel_count_x;
-    unsigned int screen_location_pixel_count_y;
 
     if (move_x == 0 && move_y == 0)
     {
@@ -291,8 +305,11 @@ void move_background(signed int move_x, signed int move_y)
 
     screen_location_x += move_x;
     screen_location_y += move_y;
+    screen_location_x_tiles = screen_location_x >> 3;
+    screen_location_y_tiles = screen_location_y >> 3;
+    screen_location_x_tilepixel = screen_location_x & 0x07U;
+    screen_location_y_tilepixel = screen_location_y & 0x07U;
 
-    screen_location_pixel_count_x = screen_location_x & 0x07U;
     // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
     // current frame buffer size + redraw offset.
     // Mask with vram tile size in X, as a form of cheap modulus (which we can do as it is a power of 2)
@@ -304,8 +321,6 @@ void move_background(signed int move_x, signed int move_y)
     else if (move_x == -1)
         // If moving left, redraw tile before
         base_itx_x -= 1U;
-
-    screen_location_pixel_count_y = screen_location_y & 0x07U;
 
     // See X alternative
     base_itx_y = screen_location_y >> 3;
@@ -323,9 +338,9 @@ void move_background(signed int move_x, signed int move_y)
         itx_x = base_itx_x;
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        // Use screen_location_pixel_count_x to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
-        itx_y_max = base_itx_y + (3U * (screen_location_pixel_count_x + 1U)) + 1U;
-        for (itx_y = base_itx_y + (3U * screen_location_pixel_count_x) - 1U;
+        // Use screen_location_x_subpixel to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
+        itx_y_max = base_itx_y + (3U * (screen_location_x_tilepixel + 1U)) + 1U;
+        for (itx_y = base_itx_y + (3U * screen_location_x_tilepixel) - 1U;
                itx_y != itx_y_max;
                itx_y ++)
         {
@@ -377,8 +392,8 @@ void move_background(signed int move_x, signed int move_y)
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = base_itx_x + (3U * (screen_location_pixel_count_y + 1U)) + 1U;
-        for (itx_x = base_itx_x + (3U * screen_location_pixel_count_y) - 1U;
+        itx_x_max = base_itx_x + (3U * (screen_location_y_tilepixel + 1U)) + 1U;
+        for (itx_x = base_itx_x + (3U * screen_location_y_tilepixel) - 1U;
                itx_x != itx_x_max;
                itx_x ++)
         {
@@ -482,6 +497,9 @@ void setup_main_map()
         screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
         screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
+    
+    // Load currently displayed buildings
+    load_building_tile_data();
     
     DISPLAY_ON;
 }
@@ -695,6 +713,26 @@ void check_end_game()
     
 }
 
+
+void update_loaded_buildings_x_left()
+{
+    if (screen_location_x_tilepixel == SC_HOUSE_TRANSITION_X)
+        screen_state.displayed_buildings |= SC_HOUSE;
+}
+void update_loaded_buildings_x_right()
+{
+    if (screen_location_x_tilepixel == SC_HOUSE_TRANSITION_X)
+        screen_state.displayed_buildings &= ~SC_HOUSE;
+}
+void update_loaded_buildings_y_up()
+{
+    
+}
+void update_loaded_buildings_y_down()
+{
+    
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -752,9 +790,27 @@ void update_state()
         // Temporary fix to help with diagonal movement
         // move_background(0, move_y);
         if (move_x != 0)
+        {
             move_background(move_x, 0);
+
+            // Check when on tile boundary (NOTE this only works for movement in positive directions,
+            // but doesn't matter for now).
+            if (screen_location_x_tilepixel == 0U)
+                if (move_x == 1)
+                    update_loaded_buildings_x_right();
+                else
+                    update_loaded_buildings_x_left();
+        }
         if (move_y != 0)
+        {
             move_background(0, move_y);
+            
+            if (screen_location_y_tilepixel == 0U)
+                if (move_y == 1)
+                    update_loaded_buildings_y_down();
+                else
+                    update_loaded_buildings_y_up();
+        }
 
         // Move sprite to new location
         move_sprite(
@@ -856,9 +912,6 @@ void main()
 
     // Load background tiles
     setup_main_map();
-    
-    // Load buildings at top-left on startup
-    load_house_tile_data();
 
     wait_vbl_done();
     SHOW_BKG;
