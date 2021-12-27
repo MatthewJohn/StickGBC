@@ -73,6 +73,9 @@
 #define TILE_PATTERN_SCRATCH_1 0x05U
 #define TILE_PATTERN_SCRATCH_2 0x06U
 #define TILE_PATTERN_SCRATCH_3 0x07U
+#define PALETTE_SCRATCH_1 0x05U
+#define PALETTE_SCRATCH_2 0x06U
+#define PALETTE_SCRATCH_3 0x07U
 
 UBYTE * debug_address;
 
@@ -126,6 +129,7 @@ unsigned int DRAW_MAX_Y;
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
 
+UWORD palette_transfer[4];
 
 void add_debug(UBYTE val)
 {
@@ -139,6 +143,16 @@ void load_building_tile_data()
     VBK_REG = 0;
     if (screen_state.displayed_buildings & SC_HOUSE)
         set_bkg_data(TILE_PATTERN_SCRATCH_1, 1, &(mainmaptiles[13 * 16]));
+    if (screen_state.displayed_buildings & SC_RESTAURANT)
+    {
+        set_bkg_data(15, 3, &(background_tiles[15 << 4]));
+        // Set palette data
+        palette_transfer[0] = RGB(0, 0, 0);
+        palette_transfer[1] = RGB(23, 20, 3);
+        palette_transfer[2] = RGB(31, 24, 0);
+        palette_transfer[3] = RGB(25, 0, 0);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &palette_transfer);
+    }
 }
 
 void setup_globals()
@@ -716,21 +730,27 @@ void check_end_game()
 
 void update_loaded_buildings_x_left()
 {
-    if (screen_location_x_tilepixel == SC_HOUSE_TRANSITION_X)
+    // Enable house
+    if (screen_location_x_tile == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings |= SC_HOUSE;
 }
 void update_loaded_buildings_x_right()
 {
-    if (screen_location_x_tilepixel == SC_HOUSE_TRANSITION_X)
+    // Disable house
+    if (screen_location_x_tile == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings &= ~SC_HOUSE;
 }
 void update_loaded_buildings_y_up()
 {
-    
+    // Disable restaurant
+    if (screen_location_y_tile == SC_RESTAURANT_TRANSITION_Y)
+        screen_state.displayed_buildings =& ~SC_RESTAURANT;
 }
 void update_loaded_buildings_y_down()
 {
-    
+    // Enable restaurant
+    if (screen_location_y_tile == SC_RESTAURANT_TRANSITION_Y)
+        screen_state.displayed_buildings |=SC_RESTAURANT;
 }
 
 // Called per cycle to update background position and sprite
