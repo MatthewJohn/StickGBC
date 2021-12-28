@@ -246,6 +246,12 @@ void setup_window()
     set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
     set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
     
+    // Setup 'days''
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &tile_data);
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &tile_data);
+
     // Move window up to only display 2 rows at top of screen
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
@@ -296,7 +302,7 @@ void update_window()
         // Display current digit
         tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
         set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
-        
+
         // Prepare for next digit
         itx_x -= 1U;
     }
@@ -324,7 +330,7 @@ void set_background_tiles()
     set_bkg_data(0, 8, background_tiles);
     
     // Load in digits/symbols from building menu tiles
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 15U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 17U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
