@@ -563,7 +563,7 @@ void load_menu_tiles()
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
 
             // Check if tile is a valid tile
-            if (menu_config.menu_items & (1 << menu_item_index) == 0U)
+            if (! menu_config.menu_items & (1 << menu_item_index))
                 continue;
 
             second_tile_row = 0U;
@@ -678,7 +678,7 @@ void setup_building_menu()
         // Number of tiles offset for palette data
         menu_config.tile_offset = 0x10U;
     }
-    if (game_state.current_building == S_B_RESTAURANT)
+    else if (game_state.current_building == S_B_RESTAURANT)
     {
                 // Menu has 3 items, default to sleep
         menu_config.current_item_x = 0;
