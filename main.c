@@ -689,11 +689,13 @@ void setup_building_menu()
                 // Menu has 3 items, default to sleep
         menu_config.current_item_x = 0;
         menu_config.current_item_y = 1;
-        menu_config.menu_items = 0x2F;
+        menu_config.menu_items = 0xFF;
     
-        menu_config.menu_item_tiles[1][0] = 0x1U;  // SL
-        menu_config.menu_item_tiles[1][1] = 0x2U;  // EE
-        menu_config.menu_item_tiles[1][2] = 0x3U;  // P
+        menu_config.menu_item_tiles[0][0] = 0x1U;  // MI
+        menu_config.menu_item_tiles[0][1] = 0x2U;  // LK
+        menu_config.menu_item_tiles[0][2] = 0x3U;  // SH
+        menu_config.menu_item_tiles[0][3] = 0x4U;  // AK
+        menu_config.menu_item_tiles[0][4] = 0x5U;  // E
         menu_config.tile_offset = 0x16U;
     }
 
@@ -728,6 +730,11 @@ void check_building_enter()
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu();
     }
+    
+    
+    // Temporary jump to restaurant
+    game_state.current_building = S_B_RESTAURANT;
+    setup_building_menu();
         
 }
 
@@ -932,6 +939,7 @@ void update_state()
             }
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+
         }
 
         // Check if moving menu item
