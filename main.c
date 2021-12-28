@@ -714,7 +714,9 @@ void setup_building_menu()
         menu_config.current_item_x = 0;
         menu_config.current_item_y = 1;
         menu_config.menu_items = 0xFF;
-    
+
+
+        // MILKSHAKE
         menu_config.menu_item_tiles[0][0] = 0x1U;  // MI
         menu_config.menu_item_tiles[0][1] = 0x2U;  // LK
         menu_config.menu_item_tiles[0][2] = 0x3U;  // SH
@@ -732,7 +734,51 @@ void setup_building_menu()
         menu_config.menu_item_palette[0][10] = MENU_ITEM_COST_PALETTE;
         menu_config.menu_item_tiles[0][11] = 0x9U; // 8
         menu_config.menu_item_palette[0][11] = MENU_ITEM_COST_PALETTE;
+        // END
+
+        // FRIES
+        menu_config.menu_item_tiles[2][0] = 0x6U;  // FR
+        menu_config.menu_item_tiles[2][1] = 0x7U;  // IE
+        menu_config.menu_item_tiles[2][2] = 0x8U;  // S
+
+        menu_config.menu_item_tiles[2][6] = 0x3U; // 2
+        menu_config.menu_item_palette[2][6] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[2][7] = 0x1U; // 0
+        menu_config.menu_item_palette[2][7] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[2][8] = 0xCU; // HP
+        menu_config.menu_item_palette[2][8] = MENU_ITEM_HP_PALETTE;
         
+        menu_config.menu_item_tiles[2][9] = 0xBU; // $
+        menu_config.menu_item_palette[2][9] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[2][10] = 0x2U; // 1
+        menu_config.menu_item_palette[2][10] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[2][11] = 0x3U; // 2
+        menu_config.menu_item_palette[2][11] = MENU_ITEM_COST_PALETTE;
+        // END
+
+        // CHEESE BURGER
+        menu_config.menu_item_tiles[4][0] = 0x9U;  // CH
+        menu_config.menu_item_tiles[4][1] = 0xAU;  // EE
+        menu_config.menu_item_tiles[4][2] = 0xBU;  //  SE
+        menu_config.menu_item_tiles[4][3] = 0xCU;  //  BU
+        menu_config.menu_item_tiles[4][4] = 0xDU;  //  RG
+        menu_config.menu_item_tiles[4][5] = 0xEU;  //  ER
+
+        menu_config.menu_item_tiles[4][6] = 0x5U; // 4
+        menu_config.menu_item_palette[4][6] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[4][7] = 0x1U; // 0
+        menu_config.menu_item_palette[4][7] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[4][8] = 0xCU; // HP
+        menu_config.menu_item_palette[4][8] = MENU_ITEM_HP_PALETTE;
+        
+        menu_config.menu_item_tiles[4][9] = 0xBU; // $
+        menu_config.menu_item_palette[4][9] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[4][10] = 0x3U; // 2
+        menu_config.menu_item_palette[4][10] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[4][11] = 0x6U; // 5
+        menu_config.menu_item_palette[4][11] = MENU_ITEM_COST_PALETTE;
+        // END
+
         menu_config.tile_offset = 0x15U;
     }
 
