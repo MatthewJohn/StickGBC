@@ -275,8 +275,6 @@ void update_window()
     // Iterate over days passed
     remainder = game_state.days_passed;
 
-set_win_tiles(10U, 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
-
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
     itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
     for (itx = 0; itx != WINDOW_MAX_DIGITS_DAYS; itx ++)
@@ -293,7 +291,8 @@ set_win_tiles(10U, 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
         }
 
         // Display current digit
-        set_win_tiles(itx_x, SCREEN_HEIGHT_TILES - 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit);
+        tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
         
         // Prepare for next digit
         itx_x -= 1U;
