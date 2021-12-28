@@ -8,7 +8,59 @@ Tile Palette Main
  - 7 - scratch for building 3 - mcstick/castle/university
 
 Tile Palette Building 1
-- 
+ 0. Background
+ 1. Unselected item
+ 2. Selected item
+ 3. Cost
+ 4. HP
+ 5. Strength
+ 6. Intelligence
+
+Building map tiles
+ 0. Background
+ 1. Border corner
+ 2. Border top
+ 3. Border side
+ 4. Ex
+ 5. it
+ 16. E
+ 17. SL
+ 18. EE
+ 19. P
+ 22. MI
+ 23. LK
+ 24. SH
+ 25. AK
+ 26. E
+ 27. FR
+ 28. IE
+ 29. S
+ 30. CH
+ 31. EE
+ 32. SE
+ 33. BU
+ 34. RG
+ 35. ER
+ 36. TR'
+ 37. PL
+ 38. WO (half O)
+ 39. ORK (half O, half K)
+ 40. K (Half K)
+
+ 110. 0
+ 111. 1
+ 112. 2
+ 113. 3
+ 114. 4
+ 115. 5
+ 116. 6
+ 117. 7
+ 118. 8
+ 119. 9
+ 120. $
+ 121. HP
+ 122. /HR
+ 
 
 Tiles
  - 0 Background/pavement/road/grass (blank palette colour 0)
