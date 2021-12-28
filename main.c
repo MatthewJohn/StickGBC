@@ -948,7 +948,7 @@ void update_state()
                 setup_main_map();
                 
             // If selected sleep in house
-            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 1U)
+            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
                 game_state.days_passed += 1U;
