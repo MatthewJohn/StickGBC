@@ -307,9 +307,7 @@ void move_background(signed int move_x, signed int move_y)
     UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
-    signed int direction_tile_offset_x;
-    signed int direction_tile_offset_y;
-
+    
 
     if (move_x == 0 && move_y == 0)
     {
@@ -535,30 +533,40 @@ void clear_menu_config()
     //memset(menu_config.menu_item_palette, 0, 112);
 }
 
+void call_set_bkg_tiles(UINT8 start, UINT8 num, char* data)
+{
+    set_bkg_tiles(
+        start, 
+        num,
+        1, 1,  // Only setting 1 tile
+        data
+    );
+}
+
 void load_menu_tiles()
 {
-    unsigned int itx_x;
-    unsigned int itx_y;
-    unsigned int menu_item_index;
-    unsigned int tile_index;
-    unsigned int tile_data_index;
-    unsigned int tile_start_itx_x;
-    unsigned int tile_start_itx_y;
-    unsigned int tile_itx_x;
-    unsigned int tile_itx_y;
-    unsigned int second_tile_row;
+    UINT8 itx_x;
+    UINT8 itx_y;
+    UINT8 menu_item_index;
+    UINT8 tile_index;
+    UINT8 tile_data_index;
+    UINT8 tile_start_itx_x;
+    UINT8 tile_start_itx_y;
+    UINT8 tile_itx_x;
+    UINT8 tile_itx_y;
+    UINT8 second_tile_row;
     
-    move_bkg(0, 0);
     
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
+    //for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
     for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
     {
         for (itx_y = 1; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
         {
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
-            
+
             // Check if tile is a valid tile
             if (menu_config.menu_items & (1 << menu_item_index) == 0U)
                 continue;
@@ -574,10 +582,15 @@ void load_menu_tiles()
                 // Once second row of menu item data tiles is reached,
                 // mark as such
                 if (tile_index == MENU_ITEM_WIDTH)
+                {
+                    tile_start_itx_x -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
- 
+                }
+
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index] == 0U)
+                {
                     continue;
+                }
 
                 tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
 
@@ -591,17 +604,12 @@ void load_menu_tiles()
                 );
                 
                 tile_itx_y = tile_start_itx_y + second_tile_row;
-                if (second_tile_row == 1U)
-                {
-                    tile_itx_x = tile_start_itx_x + (tile_index - MENU_ITEM_WIDTH);
-                } else {
-                    tile_itx_x = tile_start_itx_x + tile_index;
-                }
+                tile_itx_x = tile_start_itx_x + tile_index;
                 tile_data = tile_data_index;
 
                 // Set map data
-                set_bkg_tiles(
-                    tile_itx_x, 
+                call_set_bkg_tiles(
+                    tile_index, 
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
                     &tile_data
@@ -613,7 +621,7 @@ void load_menu_tiles()
                 tile_data = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Set palette data in VBK_REG1 for tile
-                set_bkg_tiles(
+                call_set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
@@ -624,7 +632,6 @@ void load_menu_tiles()
     }
 }
 
-//#define MENU_ITEM_X_TO_MAP_X(map_c, itx) ((map_c.max_items_x == 1U ? 1U : itx) * 8U) + MENU_ITEM_SCREEN_OFFSET_LEFT
 
 void set_menu_item_color(unsigned char palette)
 {
