@@ -563,10 +563,14 @@ void load_menu_tiles()
     // Start from 1 , as first item column is 'exit'
     for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
     {
-        for (itx_y = 1; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
+        for (itx_y = 0; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
         {
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
+
+            // Ignore top right exit
+            if (itx_x == 1U && itx_y == 0U)
+                continue;
 
             // Check if tile is a valid tile
             if (! IS_MENU_ITEM_ENABLED(menu_item_index))
