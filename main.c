@@ -129,6 +129,22 @@ unsigned int DRAW_MAX_Y;
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
 
+
+// Bunch of variables from load_menu_tiles.
+// This fixed a compiler error, which gave no
+// indication of issue and no resources online.
+unsigned int itx_x;
+unsigned int itx_y;
+UINT8 menu_item_index;
+UINT8 tile_index;
+UINT8 tile_data_index;
+UINT8 tile_itx_x_start;
+UINT8 tile_itx_y_start;
+UINT8 tile_itx_x;
+UINT8 tile_itx_y;
+UINT8 second_tile_row;
+
+
 UWORD palette_transfer[4];
 
 void add_debug(UBYTE val)
@@ -533,33 +549,12 @@ void clear_menu_config()
     //memset(menu_config.menu_item_palette, 0, 112);
 }
 
-void call_set_bkg_tiles(UINT8 start, UINT8 num, char* data)
-{
-    set_bkg_tiles(
-        start, 
-        num,
-        1, 1,  // Only setting 1 tile
-        data
-    );
-}
-
 void load_menu_tiles()
 {
-    UINT8 itx_x;
-    UINT8 itx_y;
-    UINT8 menu_item_index;
-    UINT8 tile_index;
-    UINT8 tile_data_index;
-    UINT8 tile_start_itx_x;
-    UINT8 tile_start_itx_y;
-    UINT8 tile_itx_x;
-    UINT8 tile_itx_y;
-    UINT8 second_tile_row;
-    
+    move_bkg(0, 0);
     
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
-    //for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
     for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
     {
         for (itx_y = 1; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
@@ -574,8 +569,8 @@ void load_menu_tiles()
             second_tile_row = 0U;
 
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
-            tile_start_itx_x = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
-            tile_start_itx_y = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
+            tile_itx_x_start = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
+            tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -583,7 +578,7 @@ void load_menu_tiles()
                 // mark as such
                 if (tile_index == MENU_ITEM_WIDTH)
                 {
-                    tile_start_itx_x -= MENU_ITEM_WIDTH;
+                    tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
                 }
 
@@ -602,16 +597,16 @@ void load_menu_tiles()
                     1,
                     &(buildingmenutiles[tile_data_index << 4])
                 );
-                
-                tile_itx_y = tile_start_itx_y + second_tile_row;
-                tile_itx_x = tile_start_itx_x + tile_index;
+
+                tile_itx_x = tile_itx_x_start + tile_index;
+                tile_itx_y = tile_itx_y_start + second_tile_row;
                 tile_data = tile_data_index;
 
                 // Set map data
-                call_set_bkg_tiles(
-                    tile_index, 
+                set_bkg_tiles(
+                    tile_itx_x, 
                     tile_itx_y,
-                    1, 1,  // Only setting 1 tile
+                    1U, 1U,  // Only setting 1 tile
                     &tile_data
                 );
 
@@ -621,7 +616,7 @@ void load_menu_tiles()
                 tile_data = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Set palette data in VBK_REG1 for tile
-                call_set_bkg_tiles(
+                set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
@@ -685,7 +680,7 @@ void setup_building_menu()
         // Number of tiles offset for palette data
         menu_config.tile_offset = 0x10U;
     }
-    else if (game_state.current_building == S_B_RESTAURANT)
+    if (game_state.current_building == S_B_RESTAURANT)
     {
                 // Menu has 3 items, default to sleep
         menu_config.current_item_x = 0;
