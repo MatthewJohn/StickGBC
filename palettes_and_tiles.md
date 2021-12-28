@@ -1,13 +1,35 @@
-Tile Palette Main
- - 0 - Background/house
- - 1 - Road/markings
- - 2 - Grass/
- - 3 - Pavement
- - 5 - scratch for building 1
- - 6 - scratch for building 2
- - 7 - scratch for building 3 - mcstick/castle/university
+## Tile Palette Main
 
-Tile Palette Building 1
+ 0.
+    * 0 - Sky/house windows
+    * 1 - Background/house roof
+    * 2 - Status window background
+    * 3 - House bricks/Static window text
+ 1. Road/markings
+    * 0 - House roof/road
+    * 1 - Road markings
+    * 2 - 
+    * 3 - 
+ 2.
+    * 0 - Grass
+    * 1 - 
+    * 2 -
+    * 3 - 
+ 3.
+    * 0 - Pavement inner
+    * 1 - Pavement outer
+    * 2 - 
+    * 3 -
+ 4.
+    * 0 - 
+    * 1 - 
+    * 2 - 
+    * 3 - 
+ 5. scratch for building 1
+ 6. scratch for building 2
+ 7. scratch for building 3 - mcstick/castle/university
+
+## Tile Palette Building Menu
  0. Background
  1. Unselected item
  2. Selected item
@@ -16,7 +38,8 @@ Tile Palette Building 1
  5. Strength
  6. Intelligence
 
-Building map tiles
+## Building map tiles
+
  0. Background
  1. Border corner
  2. Border top
@@ -60,13 +83,15 @@ Building map tiles
  120. $
  121. HP
  122. /HR
+ 133. DA
+ 134. YS
  
 
-Tiles
- - 0 Background/pavement/road/grass (blank palette colour 0)
+## Tiles
+ - 0 Background/pavement/road/grass/house roof (blank palette colour 0)
  - 1 Pavement edge/road markings (blank palette colour 0/1)
  - 2 Vertical Pavement edge/road markings (blank palette colour 0/1)
- - 3  (blank palette colour 3)
+ - 3  (blank palette colour 3) (used for house bricks/window background)
  - 4 
  - 5 - scratch for building 1
  - 6 - scratch for building 2 
