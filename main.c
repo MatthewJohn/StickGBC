@@ -34,6 +34,7 @@
 #define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
 
 #define WINDOW_MAX_DIGITS_DAYS 5U
+#define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -244,6 +245,9 @@ void setup_window()
     set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
+    
+    // Move window up to only display 2 rows at top of screen
+    move_win(7, (SCREEN_HEIGHT_TILES - 2) << 3);
 }
 
 void update_window()
@@ -266,6 +270,8 @@ void update_window()
     // - 1 tile for HP symbol
     // All of the above HP-stats are padded together.
 
+    VBK_REG = 0;
+
     // Iterate over days passed
     remainder = game_state.days_passed;
 
@@ -283,8 +289,9 @@ void update_window()
             // Update remainder
             remainder = remainder / 10U;
         }
+
         // Display current digit
-        set_win_tiles(itx_x, 0U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
+        set_win_tiles(itx_x, SCREEN_HEIGHT_TILES - 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
         
         // Prepare for next digit
         itx_x -= 1U;
