@@ -89,7 +89,7 @@
  - 0 Background/pavement/road/grass/house roof (blank palette colour 0)
  - 1 Pavement edge/road markings (blank palette colour 0/1)
  - 2 Vertical Pavement edge/road markings (blank palette colour 0/1)
- - 3  (blank palette colour 3) (used for house bricks)
+ - 3  (blank palette colour 3) (used for house bricks/window background)
  - 4 
  - 5 - scratch for building 1
  - 6 - scratch for building 2 

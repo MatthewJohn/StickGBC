@@ -215,6 +215,55 @@ void setup_sprite()
     SHOW_SPRITES;
 }
 
+void setup_window()
+{
+    // Set transparency for all tiles
+    // bit 0-2 palette
+    // bit 3 - tile bank
+    // bit 4 - unused
+    // bit 5 - horizontal flip
+    // bit 6 - verical flip
+    // bit 7 Set piority flag and color palette to 1
+    tile_data = 0x80U;
+    for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
+    {
+        for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
+        {
+            VBK_REG = 0;
+            set_win_tiles(itx_x, itx_y, 1, 1, &(mainmaptiles[1 << 4]));
+            VBK_REG = 1;
+            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data);
+        }
+    }
+}
+
+void update_window()
+{
+    unsigned int itx_x = 0U;
+    unsigned int itx_y = 0U;
+    unsigned int current_digit;
+    unsigned long remainder;
+    // Screen is 20 tiles wide.
+    // Window is layed out as:
+    // Row 1:
+    // 1 tile padding on left
+    // 8 tiles for days passed, 7 numerics with symbol with right padding.
+    // 10 tiles for money, left padded (so starts by appearing in last 4 tiles). This allows for 100,000,000 with dollar symbol and 1,000,000,000 without.
+    // Row 2:
+    // HP:
+    // - 5 tiles for HP
+    // - 1 tile for '/'
+    // - 5 tiles for max HP
+    // - 1 tile for HP symbol
+    // All of the above HP-stats are padded together.
+
+    // Setup borders
+    set_win_tiles(0U, 0U, 1U, 1U, &(mainmaptiles[3U << 4U]));
+    set_win_tiles(0U, 1U, 1U, 1U, &(mainmaptiles[3U << 4U]));
+    set_win_tiles(19U, 0U, 1U, 1U, &(mainmaptiles[3U << 4U]));
+    set_win_tiles(19U, 1U, 1U, 1U, &(mainmaptiles[3U << 4U]));
+}
+
 void set_background_tiles()
 {
     // @TODO Fix the increment
@@ -791,6 +840,8 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
         else
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
+            
+        update_window();
     }
 }
 
@@ -802,6 +853,8 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
     }
+    
+    update_window();
 }
 
 // Called per cycle to update background position and sprite
@@ -1045,6 +1098,13 @@ void main()
 
     wait_vbl_done();
     SHOW_BKG;
+    
+    // Initial setup of window and update with starting stats
+    setup_window();
+    //update_window();
+    SHOW_WIN;
+
+    // And open the curtains!
     DISPLAY_ON;
         
         while(1) {
