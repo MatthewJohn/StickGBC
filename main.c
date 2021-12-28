@@ -710,11 +710,10 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_RESTAURANT)
     {
-                // Menu has 3 items, default to sleep
+        // Menu has 3 items, default to sleep
         menu_config.current_item_x = 0;
         menu_config.current_item_y = 1;
-        menu_config.menu_items = 0xFF;
-
+        menu_config.menu_items = 0x5F;
 
         // MILKSHAKE
         menu_config.menu_item_tiles[0][0] = 0x1U;  // MI
