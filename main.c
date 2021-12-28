@@ -241,10 +241,10 @@ void setup_window()
 
 void update_window()
 {
-    UINT8 current_digit;
-    UINT32 remainder;
-    UINT32 factor;
-    UINT8 displaying_digits;
+    unsigned int current_digit;
+    unsigned int remainder;
+    unsigned int factor;
+    unsigned int displaying_digits;
     // Screen is 20 tiles wide.
     // Window is layed out as:
     // Row 1:
@@ -265,32 +265,29 @@ void update_window()
     set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
-    
+
     // Iterate over days passed
     remainder = game_state.days_passed;
-    displaying_digits = 0U;
-    itx_x = 1;
-    for (itx = WINDOW_MAX_DIGITS_DAYS; itx != 0U; itx --)
-    {
-        factor = 10U ^ (itx - 1U);
-        current_digit = remainder / factor;
-        
-        // Skip digit if number not this big (digit is 0), unless at last digit, unless digits
-        // have already been displayed (e.g. 0 in 801)
-        if (current_digit == 0U && itx != 1U && displaying_digits == 0U)
-            continue;
-            
-        // Mark as having stated showing digits
-        displaying_digits = 1U;
 
-        // Update remainder
-        remainder = remainder % (10U ^ (itx - 1U));
-        
+    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
+    itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_DAYS; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (itx == (WINDOW_MAX_DIGITS_DAYS - 1U))
+        {
+            current_digit = remainder;
+        } else {
+            current_digit = remainder % 10U;
+
+            // Update remainder
+            remainder = remainder / 10U;
+        }
         // Display current digit
-        set_win_tiles(itx_x, 0U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit);
+        set_win_tiles(itx_x, 0U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
         
         // Prepare for next digit
-        itx_x += 1U;
+        itx_x -= 1U;
     }
 }
 
