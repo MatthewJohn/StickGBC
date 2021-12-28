@@ -26,8 +26,8 @@ typedef struct {
 
     unsigned int current_item_x;
     unsigned int current_item_y;
-    unsigned int max_items_x;
-    unsigned int max_items_y;
+    // Bit mask of menu items. Lower nibble is left column (x = 0), upper nibble is right (x = 1)
+    UINT8 menu_items;
     
     unsigned int tile_offset;
 } menu_config_t;
