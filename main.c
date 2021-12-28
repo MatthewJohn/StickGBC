@@ -31,7 +31,7 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
-#define IS_MENU_ITEM_ENABLED(index) menu_config.menu_items & (1 << index)
+#define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
 
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 //#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
@@ -540,24 +540,6 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
-void clear_menu_config()
-{
-    int itx_x;
-    int itx_y;
-    // Clear tile and palette arrays -
-    // entire array is 8 * 14
-    // Iterate over menu items
-    for (itx_x = 0U; itx_x != 0x8U; itx_x ++)
-        // Iterate over menu item tiles
-        for (itx_y = 0U; itx_y != 0x14U; itx_y ++)
-        {
-            menu_config.menu_item_tiles[itx_x][itx_y] = 0U;
-            menu_config.menu_item_palette[itx_x][itx_y] = 0U;
-        }
-    //memset(menu_config.menu_item_tiles, 0, 112);
-    //memset(menu_config.menu_item_palette, 0, 112);
-}
-
 void load_menu_tiles()
 {
     move_bkg(0, 0);
@@ -586,7 +568,7 @@ void load_menu_tiles()
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
             
             // For tiles on top row, use offset from menu config
-            tile_data_offset = menu_config.tile_offset;
+            tile_data_offset = menu_config->tile_offset;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -600,10 +582,10 @@ void load_menu_tiles()
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
-                if (menu_config.menu_item_tiles[menu_item_index][tile_index] == 0U)
+                if (menu_config->menu_item_tiles[menu_item_index][tile_index] == 0U)
                     continue;
 
-                tile_data_index = tile_data_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
+                tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
 
                 VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
@@ -632,8 +614,8 @@ void load_menu_tiles()
                 tile_data = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Override color palette from menu_item palette tile overrides
-                if (menu_config.menu_item_palette[menu_item_index][tile_index])
-                    tile_data = menu_config.menu_item_palette[menu_item_index][tile_index];
+                if (menu_config->menu_item_palette[menu_item_index][tile_index])
+                    tile_data = menu_config->menu_item_palette[menu_item_index][tile_index];
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -652,7 +634,7 @@ void set_menu_item_color(unsigned char palette)
 {
     unsigned int itx_y, itx_x, tile_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_index = menu_config.current_item_x + (MENU_MAX_ITEMS_X * menu_config.current_item_y);
+    unsigned int menu_item_index = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
@@ -661,12 +643,12 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            if (menu_config.menu_item_palette[menu_item_index][tile_index] != 0U)
-                palette_colors[itx_x] = menu_config.menu_item_palette[menu_item_index][tile_index];
+            if (menu_config->menu_item_palette[menu_item_index][tile_index] != 0U)
+                palette_colors[itx_x] = menu_config->menu_item_palette[menu_item_index][tile_index];
          }
         set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_config.current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_config.current_item_y),
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
             MENU_ITEM_WIDTH, 1,
             &palette_colors
         );
@@ -689,130 +671,20 @@ void setup_building_menu()
     DRAW_OFFSET_Y = 0U;
     DRAW_MAX_X = SCREEN_WIDTH_TILES;
     DRAW_MAX_Y = SCREEN_HEIGHT_TILES;
-    
-    // Setup config for main menu
-    clear_menu_config();
 
     if (game_state.current_building == S_B_HOUSE)
     {
         // Menu has 3 items, default to sleep
-        menu_config.current_item_x = 1;
-        menu_config.current_item_y = 3;
-        menu_config.menu_items = 0x82;
-    
-        menu_config.menu_item_tiles[7][0] = 0x1U;  // SL
-        menu_config.menu_item_tiles[7][1] = 0x2U;  // EE
-        menu_config.menu_item_tiles[7][2] = 0x3U;  // P
-    
-        // Number of tiles offset for palette data
-        menu_config.tile_offset = 0x10U;
+        menu_state.current_item_x = 1;
+        menu_state.current_item_y = 3;
+        menu_config = &menu_config_house;
     }
     else if (game_state.current_building == S_B_RESTAURANT)
     {
         // Menu has 3 items, default to sleep
-        menu_config.current_item_x = 0;
-        menu_config.current_item_y = 1;
-        menu_config.menu_items = 0x5F;
-
-        // MILKSHAKE
-        menu_config.menu_item_tiles[0][0] = 0x1U;  // MI
-        menu_config.menu_item_tiles[0][1] = 0x2U;  // LK
-        menu_config.menu_item_tiles[0][2] = 0x3U;  // SH
-        menu_config.menu_item_tiles[0][3] = 0x4U;  // AK
-        menu_config.menu_item_tiles[0][4] = 0x5U;  // E
-
-        menu_config.menu_item_tiles[0][6] = 0x2U; // 1
-        menu_config.menu_item_palette[0][6] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[0][7] = 0x3U; // 2
-        menu_config.menu_item_palette[0][7] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[0][8] = 0xCU; // HP
-        menu_config.menu_item_palette[0][8] = MENU_ITEM_HP_PALETTE;
-        
-        menu_config.menu_item_tiles[0][10] = 0xBU; // $
-        menu_config.menu_item_palette[0][10] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[0][11] = 0x9U; // 8
-        menu_config.menu_item_palette[0][11] = MENU_ITEM_COST_PALETTE;
-        // END
-
-        // FRIES
-        menu_config.menu_item_tiles[2][0] = 0x6U;  // FR
-        menu_config.menu_item_tiles[2][1] = 0x7U;  // IE
-        menu_config.menu_item_tiles[2][2] = 0x8U;  // S
-
-        menu_config.menu_item_tiles[2][6] = 0x3U; // 2
-        menu_config.menu_item_palette[2][6] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[2][7] = 0x1U; // 0
-        menu_config.menu_item_palette[2][7] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[2][8] = 0xCU; // HP
-        menu_config.menu_item_palette[2][8] = MENU_ITEM_HP_PALETTE;
-        
-        menu_config.menu_item_tiles[2][9] = 0xBU; // $
-        menu_config.menu_item_palette[2][9] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[2][10] = 0x2U; // 1
-        menu_config.menu_item_palette[2][10] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[2][11] = 0x3U; // 2
-        menu_config.menu_item_palette[2][11] = MENU_ITEM_COST_PALETTE;
-        // END
-
-        // CHEESE BURGER
-        menu_config.menu_item_tiles[4][0] = 0x9U;  // CH
-        menu_config.menu_item_tiles[4][1] = 0xAU;  // EE
-        menu_config.menu_item_tiles[4][2] = 0xBU;  //  SE
-        menu_config.menu_item_tiles[4][3] = 0xCU;  //  BU
-        menu_config.menu_item_tiles[4][4] = 0xDU;  //  RG
-        menu_config.menu_item_tiles[4][5] = 0xEU;  //  ER
-
-        menu_config.menu_item_tiles[4][6] = 0x5U; // 4
-        menu_config.menu_item_palette[4][6] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[4][7] = 0x1U; // 0
-        menu_config.menu_item_palette[4][7] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[4][8] = 0xCU; // HP
-        menu_config.menu_item_palette[4][8] = MENU_ITEM_HP_PALETTE;
-        
-        menu_config.menu_item_tiles[4][9] = 0xBU; // $
-        menu_config.menu_item_palette[4][9] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[4][10] = 0x3U; // 2
-        menu_config.menu_item_palette[4][10] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[4][11] = 0x6U; // 5
-        menu_config.menu_item_palette[4][11] = MENU_ITEM_COST_PALETTE;
-        // END
-
-        // TRIPLE BURGER
-        menu_config.menu_item_tiles[6][0] = 0xFU;  // TR
-        menu_config.menu_item_tiles[6][1] = 0x10U;  // PL
-        menu_config.menu_item_tiles[6][3] = 0xCU;  //  BU
-        menu_config.menu_item_tiles[6][4] = 0xDU;  //  RG
-        menu_config.menu_item_tiles[6][5] = 0xEU;  //  ER
-
-        menu_config.menu_item_tiles[6][6] = 0x9U; // 8
-        menu_config.menu_item_palette[6][6] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[6][7] = 0x1U; // 0
-        menu_config.menu_item_palette[6][7] = MENU_ITEM_HP_PALETTE;
-        menu_config.menu_item_tiles[6][8] = 0xCU; // HP
-        menu_config.menu_item_palette[6][8] = MENU_ITEM_HP_PALETTE;
-        
-        menu_config.menu_item_tiles[6][9] = 0xBU; // $
-        menu_config.menu_item_palette[6][9] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[6][10] = 0x6U; // 5
-        menu_config.menu_item_palette[6][10] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[6][11] = 0x1U; // 0
-        menu_config.menu_item_palette[6][11] = MENU_ITEM_COST_PALETTE;
-        // END
-        
-        // WORK
-        menu_config.menu_item_tiles[3][0] = 0x11U;  // WO
-        menu_config.menu_item_tiles[3][1] = 0x12U;  // RK
-        menu_config.menu_item_tiles[3][2] = 0x13U;  //  K
-        
-        menu_config.menu_item_tiles[3][9] = 0xBU; // $
-        menu_config.menu_item_palette[3][9] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[3][10] = 0x7U; // 6
-        menu_config.menu_item_palette[3][10] = MENU_ITEM_COST_PALETTE;
-        menu_config.menu_item_tiles[3][11] = 0xDU; // /HR
-        menu_config.menu_item_palette[3][11] = MENU_ITEM_COST_PALETTE;
-        // END
-
-        menu_config.tile_offset = 0x15U;
+        menu_state.current_item_x = 0;
+        menu_state.current_item_y = 1;
+        menu_config = &menu_config_restaurant;
     }
 
     HIDE_SPRITES;
@@ -1028,34 +900,34 @@ void update_state()
             // Since there's only two items in X direction of menu, do a simple hard coded check
             if (
                     (
-                        (travel_x == 1 && menu_config.current_item_x == 0U) ||
-                        (travel_x == -1 && menu_config.current_item_x == 1U)
+                        (travel_x == 1 && menu_state.current_item_x == 0U) ||
+                        (travel_x == -1 && menu_state.current_item_x == 1U)
                     ) &&
-                    IS_MENU_ITEM_ENABLED(menu_config.current_item_x + travel_x + (menu_config.current_item_y * MENU_MAX_ITEMS_X))
+                    IS_MENU_ITEM_ENABLED(menu_state.current_item_x + travel_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X))
                 )
-                menu_config.current_item_x += travel_x;
+                menu_state.current_item_x += travel_x;
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
         
             if (travel_y == 1)
             {
-                itx_start = menu_config.current_item_y + 1U;
+                itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
-                    if (IS_MENU_ITEM_ENABLED(menu_config.current_item_x + (itx * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        menu_config.current_item_y = itx;
+                        menu_state.current_item_y = itx;
                         break;
                     }
             }
-            else if (travel_y == -1 && menu_config.current_item_y != 0U)
+            else if (travel_y == -1 && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
-                for (itx = menu_config.current_item_y; itx != 0U; itx --)
-                    if (IS_MENU_ITEM_ENABLED(menu_config.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
+                for (itx = menu_state.current_item_y; itx != 0U; itx --)
+                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        menu_config.current_item_y = itx - 1U;
+                        menu_state.current_item_y = itx - 1U;
                         break;
                     }
             }
@@ -1070,12 +942,12 @@ void update_state()
         if (a_pressed)
         {
             // Check if 'exit' selected
-            if (menu_config.current_item_y == 0U && menu_config.current_item_x == 1U)
+            if (menu_state.current_item_y == 0U && menu_state.current_item_x == 1U)
                 // If exiting menu, load main map
                 setup_main_map();
                 
             // If selected sleep in house
-            if (game_state.current_building == S_B_HOUSE && menu_config.current_item_y == 1U)
+            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 1U)
             {
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
                 game_state.days_passed += 1U;
