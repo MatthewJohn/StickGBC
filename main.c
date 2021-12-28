@@ -237,6 +237,13 @@ void setup_window()
         }
     }
     VBK_REG = 0;
+    
+    // Setup borders
+    tile_data_meta = 3U;
+    set_win_tiles(0U, 0U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
 }
 
 void update_window()
@@ -258,13 +265,6 @@ void update_window()
     // - 5 tiles for max HP
     // - 1 tile for HP symbol
     // All of the above HP-stats are padded together.
-
-    // Setup borders
-    tile_data_meta = 3U;
-    set_win_tiles(0U, 0U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
 
     // Iterate over days passed
     remainder = game_state.days_passed;
