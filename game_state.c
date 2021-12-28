@@ -11,6 +11,7 @@
 #define S_B_NO_BUILDING 0x00U
 #define S_B_MAIN_MENU 0x01U
 #define S_B_HOUSE 0x02U
+#define S_B_RESTAURANT 0x04U
 
 #define S_HOUR_WAKEUP_NORMAL 0x04U;
 
