@@ -243,10 +243,10 @@ void setup_window()
 
 void update_window()
 {
-    unsigned int itx_x = 0U;
-    unsigned int itx_y = 0U;
-    unsigned int current_digit;
+    unsigned short current_digit;
     unsigned long remainder;
+    unsigned long factor;
+    UINT8 displaying_digits;
     // Screen is 20 tiles wide.
     // Window is layed out as:
     // Row 1:
@@ -267,6 +267,33 @@ void update_window()
     set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
     set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
+    
+    // Iterate over days passed
+    remainder = game_state.days_passed;
+    displaying_digits = 0U;
+    itx_x = 1;
+    for (itx = 8; itx != 0U; itx --)
+    {
+        factor = 10U ^ (itx - 1U);
+        current_digit = remainder / factor;
+        
+        // Skip digit if number not this big (digit is 0), unless at last digit, unless digits
+        // have already been displayed (e.g. 0 in 801)
+        if (current_digit == 0U && itx != 1U && displaying_digits == 0U)
+            continue;
+            
+        // Mark as having stated showing digits
+        displaying_digits = 1U;
+
+        // Update remainder
+        remainder = remainder % (10U ^ (itx - 1U));
+        
+        // Display current digit
+        set_win_tiles(itx_x, 0U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit);
+        
+        // Prepare for next digit
+        itx_x += 1U;
+    }
 }
 
 void set_background_tiles()
@@ -289,6 +316,9 @@ void set_background_tiles()
 
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
+    
+    // Load in digits/symbols from building menu tiles
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 15, buildingmenutiles);
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
