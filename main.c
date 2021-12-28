@@ -1182,6 +1182,8 @@ void update_state()
                         do_work(6U, 6U);
                     }
                 }
+                // Delay after purchasing, to avoid double purchase
+                delay(700);
             }
         }
     }
