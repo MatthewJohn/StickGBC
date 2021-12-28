@@ -31,6 +31,8 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
+#define IS_MENU_ITEM_ENABLED(index) menu_config.menu_items & (1 << index)
+
 //#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
 //#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
 #define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
@@ -128,6 +130,10 @@ unsigned int DRAW_MAX_Y;
 // changing to another map
 unsigned int background_palette_itx_x;
 unsigned int background_palette_itx_y;
+
+// General iterators
+unsigned int itx_start;
+unsigned int itx;
 
 
 // Bunch of variables from load_menu_tiles.
@@ -563,7 +569,7 @@ void load_menu_tiles()
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
 
             // Check if tile is a valid tile
-            if (! menu_config.menu_items & (1 << menu_item_index))
+            if (! IS_MENU_ITEM_ENABLED(menu_item_index))
                 continue;
 
             second_tile_row = 0U;
@@ -669,7 +675,7 @@ void setup_building_menu()
         // Menu has 3 items, default to sleep
         menu_config.current_item_x = 1;
         menu_config.current_item_y = 3;
-        menu_config.menu_items = 0x90;
+        menu_config.menu_items = 0x82;
     
         menu_config.menu_item_tiles[7][0] = 0x1U;  // SL
         menu_config.menu_item_tiles[7][1] = 0x2U;  // EE
@@ -896,21 +902,34 @@ void update_state()
             set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
-            if ((travel_x == 1 && (menu_config.menu_items & 1 << (menu_config.current_item_x + 1U))) ||
-                    (travel_x == -1 &&
-                     menu_config.current_item_x != 0U &&
-                     (travel_x == -1 && (menu_config.menu_items & 1 << (menu_config.current_item_x - 1U)))
-                    )
-                )
+            // Since there's only two items in X direction of menu, do a simple hard coded check
+            if (travel_x != 0 && IS_MENU_ITEM_ENABLED(menu_config.current_item_x + travel_x + (menu_config.current_item_y * MENU_MAX_ITEMS_X)))
                 menu_config.current_item_x += travel_x;
 
-            if ((travel_y == 1 && (menu_config.menu_items & 1 << (menu_config.current_item_y + 0xFU))) ||
-                    (travel_y == -1 &&
-                     menu_config.current_item_y != 0 &&
-                     (travel_y == -1 && (menu_config.menu_items & 1 << (menu_config.current_item_y - 0xFU)))
-                    )
-                )
-                menu_config.current_item_y += travel_y;
+            // Until I can find a nicer way of doing this. Go in direction of menu travel and
+            // check if there is an option available
+        
+            if (travel_y == 1)
+            {
+                itx_start = menu_config.current_item_y + 1U;
+                for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
+                    if (IS_MENU_ITEM_ENABLED(menu_config.current_item_x + (itx * MENU_MAX_ITEMS_X)))
+                    {
+                        menu_config.current_item_y = itx;
+                        break;
+                    }
+            }
+            else if (travel_y == -1 && menu_config.current_item_y != 0U)
+            {
+                // Since we're going from current itx (Y -1) to 0,
+                // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
+                for (itx = menu_config.current_item_y; itx != 0U; itx --)
+                    if (IS_MENU_ITEM_ENABLED(menu_config.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
+                    {
+                        menu_config.current_item_y = itx - 1U;
+                        break;
+                    }
+            }
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
         }
