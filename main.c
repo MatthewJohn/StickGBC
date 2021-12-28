@@ -86,7 +86,9 @@ UBYTE * debug_address;
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
+// Temporary storage for transfer of tile data and tile data vram1 data
 UBYTE tile_data;
+UBYTE tile_data_meta;
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -218,23 +220,25 @@ void setup_sprite()
 void setup_window()
 {
     // Set transparency for all tiles
+    tile_data = 0x00U;
     // bit 0-2 palette
     // bit 3 - tile bank
     // bit 4 - unused
     // bit 5 - horizontal flip
     // bit 6 - verical flip
     // bit 7 Set piority flag and color palette to 1
-    tile_data = 0x80U;
+    tile_data_meta = 0x80U;
     for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
     {
         for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
         {
             VBK_REG = 0;
-            set_win_tiles(itx_x, itx_y, 1, 1, &(mainmaptiles[1 << 4]));
-            VBK_REG = 1;
             set_win_tiles(itx_x, itx_y, 1, 1, &tile_data);
+            VBK_REG = 1;
+            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data_meta);
         }
     }
+    VBK_REG = 0;
 }
 
 void update_window()
@@ -258,10 +262,11 @@ void update_window()
     // All of the above HP-stats are padded together.
 
     // Setup borders
-    set_win_tiles(0U, 0U, 1U, 1U, &(mainmaptiles[3U << 4U]));
-    set_win_tiles(0U, 1U, 1U, 1U, &(mainmaptiles[3U << 4U]));
-    set_win_tiles(19U, 0U, 1U, 1U, &(mainmaptiles[3U << 4U]));
-    set_win_tiles(19U, 1U, 1U, 1U, &(mainmaptiles[3U << 4U]));
+    tile_data_meta = 3U;
+    set_win_tiles(0U, 0U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
+    set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
 }
 
 void set_background_tiles()
@@ -1093,16 +1098,16 @@ void main()
     DISPLAY_OFF;
     setup_globals();
 
-    // Load background tiles
-    setup_main_map();
-
     wait_vbl_done();
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
     setup_window();
-    //update_window();
+    update_window();
     SHOW_WIN;
+    
+    // Load background tiles. This turns display on, so run last
+    setup_main_map();
 
     // And open the curtains!
     DISPLAY_ON;
