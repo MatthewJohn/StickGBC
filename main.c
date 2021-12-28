@@ -307,7 +307,7 @@ void update_window()
             remainder = remainder / 10U;
         }
         
-        if (remainder == 0U && itx != 0)
+        if (remainder == 0U && current_digit == 0U && itx != 0)
             break;
 
         // Display current digit
