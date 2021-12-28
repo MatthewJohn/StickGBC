@@ -184,6 +184,11 @@ void setup_globals()
     game_state.current_building = S_B_NO_BUILDING;
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
+    // Start with $100
+    game_state.balance = 100U;
+
+    game_state.max_hp = 23U;
+    game_state.hp = 23U;
 
     screen_state.displayed_buildings = SC_HOUSE;
 
@@ -765,6 +770,36 @@ void update_loaded_buildings_y_down()
     }
 }
 
+void purchase_food(UINT8 cost, UINT8 gained_hp)
+{
+    // Breaking the rules using >=, but
+    // only performed when buying an item
+    // and currency is decimal, making very difficult
+    // to do using bit shifting (and at least probably
+    // less CPU intensive)
+    if (game_state.balance >= cost)
+    {
+        game_state.balance -= cost;
+        
+        // If new HP would exeed max HP, limit new HP to difference
+        if (gained_hp >= (game_state.max_hp - game_state.hp))
+            game_state.hp = game_state.max_hp;
+        else
+            // Otherwise, add new HP to HP
+            game_state.hp += gained_hp;
+    }
+}
+
+void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
+{
+    if ((S_HOURS_PER_DAY - game_state.hour) >= number_of_hours)
+    {
+        // Increase balance and increase time of day
+        game_state.balance += (pay_per_hour * number_of_hours);
+        game_state.hour += number_of_hours;
+    }
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -948,7 +983,7 @@ void update_state()
                 setup_main_map();
                 
             // If selected sleep in house
-            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
+            else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
                 game_state.days_passed += 1U;
@@ -958,6 +993,36 @@ void update_state()
                 DISPLAY_OFF;
                 delay(1000);
                 DISPLAY_ON;
+            }
+            // Handle menu selections from restaurant
+            else if (game_state.current_building == S_B_RESTAURANT)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 0U)  // Milkshake
+                    {
+                        purchase_food(8U, 12U);
+                    }
+                    else if (menu_state.current_item_y == 1U)  // Fries
+                    {
+                        purchase_food(12U, 20U);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Cheeseburger
+                    {
+                        purchase_food(25U, 40U);
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Triple Burger
+                    {
+                        purchase_food(50U, 80U);
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Work
+                    {
+                        do_work(6U, 6U);
+                    }
+                }
             }
         }
     }
