@@ -5,6 +5,10 @@
  */
 
 
+
+# ifndef MENU_CONFIG_DEF
+#define MENU_CONFIG_DEF 1
+
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
 
@@ -37,4 +41,5 @@ typedef struct {
     unsigned int tile_offset;
 } menu_config_t;
 
-
+// Define global instance of menu config
+menu_config_t menu_config;

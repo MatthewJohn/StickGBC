@@ -111,7 +111,6 @@ UINT8 sprite_prop_data;
 
 // Game state
 game_state_t game_state;
-menu_config_t menu_config;
 screen_state_t screen_state;
 
 // Globals used when redrawing map
