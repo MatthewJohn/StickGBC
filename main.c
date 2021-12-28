@@ -265,7 +265,6 @@ void update_window()
     unsigned int current_digit;
     unsigned int remainder;
     unsigned short shown_symbol;
-    signed int itx_s;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -375,12 +374,12 @@ void update_window()
     itx_x -= 1U;
     shown_symbol = 0U;
     remainder = game_state.max_hp;
-    for (itx_s = 0; itx_s != WINDOW_MAX_DIGITS_HP; itx_s ++)
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_HP; itx ++)
     {
         // If on last iteration, update digit with remainder
         if (remainder != 0U || current_digit != 0U)
         {
-            if (itx_s == (WINDOW_MAX_DIGITS_HP - 1U))
+            if (itx == (WINDOW_MAX_DIGITS_HP - 1U))
             {
                 current_digit = remainder;
             } else {
@@ -391,7 +390,7 @@ void update_window()
             }
         }
     
-        if (remainder == 0U && current_digit == 0U && itx_s != 0)
+        if (remainder == 0U && current_digit == 0U && itx != 0)
         {
             // Display dollar symbol, if not already shown
             if (shown_symbol == 0U)
@@ -401,11 +400,9 @@ void update_window()
                 
                 // Once complete with max_hp, continue to actual HP value
                 remainder = game_state.hp;
-                // Remove lenght of the entire digit array.
-                // This will go to negative, but will mean the total number
-                // of iterations will be correct and will clear all tiles, as necessary,
-                // whilst still having a continuous line of both values.
-                itx_s -= WINDOW_MAX_DIGITS_HP;
+                // Set itx back to start. When using high number values (5 digits for each), then this may cause an issue
+                // with failing to remove the remaining digits.
+                itx = 0;
             }
             else
             {
