@@ -5,59 +5,7 @@
  */
 
 
-
-# ifndef MENU_CONFIG_DEF
-#define MENU_CONFIG_DEF 1
-
-#define MENU_MAX_ITEMS_X 2U
-#define MENU_MAX_ITEMS_Y 4U
-
-#define MENU_ITEM_WIDTH 6U
-#define MENU_ITEM_HEIGHT 2U
-#define MENU_ITEM_TILE_COUNT 12U
-#define MENU_ROW_2_TILE_DATA_OFFSET 0x6DU
-
-#define MENU_ITEM_SCREEN_OFFSET_TOP 0x03U
-#define MENU_ITEM_SCREEN_OFFSET_LEFT 0x03U
-#define MENU_ITEM_MARGIN 0x02U
-
-#define MENU_ITEM_NO_TILE 0x00U
-#define MENU_BLANK_ITEM_ROW MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE
-#define MENU_BLANK_ITEM {MENU_BLANK_ITEM_ROW, MENU_BLANK_ITEM_ROW}
-
-#define MENU_ITEM_NO_PALETTE 0x00U
-#define MENU_ITEM_NO_PALETTE_ROW MENU_ITEM_NO_PALETTE, MENU_ITEM_NO_PALETTE, \
-                                                                             MENU_ITEM_NO_PALETTE, MENU_ITEM_NO_PALETTE, \
-                                                                             MENU_ITEM_NO_PALETTE, MENU_ITEM_NO_PALETTE
-#define MENU_ITEM_DEFAULT_PALETTE 0x01U
-#define MENU_ITEM_SELECTED_PALETTE 0x02U
-#define MENU_ITEM_COST_PALETTE 0x03U
-#define MENU_ITEM_HP_PALETTE 0x04U
-#define MENU_ITEM_STRENGTH_PALETTE 0x05U
-#define MENU_ITEM_INTELLIGENCE_PALETTE 0x06U
-#define MENU_BLANK_ITEM_PALETTE {MENU_ITEM_NO_PALETTE_ROW, MENU_ITEM_NO_PALETTE_ROW}
-
-typedef struct {
-    // Menu can contain 8 items each with 12 tiles
-    unsigned int menu_item_tiles[8][12];
-    unsigned char menu_item_palette[8][12];
-
-    // Bit mask of menu items. Lower nibble is left column (x = 0), upper nibble is right (x = 1)
-    UINT8 menu_items;
-    
-    unsigned int tile_offset;
-} menu_config_t;
-
-typedef struct {
-    unsigned int current_item_x;
-    unsigned int current_item_y;
-} menu_state_t;
-
-// Define global instance of menu config
-menu_config_t *menu_config;
-
-menu_state_t menu_state;
-
+#include "menu_config.h"
 
 // BUILDING MENU DEFINITIONS
 
