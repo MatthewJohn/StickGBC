@@ -254,8 +254,6 @@ void setup_window()
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &tile_data);
     tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &tile_data);
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 5U, 0U, 1U, 1U, &tile_data);
 
     // Move window up to only display 2 rows at top of screen
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
@@ -265,13 +263,6 @@ void update_window()
 {
     unsigned int current_digit;
     unsigned int remainder;
-    unsigned int factor;
-    unsigned int displaying_digits;
-    unsigned int finish_digit;
-    // Set to size of balance digits, as this is the most 
-    unsigned char digit_tiles[WINDOW_MAX_DIGITS_BALANCE];
-    unsigned char* digit_tiles_p;
-    unsigned int array_index;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -324,16 +315,12 @@ void update_window()
 
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
     // Remove 1 as loop iterator starting at 1 
-    itx_x = 5U + WINDOW_MAX_DIGITS_DAYS;
+    itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
 
-    // Setup tile data to clear display
-    tile_data = 0x01U;
-    finish_digit = 0x0U;
-    itx_end = WINDOW_MAX_DIGITS_BALANCE + 1U;
-    for (itx = 1; itx != itx_end; itx ++)
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
     {
         // If on last iteration, update digit with remainder
-        if (itx == WINDOW_MAX_DIGITS_BALANCE)
+        if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
         {
             current_digit = remainder;
         } else {
@@ -343,31 +330,20 @@ void update_window()
             remainder = remainder / 10U;
         }
         
-        array_index = WINDOW_MAX_DIGITS_BALANCE - itx;
-        // If current digit has no value and there's no left,
-        // mark final digit index (if not already done), show
-        // trailing 0 if first character.
-        if (remainder == 0U && current_digit == 0U)
+        if (remainder == 0U && current_digit == 0U && itx != 0)
         {
-            // Only show leading 0s if it's the first digit
-            if (itx == 1U)
-                digit_tiles[array_index] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
-            else if (finish_digit == 0x0U)
-                finish_digit = itx;
-        } else {
-            // Otherwise, if there's still a remainder, continue to prepare characters and
-            // put onto end of tiles array
-            digit_tiles[array_index] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+            // Display dollar symbol and exit
+            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
+            set_win_tiles(itx_x, 0U, 1U, 1U, &tile_data);
+            break;
         }
-        // Clear tile for current digit
-        //set_win_tiles(itx_x + itx, 0U, 1U, 1U, &tile_data);
-    }
-    // Display digits
-    for (itx = 0; itx != finish_digit; itx ++)
-    {
-        itx_x += 1;
-        tile_data = digit_tiles[(WINDOW_MAX_DIGITS_BALANCE - finish_digit) + itx];
-        set_win_tiles(itx_x, 0U, 1U, 1U, &tile_data);
+
+        // Display current digit
+        tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
+
+        // Prepare for next digit
+        itx_x -= 1U;
     }
 }
 
