@@ -583,9 +583,7 @@ void load_menu_tiles()
                 }
 
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index] == 0U)
-                {
                     continue;
-                }
 
                 tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
 
@@ -669,13 +667,13 @@ void setup_building_menu()
     if (game_state.current_building == S_B_HOUSE)
     {
         // Menu has 3 items, default to sleep
-        menu_config.current_item_x = 0;
-        menu_config.current_item_y = 1;
-        menu_config.menu_items = 0x10;
+        menu_config.current_item_x = 1;
+        menu_config.current_item_y = 3;
+        menu_config.menu_items = 0x90;
     
-        menu_config.menu_item_tiles[1][0] = 0x1U;  // SL
-        menu_config.menu_item_tiles[1][1] = 0x2U;  // EE
-        menu_config.menu_item_tiles[1][2] = 0x3U;  // P
+        menu_config.menu_item_tiles[7][0] = 0x1U;  // SL
+        menu_config.menu_item_tiles[7][1] = 0x2U;  // EE
+        menu_config.menu_item_tiles[7][2] = 0x3U;  // P
     
         // Number of tiles offset for palette data
         menu_config.tile_offset = 0x10U;
