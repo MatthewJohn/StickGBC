@@ -149,6 +149,7 @@ UINT8 tile_itx_y_start;
 UINT8 tile_itx_x;
 UINT8 tile_itx_y;
 UINT8 second_tile_row;
+unsigned int tile_data_offset;
 
 
 UWORD palette_transfer[4];
@@ -581,6 +582,9 @@ void load_menu_tiles()
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
             tile_itx_x_start = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
+            
+            // For tiles on top row, use offset from menu config
+            tile_data_offset = menu_config.tile_offset;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -590,12 +594,14 @@ void load_menu_tiles()
                 {
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
+                    // Use row 2 offset for numbers and symbols
+                    tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
                 if (menu_config.menu_item_tiles[menu_item_index][tile_index] == 0U)
                     continue;
 
-                tile_data_index = menu_config.tile_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
+                tile_data_index = tile_data_offset + menu_config.menu_item_tiles[menu_item_index][tile_index];
 
                 VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
@@ -700,6 +706,14 @@ void setup_building_menu()
         menu_config.menu_item_tiles[0][2] = 0x3U;  // SH
         menu_config.menu_item_tiles[0][3] = 0x4U;  // AK
         menu_config.menu_item_tiles[0][4] = 0x5U;  // E
+
+        menu_config.menu_item_tiles[0][6] = 0x2U; // 1
+        menu_config.menu_item_tiles[0][7] = 0x3U; // 2
+        menu_config.menu_item_tiles[0][8] = 0xCU; // HP
+        
+        menu_config.menu_item_tiles[0][10] = 0xBU; // $
+        menu_config.menu_item_tiles[0][11] = 0x9U; // 8
+        
         menu_config.tile_offset = 0x15U;
     }
 
