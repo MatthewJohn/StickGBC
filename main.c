@@ -12,10 +12,10 @@
 
 #include "main_map_tileset.c"
 #include "main_map.h"
-#include "main_map_palette.c"
+#include "main_map_palette.h"
 #include "main_map_boundaries.h"
 
-#include "building_menu_tiles.c"
+#include "building_menu_tiles.h"
 #include "building_menu_map.h"
 #include "building_menu_palette.c"
 
@@ -33,9 +33,10 @@
 
 #define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
 
-//#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
-//#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
-#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
+#define WINDOW_MAX_DIGITS_DAYS 5U
+#define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
+#define WINDOW_MAX_DIGITS_BALANCE 0x6U
+#define WINDOW_MAX_DIGITS_HP 0x5U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -86,7 +87,9 @@ UBYTE * debug_address;
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
+// Temporary storage for transfer of tile data and tile data vram1 data
 UBYTE tile_data;
+UBYTE tile_data_meta;
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -136,6 +139,7 @@ unsigned int background_palette_itx_y;
 
 // General iterators
 unsigned int itx_start;
+unsigned int itx_end;
 unsigned int itx;
 
 
@@ -186,6 +190,7 @@ void load_building_tile_data()
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
+    // @TODO make sure display works after 999
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
     // Start with $100
@@ -215,6 +220,209 @@ void setup_sprite()
     SHOW_SPRITES;
 }
 
+void setup_window()
+{
+    // Set transparency for all tiles
+    tile_data = 0x00U;
+    // bit 0-2 palette
+    // bit 3 - tile bank
+    // bit 4 - unused
+    // bit 5 - horizontal flip
+    // bit 6 - verical flip
+    // bit 7 Set piority flag and color palette to 1
+    tile_data_meta = 0x81U;
+    for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
+    {
+        for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
+        {
+            VBK_REG = 0;
+            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data);
+            VBK_REG = 1;
+            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data_meta);
+        }
+    }
+    VBK_REG = 0;
+    
+    // Setup borders
+    tile_data = 0U;
+    set_win_tiles(0U, 0U, 1U, 1U, &tile_data);
+    set_win_tiles(0U, 1U, 1U, 1U, &tile_data);
+    set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
+    set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
+    
+    // Setup 'days''
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &tile_data);
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &tile_data);
+
+    // Move window up to only display 2 rows at top of screen
+    move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
+}
+
+void update_window()
+{
+    unsigned int current_digit;
+    unsigned int remainder;
+    unsigned short shown_symbol;
+
+    // Screen is 20 tiles wide.
+    // Window is layed out as:
+    // Row 1:
+    // 1 tile padding on left
+    // 6 tiles for days passed, 5 numerics with symbol with right padding.
+    // 10 tiles for money, left padded (so starts by appearing in last 4 tiles). This allows for 100,000,000 with dollar symbol and 1,000,000,000 without.
+    // Row 2:
+    // HP:
+    // - 5 tiles for HP
+    // - 1 tile for '/'
+    // - 5 tiles for max HP
+    // - 1 tile for HP symbol
+    // All of the above HP-stats are padded together.
+
+    VBK_REG = 0;
+
+    // DAYS PASSED
+    remainder = game_state.days_passed;
+
+    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
+    itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_DAYS; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (itx == (WINDOW_MAX_DIGITS_DAYS - 1U))
+        {
+            current_digit = remainder;
+        } else {
+            current_digit = remainder % 10U;
+
+            // Update remainder
+            remainder = remainder / 10U;
+        }
+        
+        if (remainder == 0U && current_digit == 0U && itx != 0)
+            break;
+
+        // Display current digit
+        tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
+
+        // Prepare for next digit
+        itx_x -= 1U;
+    }
+    
+    // BALANCE
+    // Iterate over days passed
+    remainder = game_state.balance;
+
+    shown_symbol = 0U;
+
+    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
+    // Remove 1 as loop iterator starting at 1 
+    itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
+
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (remainder != 0U || current_digit != 0U)
+        {
+            if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
+            {
+                current_digit = remainder;
+            } else {
+                current_digit = remainder % 10U;
+
+                // Update remainder
+                remainder = remainder / 10U;
+            }
+        }
+    
+        if (remainder == 0U && current_digit == 0U && itx != 0)
+        {
+            // Display dollar symbol, if not already shown
+            if (shown_symbol == 0U)
+            {
+                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
+                shown_symbol = 1U;
+            }
+            else
+            {
+                // Otherwise display blank tile
+                tile_data = 0x00;
+            }
+        }
+        else
+        {
+            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        }
+
+        // Display current digit
+        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
+
+        // Prepare for next digit
+        itx_x -= 1U;
+    }
+    
+
+    // HP
+
+    // Start at right hand side
+    itx_x = SCREEN_WIDTH_TILES - 2U;
+    // Draw HP symbol
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 12U;
+    set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
+    itx_x -= 1U;
+    shown_symbol = 0U;
+    remainder = game_state.max_hp;
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_HP; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (remainder != 0U || current_digit != 0U)
+        {
+            if (itx == (WINDOW_MAX_DIGITS_HP - 1U))
+            {
+                current_digit = remainder;
+            } else {
+                current_digit = remainder % 10U;
+
+                // Update remainder
+                remainder = remainder / 10U;
+            }
+        }
+    
+        if (remainder == 0U && current_digit == 0U && itx != 0)
+        {
+            // Display dollar symbol, if not already shown
+            if (shown_symbol == 0U)
+            {
+                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 16U;
+                shown_symbol = 1U;
+                
+                // Once complete with max_hp, continue to actual HP value
+                remainder = game_state.hp;
+                // Set itx back to start. When using high number values (5 digits for each), then this may cause an issue
+                // with failing to remove the remaining digits.
+                itx = 0;
+            }
+            else
+            {
+                // Otherwise break
+                tile_data = 0x00;
+            }
+        }
+        else
+        {
+            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        }
+
+        // Display current digit
+        set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
+
+        // Prepare for next digit
+        itx_x -= 1U;
+    }
+}
+
 void set_background_tiles()
 {
     // @TODO Fix the increment
@@ -235,6 +443,9 @@ void set_background_tiles()
 
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
+    
+    // Load in digits/symbols from building menu tiles
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 17U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
@@ -791,6 +1002,8 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
         else
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
+            
+        update_window();
     }
 }
 
@@ -802,6 +1015,8 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
     }
+    
+    update_window();
 }
 
 // Called per cycle to update background position and sprite
@@ -990,9 +1205,11 @@ void update_state()
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
-                game_state.days_passed += 1U;
+                game_state.days_passed ++;
                 check_end_game();
-                
+
+                update_window();
+
                 // TURN OFF DISPLAY FOR 1 second
                 DISPLAY_OFF;
                 delay(1000);
@@ -1027,6 +1244,8 @@ void update_state()
                         do_work(6U, 6U);
                     }
                 }
+                // Delay after purchasing, to avoid double purchase
+                delay(700);
             }
         }
     }
@@ -1040,11 +1259,18 @@ void main()
     DISPLAY_OFF;
     setup_globals();
 
-    // Load background tiles
-    setup_main_map();
-
     wait_vbl_done();
     SHOW_BKG;
+    
+    // Initial setup of window and update with starting stats
+    setup_window();
+    update_window();
+    SHOW_WIN;
+    
+    // Load background tiles. This turns display on, so run last
+    setup_main_map();
+
+    // And open the curtains!
     DISPLAY_ON;
         
         while(1) {

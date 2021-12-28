@@ -26,7 +26,7 @@ typedef struct {
     // Current building
     UINT8 current_building;
     // In-game days passed. Might need to be int (not required for limited game plays).
-    UINT8 days_passed;
+    unsigned int days_passed;
     
     // Current hour of day (out of 12).
     UINT8 hour;
@@ -38,5 +38,5 @@ typedef struct {
     UINT8 hp;
     
     // Money the user has.
-    unsigned long balance;
+    unsigned int balance;
 } game_state_t;
