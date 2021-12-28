@@ -551,7 +551,10 @@ void clear_menu_config()
     for (itx_x = 0U; itx_x != 0x8U; itx_x ++)
         // Iterate over menu item tiles
         for (itx_y = 0U; itx_y != 0x14U; itx_y ++)
+        {
             menu_config.menu_item_tiles[itx_x][itx_y] = 0U;
+            menu_config.menu_item_palette[itx_x][itx_y] = 0U;
+        }
     //memset(menu_config.menu_item_tiles, 0, 112);
     //memset(menu_config.menu_item_palette, 0, 112);
 }
@@ -626,8 +629,12 @@ void load_menu_tiles()
 
                 VBK_REG = 1;
 
-                // Lookup tile from background tile map
+                // Load default palette
                 tile_data = MENU_ITEM_DEFAULT_PALETTE;
+
+                // Override color palette from menu_item palette tile overrides
+                if (menu_config.menu_item_palette[menu_item_index][tile_index])
+                    tile_data = menu_config.menu_item_palette[menu_item_index][tile_index];
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -644,20 +651,27 @@ void load_menu_tiles()
 
 void set_menu_item_color(unsigned char palette)
 {
-    unsigned int itx_y;
-
-    unsigned char palette_colors[MENU_ITEM_WIDTH] = {
-      palette, palette, palette, palette, palette, palette
-    };
+    unsigned int itx_y, itx_x, tile_index;
+    unsigned char palette_colors[MENU_ITEM_WIDTH];
+    unsigned int menu_item_index = menu_config.current_item_x + (MENU_MAX_ITEMS_X * menu_config.current_item_y);
 
     VBK_REG = 1;
-     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
+        {
+            palette_colors[itx_x] = palette;
+            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            if (menu_config.menu_item_palette[menu_item_index][tile_index] != 0U)
+                palette_colors[itx_x] = menu_config.menu_item_palette[menu_item_index][tile_index];
+         }
         set_bkg_tiles(
             MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_config.current_item_x),
             itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_config.current_item_y),
             MENU_ITEM_WIDTH, 1,
             &palette_colors
         );
+    }
     VBK_REG = 0;
 }
 
@@ -708,11 +722,16 @@ void setup_building_menu()
         menu_config.menu_item_tiles[0][4] = 0x5U;  // E
 
         menu_config.menu_item_tiles[0][6] = 0x2U; // 1
+        menu_config.menu_item_palette[0][6] = MENU_ITEM_HP_PALETTE;
         menu_config.menu_item_tiles[0][7] = 0x3U; // 2
+        menu_config.menu_item_palette[0][7] = MENU_ITEM_HP_PALETTE;
         menu_config.menu_item_tiles[0][8] = 0xCU; // HP
+        menu_config.menu_item_palette[0][8] = MENU_ITEM_HP_PALETTE;
         
         menu_config.menu_item_tiles[0][10] = 0xBU; // $
+        menu_config.menu_item_palette[0][10] = MENU_ITEM_COST_PALETTE;
         menu_config.menu_item_tiles[0][11] = 0x9U; // 8
+        menu_config.menu_item_palette[0][11] = MENU_ITEM_COST_PALETTE;
         
         menu_config.tile_offset = 0x15U;
     }
