@@ -22,7 +22,7 @@
 #include "main_map_sprite_tileset.c"
 
 #include "game_state.c"
-#include "menu_config.c"
+#include "menu_config.h"
 #include "screen_state.c"
 
 // Get tile pixel within from map-coordinates
@@ -112,6 +112,10 @@ UINT8 sprite_prop_data;
 // Game state
 game_state_t game_state;
 screen_state_t screen_state;
+
+// Define global instance of menu config
+menu_config_t *menu_config;
+menu_state_t menu_state;
 
 // Globals used when redrawing map
 unsigned char *background_tile_map;
