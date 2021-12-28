@@ -35,6 +35,7 @@
 
 #define WINDOW_MAX_DIGITS_DAYS 5U
 #define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
+#define WINDOW_MAX_DIGITS_BALANCE 10U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -263,6 +264,11 @@ void update_window()
     unsigned int remainder;
     unsigned int factor;
     unsigned int displaying_digits;
+    UINT8 finish_digit;
+    // Set to size of balance digits, as this is the most 
+    unsigned char digit_tiles[WINDOW_MAX_DIGITS_BALANCE];
+    unsigned char* digit_tiles_p;
+
     // Screen is 20 tiles wide.
     // Window is layed out as:
     // Row 1:
@@ -279,7 +285,7 @@ void update_window()
 
     VBK_REG = 0;
 
-    // Iterate over days passed
+    // DAYS PASSED
     remainder = game_state.days_passed;
 
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
@@ -307,6 +313,53 @@ void update_window()
         // Prepare for next digit
         itx_x -= 1U;
     }
+    
+    // BALANCE
+    // Iterate over days passed
+    remainder = game_state.balance;
+
+    // Start at WINDOW_MAX_DIGITS_BALANCE + margin from left, days digits, dollar symbol
+    itx_x = 4U + WINDOW_MAX_DIGITS_DAYS;
+
+    // Setup tile data to clear display
+    tile_data = 0x01U;
+    finish_digit = 0x0U;
+
+    for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
+        {
+            current_digit = remainder;
+        } else {
+            current_digit = remainder % 10U;
+
+            // Update remainder
+            remainder = remainder / 10U;
+        }
+        
+        // If current digit has no value and there's no left,
+        // mark final digit index (if not already done), show
+        // trailing 0 if first character.
+//        if (remainder == 0U && current_digit == 0U)
+//        {
+//            // Only show leading 0s if it's the first digit
+//            if (itx == 0U)
+//                digit_tiles[(WINDOW_MAX_DIGITS_BALANCE - itx) - 1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
+//            else if (finish_digit == 0x0U)
+//                finish_digit = itx;
+//        } else {
+            // Otherwise, if there's still a remainder, continue to prepare characters and
+            // put onto end of tiles array
+            digit_tiles[(WINDOW_MAX_DIGITS_BALANCE - itx) -1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+//        }
+        // Clear tile for current digit
+//        set_win_tiles(itx_x + itx, 0U, 1U, 1U, &tile_data);
+    }
+    // Display digits
+    digit_tiles_p = digit_tiles;
+    set_win_tiles(itx_x, 0U, finish_digit, 1, &(digit_tiles_p[WINDOW_MAX_DIGITS_BALANCE - finish_digit]));
+
 }
 
 void set_background_tiles()
