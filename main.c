@@ -219,14 +219,14 @@ void setup_sprite()
 void setup_window()
 {
     // Set transparency for all tiles
-    tile_data = 0x03U;
+    tile_data = 0x00U;
     // bit 0-2 palette
     // bit 3 - tile bank
     // bit 4 - unused
     // bit 5 - horizontal flip
     // bit 6 - verical flip
     // bit 7 Set piority flag and color palette to 1
-    tile_data_meta = 0x80U;
+    tile_data_meta = 0x81U;
     for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
     {
         for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
@@ -240,14 +240,14 @@ void setup_window()
     VBK_REG = 0;
     
     // Setup borders
-    tile_data = 3U;
+    tile_data = 0U;
     set_win_tiles(0U, 0U, 1U, 1U, &tile_data);
     set_win_tiles(0U, 1U, 1U, 1U, &tile_data);
     set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
     set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
     
     // Move window up to only display 2 rows at top of screen
-    move_win(7, (SCREEN_HEIGHT_TILES - 2) << 3);
+    move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
 
 void update_window()
