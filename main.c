@@ -289,6 +289,9 @@ void update_window()
             // Update remainder
             remainder = remainder / 10U;
         }
+        
+        if (remainder == 0U && itx != 0)
+            break;
 
         // Display current digit
         tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
