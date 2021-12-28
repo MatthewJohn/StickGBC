@@ -708,12 +708,13 @@ void check_building_enter()
     );
     
     // Check for entering house
-    // TEMP disable check to always enter house to make testing quicket
     if (tile_itx == 0x321U)
     {
         game_state.current_building = S_B_HOUSE;
         setup_building_menu();
-    } else if (tile_itx == 0x76D)
+    }
+    // Check for entering restaurant
+    else if (tile_itx == 0x76D)
     {
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu();
@@ -721,8 +722,8 @@ void check_building_enter()
     
     
     // Temporary jump to restaurant
-    game_state.current_building = S_B_RESTAURANT;
-    setup_building_menu();
+//    game_state.current_building = S_B_RESTAURANT;
+//    setup_building_menu();
         
 }
 
