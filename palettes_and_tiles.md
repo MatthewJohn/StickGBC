@@ -3,8 +3,8 @@
  0.
     * 0 - Sky/house windows
     * 1 - Background/house roof
-    * 2 - 
-    * 3 - House bricks
+    * 2 - Status window background
+    * 3 - House bricks/Static window text
  1. Road/markings
     * 0 - House roof/road
     * 1 - Road markings
