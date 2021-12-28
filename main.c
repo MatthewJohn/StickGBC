@@ -263,6 +263,7 @@ void update_window()
 {
     unsigned int current_digit;
     unsigned int remainder;
+    unsigned short shown_symbol;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -320,26 +321,39 @@ void update_window()
     for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
     {
         // If on last iteration, update digit with remainder
-        if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
+        if (remainder != 0U || current_digit != 0U)
         {
-            current_digit = remainder;
-        } else {
-            current_digit = remainder % 10U;
+            if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
+            {
+                current_digit = remainder;
+            } else {
+                current_digit = remainder % 10U;
 
-            // Update remainder
-            remainder = remainder / 10U;
+                // Update remainder
+                remainder = remainder / 10U;
+            }
         }
-        
+    
         if (remainder == 0U && current_digit == 0U && itx != 0)
         {
-            // Display dollar symbol and exit
-            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
-            set_win_tiles(itx_x, 0U, 1U, 1U, &tile_data);
-            break;
+            // Display dollar symbol, if not already shown
+            if (shown_symbol == 0U)
+            {
+                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
+                shown_symbol = 1U;
+            }
+            else
+            {
+                // Otherwise display blank tile
+                tile_data = 0x00;
+            }
+        }
+        else
+        {
+            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
         }
 
         // Display current digit
-        tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
         set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
 
         // Prepare for next digit
