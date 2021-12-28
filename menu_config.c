@@ -10,7 +10,7 @@
 // BUILDING MENU DEFINITIONS
 
 // HOUSE
-static const menu_config_t menu_config_house = {
+const menu_config_t menu_config_house = {
     {
         // Blank item 1
         MENU_BLANK_ITEM,
@@ -45,7 +45,7 @@ static const menu_config_t menu_config_house = {
 };
 
 // RESTAURANT
-static const menu_config_t menu_config_restaurant = {
+const menu_config_t menu_config_restaurant = {
     {
         {
             // MILKSHAKE
