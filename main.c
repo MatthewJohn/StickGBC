@@ -33,9 +33,7 @@
 
 #define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
 
-//#define DEBUG_HIGHLIGHT_TILE_BOUNDARY 1U
-//#define DEBUG_HIGHLIGHT_VERTICAL_FLIP_TILE 1U
-#define DEBUG_HIGHLIGHT_HORIZONTAL_FLIP_TILE 1U
+#define WINDOW_MAX_DIGITS_DAYS 5U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -251,7 +249,7 @@ void update_window()
     // Window is layed out as:
     // Row 1:
     // 1 tile padding on left
-    // 8 tiles for days passed, 7 numerics with symbol with right padding.
+    // 6 tiles for days passed, 5 numerics with symbol with right padding.
     // 10 tiles for money, left padded (so starts by appearing in last 4 tiles). This allows for 100,000,000 with dollar symbol and 1,000,000,000 without.
     // Row 2:
     // HP:
@@ -272,7 +270,7 @@ void update_window()
     remainder = game_state.days_passed;
     displaying_digits = 0U;
     itx_x = 1;
-    for (itx = 8; itx != 0U; itx --)
+    for (itx = WINDOW_MAX_DIGITS_DAYS; itx != 0U; itx --)
     {
         factor = 10U ^ (itx - 1U);
         current_digit = remainder / factor;
