@@ -12,10 +12,10 @@
 
 #include "main_map_tileset.c"
 #include "main_map.h"
-#include "main_map_palette.c"
+#include "main_map_palette.h"
 #include "main_map_boundaries.h"
 
-#include "building_menu_tiles.c"
+#include "building_menu_tiles.h"
 #include "building_menu_map.h"
 #include "building_menu_palette.c"
 
@@ -243,9 +243,9 @@ void setup_window()
 
 void update_window()
 {
-    unsigned short current_digit;
-    unsigned long remainder;
-    unsigned long factor;
+    UINT8 current_digit;
+    UINT32 remainder;
+    UINT32 factor;
     UINT8 displaying_digits;
     // Screen is 20 tiles wide.
     // Window is layed out as:
