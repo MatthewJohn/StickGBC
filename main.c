@@ -36,6 +36,7 @@
 #define WINDOW_MAX_DIGITS_DAYS 5U
 #define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
 #define WINDOW_MAX_DIGITS_BALANCE 0x6U
+#define WINDOW_MAX_DIGITS_HP 0x5U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -264,6 +265,7 @@ void update_window()
     unsigned int current_digit;
     unsigned int remainder;
     unsigned short shown_symbol;
+    signed int itx_s;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -314,6 +316,8 @@ void update_window()
     // Iterate over days passed
     remainder = game_state.balance;
 
+    shown_symbol = 0U;
+
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
     // Remove 1 as loop iterator starting at 1 
     itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
@@ -355,6 +359,67 @@ void update_window()
 
         // Display current digit
         set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
+
+        // Prepare for next digit
+        itx_x -= 1U;
+    }
+    
+
+    // HP
+
+    // Start at right hand side
+    itx_x = SCREEN_WIDTH_TILES - 2U;
+    // Draw HP symbol
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 12U;
+    set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
+    itx_x -= 1U;
+    shown_symbol = 0U;
+    remainder = game_state.max_hp;
+    for (itx_s = 0; itx_s != WINDOW_MAX_DIGITS_HP; itx_s ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (remainder != 0U || current_digit != 0U)
+        {
+            if (itx_s == (WINDOW_MAX_DIGITS_HP - 1U))
+            {
+                current_digit = remainder;
+            } else {
+                current_digit = remainder % 10U;
+
+                // Update remainder
+                remainder = remainder / 10U;
+            }
+        }
+    
+        if (remainder == 0U && current_digit == 0U && itx_s != 0)
+        {
+            // Display dollar symbol, if not already shown
+            if (shown_symbol == 0U)
+            {
+                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 16U;
+                shown_symbol = 1U;
+                
+                // Once complete with max_hp, continue to actual HP value
+                remainder = game_state.hp;
+                // Remove lenght of the entire digit array.
+                // This will go to negative, but will mean the total number
+                // of iterations will be correct and will clear all tiles, as necessary,
+                // whilst still having a continuous line of both values.
+                itx_s -= WINDOW_MAX_DIGITS_HP;
+            }
+            else
+            {
+                // Otherwise break
+                tile_data = 0x00;
+            }
+        }
+        else
+        {
+            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        }
+
+        // Display current digit
+        set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
 
         // Prepare for next digit
         itx_x -= 1U;
