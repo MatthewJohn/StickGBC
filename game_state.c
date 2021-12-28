@@ -38,5 +38,5 @@ typedef struct {
     UINT8 hp;
     
     // Money the user has.
-    unsigned long balance;
+    unsigned int balance;
 } game_state_t;
