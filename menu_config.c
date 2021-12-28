@@ -19,6 +19,10 @@
 
 #define MENU_ITEM_DEFAULT_PALETTE 0x01U
 #define MENU_ITEM_SELECTED_PALETTE 0x02U
+#define MENU_ITEM_COST_PALETTE 0x03U
+#define MENU_ITEM_HP_PALETTE 0x04U
+#define MENU_ITEM_STRENGTH_PALETTE 0x05U
+#define MENU_ITEM_INTELLIGENCE_PALETTE 0x06U
 
 typedef struct {
     // Menu can contain 8 items each with 12 tiles
