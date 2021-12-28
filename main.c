@@ -779,6 +779,27 @@ void setup_building_menu()
         menu_config.menu_item_palette[4][11] = MENU_ITEM_COST_PALETTE;
         // END
 
+        // TRIPLE BURGER
+        menu_config.menu_item_tiles[6][0] = 0xFU;  // TR
+        menu_config.menu_item_tiles[6][1] = 0x10U;  // PL
+        menu_config.menu_item_tiles[6][3] = 0xCU;  //  BU
+        menu_config.menu_item_tiles[6][4] = 0xDU;  //  RG
+        menu_config.menu_item_tiles[6][5] = 0xEU;  //  ER
+
+        menu_config.menu_item_tiles[6][6] = 0x9U; // 8
+        menu_config.menu_item_palette[6][6] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[6][7] = 0x1U; // 0
+        menu_config.menu_item_palette[6][7] = MENU_ITEM_HP_PALETTE;
+        menu_config.menu_item_tiles[6][8] = 0xCU; // HP
+        menu_config.menu_item_palette[6][8] = MENU_ITEM_HP_PALETTE;
+        
+        menu_config.menu_item_tiles[6][9] = 0xBU; // $
+        menu_config.menu_item_palette[6][9] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[6][10] = 0x6U; // 5
+        menu_config.menu_item_palette[6][10] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[6][11] = 0x1U; // 0
+        menu_config.menu_item_palette[6][11] = MENU_ITEM_COST_PALETTE;
+        // END
         menu_config.tile_offset = 0x15U;
     }
 
