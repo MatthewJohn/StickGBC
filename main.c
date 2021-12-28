@@ -940,6 +940,8 @@ void update_state()
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
+            // Sleep to stop double pressed
+            delay(100);
         }
 
         // Check if moving menu item
