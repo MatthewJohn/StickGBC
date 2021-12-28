@@ -700,7 +700,7 @@ void setup_building_menu()
         menu_config.menu_item_tiles[0][2] = 0x3U;  // SH
         menu_config.menu_item_tiles[0][3] = 0x4U;  // AK
         menu_config.menu_item_tiles[0][4] = 0x5U;  // E
-        menu_config.tile_offset = 0x16U;
+        menu_config.tile_offset = 0x15U;
     }
 
     HIDE_SPRITES;
