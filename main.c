@@ -219,7 +219,7 @@ void setup_sprite()
 void setup_window()
 {
     // Set transparency for all tiles
-    tile_data = 0x00U;
+    tile_data = 0x03U;
     // bit 0-2 palette
     // bit 3 - tile bank
     // bit 4 - unused
@@ -240,11 +240,11 @@ void setup_window()
     VBK_REG = 0;
     
     // Setup borders
-    tile_data_meta = 3U;
-    set_win_tiles(0U, 0U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(0U, 1U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(19U, 0U, 1U, 1U, &tile_data_meta);
-    set_win_tiles(19U, 1U, 1U, 1U, &tile_data_meta);
+    tile_data = 3U;
+    set_win_tiles(0U, 0U, 1U, 1U, &tile_data);
+    set_win_tiles(0U, 1U, 1U, 1U, &tile_data);
+    set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
+    set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
     
     // Move window up to only display 2 rows at top of screen
     move_win(7, (SCREEN_HEIGHT_TILES - 2) << 3);
@@ -275,6 +275,8 @@ void update_window()
     // Iterate over days passed
     remainder = game_state.days_passed;
 
+set_win_tiles(10U, 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
+
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
     itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
     for (itx = 0; itx != WINDOW_MAX_DIGITS_DAYS; itx ++)
@@ -291,7 +293,7 @@ void update_window()
         }
 
         // Display current digit
-        set_win_tiles(itx_x, SCREEN_HEIGHT_TILES - 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + 0U);
+        set_win_tiles(itx_x, SCREEN_HEIGHT_TILES - 2U, 1, 1, MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit);
         
         // Prepare for next digit
         itx_x -= 1U;
