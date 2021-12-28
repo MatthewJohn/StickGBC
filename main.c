@@ -800,6 +800,20 @@ void setup_building_menu()
         menu_config.menu_item_tiles[6][11] = 0x1U; // 0
         menu_config.menu_item_palette[6][11] = MENU_ITEM_COST_PALETTE;
         // END
+        
+        // WORK
+        menu_config.menu_item_tiles[3][0] = 0x11U;  // WO
+        menu_config.menu_item_tiles[3][1] = 0x12U;  // RK
+        menu_config.menu_item_tiles[3][2] = 0x13U;  //  K
+        
+        menu_config.menu_item_tiles[3][9] = 0xBU; // $
+        menu_config.menu_item_palette[3][9] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[3][10] = 0x7U; // 6
+        menu_config.menu_item_palette[3][10] = MENU_ITEM_COST_PALETTE;
+        menu_config.menu_item_tiles[3][11] = 0xDU; // /HR
+        menu_config.menu_item_palette[3][11] = MENU_ITEM_COST_PALETTE;
+        // END
+
         menu_config.tile_offset = 0x15U;
     }
 
