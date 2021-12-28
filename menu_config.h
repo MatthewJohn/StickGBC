@@ -52,5 +52,5 @@ typedef struct {
     unsigned int current_item_y;
 } menu_state_t;
 
-extern static const menu_config_t menu_config_house;
-extern static const menu_config_t menu_config_restaurant;
+extern const menu_config_t menu_config_house;
+extern const menu_config_t menu_config_restaurant;
