@@ -318,7 +318,7 @@ void set_background_tiles()
     set_bkg_data(0, 8, background_tiles);
     
     // Load in digits/symbols from building menu tiles
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 15, buildingmenutiles);
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 15U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
