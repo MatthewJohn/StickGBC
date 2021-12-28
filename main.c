@@ -910,7 +910,13 @@ void update_state()
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
-            if (travel_x != 0 && IS_MENU_ITEM_ENABLED(menu_config.current_item_x + travel_x + (menu_config.current_item_y * MENU_MAX_ITEMS_X)))
+            if (
+                    (
+                        (travel_x == 1 && menu_config.current_item_x == 0U) ||
+                        (travel_x == -1 && menu_config.current_item_x == 1U)
+                    ) &&
+                    IS_MENU_ITEM_ENABLED(menu_config.current_item_x + travel_x + (menu_config.current_item_y * MENU_MAX_ITEMS_X))
+                )
                 menu_config.current_item_x += travel_x;
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
