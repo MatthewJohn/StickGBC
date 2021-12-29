@@ -88,10 +88,10 @@
  
 
 ## Tiles
- - 0 Background/pavement/road/grass/house roof (blank palette colour 0)
+ - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
  - 1 Pavement edge/road markings (blank palette colour 0/1)
- - 2 Vertical Pavement edge/road markings (blank palette colour 0/1)
- - 3  (blank palette colour 3) (used for house bricks/window background)
+ - 2 Vertical Pavement edge/road markings/shop roof edge (blank palette colour 0/1)
+ - 3  (blank palette colour 3) (used for house bricks/window background/shop front)
  - 4 
  - 5 - scratch for building 1
  - 6 - scratch for building 2 
@@ -103,7 +103,8 @@
  - 16 - restaurant (mcstick) - 2
  - 17 - restaurant (mcstick) - 3
  - 18 - Shop - door
- - 19 - Shop main
- - 20 - Shop bottom 
- - 21 - shop bottom grafitti
+ - 19 - Shop exit sign 1
+ - 20 - Shop exit sign 2 
+ - 21 - shop bottom grafitti 1
+ - 22 - shop bottom grafitti 2
  
