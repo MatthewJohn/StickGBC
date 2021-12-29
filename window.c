@@ -14,29 +14,10 @@
 #include "game_state.c"
 #include "external_bank_globals.h"
 
-void update_window(game_state_t game_state) BANKED
+void update_window(game_state_t game_state)
 {
     unsigned int current_digit, remainder, itx, itx_x;
     unsigned short shown_symbol;
-    // 6 hours' worth of positions with X and Y
-    // movement vectors about the centre of the clock
-    const unsigned short clock_array_positions[6][2] = {
-        // 0 - pointing straight up
-        {0x0U, 0x8U},
-        {0x1U, 0x7U},
-        {0x2U, 0x6U},
-        {0x3U, 0x5U},
-        {0x4U, 0x4U},
-        {0x5U, 0x3U},
-        {0x6U, 0x2U}
-    };
-    const unsigned short clock_starting_positions[4][2] = {
-        {9U, SCREEN_HEIGHT - 9U},
-        {9U, SCREEN_HEIGHT - 8U},
-        {8U, SCREEN_HEIGHT - 8U},
-        {8U, SCREEN_HEIGHT - 9U}
-    };
-    unsigned short end_x, end_y;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -70,36 +51,17 @@ void update_window(game_state_t game_state) BANKED
     set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
     VBK_REG = 0;
 
-    remainder = game_state->hour / 4;
-    current_digit = game_state->hour % 6;
+    remainder = game_state->hour / 10U;
+    current_digit = game_state->hour % 10U;
 
-    if (remainder == 0U)
-    {
-        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
-        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
-    }
-    else if (remainder == 1U)
-    {
-        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
-        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
-    }
-    else if (remainder == 2U)
-    {
-        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
-        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
-    }
-    else if (remainder == 3U)
-    {
-        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
-        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
-    }
-
-    line(
-        clock_starting_positions[current_digit][0U],
-        clock_starting_positions[current_digit][1U],
-        end_x,
-        end_y
-    );
+    // Set 24 hour time e.g. 17:00
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + remainder;
+    tile_data[1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+    tile_data[2] = MENU_ROW_2_TILE_DATA_OFFSET;
+    tile_data[3] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
+    tile_data[4] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
+    // Display time
+    set_win_tiles(2U, 1U, 5, 1, &tile_data);
 
     // DAYS PASSED
     remainder = game_state->days_passed;
