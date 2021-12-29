@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gb/gb.h>
+#include <gb/drawing.h>
 
 #include "main_map_tileset.c"
 #include "main_map.h"
@@ -266,6 +267,25 @@ void update_window()
     unsigned int current_digit;
     unsigned int remainder;
     unsigned short shown_symbol;
+    // 6 hours' worth of positions with X and Y
+    // movement vectors about the centre of the clock
+    unsigned short clock_array_positions[6][2] = {
+        // 0 - pointing straight up
+        {0x0U, 0x8U},
+        {0x1U, 0x7U},
+        {0x2U, 0x6U},
+        {0x3U, 0x5U},
+        {0x4U, 0x4U},
+        {0x5U, 0x3U},
+        {0x6U, 0x2U}
+    };
+    unsigned short clock_starting_positions[4][2] = {
+        {9U, SCREEN_HEIGHT - 9U},
+        {9U, SCREEN_HEIGHT - 8U},
+        {8U, SCREEN_HEIGHT - 8U},
+        {8U, SCREEN_HEIGHT - 9U}
+    };
+    unsigned short end_x, end_y;
 
     // Screen is 20 tiles wide.
     // Window is layed out as:
@@ -298,6 +318,38 @@ void update_window()
     tile_data = 0x61U;
     set_win_tiles(0U, 1U, 1, 1, &tile_data);
     VBK_REG = 0;
+    
+    remainder = game_state.hour / 4;
+    current_digit = game_state.hour % 6;
+
+    if (remainder == 0U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 1U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 2U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 3U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
+    }
+
+    line(
+        clock_starting_positions[current_digit][0U],
+        clock_starting_positions[current_digit][1U],
+        end_x,
+        end_y
+    );
+    
 
     // DAYS PASSED
     remainder = game_state.days_passed;
