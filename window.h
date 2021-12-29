@@ -5,6 +5,4 @@
  */
 
 
-
-void setup_window();
 void update_window();
