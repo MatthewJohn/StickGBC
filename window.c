@@ -56,18 +56,18 @@ void update_window(game_state_t* game_state)
 //    VBK_REG = 0;
 //
 //    // CLOCK
-//    tile_data = MENU_ROW_2_TILE_DATA_OFFSET - 1U;
-//    set_win_tiles(0U, 0U, 1, 1, &tile_data);
-//    set_win_tiles(0U, 1U, 1, 1, &tile_data);
-//    set_win_tiles(1U, 1U, 1, 1, &tile_data);
-//    set_win_tiles(1U, 0U, 1, 1, &tile_data);
+//    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET - 1U;
+//    set_win_tiles(0U, 0U, 1, 1, &(tile_data[0]));
+//    set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
+//    set_win_tiles(1U, 1U, 1, 1, &(tile_data[0]));
+//    set_win_tiles(1U, 0U, 1, 1, &(tile_data[0]));
 //    VBK_REG = 1;
-//    tile_data = 0x21U;
-//    set_win_tiles(0U, 0U, 1, 1, &tile_data);
-//    tile_data = 0x41U;
-//    set_win_tiles(1U, 1U, 1, 1, &tile_data);
-//    tile_data = 0x61U;
-//    set_win_tiles(0U, 1U, 1, 1, &tile_data);
+//    tile_data[0] = 0x21U;
+//    set_win_tiles(0U, 0U, 1, 1, &(tile_data[0]));
+//    tile_data[0] = 0x41U;
+//    set_win_tiles(1U, 1U, 1, 1, &(tile_data[0]));
+//    tile_data[0] = 0x61U;
+//    set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
 //    VBK_REG = 0;
 //    
 //    remainder = game_state->hour / 4;
@@ -99,7 +99,7 @@ void update_window(game_state_t* game_state)
 //        clock_starting_positions[current_digit][1U],
 //        end_x,
 //        end_y
-//    );    
+//    );
 
     // DAYS PASSED
     remainder = game_state->days_passed;
