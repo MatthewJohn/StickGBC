@@ -41,6 +41,7 @@ unsigned int user_pos_y;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
 UBYTE tile_data[12];
+UWORD word_data[4];
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -120,22 +121,24 @@ void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
-    ROM_BANK_TILE_DATA;
     if (screen_state.displayed_buildings & SC_HOUSE)
     {
+        ROM_BANK_TILE_DATA;
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+        ROM_BANK_RESET;
     }
     if (screen_state.displayed_buildings & SC_RESTAURANT)
     {
+        ROM_BANK_TILE_DATA;
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+        ROM_BANK_RESET;
         // Set palette data
-        tile_data[0] = RGB(0, 0, 0);
-        tile_data[1] = RGB(31, 22, 8);
-        tile_data[2] = RGB(25, 0, 0);
-        tile_data[3] = RGB(13, 12, 1 );
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &tile_data);
+        word_data[0] = RGB(0, 0, 0);
+        word_data[1] = RGB(31, 22, 8);
+        word_data[2] = RGB(25, 0, 0);
+        word_data[3] = RGB(13, 12, 1 );
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
-    ROM_BANK_RESET;
 }
 
 void setup_globals()
