@@ -39,9 +39,8 @@ UBYTE * debug_address;
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
-// Temporary storage for transfer of tile data and tile data vram1 data
-UBYTE tile_data;
-UBYTE tile_data_meta;
+// Temporary storege for transfer of tile data and tile data vram1 data
+UBYTE tile_data[12];
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -111,9 +110,6 @@ UINT8 second_tile_row;
 unsigned int tile_data_offset;
 
 
-UWORD palette_transfer[4];
-unsigned char tile_data_transfer[4];
-
 void add_debug(UBYTE val)
 {
     *debug_address = val;
@@ -133,11 +129,11 @@ void load_building_tile_data() NONBANKED
     {
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
         // Set palette data
-        palette_transfer[0] = RGB(0, 0, 0);
-        palette_transfer[1] = RGB(31, 22, 8);
-        palette_transfer[2] = RGB(25, 0, 0);
-        palette_transfer[3] = RGB(13, 12, 1 );
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &palette_transfer);
+        tile_data[0] = RGB(0, 0, 0);
+        tile_data[1] = RGB(31, 22, 8);
+        tile_data[2] = RGB(25, 0, 0);
+        tile_data[3] = RGB(13, 12, 1 );
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &tile_data);
     }
     ROM_BANK_RESET;
 }
@@ -178,38 +174,38 @@ void setup_sprite()
 void setup_window()
 {
     // Set transparency for all tiles
-    tile_data = 0x00U;
+    tile_data[0] = 0x00U;
     // bit 0-2 palette
     // bit 3 - tile bank
     // bit 4 - unused
     // bit 5 - horizontal flip
     // bit 6 - verical flip
     // bit 7 Set piority flag and color palette to 1
-    tile_data_meta = 0x81U;
+    tile_data[1] = 0x81U;
     for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
     {
         for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
         {
             VBK_REG = 0;
-            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data);
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[0]));
             VBK_REG = 1;
-            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data_meta);
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[1]));
         }
     }
     VBK_REG = 0;
     
     // Setup borders
-    tile_data = 0U;
-    set_win_tiles(0U, 0U, 1U, 1U, &tile_data);
-    set_win_tiles(0U, 1U, 1U, 1U, &tile_data);
-    set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
-    set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
+    tile_data[0] = 0U;
+    set_win_tiles(0U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(0U, 1U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
     
     // Setup 'days''
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &tile_data);
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &tile_data);
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
 
     // Move window up to only display 2 rows at top of screen
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
@@ -269,7 +265,7 @@ void set_background_tiles() NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             ROM_BANK_TILE_DATA;
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0; 
@@ -279,21 +275,21 @@ void set_background_tiles() NONBANKED
                 background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
             
             VBK_REG = 1;
 
             ROM_BANK_TILE_DATA;
             // Lookup tile from background tile map
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
 
@@ -302,7 +298,7 @@ void set_background_tiles() NONBANKED
                 background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
                 background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );
 
             // @TODO Fix this
@@ -406,7 +402,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             ROM_BANK_TILE_DATA;
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0; 
@@ -416,19 +412,19 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
 
             // Lookup tile from background tile map
             ROM_BANK_TILE_DATA;
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
             ROM_BANK_RESET;
 
             VBK_REG = 1;
@@ -438,7 +434,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );
 
             VBK_REG = 0; 
@@ -463,7 +459,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             ROM_BANK_TILE_DATA;
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0; 
@@ -473,19 +469,19 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
 
             ROM_BANK_TILE_DATA;
             // Lookup tile from background tile map
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
 
@@ -496,7 +492,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );        
            VBK_REG = 0; 
     
@@ -630,31 +626,31 @@ void load_menu_tiles()
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;
-                tile_data = tile_data_index;
+                tile_data[0] = tile_data_index;
 
                 // Set map data
                 set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1U, 1U,  // Only setting 1 tile
-                    &tile_data
+                    &(tile_data[0])
                 );
 
                 VBK_REG = 1;
 
                 // Load default palette
-                tile_data = MENU_ITEM_DEFAULT_PALETTE;
+                tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Override color palette from menu_item palette tile overrides
                 if (menu_config->menu_item_palette[menu_item_index][tile_index])
-                    tile_data = menu_config->menu_item_palette[menu_item_index][tile_index];
+                    tile_data[0] = menu_config->menu_item_palette[menu_item_index][tile_index];
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
-                    &tile_data
+                    &(tile_data[0])
                 );
             }
         }
