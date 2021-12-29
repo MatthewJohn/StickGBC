@@ -5,8 +5,6 @@
  */
 
 
-#include "gb.h"
-
 #define SC_HOUSE 0x1U
 #define SC_RESTAURANT 0x2U
 
