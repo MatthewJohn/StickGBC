@@ -20,17 +20,17 @@ unsigned int screen_location_y;
 // These are pre-calculated bit shifts of screen_location.
 // DO NOT manually change outside of position updating method.
 // This is the current user position in tiles.
-unsigned int screen_location_x_tiles;
-unsigned int screen_location_y_tiles;
+unsigned short screen_location_x_tiles;
+unsigned short screen_location_y_tiles;
 // These are pre-calculated ANDs of screen_location
 // DO NOT  manually change outside of position updating method.
 // This is the current pixel location of user within current tile.
-unsigned int screen_location_x_tilepixel;
-unsigned int screen_location_y_tilepixel;
+unsigned short screen_location_x_tilepixel;
+unsigned short screen_location_y_tilepixel;
 
 // Determine which way user needs to travel
-signed int travel_x;
-signed int travel_y;
+signed short travel_x;
+signed short travel_y;
 unsigned short a_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
@@ -47,10 +47,6 @@ unsigned int DRAW_OFFSET_X;
 unsigned int DRAW_OFFSET_Y;
 unsigned int DRAW_MAX_X;
 unsigned int DRAW_MAX_Y;
-// Variables to store current main map location when
-// changing to another map
-unsigned int background_palette_itx_x;
-unsigned int background_palette_itx_y;
 
 // General iterators
 unsigned int itx_start;

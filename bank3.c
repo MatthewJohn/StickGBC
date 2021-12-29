@@ -5,8 +5,6 @@
  */
 
 
-#include "main_map.c"
-#include "building_menu_map.c"
-#include "building_menu_tiles.c"
-#include "main_map_boundaries.c"
-#include "main_map_palette.c"
+
+#include "menu_config_data.c"
+#include "window.c"
