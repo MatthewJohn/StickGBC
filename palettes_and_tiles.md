@@ -1,13 +1,13 @@
 ## Tile Palette Main
 
  0.
-    * 0 - Sky/house windows
-    * 1 - Background/house roof
+    * 0 - Sky/house windows/shop door inner
+    * 1 - Background/house roof/shop door rim
     * 2 - Status window background
     * 3 - House bricks/Static window text
  1. Road/markings
-    * 0 - House roof/road
-    * 1 - Road markings
+    * 0 - House roof/road/status bar background
+    * 1 - Road markings/status bar foreground
     * 2 - 
     * 3 - 
  2.
@@ -25,8 +25,8 @@
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1
- 6. scratch for building 2
+ 5. scratch for building 1 - pawn shop
+ 6. scratch for building 2 - shop
  7. scratch for building 3 - mcstick/castle/university
 
 ## Tile Palette Building Menu
@@ -102,4 +102,8 @@
  - 15 - restaurant (mcstick) - 1
  - 16 - restaurant (mcstick) - 2
  - 17 - restaurant (mcstick) - 3
+ - 18 - Shop - door
+ - 19 - Shop main
+ - 20 - Shop bottom 
+ - 21 - shop bottom grafitti
  
