@@ -12,14 +12,14 @@
 
 #include "common_globals.c"
 
-#include "main_map_tileset.c"
+#include "main_map_tileset.h"
 #include "main_map.h"
 #include "main_map_palette.h"
 #include "main_map_boundaries.h"
 
 #include "building_menu_tiles.h"
 #include "building_menu_map.h"
-#include "building_menu_palette.c"
+#include "building_menu_palette.h"
 
 #include "main_map_sprite_tileset.c"
 
@@ -942,18 +942,16 @@ void main()
 
     DISPLAY_OFF;
     
-    // Switch to ROM bank 2 by default
-    SWITCH_ROM_MBC1(2);
+    // Switch to ROM bank 1 by default
+    SWITCH_ROM_MBC1(1);
     setup_globals();
 
     wait_vbl_done();
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
-    SWITCH_ROM_MBC1(3);
     setup_window();
     update_window();
-    SWITCH_ROM_MBC1(2);
 
     SHOW_WIN;
     
