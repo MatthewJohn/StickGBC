@@ -543,7 +543,9 @@ void set_background_tiles()
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            SWITCH_ROM_MBC5(5);
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            SWITCH_ROM_MBC5(1);
 
            VBK_REG = 0; 
             // Set map data
@@ -557,6 +559,7 @@ void set_background_tiles()
             
             VBK_REG = 1;
 
+            SWITCH_ROM_MBC5(5);
             // Lookup tile from background tile map
             tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -566,6 +569,8 @@ void set_background_tiles()
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data |= S_FLIPX;
+
+            SWITCH_ROM_MBC5(1);
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -675,7 +680,9 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            SWITCH_ROM_MBC5(5);
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            SWITCH_ROM_MBC5(1);
 
            VBK_REG = 0; 
             // Set map data
@@ -688,6 +695,7 @@ void move_background(signed int move_x, signed int move_y)
             );
 
             // Lookup tile from background tile map
+            SWITCH_ROM_MBC5(5);
             tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
@@ -696,8 +704,9 @@ void move_background(signed int move_x, signed int move_y)
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data |= S_FLIPX;
+            SWITCH_ROM_MBC5(1);
 
-          VBK_REG = 1;
+            VBK_REG = 1;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -728,7 +737,9 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
+            SWITCH_ROM_MBC5(5);
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            SWITCH_ROM_MBC5(1);
 
            VBK_REG = 0; 
             // Set map data
@@ -740,6 +751,7 @@ void move_background(signed int move_x, signed int move_y)
                  &tile_data
             );
 
+            SWITCH_ROM_MBC5(5);
             // Lookup tile from background tile map
             tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -749,6 +761,8 @@ void move_background(signed int move_x, signed int move_y)
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data |= S_FLIPX;
+
+            SWITCH_ROM_MBC5(1);
 
             VBK_REG = 1;
 
