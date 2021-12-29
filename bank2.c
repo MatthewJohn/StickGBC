@@ -5,6 +5,5 @@
  */
 
 
-#include "building_menu_tiles.c"
 #include "menu_config.c"
 #include "main_map_palette.c"
