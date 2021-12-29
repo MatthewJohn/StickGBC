@@ -36,9 +36,6 @@ extern unsigned int DRAW_OFFSET_Y;
 extern unsigned int DRAW_MAX_X;
 extern unsigned int DRAW_MAX_Y;
 
-extern unsigned int background_palette_itx_x;
-extern unsigned int background_palette_itx_y;
-
 extern unsigned int itx_start;
 extern unsigned int itx_end;
 extern unsigned int itx;

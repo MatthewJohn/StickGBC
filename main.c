@@ -42,7 +42,6 @@ void add_debug(UBYTE val)
 void load_building_tile_data()
 {
     // Load house data from tile 8 to tile
-    VBK_REG = 0;
     if (screen_state.displayed_buildings & SC_HOUSE)
     {
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
@@ -92,6 +91,7 @@ void setup_sprite()
     SHOW_SPRITES;
 }
 
+
 void set_background_tiles()
 {
     // @TODO Fix the increment
@@ -108,30 +108,30 @@ void set_background_tiles()
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
     // Load color palette
+    switch_rom_mbc1(2U);
     set_bkg_palette(0, 8, background_color_palette);
 
-    VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
     
     // Load in digits/symbols from building menu tiles, including clock tiles before it
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 19U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
 
-    for (background_palette_itx_x = DRAW_OFFSET_X;
-           background_palette_itx_x != max_x;
-           background_palette_itx_x ++)
+    for (itx_x = DRAW_OFFSET_X;
+           itx_x != max_x;
+           itx_x ++)
     {
         // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-//        if (background_palette_itx_x == 0x10U)
+//        if (itx_x == 0x10U)
 //            break;
-        for (background_palette_itx_y = DRAW_OFFSET_Y;
-               background_palette_itx_y != max_y;
-               background_palette_itx_y ++)
+        for (itx_y = DRAW_OFFSET_Y;
+               itx_y != max_y;
+               itx_y ++)
         {
             // Temp Test
-            current_tile_itx = ((background_palette_itx_y) * background_width) + background_palette_itx_x;
+            current_tile_itx = ((itx_y) * background_width) + itx_x;
 
             // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-//            if (background_palette_itx_y == 0x10U/)
+//            if (itx_y == 0x10U/)
 //                break;
 
             // Tile data is split across two bytes. In the layout:
@@ -145,11 +145,10 @@ void set_background_tiles()
 
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
-           VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &tile_data
@@ -169,11 +168,12 @@ void set_background_tiles()
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &tile_data
             );
+            VBK_REG = 0;
 
             // @TODO Fix this
             //current_tile_itx ++;
@@ -184,7 +184,7 @@ void set_background_tiles()
     }
 
     // Reset VKG_REG to original value
-    VBK_REG = 0;
+    
 }
 
 void check_user_input()
@@ -209,8 +209,6 @@ void check_user_input()
 
 void move_background(signed int move_x, signed int move_y)
 {
-    unsigned int itx_x;
-    unsigned int itx_y;
     unsigned int base_itx_x;
     unsigned int base_itx_y;
     UINT16 current_tile_itx;
@@ -277,7 +275,6 @@ void move_background(signed int move_x, signed int move_y)
 
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
-           VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -330,7 +327,6 @@ void move_background(signed int move_x, signed int move_y)
 
             tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
 
-           VBK_REG = 0; 
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -476,7 +472,6 @@ void load_menu_tiles()
 
                 tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
 
-                VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
                 // in menu config and tile config in menu tile array
                 set_bkg_data(
@@ -513,6 +508,7 @@ void load_menu_tiles()
                     1, 1,  // Only setting 1 tile
                     &tile_data
                 );
+                VBK_REG = 0;
             }
         }
     }
