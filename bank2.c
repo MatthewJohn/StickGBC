@@ -11,4 +11,3 @@
 #include "main_map_boundaries.c"
 #include "menu_config.c"
 #include "main_map_palette.c"
-#include "window.c"
