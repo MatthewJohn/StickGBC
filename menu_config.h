@@ -8,6 +8,8 @@
 # ifndef MENU_CONFIG_DEF
 #define MENU_CONFIG_DEF 1
 
+#include "gb.h"
+
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
 

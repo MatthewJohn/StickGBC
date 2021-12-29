@@ -780,7 +780,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 }
 
 // Check if next position will hit a boundary
-void check_boundary_hit()
+void check_boundary_hit() NONBANKED
 {
     unsigned int new_x;
     unsigned int new_y;
@@ -798,6 +798,7 @@ void check_boundary_hit()
                 PIXEL_LOCATION_TO_TILE_COUNT(new_x),
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
+            SWITCH_ROM_MBC5(5);
 
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
@@ -806,6 +807,7 @@ void check_boundary_hit()
                 travel_x = 0;
                 travel_y = 0;
             }
+            SWITCH_ROM_MBC5(1);
     }
 }
 
