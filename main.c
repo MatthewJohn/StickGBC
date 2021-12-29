@@ -142,7 +142,7 @@ void load_building_tile_data() NONBANKED
     if (screen_state.displayed_buildings & SC_SHOP)
     {
         ROM_BANK_TILE_DATA;
-        set_bkg_data(18, 5, &(mainmaptiles[18 << 4]));
+        set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
         ROM_BANK_RESET;
         word_data[0] = RGB(31, 21, 5);
         word_data[1] = RGB(1, 0, 2);
