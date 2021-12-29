@@ -773,7 +773,7 @@ void check_building_enter()
         setup_building_menu();
     }
     // Check for entering shop, through either door
-    else if (tile_itx == 0x1089U || tile_itx == 0x10D1)
+    else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
         setup_building_menu;
