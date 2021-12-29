@@ -1106,6 +1106,26 @@ void update_state()
                 // Delay after purchasing, to avoid double purchase
                 delay(DELAY_PURCHASE_ITEM);
             }
+            else if (game_state.current_building == S_B_SHOP)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Slushee
+                    {
+                        purchase_food(1U, 1U);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Candy Bar
+                    {
+                        purchase_food(2U, 3U);
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Nachos
+                    {
+                        purchase_food(4U, 7U);
+                    }
+                }
+                // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
         }
     }
 }
