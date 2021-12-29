@@ -191,7 +191,7 @@ void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
     // @TODO make sure display works after 999
-    game_state.days_passed = 0U;
+    game_state.days_passed = 10000U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
     // Start with $100
     game_state.balance = 100U;
@@ -444,8 +444,8 @@ void set_background_tiles()
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
     
-    // Load in digits/symbols from building menu tiles
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 17U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
+    // Load in digits/symbols from building menu tiles, including clock tiles before it
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 19U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
