@@ -9,76 +9,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gb/gb.h>
+#include <gb/drawing.h>
 
-#include "main_map_tileset.c"
+#include "main_map_tileset.h"
 #include "main_map.h"
 #include "main_map_palette.h"
 #include "main_map_boundaries.h"
 
 #include "building_menu_tiles.h"
 #include "building_menu_map.h"
-#include "building_menu_palette.c"
+#include "building_menu_palette.h"
 
-#include "main_map_sprite_tileset.c"
+#include "main_map_sprite_tileset.h"
 
+#include "game_constants.h"
 #include "game_state.c"
 #include "menu_config.h"
 #include "screen_state.c"
+#include "window.h"
 
-// Get tile pixel within from map-coordinates
-#define TO_SUBTILE_PIXEL(location) (location & 0x0FU)
-#define PIXEL_LOCATION_TO_TILE_COUNT(location) (location >> 3)
-#define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
-#define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
+#define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
+#define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
 
-#define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
-
-#define WINDOW_MAX_DIGITS_DAYS 5U
-#define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
-#define WINDOW_MAX_DIGITS_BALANCE 0x6U
-#define WINDOW_MAX_DIGITS_HP 0x5U
-
-// Screen size 160x168
-#define SCREEN_WIDTH 0xA8U
-#define SCREEN_HEIGHT 0xA0U
-
-#define SCREEN_TILE_MAX_X 0x13U
-#define SCREEN_TILE_MAX_Y 0x11U
-#define SCREEN_WIDTH_TILES 0x14U
-#define SCREEN_HEIGHT_TILES 0x12U
-
-// Manually calculated by putting sprite into corner of screen and setting until middle
-// of character is at 0,0 location
-#define SPRITE_OFFSET_X 0x04U
-#define SPRITE_OFFSET_Y 0x0dU
-
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
-
-// Max address if 0x1F, set to 0x20 for loops that loop whilst
-// less than the value (or rather !=)
-#define BACKGROUND_BUFFER_SIZE_X 0x20U
-#define BACKGROUND_BUFFER_SIZE_Y 0x20U
-#define BACKGROUND_BUFFER_MAX_X 0x1FU
-#define BACKGROUND_BUFFER_MAX_Y 0x1FU
-#define BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X 0xFFU
-#define BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y 0xFFU
-#define BACKGROUND_BUFFER_SIZE_PIXELS_X 0x100U
-#define BACKGROUND_BUFFER_SIZE_PIXELS_Y 0x100U
-
-#define VRAME_SIZE_TILES_X_MASK 0x1FU
-#define VRAME_SIZE_TILES_Y_MASK 0x1FU
-// From screen left-top-hand position to half way through unused vram
-// x - ( 0x20U (vram width in tiles) - 0x14U (screen width in tiles) / 2) + 0x14U (screen width in tiles)
-#define REDRAW_VRAM_OFFSET_X 0x1AU
-#define REDRAW_VRAM_OFFSET_Y 0x1AU
-
-#define TILE_PATTERN_INDEX_TO_ARRAY_INDEX(index) (index << 4)
-#define TILE_PATTERN_SCRATCH_1 0x05U
-#define TILE_PATTERN_SCRATCH_2 0x06U
-#define TILE_PATTERN_SCRATCH_3 0x07U
-#define PALETTE_SCRATCH_1 0x05U
-#define PALETTE_SCRATCH_2 0x06U
-#define PALETTE_SCRATCH_3 0x07U
 
 UBYTE * debug_address;
 
@@ -87,9 +39,9 @@ UBYTE * debug_address;
 unsigned int user_pos_x;
 unsigned int user_pos_y;
 
-// Temporary storage for transfer of tile data and tile data vram1 data
-UBYTE tile_data;
-UBYTE tile_data_meta;
+// Temporary storege for transfer of tile data and tile data vram1 data
+UBYTE tile_data[12];
+UWORD word_data[4];
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -159,31 +111,33 @@ UINT8 second_tile_row;
 unsigned int tile_data_offset;
 
 
-UWORD palette_transfer[4];
-
 void add_debug(UBYTE val)
 {
     *debug_address = val;
     debug_address ++;
 }
 
-void load_building_tile_data()
+void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
     if (screen_state.displayed_buildings & SC_HOUSE)
     {
+        ROM_BANK_TILE_DATA;
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+        ROM_BANK_RESET;
     }
     if (screen_state.displayed_buildings & SC_RESTAURANT)
     {
+        ROM_BANK_TILE_DATA;
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+        ROM_BANK_RESET;
         // Set palette data
-        palette_transfer[0] = RGB(0, 0, 0);
-        palette_transfer[1] = RGB(31, 22, 8);
-        palette_transfer[2] = RGB(25, 0, 0);
-        palette_transfer[3] = RGB(13, 12, 1 );
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &palette_transfer);
+        word_data[0] = RGB(0, 0, 0);
+        word_data[1] = RGB(31, 22, 8);
+        word_data[2] = RGB(25, 0, 0);
+        word_data[3] = RGB(13, 12, 1 );
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
 }
 
@@ -214,8 +168,10 @@ void setup_sprite()
 {
     // Load single sprite tile
     HIDE_SPRITES;
+    ROM_BANK_TILE_DATA;
     set_sprite_data(0, 3, sprite_tiles);
     set_sprite_palette(0, 1, sprite_palette);
+    ROM_BANK_RESET;
     set_sprite_tile(0, 0);
     SHOW_SPRITES;
 }
@@ -223,207 +179,44 @@ void setup_sprite()
 void setup_window()
 {
     // Set transparency for all tiles
-    tile_data = 0x00U;
+    tile_data[0] = 0x00U;
     // bit 0-2 palette
     // bit 3 - tile bank
     // bit 4 - unused
     // bit 5 - horizontal flip
     // bit 6 - verical flip
     // bit 7 Set piority flag and color palette to 1
-    tile_data_meta = 0x81U;
+    tile_data[1] = 0x81U;
     for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
     {
         for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
         {
             VBK_REG = 0;
-            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data);
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[0]));
             VBK_REG = 1;
-            set_win_tiles(itx_x, itx_y, 1, 1, &tile_data_meta);
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[1]));
         }
     }
     VBK_REG = 0;
     
     // Setup borders
-    tile_data = 0U;
-    set_win_tiles(0U, 0U, 1U, 1U, &tile_data);
-    set_win_tiles(0U, 1U, 1U, 1U, &tile_data);
-    set_win_tiles(19U, 0U, 1U, 1U, &tile_data);
-    set_win_tiles(19U, 1U, 1U, 1U, &tile_data);
+    tile_data[0] = 0U;
+    set_win_tiles(0U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(0U, 1U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
     
     // Setup 'days''
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &tile_data);
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &tile_data);
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
 
     // Move window up to only display 2 rows at top of screen
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
 
-void update_window()
-{
-    unsigned int current_digit;
-    unsigned int remainder;
-    unsigned short shown_symbol;
-
-    // Screen is 20 tiles wide.
-    // Window is layed out as:
-    // Row 1:
-    // 1 tile padding on left
-    // 6 tiles for days passed, 5 numerics with symbol with right padding.
-    // 10 tiles for money, left padded (so starts by appearing in last 4 tiles). This allows for 100,000,000 with dollar symbol and 1,000,000,000 without.
-    // Row 2:
-    // HP:
-    // - 5 tiles for HP
-    // - 1 tile for '/'
-    // - 5 tiles for max HP
-    // - 1 tile for HP symbol
-    // All of the above HP-stats are padded together.
-
-    VBK_REG = 0;
-
-    // DAYS PASSED
-    remainder = game_state.days_passed;
-
-    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
-    itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
-    for (itx = 0; itx != WINDOW_MAX_DIGITS_DAYS; itx ++)
-    {
-        // If on last iteration, update digit with remainder
-        if (itx == (WINDOW_MAX_DIGITS_DAYS - 1U))
-        {
-            current_digit = remainder;
-        } else {
-            current_digit = remainder % 10U;
-
-            // Update remainder
-            remainder = remainder / 10U;
-        }
-        
-        if (remainder == 0U && current_digit == 0U && itx != 0)
-            break;
-
-        // Display current digit
-        tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
-        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
-
-        // Prepare for next digit
-        itx_x -= 1U;
-    }
-    
-    // BALANCE
-    // Iterate over days passed
-    remainder = game_state.balance;
-
-    shown_symbol = 0U;
-
-    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
-    // Remove 1 as loop iterator starting at 1 
-    itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
-
-    for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
-    {
-        // If on last iteration, update digit with remainder
-        if (remainder != 0U || current_digit != 0U)
-        {
-            if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
-            {
-                current_digit = remainder;
-            } else {
-                current_digit = remainder % 10U;
-
-                // Update remainder
-                remainder = remainder / 10U;
-            }
-        }
-    
-        if (remainder == 0U && current_digit == 0U && itx != 0)
-        {
-            // Display dollar symbol, if not already shown
-            if (shown_symbol == 0U)
-            {
-                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
-                shown_symbol = 1U;
-            }
-            else
-            {
-                // Otherwise display blank tile
-                tile_data = 0x00;
-            }
-        }
-        else
-        {
-            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
-        }
-
-        // Display current digit
-        set_win_tiles(itx_x, 0U, 1, 1, &tile_data);
-
-        // Prepare for next digit
-        itx_x -= 1U;
-    }
-    
-
-    // HP
-
-    // Start at right hand side
-    itx_x = SCREEN_WIDTH_TILES - 2U;
-    // Draw HP symbol
-    tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 12U;
-    set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
-    itx_x -= 1U;
-    shown_symbol = 0U;
-    remainder = game_state.max_hp;
-    for (itx = 0; itx != WINDOW_MAX_DIGITS_HP; itx ++)
-    {
-        // If on last iteration, update digit with remainder
-        if (remainder != 0U || current_digit != 0U)
-        {
-            if (itx == (WINDOW_MAX_DIGITS_HP - 1U))
-            {
-                current_digit = remainder;
-            } else {
-                current_digit = remainder % 10U;
-
-                // Update remainder
-                remainder = remainder / 10U;
-            }
-        }
-    
-        if (remainder == 0U && current_digit == 0U && itx != 0)
-        {
-            // Display dollar symbol, if not already shown
-            if (shown_symbol == 0U)
-            {
-                tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 16U;
-                shown_symbol = 1U;
-                
-                // Once complete with max_hp, continue to actual HP value
-                remainder = game_state.hp;
-                // Set itx back to start. When using high number values (5 digits for each), then this may cause an issue
-                // with failing to remove the remaining digits.
-                itx = 0;
-            }
-            else
-            {
-                // Otherwise break
-                tile_data = 0x00;
-            }
-        }
-        else
-        {
-            tile_data = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
-        }
-
-        // Display current digit
-        set_win_tiles(itx_x, 1U, 1, 1, &tile_data);
-
-        // Prepare for next digit
-        itx_x -= 1U;
-    }
-}
-
-void set_background_tiles()
+void set_background_tiles() NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -439,13 +232,15 @@ void set_background_tiles()
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
     // Load color palette
+    ROM_BANK_TILE_DATA;
     set_bkg_palette(0, 8, background_color_palette);
 
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
-    
-    // Load in digits/symbols from building menu tiles
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 17U, &(buildingmenutiles[MENU_ROW_2_TILE_DATA_OFFSET << 4U]));
+
+    // Load in digits/symbols from building menu tiles, including clock tiles before it
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 21U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
@@ -474,7 +269,9 @@ void set_background_tiles()
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_TILE_DATA;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_RESET;
 
            VBK_REG = 0; 
             // Set map data
@@ -483,27 +280,30 @@ void set_background_tiles()
                 background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
             
             VBK_REG = 1;
 
+            ROM_BANK_TILE_DATA;
             // Lookup tile from background tile map
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
+
+            ROM_BANK_RESET;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
                 background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );
 
             // @TODO Fix this
@@ -538,7 +338,7 @@ void check_user_input()
         a_pressed = 1U;
 }
 
-void move_background(signed int move_x, signed int move_y)
+void move_background(signed int move_x, signed int move_y) NONBANKED
 {
     unsigned int itx_x;
     unsigned int itx_y;
@@ -606,7 +406,9 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_TILE_DATA;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_RESET;
 
            VBK_REG = 0; 
             // Set map data
@@ -615,27 +417,29 @@ void move_background(signed int move_x, signed int move_y)
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
 
             // Lookup tile from background tile map
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            ROM_BANK_TILE_DATA;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
+            ROM_BANK_RESET;
 
-          VBK_REG = 1;
+            VBK_REG = 1;
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );
 
             VBK_REG = 0; 
@@ -659,7 +463,9 @@ void move_background(signed int move_x, signed int move_y)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            tile_data = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_TILE_DATA;
+            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            ROM_BANK_RESET;
 
            VBK_REG = 0; 
             // Set map data
@@ -668,18 +474,21 @@ void move_background(signed int move_x, signed int move_y)
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
-                 &tile_data
+                 &(tile_data[0])
             );
 
+            ROM_BANK_TILE_DATA;
             // Lookup tile from background tile map
-            tile_data = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
             if (background_tile_map[current_tile_palette_itx] & 0x08)
-                tile_data |= S_FLIPY;
+                tile_data[0] |= S_FLIPY;
 
             if (background_tile_map[current_tile_palette_itx] & 0x10)
-                tile_data |= S_FLIPX;
+                tile_data[0] |= S_FLIPX;
+
+            ROM_BANK_RESET;
 
             VBK_REG = 1;
 
@@ -688,7 +497,7 @@ void move_background(signed int move_x, signed int move_y)
                 itx_x & BACKGROUND_BUFFER_MAX_X,
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
-                &tile_data
+                &(tile_data[0])
             );        
            VBK_REG = 0; 
     
@@ -697,7 +506,7 @@ void move_background(signed int move_x, signed int move_y)
 }
 
 // Check if next position will hit a boundary
-void check_boundary_hit()
+void check_boundary_hit() NONBANKED
 {
     unsigned int new_x;
     unsigned int new_y;
@@ -716,6 +525,7 @@ void check_boundary_hit()
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
 
+            ROM_BANK_TILE_DATA;
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
@@ -723,6 +533,7 @@ void check_boundary_hit()
                 travel_x = 0;
                 travel_y = 0;
             }
+            ROM_BANK_RESET;
     }
 }
 
@@ -788,7 +599,9 @@ void load_menu_tiles()
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
             
             // For tiles on top row, use offset from menu config
+            ROM_BANK_TILE_DATA;
             tile_data_offset = menu_config->tile_offset;
+            ROM_BANK_RESET;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -802,8 +615,12 @@ void load_menu_tiles()
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
+                ROM_BANK_TILE_DATA;
                 if (menu_config->menu_item_tiles[menu_item_index][tile_index] == 0U)
+                {
+                    ROM_BANK_RESET;
                     continue;
+                }
 
                 tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
 
@@ -815,34 +632,37 @@ void load_menu_tiles()
                     1,
                     &(buildingmenutiles[tile_data_index << 4])
                 );
+                ROM_BANK_RESET;
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;
-                tile_data = tile_data_index;
+                tile_data[0] = tile_data_index;
 
                 // Set map data
                 set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1U, 1U,  // Only setting 1 tile
-                    &tile_data
+                    &(tile_data[0])
                 );
 
                 VBK_REG = 1;
 
                 // Load default palette
-                tile_data = MENU_ITEM_DEFAULT_PALETTE;
+                tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Override color palette from menu_item palette tile overrides
+                ROM_BANK_TILE_DATA;
                 if (menu_config->menu_item_palette[menu_item_index][tile_index])
-                    tile_data = menu_config->menu_item_palette[menu_item_index][tile_index];
+                    tile_data[0] = menu_config->menu_item_palette[menu_item_index][tile_index];
+                ROM_BANK_RESET;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
                     tile_itx_x, 
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
-                    &tile_data
+                    &(tile_data[0])
                 );
             }
         }
@@ -863,8 +683,10 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            ROM_BANK_TILE_DATA;
             if (menu_config->menu_item_palette[menu_item_index][tile_index] != 0U)
                 palette_colors[itx_x] = menu_config->menu_item_palette[menu_item_index][tile_index];
+            ROM_BANK_RESET;
          }
         set_bkg_tiles(
             MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
@@ -1003,7 +825,9 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
             
-        update_window();
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
     }
 }
 
@@ -1016,7 +840,9 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.hour += number_of_hours;
     }
     
-    update_window();
+    ROM_BANK_TILE_DATA;
+    update_window(&game_state);
+    ROM_BANK_RESET;
 }
 
 // Called per cycle to update background position and sprite
@@ -1153,6 +979,7 @@ void update_state()
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
+            ROM_BANK_TILE_DATA;
             if (
                     (
                         (travel_x == 1 && menu_state.current_item_x == 0U) ||
@@ -1186,11 +1013,12 @@ void update_state()
                         break;
                     }
             }
+            ROM_BANK_RESET;
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
             // Sleep to stop double pressed
-            delay(100);
+            delay(DELAY_MENU_ITEM_MOVE);
         }
 
         // Check if moving menu item
@@ -1208,11 +1036,13 @@ void update_state()
                 game_state.days_passed ++;
                 check_end_game();
 
-                update_window();
+                ROM_BANK_TILE_DATA;
+                update_window(&game_state);
+                ROM_BANK_RESET;
 
                 // TURN OFF DISPLAY FOR 1 second
                 DISPLAY_OFF;
-                delay(1000);
+                delay(DELAY_SLEEP);
                 DISPLAY_ON;
             }
             // Handle menu selections from restaurant
@@ -1245,7 +1075,7 @@ void update_state()
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
-                delay(700);
+                delay(DELAY_PURCHASE_ITEM);
             }
         }
     }
@@ -1264,7 +1094,9 @@ void main()
     
     // Initial setup of window and update with starting stats
     setup_window();
-    update_window();
+    ROM_BANK_TILE_DATA;
+    update_window(&game_state);
+    ROM_BANK_RESET;
     SHOW_WIN;
     
     // Load background tiles. This turns display on, so run last

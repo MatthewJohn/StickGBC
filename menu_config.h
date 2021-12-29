@@ -8,13 +8,15 @@
 # ifndef MENU_CONFIG_DEF
 #define MENU_CONFIG_DEF 1
 
+#include "gb.h"
+#include "game_constants.h"
+
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
 
 #define MENU_ITEM_WIDTH 6U
 #define MENU_ITEM_HEIGHT 2U
 #define MENU_ITEM_TILE_COUNT 12U
-#define MENU_ROW_2_TILE_DATA_OFFSET 0x6DU
 
 #define MENU_ITEM_SCREEN_OFFSET_TOP 0x03U
 #define MENU_ITEM_SCREEN_OFFSET_LEFT 0x03U

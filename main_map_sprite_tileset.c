@@ -4,6 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#pragma bank=5
 /*
 
  MAIN_MAP_SPRITE_TILESET.C
@@ -29,12 +30,12 @@
 */
 
 /* CGBpalette entries. */
-unsigned char mainmapspritetilesCGB[] =
+const unsigned char mainmapspritetilesCGB[] =
 {
   0x00,0x00,0x00
 };
 /* Start of tile array. */
-unsigned char mainmapspritetiles[] =
+const unsigned char mainmapspritetiles[] =
 {
   0x81,0x00,0x99,0x00,0xBD,0x00,0xFF,0x00,
   0x7E,0x00,0x3C,0x00,0x18,0x00,0x00,0x00,

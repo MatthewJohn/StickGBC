@@ -5,6 +5,8 @@
  */
 
 
+#pragma bank=5
+
 #include "menu_config.h"
 
 // BUILDING MENU DEFINITIONS

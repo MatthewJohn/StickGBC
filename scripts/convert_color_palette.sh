@@ -5,7 +5,13 @@
 
 for filename in main_map_palette building_menu_palette
 do
-  echo "const UWORD $filename[] = {" > $filename.c
+  cat > $filename.c <<EOF
+#pragma bank=5
+
+#include "gb.h"
+
+const UWORD $filename[] = {
+EOF
 
   cat $filename.raw | sed 's/\t/, /g' | sed 's/^/  RGB(/g' | sed 's/$/),/g' >> $filename.c
 
