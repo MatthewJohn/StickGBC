@@ -739,6 +739,12 @@ void setup_building_menu()
         menu_state.current_item_y = 1;
         menu_config = &menu_config_restaurant;
     }
+    else if (game_state.current_building == S_B_SHOP)
+    {
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_shop;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
