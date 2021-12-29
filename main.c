@@ -776,7 +776,7 @@ void check_building_enter()
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
-        setup_building_menu;
+        setup_building_menu();
     }
     
     // Temporary jump to restaurant
