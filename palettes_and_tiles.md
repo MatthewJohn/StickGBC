@@ -69,6 +69,21 @@
  38. WO (half O)
  39. ORK (half O, half K)
  40. K (Half K)
+ 41. US
+ 42. CA
+ 43. ND
+ 44. Y
+ 45. BA
+ 46. R
+ 47. NA
+ 48. OS
+ 49. SM
+ 50. OK
+ 51. ES
+ 52. FF
+ 53. EI
+ 54. NE
+ 
 
  110. 0
  111. 1
