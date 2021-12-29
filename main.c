@@ -11,7 +11,7 @@
 #include <gb/gb.h>
 #include <gb/drawing.h>
 
-#include "main_map_tileset.c"
+#include "main_map_tileset.h"
 #include "main_map.h"
 #include "main_map_palette.h"
 #include "main_map_boundaries.h"
@@ -81,6 +81,10 @@
 #define PALETTE_SCRATCH_1 0x05U
 #define PALETTE_SCRATCH_2 0x06U
 #define PALETTE_SCRATCH_3 0x07U
+
+#define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
+#define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+
 
 UBYTE * debug_address;
 
@@ -162,6 +166,7 @@ unsigned int tile_data_offset;
 
 
 UWORD palette_transfer[4];
+unsigned char tile_data_transfer[4];
 
 void add_debug(UBYTE val)
 {
@@ -169,10 +174,11 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
-void load_building_tile_data()
+void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
+    ROM_BANK_TILE_DATA;
     if (screen_state.displayed_buildings & SC_HOUSE)
     {
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
@@ -187,6 +193,7 @@ void load_building_tile_data()
         palette_transfer[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, &palette_transfer);
     }
+    ROM_BANK_RESET;
 }
 
 void setup_globals()
@@ -511,10 +518,12 @@ void set_background_tiles() NONBANKED
     set_bkg_palette(0, 8, background_color_palette);
 
     VBK_REG = 0;
+    ROM_BANK_TILE_DATA;
     set_bkg_data(0, 8, background_tiles);
-    
+
     // Load in digits/symbols from building menu tiles, including clock tiles before it
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 19U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
            background_palette_itx_x != max_x;
@@ -895,11 +904,13 @@ void load_menu_tiles()
                 VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
                 // in menu config and tile config in menu tile array
+                ROM_BANK_TILE_DATA;
                 set_bkg_data(
                     tile_data_index,
                     1,
                     &(buildingmenutiles[tile_data_index << 4])
                 );
+                ROM_BANK_RESET;
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;

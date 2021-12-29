@@ -10,4 +10,7 @@
 sed -i 's/^unsigned char/const unsigned char/g' main_map.c main_map_tileset.c building_menu_tiles.c
 sed -i 's/^extern unsigned char/extern const unsigned char/g' main_map.h main_map_tileset.h building_menu_tiles.h
 
-
+for file in main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset;
+do
+    grep 'pragma bank' $file.c >/dev/null 2>&1 || { echo '#pragma bank=5'; cat $i.c; } >> $i.c
+done
