@@ -4,6 +4,10 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#pragma bank=5
+
+#include "gb.h"
+
 const UWORD main_map_palette[] = {
   RGB(2, 31, 31),
   RGB(10, 10, 10),

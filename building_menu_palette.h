@@ -5,4 +5,4 @@
  */
 
 
-#include "menu_config.c"
+extern const UWORD building_menu_palette[];

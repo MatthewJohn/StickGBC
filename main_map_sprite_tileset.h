@@ -104,8 +104,8 @@
 #define mainmapspritetilesCGBPal7c2 6596
 #define mainmapspritetilesCGBPal7c3 5344
 /* CGBpalette entries. */
-extern unsigned char mainmapspritetilesCGB[];
+extern const unsigned char mainmapspritetilesCGB[];
 /* Start of tile array. */
-extern unsigned char mainmapspritetiles[];
+extern const unsigned char mainmapspritetiles[];
 
 /* End of MAIN_MAP_SPRITE_TILESET.H */
