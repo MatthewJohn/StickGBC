@@ -139,6 +139,17 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
+    if (screen_state.displayed_buildings & SC_SHOP)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+        ROM_BANK_RESET;
+        word_data[0] = RGB(31, 21, 5);
+        word_data[1] = RGB(1, 0, 2);
+        word_data[2] = RGB(4, 20, 0);
+        word_data[3] = RGB(26, 16, 0 );
+        set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
+    }
 }
 
 void setup_globals()
@@ -154,6 +165,9 @@ void setup_globals()
     game_state.hp = 23U;
 
     screen_state.displayed_buildings = SC_HOUSE;
+
+    game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
+    game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -728,6 +742,12 @@ void setup_building_menu()
         menu_state.current_item_y = 1;
         menu_config = &menu_config_restaurant;
     }
+    else if (game_state.current_building == S_B_SHOP)
+    {
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_shop;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -761,7 +781,12 @@ void check_building_enter()
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu();
     }
-    
+    // Check for entering shop, through either door
+    else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
+    {
+        game_state.current_building = S_B_SHOP;
+        setup_building_menu();
+    }
     
     // Temporary jump to restaurant
 //    game_state.current_building = S_B_RESTAURANT;
@@ -796,6 +821,8 @@ void update_loaded_buildings_y_up()
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+        screen_state.displayed_buildings &= ~SC_SHOP;
 }
 void update_loaded_buildings_y_down()
 {
@@ -803,6 +830,11 @@ void update_loaded_buildings_y_down()
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
         screen_state.displayed_buildings |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings |= SC_SHOP;
         load_building_tile_data();
     }
 }
@@ -825,6 +857,25 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
             
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void purchase_item(UINT8 cost, UINT8 inventory_item)
+{
+    // Breaking the rules using >=, but
+    // only performed when buying an item
+    // and currency is decimal, making very difficult
+    // to do using bit shifting (and at least probably
+    // less CPU intensive)
+
+    if (game_state.balance >= cost && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
+    {
+        game_state.balance -= cost;
+        game_state.inventory[inventory_item] += 1U;
+
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
@@ -1072,6 +1123,37 @@ void update_state()
                     if (menu_state.current_item_y == 1U)  // Work
                     {
                         do_work(6U, 6U);
+                    }
+                }
+                // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_SHOP)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Slushee
+                    {
+                        purchase_food(1U, 1U);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Candy Bar
+                    {
+                        purchase_food(2U, 3U);
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Nachos
+                    {
+                        purchase_food(4U, 7U);
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Smokes
+                    {
+                        purchase_item(10U, S_INVENTORY_SMOKES);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Caffeine Pills
+                    {
+                        purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
