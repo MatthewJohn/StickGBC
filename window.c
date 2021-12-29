@@ -70,36 +70,36 @@ void update_window(game_state_t game_state) BANKED
     set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
     VBK_REG = 0;
 
-//    remainder = game_state->hour / 4;
-//    current_digit = game_state->hour % 6;
-//
-//    if (remainder == 0U)
-//    {
-//        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
-//        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
-//    }
-//    else if (remainder == 1U)
-//    {
-//        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
-//        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
-//    }
-//    else if (remainder == 2U)
-//    {
-//        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
-//        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
-//    }
-//    else if (remainder == 3U)
-//    {
-//        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
-//        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
-//    }
-//
-//    line(
-//        clock_starting_positions[current_digit][0U],
-//        clock_starting_positions[current_digit][1U],
-//        end_x,
-//        end_y
-//    );
+    remainder = game_state->hour / 4;
+    current_digit = game_state->hour % 6;
+
+    if (remainder == 0U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 1U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] + clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 2U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] + clock_array_positions[current_digit][1U];
+    }
+    else if (remainder == 3U)
+    {
+        end_x = clock_starting_positions[current_digit][0U] - clock_array_positions[current_digit][0U];
+        end_y = clock_starting_positions[current_digit][1U] - clock_array_positions[current_digit][1U];
+    }
+
+    line(
+        clock_starting_positions[current_digit][0U],
+        clock_starting_positions[current_digit][1U],
+        end_x,
+        end_y
+    );
 
     // DAYS PASSED
     remainder = game_state->days_passed;
