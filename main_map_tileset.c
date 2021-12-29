@@ -4,9 +4,6 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-
-#pragma bank=5
-
 /*
 
  MAIN_MAP_TILESET.C

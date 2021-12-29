@@ -7,8 +7,8 @@
 
 #include "gb.h"
 
-#ifndef GAME_STATE_DEF_H
-#define GAME_STATE_DEF_H 1
+#ifndef GAME_STATE_DEF
+#define GAME_STATE_DEF 1
 
 // Game state and constants for game state
 

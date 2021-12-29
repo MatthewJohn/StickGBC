@@ -4,8 +4,6 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#pragma bank=5
-
 /*
 
  BUILDING_MENU_TILES.C
