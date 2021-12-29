@@ -139,6 +139,17 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
+    if (screen_state.displayed_buildings & SC_SHOP)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(18, 5, &(mainmaptiles[18 << 4]));
+        ROM_BANK_RESET;
+        word_data[0] = RGB(31, 21, 5);
+        word_data[1] = RGB(1, 0, 2);
+        word_data[2] = RGB(4, 20, 0);
+        word_data[3] = RGB(26, 16, 0 );
+        set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
+    }
 }
 
 void setup_globals()
@@ -796,6 +807,8 @@ void update_loaded_buildings_y_up()
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+        screen_state.displayed_buildings &= ~SC_SHOP;
 }
 void update_loaded_buildings_y_down()
 {
@@ -803,6 +816,11 @@ void update_loaded_buildings_y_down()
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
         screen_state.displayed_buildings |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings |= SC_SHOP;
         load_building_tile_data();
     }
 }
