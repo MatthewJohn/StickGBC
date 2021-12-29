@@ -12,5 +12,5 @@ main.gb: building_menu_map.o building_menu_palette.o building_menu_tiles.o commo
 	$(CC) -Wl-yt2 -Wl-yo16 -Wl-ya4 -Wl-m -Wl-yp0x143=0x80 -o $@ *.o
 
 clean:
-	rm -f *.o $(BIN)
+	rm -f *.o $(BIN) *.lst *.map
 

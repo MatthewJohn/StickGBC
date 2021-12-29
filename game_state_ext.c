@@ -5,6 +5,9 @@
  */
 
 
+#ifndef GAME_STATE_EXT_DEF_C
+#define GAME_STATE_EXT_DEF_C 1
+
 #include "game_state.h"
 
 // Game state
