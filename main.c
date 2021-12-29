@@ -492,7 +492,7 @@ void update_window()
     }
 }
 
-void set_background_tiles()
+void set_background_tiles() NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -612,7 +612,7 @@ void check_user_input()
         a_pressed = 1U;
 }
 
-void move_background(signed int move_x, signed int move_y)
+void move_background(signed int move_x, signed int move_y) NONBANKED
 {
     unsigned int itx_x;
     unsigned int itx_y;
