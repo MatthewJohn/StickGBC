@@ -5,6 +5,8 @@
  */
 
 
+#include <gb/gb.h>
+
 # ifndef MENU_CONFIG_DEF
 #define MENU_CONFIG_DEF 1
 

@@ -5,10 +5,7 @@
  */
 
 
-#include "main_map.c"
-#include "building_menu_map.c"
-#include "building_menu_tiles.c"
-#include "main_map_boundaries.c"
-#include "menu_config_data.c"
-#include "main_map_palette.c"
-#include "window.c"
+#include "game_state.h"
+
+// Game state
+extern game_state_t game_state;
