@@ -6,5 +6,5 @@
 
 
 
-void setup_window();
-void update_window();
+void setup_window() BANKED;
+void update_window() BANKED;
