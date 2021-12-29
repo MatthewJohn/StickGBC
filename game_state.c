@@ -20,8 +20,6 @@
 #define S_B_HOUSE 0x02U
 #define S_B_RESTAURANT 0x04U
 
-
-
 typedef struct {
     // Current building
     UINT8 current_building;
