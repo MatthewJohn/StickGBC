@@ -18,9 +18,9 @@
 
 #include "building_menu_tiles.h"
 #include "building_menu_map.h"
-#include "building_menu_palette.c"
+#include "building_menu_palette.h"
 
-#include "main_map_sprite_tileset.c"
+#include "main_map_sprite_tileset.h"
 
 #include "game_constants.h"
 #include "game_state.c"
@@ -168,8 +168,10 @@ void setup_sprite()
 {
     // Load single sprite tile
     HIDE_SPRITES;
+    ROM_BANK_TILE_DATA;
     set_sprite_data(0, 3, sprite_tiles);
     set_sprite_palette(0, 1, sprite_palette);
+    ROM_BANK_RESET;
     set_sprite_tile(0, 0);
     SHOW_SPRITES;
 }
@@ -230,10 +232,10 @@ void set_background_tiles() NONBANKED
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
     // Load color palette
+    ROM_BANK_TILE_DATA;
     set_bkg_palette(0, 8, background_color_palette);
 
     VBK_REG = 0;
-    ROM_BANK_TILE_DATA;
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
@@ -522,8 +524,8 @@ void check_boundary_hit() NONBANKED
                 PIXEL_LOCATION_TO_TILE_COUNT(new_x),
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
-            ROM_BANK_TILE_DATA;
 
+            ROM_BANK_TILE_DATA;
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
