@@ -4,9 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-
 #include <gb/drawing.h>
-
 #include "game_constants.h"
 #include "common_globals.h"
 #include "game_state_ext.c"
