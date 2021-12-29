@@ -943,18 +943,14 @@ void main()
 
     DISPLAY_OFF;
     
-    // Switch to ROM bank 1 by default
-    SWITCH_ROM_MBC1(1);
     setup_globals();
 
     wait_vbl_done();
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
-    SWITCH_ROM_MBC1(3);
     setup_window();
-//    update_window();
-    SWITCH_ROM_MBC1(1);
+    update_window();
 
     SHOW_WIN;
     
