@@ -92,7 +92,7 @@ void setup_sprite()
 }
 
 
-void set_background_tiles()
+void set_background_tiles() NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -107,6 +107,7 @@ void set_background_tiles()
     max_x = DRAW_OFFSET_X + DRAW_MAX_X;
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
+    SWITCH_ROM_MBC1(2);
     set_bkg_palette(0, 8, background_color_palette);
 
     set_bkg_data(0, 8, background_tiles);
@@ -182,7 +183,7 @@ void set_background_tiles()
     }
 
     // Reset VKG_REG to original value
-    
+    SWITCH_ROM_MBC1(1);
 }
 
 void check_user_input()
@@ -950,8 +951,10 @@ void main()
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
+    SWITCH_ROM_MBC1(3);
     setup_window();
-    update_window();
+//    update_window();
+    SWITCH_ROM_MBC1(1);
 
     SHOW_WIN;
     
