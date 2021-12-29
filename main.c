@@ -166,6 +166,9 @@ void setup_globals()
 
     screen_state.displayed_buildings = SC_HOUSE;
 
+    game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
+    game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] = 0x0U;
+
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
     screen_location_y = 0x00U;
@@ -860,6 +863,25 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
+void purchase_item(UINT8 cost, UINT8 inventory_item)
+{
+    // Breaking the rules using >=, but
+    // only performed when buying an item
+    // and currency is decimal, making very difficult
+    // to do using bit shifting (and at least probably
+    // less CPU intensive)
+
+    if (game_state.balance >= cost && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
+    {
+        game_state.balance -= cost;
+        game_state.inventory[inventory_item] += 1U;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 {
     if ((S_HOURS_PER_DAY - game_state.hour) >= number_of_hours)
@@ -1121,6 +1143,17 @@ void update_state()
                     else if (menu_state.current_item_y == 3U)  // Nachos
                     {
                         purchase_food(4U, 7U);
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Smokes
+                    {
+                        purchase_item(10U, S_INVENTORY_SMOKES);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Caffeine Pills
+                    {
+                        purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
