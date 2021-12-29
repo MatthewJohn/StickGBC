@@ -12,7 +12,7 @@
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
 #define SC_RESTAURANT_TRANSITION_Y 0x7U
-#define SC_SHOP_TRANSITION_Y 0xAU
+#define SC_SHOP_TRANSITION_Y 0x15U
 
 typedef struct {
     UINT8 displayed_buildings;
