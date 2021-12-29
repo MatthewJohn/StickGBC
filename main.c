@@ -21,6 +21,7 @@
 
 #include "main_map_sprite_tileset.c"
 
+#include "game_constants.h"
 #include "game_state.c"
 #include "menu_config.h"
 #include "screen_state.c"
@@ -191,7 +192,7 @@ void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
     // @TODO make sure display works after 999
-    game_state.days_passed = 10000U;
+    game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
     // Start with $100
     game_state.balance = 100U;
@@ -1190,7 +1191,7 @@ void update_state()
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
             // Sleep to stop double pressed
-            delay(100);
+            delay(DELAY_MENU_ITEM_MOVE);
         }
 
         // Check if moving menu item
@@ -1212,7 +1213,7 @@ void update_state()
 
                 // TURN OFF DISPLAY FOR 1 second
                 DISPLAY_OFF;
-                delay(1000);
+                delay(DELAY_SLEEP);
                 DISPLAY_ON;
             }
             // Handle menu selections from restaurant
@@ -1245,7 +1246,7 @@ void update_state()
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
-                delay(700);
+                delay(DELAY_PURCHASE_ITEM);
             }
         }
     }
