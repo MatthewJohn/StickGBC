@@ -4,6 +4,9 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+
+#include "gb.h"
+
 const UWORD building_menu_palette[] = {
   RGB(31, 31, 31),
   RGB(22, 22, 22),

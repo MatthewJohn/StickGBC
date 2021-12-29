@@ -68,5 +68,7 @@
 #define PALETTE_SCRATCH_2 0x06U
 #define PALETTE_SCRATCH_3 0x07U
 
+#define MENU_ROW_2_TILE_DATA_OFFSET 0x6DU
+
 
 #endif
