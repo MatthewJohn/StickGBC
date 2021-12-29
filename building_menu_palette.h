@@ -4,7 +4,4 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-
-
-void setup_window() BANKED;
-void update_window() BANKED;
+extern const UWORD building_menu_palette;

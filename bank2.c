@@ -5,8 +5,12 @@
  */
 
 
+#include <gb/gb.h>
+
 #include "main_map.c"
 #include "building_menu_map.c"
 #include "building_menu_tiles.c"
+#include "building_menu_palette.c"
 #include "main_map_boundaries.c"
+#include "main_map_tileset.c"
 #include "main_map_palette.c"
