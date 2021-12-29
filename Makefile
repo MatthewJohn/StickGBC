@@ -6,9 +6,11 @@ CFLAGS	= -c -o
 all:	$(BIN)
 
 main main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset: %.o: %.c
+	bash ./scripts/convert_main_main.sh
 	$(CC) $(CFLAGS) $@ $<
 
 bank2.o:	bank2.c
+	bash ./scripts/convert_main_main.sh
 	$(CC) -Wf-bo1 $(CFLAGS) $@ $<
 
 main.gb: main.o main_map.o building_menu_map.o main_map_boundaries.o building_menu_tiles.o main_map_tileset.o bank2.o
