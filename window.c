@@ -14,7 +14,7 @@
 #include "game_state.c"
 #include "external_bank_globals.h"
 
-void update_window(game_state_t* game_state) BANKED
+void update_window(game_state_t* game_state)
 {
     unsigned int current_digit, remainder, itx, itx_x;
     unsigned short shown_symbol;
