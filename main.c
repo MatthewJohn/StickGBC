@@ -599,7 +599,9 @@ void load_menu_tiles()
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
             
             // For tiles on top row, use offset from menu config
+            ROM_BANK_TILE_DATA;
             tile_data_offset = menu_config->tile_offset;
+            ROM_BANK_RESET;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -613,15 +615,18 @@ void load_menu_tiles()
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
+                ROM_BANK_TILE_DATA;
                 if (menu_config->menu_item_tiles[menu_item_index][tile_index] == 0U)
+                {
+                    ROM_BANK_RESET;
                     continue;
+                }
 
                 tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
 
                 VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
                 // in menu config and tile config in menu tile array
-                ROM_BANK_TILE_DATA;
                 set_bkg_data(
                     tile_data_index,
                     1,
@@ -647,8 +652,10 @@ void load_menu_tiles()
                 tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Override color palette from menu_item palette tile overrides
+                ROM_BANK_TILE_DATA;
                 if (menu_config->menu_item_palette[menu_item_index][tile_index])
                     tile_data[0] = menu_config->menu_item_palette[menu_item_index][tile_index];
+                ROM_BANK_RESET;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -676,8 +683,10 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            ROM_BANK_TILE_DATA;
             if (menu_config->menu_item_palette[menu_item_index][tile_index] != 0U)
                 palette_colors[itx_x] = menu_config->menu_item_palette[menu_item_index][tile_index];
+            ROM_BANK_RESET;
          }
         set_bkg_tiles(
             MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
@@ -970,6 +979,7 @@ void update_state()
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
+            ROM_BANK_TILE_DATA;
             if (
                     (
                         (travel_x == 1 && menu_state.current_item_x == 0U) ||
@@ -1003,6 +1013,7 @@ void update_state()
                         break;
                     }
             }
+            ROM_BANK_RESET;
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
