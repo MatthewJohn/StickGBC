@@ -40,13 +40,13 @@
 
 typedef struct {
     // Menu can contain 8 items each with 12 tiles
-    unsigned int menu_item_tiles[8][12];
-    unsigned char menu_item_palette[8][12];
+    const unsigned int menu_item_tiles[8][12];
+    const unsigned char menu_item_palette[8][12];
 
     // Bit mask of menu items. Lower nibble is left column (x = 0), upper nibble is right (x = 1)
-    UINT8 menu_items;
+    const UINT8 menu_items;
     
-    unsigned int tile_offset;
+    const unsigned int tile_offset;
 } menu_config_t;
 
 typedef struct {
@@ -56,3 +56,4 @@ typedef struct {
 
 extern const menu_config_t menu_config_house;
 extern const menu_config_t menu_config_restaurant;
+extern const menu_config_t menu_config_shop;

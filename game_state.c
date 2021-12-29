@@ -18,7 +18,15 @@
 #define S_B_NO_BUILDING 0x00U
 #define S_B_MAIN_MENU 0x01U
 #define S_B_HOUSE 0x02U
-#define S_B_RESTAURANT 0x04U
+#define S_B_RESTAURANT 0x03U
+#define S_B_SHOP 0x04U
+
+// Maximum of 99 of each item
+#define S_MAX_INVENTORY_ITEM 99U
+
+// Inventory items
+#define S_INVENTORY_SMOKES 0x0U
+#define S_INVENTORY_CAFFEINE_PILLS 0x1U
 
 typedef struct {
     // Current building
@@ -37,4 +45,7 @@ typedef struct {
     
     // Money the user has.
     unsigned int balance;
+
+    // Inventory items
+    UINT8 inventory[2];
 } game_state_t;

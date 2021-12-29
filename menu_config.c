@@ -188,3 +188,148 @@ const menu_config_t menu_config_restaurant = {
 };
 
 
+// SHOP
+const menu_config_t menu_config_shop = {
+    {
+        MENU_BLANK_ITEM,
+        MENU_BLANK_ITEM,
+        {
+            // SLUSHEE
+            0x11U,  // SL
+            0x29U,  // US
+            0x1FU,  // EE
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            0x2U, // 1
+            0xCU, // HP
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x2U, // 1
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            // SMOKES
+            0x31U,  // SM
+            0x32U,  // OK
+            0x33U,  // ES
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x2U, // 1
+            0x1U, // 0
+        },
+        {
+            // CANDY BAR
+            0x2AU,  // CA
+            0x2BU,  // ND
+            0x2CU,  // Y
+            0x2DU,  // BA
+            0x2E,  // R
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            0x4U, // 3
+            0xCU, // HP
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x3U, // 2
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            // CAFFEINE PILLS
+            0x2AU,  // CA
+            0x34U,  // FF
+            0x35U,  // EI
+            0x36U,  // NE
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x5U, // 4
+            0x6U, // 5
+        },
+        {
+            // NACHOS
+            0x2FU,  // NA
+            0x1EU,  // CH
+            0x30U,  // OS
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            0x8U, // 7
+            0xCU, // HP
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x5U, // 4
+            MENU_ITEM_NO_TILE,
+        },
+        MENU_BLANK_ITEM,
+    },
+    {
+        MENU_BLANK_ITEM_PALETTE,
+        MENU_BLANK_ITEM_PALETTE,
+        {
+            // MILKSHAKE
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+        {
+            // SMOKES
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        {
+            // CANDY BAR
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+        {
+            // CAFFEINE PILLS
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        {
+            // NACHOS
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_HP_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+        MENU_BLANK_ITEM_PALETTE,
+    },
+    0x7EU,
+    0x00U,
+};
