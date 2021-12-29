@@ -51,12 +51,9 @@ void update_window(game_state_t game_state)
     set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
     VBK_REG = 0;
 
-    remainder = game_state->hour / 10U;
-    current_digit = game_state->hour % 10U;
-
     // Set 24 hour time e.g. 17:00
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + remainder;
-    tile_data[1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + game_state->hour / 10U;
+    tile_data[1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + game_state->hour % 10U;
     tile_data[2] = MENU_ROW_2_TILE_DATA_OFFSET;
     tile_data[3] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
     tile_data[4] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
@@ -74,7 +71,9 @@ void update_window(game_state_t game_state)
         if (itx == (WINDOW_MAX_DIGITS_DAYS - 1U))
         {
             current_digit = remainder;
-        } else {
+        }
+        else
+        {
             current_digit = remainder % 10U;
 
             // Update remainder
