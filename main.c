@@ -107,8 +107,6 @@ void set_background_tiles()
     max_x = DRAW_OFFSET_X + DRAW_MAX_X;
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
-    // Load color palette
-    switch_rom_mbc1(2U);
     set_bkg_palette(0, 8, background_color_palette);
 
     set_bkg_data(0, 8, background_tiles);
@@ -216,7 +214,9 @@ void move_background(signed int move_x, signed int move_y)
     UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
-    
+
+    // Building tile data ROM bank
+    SWITCH_ROM_MBC1(2);
 
     if (move_x == 0 && move_y == 0)
     {
@@ -367,6 +367,9 @@ void check_boundary_hit()
     unsigned int new_x;
     unsigned int new_y;
     unsigned int new_tile_itx;
+
+    // Rom bank with boundary data
+    SWITCH_ROM_MBC1(2);
     
     new_x = user_pos_x + travel_x;
     new_y = user_pos_y + travel_y;
@@ -427,6 +430,8 @@ void setup_main_map()
 
 void load_menu_tiles()
 {
+    // Load ROM bank for menu config
+    SWITCH_ROM_MBC1(3);
     move_bkg(0, 0);
     
     // Iterate over all menu items and load palette data.
@@ -512,6 +517,8 @@ void load_menu_tiles()
             }
         }
     }
+    // Switch ROM bank back
+    SWITCH_ROM_MBC1(2);
 }
 
 
@@ -520,6 +527,9 @@ void set_menu_item_color(unsigned char palette)
     unsigned int itx_y, itx_x, tile_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
     unsigned int menu_item_index = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
+
+    // Load ROM bank for menu config
+    SWITCH_ROM_MBC1(3);
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
@@ -539,6 +549,9 @@ void set_menu_item_color(unsigned char palette)
         );
     }
     VBK_REG = 0;
+
+    // Switch ROM bank back
+    SWITCH_ROM_MBC1(2);
 }
 
 void setup_building_menu()
@@ -668,7 +681,9 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
             
+        SWITCH_ROM_MBC1(3);
         update_window();
+        SWITCH_ROM_MBC1(2);
     }
 }
 
@@ -681,7 +696,9 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.hour += number_of_hours;
     }
     
+    SWITCH_ROM_MBC1(3);
     update_window();
+    SWITCH_ROM_MBC1(2);
 }
 
 // Called per cycle to update background position and sprite
@@ -873,7 +890,9 @@ void update_state()
                 game_state.days_passed ++;
                 check_end_game();
 
+                SWITCH_ROM_MBC1(3);
                 update_window();
+                SWITCH_ROM_MBC1(2);
 
                 // TURN OFF DISPLAY FOR 1 second
                 DISPLAY_OFF;
@@ -922,14 +941,20 @@ void main()
     debug_address = 0xFFFA;
 
     DISPLAY_OFF;
+    
+    // Switch to ROM bank 2 by default
+    SWITCH_ROM_MBC1(2);
     setup_globals();
 
     wait_vbl_done();
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
+    SWITCH_ROM_MBC1(3);
     setup_window();
     update_window();
+    SWITCH_ROM_MBC1(2);
+
     SHOW_WIN;
     
     // Load background tiles. This turns display on, so run last
