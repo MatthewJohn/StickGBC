@@ -12,5 +12,5 @@ sed -i 's/^extern unsigned char/extern const unsigned char/g' main_map.h main_ma
 
 for file in main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset;
 do
-    grep 'pragma bank' $file.c >/dev/null 2>&1 || { echo '#pragma bank=5'; cat $i.c; } >> $i.c
+    grep 'pragma bank' $file.c >/dev/null 2>&1 || echo '#pragma bank=5' > tmp.c && cat $file.c >> tmp.c && mv tmp.c $file.c;
 done
