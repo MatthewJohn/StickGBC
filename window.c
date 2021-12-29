@@ -11,7 +11,7 @@
 #include "common_globals.h"
 #include "game_state_ext.c"
 
-void setup_window() BANKED
+void setup_window()
 {
     // Set transparency for all tiles
     tile_data = 0x00U;
@@ -51,7 +51,7 @@ void setup_window() BANKED
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
 
-void update_window() BANKED
+void update_window()
 {
     unsigned int current_digit;
     unsigned int remainder;
