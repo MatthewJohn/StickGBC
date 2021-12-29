@@ -5,8 +5,6 @@
  */
 
 
-#include "gb.h"
-
 // Location of user in world.
 // This is not the sprites position on the screen
 unsigned int user_pos_x;

@@ -5,8 +5,6 @@
  */
 
 
-#include "gb.h"
-
 #ifndef GAME_STATE_DEF
 #define GAME_STATE_DEF 1
 

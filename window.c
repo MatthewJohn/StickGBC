@@ -5,7 +5,6 @@
  */
 
 
-#include "gb.h"
 #include <gb/drawing.h>
 
 #include "game_constants.h"
