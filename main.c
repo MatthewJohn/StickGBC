@@ -270,17 +270,33 @@ void update_window()
     // Screen is 20 tiles wide.
     // Window is layed out as:
     // Row 1:
-    // 1 tile padding on left
+    // 2 tiles for top-half of clock
     // 6 tiles for days passed, 5 numerics with symbol with right padding.
     // 10 tiles for money, left padded (so starts by appearing in last 4 tiles). This allows for 100,000,000 with dollar symbol and 1,000,000,000 without.
     // Row 2:
+    // 2 tiles for bottom-half of clock
     // HP:
     // - 5 tiles for HP
     // - 1 tile for '/'
     // - 5 tiles for max HP
     // - 1 tile for HP symbol
-    // All of the above HP-stats are padded together.
+    // All of the above HP-stats are left-padded together.
 
+    VBK_REG = 0;
+
+    // CLOCK
+    tile_data = MENU_ROW_2_TILE_DATA_OFFSET - 1U;
+    set_win_tiles(0U, 0U, 1, 1, &tile_data);
+    set_win_tiles(0U, 1U, 1, 1, &tile_data);
+    set_win_tiles(1U, 1U, 1, 1, &tile_data);
+    set_win_tiles(1U, 0U, 1, 1, &tile_data);
+    VBK_REG = 1;
+    tile_data = 0x21U;
+    set_win_tiles(0U, 0U, 1, 1, &tile_data);
+    tile_data = 0x41U;
+    set_win_tiles(1U, 1U, 1, 1, &tile_data);
+    tile_data = 0x61U;
+    set_win_tiles(0U, 1U, 1, 1, &tile_data);
     VBK_REG = 0;
 
     // DAYS PASSED
