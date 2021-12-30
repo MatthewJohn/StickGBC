@@ -359,10 +359,10 @@ const menu_config_t menu_config_pawn = {
         },
         {
             // CELL PHONE
-            0x41U,  // CE
-            0x42U,  // LL
-            0x43U,  // PH
-            0x44U,  // ON
+            0x42U,  // CE
+            0x43U,  // LL
+            0x44U,  // PH
+            0x45U,  // ON
             0x1AU,  // E
             MENU_ITEM_NO_TILE,
             // Row 2
@@ -395,9 +395,9 @@ const menu_config_t menu_config_pawn = {
             0x3CU,  // AL
             0x3DU,  // AR
             0x3EU,  // M
-            0x3EU,  // CL
-            0x3FU,  // OC
-            0x40U,  // K
+            0x3FU,  // CL
+            0x40U,  // OC
+            0x41U,  // K
             // Row 2
             MENU_ITEM_NO_TILE,
             MENU_ITEM_NO_TILE,
