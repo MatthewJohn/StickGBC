@@ -70,15 +70,15 @@ typedef struct {
     // Menu can contain 8 items
     unsigned short items[8];
     
-    unsigned int tile_offset;
+    unsigned short tile_offset;
 } menu_config_t;
 
 typedef struct {
-    unsigned int current_item_x;
-    unsigned int current_item_y;
+    unsigned short current_item_x;
+    unsigned short current_item_y;
 } menu_state_t;
 
-extern const menu_config_item_t menu_config_items[0x10U];
+extern const menu_config_item_t menu_config_items[];
 
 extern menu_config_t menu_config_house;
 extern menu_config_t menu_config_restaurant;
