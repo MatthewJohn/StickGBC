@@ -23,7 +23,9 @@
 #define MENU_ITEM_MARGIN 0x02U
 
 #define MENU_ITEM_NO_TILE 0x00U
-#define MENU_BLANK_ITEM_ROW MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE
+#define MENU_BLANK_ITEM_ROW MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, \
+                                                                 MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, \
+                                                                 MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE
 #define MENU_BLANK_ITEM {MENU_BLANK_ITEM_ROW, MENU_BLANK_ITEM_ROW}
 
 #define MENU_ITEM_NO_PALETTE 0x00U
@@ -38,10 +40,13 @@
 #define MENU_ITEM_INTELLIGENCE_PALETTE 0x06U
 #define MENU_BLANK_ITEM_PALETTE {MENU_ITEM_NO_PALETTE_ROW, MENU_ITEM_NO_PALETTE_ROW}
 
+// Indexes for menu config menu_item_tiles
+#define MENU_CONFIG_TILE_INDEX 0U
+#define MENU_CONFIG_PALETTE_INDEX 1U
+
 typedef struct {
-    // Menu can contain 8 items each with 12 tiles
-    const unsigned int menu_item_tiles[8][12];
-    const unsigned char menu_item_palette[8][12];
+    // Menu can contain 8 items, split into tile data and palette data, each with 12 tiles
+    const unsigned int menu_item_tiles[8][2][12];
 
     // Bit mask of menu items. Lower nibble is left column (x = 0), upper nibble is right (x = 1)
     const UINT8 menu_items;
