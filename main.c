@@ -30,6 +30,7 @@
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+#define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 
 
 UBYTE * debug_address;
@@ -616,8 +617,10 @@ void load_menu_tiles()
                 continue;
 
             // Check if tile is a valid tile
+            ROM_BANK_TILE_DATA;
             if (! IS_MENU_ITEM_ENABLED(menu_item_index))
                 continue;
+            ROM_BANK_RESET;
 
             second_tile_row = 0U;
 
@@ -626,7 +629,7 @@ void load_menu_tiles()
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
             
             // For tiles on top row, use offset from menu config
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_MENU_CONFIG;
             tile_data_offset = menu_config->tile_offset;
             ROM_BANK_RESET;
 
@@ -642,7 +645,7 @@ void load_menu_tiles()
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
-                ROM_BANK_TILE_DATA;
+                ROM_BANK_MENU_CONFIG;
                 if (menu_config->items[menu_item_index]->tiles[tile_index] == 0U)
                 {
                     ROM_BANK_RESET;
@@ -650,6 +653,8 @@ void load_menu_tiles()
                 }
 
                 tile_data_index = tile_data_offset + menu_config->items[menu_item_index]->tiles[tile_index];
+
+                ROM_BANK_TILE_DATA;
 
                 VBK_REG = 0; 
                 // Load tile data for menu item based on tile data offset
@@ -679,7 +684,7 @@ void load_menu_tiles()
                 tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
 
                 // Override color palette from menu_item palette tile overrides
-                ROM_BANK_TILE_DATA;
+                ROM_BANK_MENU_CONFIG;
                 if (menu_config->items[menu_item_index]->palette[tile_index])
                     tile_data[0] = menu_config->items[menu_item_index]->palette[tile_index];
                 ROM_BANK_RESET;
@@ -710,7 +715,7 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_MENU_CONFIG;
             if (menu_config->items[menu_item_index]->palette[tile_index] != 0U)
                 palette_colors[itx_x] = menu_config->items[menu_item_index]->palette[tile_index];
             ROM_BANK_RESET;

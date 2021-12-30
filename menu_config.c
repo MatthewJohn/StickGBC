@@ -5,7 +5,7 @@
  */
 
 
-#pragma bank=5
+#pragma bank=6
 
 #include "menu_config.h"
 
