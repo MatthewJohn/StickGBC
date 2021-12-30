@@ -599,7 +599,7 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
-void load_menu_tiles()
+void load_menu_tiles() NONBANKED
 {
     move_bkg(0, 0);
     

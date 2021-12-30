@@ -426,6 +426,7 @@ menu_config_t menu_config_house = {
     0x82U,
 };
 
+
 // RESTAURANT
 menu_config_t menu_config_restaurant = {
     {
