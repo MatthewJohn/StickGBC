@@ -57,3 +57,4 @@ typedef struct {
 extern const menu_config_t menu_config_house;
 extern const menu_config_t menu_config_restaurant;
 extern const menu_config_t menu_config_shop;
+extern const menu_config_t menu_config_pawn;

@@ -20,6 +20,7 @@
 #define S_B_HOUSE 0x02U
 #define S_B_RESTAURANT 0x03U
 #define S_B_SHOP 0x04U
+#define S_B_PAWN 0x05U
 
 // Maximum of 99 of each item
 #define S_MAX_INVENTORY_ITEM 99U
