@@ -48,9 +48,9 @@ typedef struct {
 
 typedef struct {
     // Menu can contain 8 items
-    menu_config_item_t* items[8];
+    menu_config_item_t *items[8];
     
-    const unsigned int tile_offset;
+    unsigned int tile_offset;
 } menu_config_t;
 
 typedef struct {
@@ -76,7 +76,7 @@ extern const menu_config_item_t menu_config_item_cell_phone;
 extern const menu_config_item_t menu_config_item_knife;
 extern const menu_config_item_t menu_config_item_alarm_clock;
 
-extern const menu_config_t menu_config_house;
-extern const menu_config_t menu_config_restaurant;
-extern const menu_config_t menu_config_shop;
-extern const menu_config_t menu_config_pawn;
+extern menu_config_t menu_config_house;
+extern menu_config_t menu_config_restaurant;
+extern menu_config_t menu_config_shop;
+extern menu_config_t menu_config_pawn;
