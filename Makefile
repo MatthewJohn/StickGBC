@@ -4,8 +4,6 @@ CC	= ../../bin/lcc
 ROMUSAGE	= ../../tools/romusage.exe
 CFLAGS	= -c -o
 
-all:	$(BIN)
-
 main main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset window building_menu_palette main_map_palette main_map_sprite_tileset menu_config: %.o: %.c
 	bash ./scripts/convert_main_main.sh
 	$(CC) $(CFLAGS) $@ $<
@@ -20,3 +18,4 @@ usage:	$(BIN)
 clean:
 	rm -f *.o $(BIN)
 
+all:	$(BIN)

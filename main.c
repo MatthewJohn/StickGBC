@@ -601,6 +601,7 @@ void setup_main_map()
 
 void load_menu_tiles() NONBANKED
 {
+    unsigned int menu_item_itx;
     move_bkg(0, 0);
     
     // Iterate over all menu items and load palette data.
@@ -645,14 +646,16 @@ void load_menu_tiles() NONBANKED
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
+                menu_item_itx = menu_config->items[menu_item_index];
+
                 ROM_BANK_MENU_CONFIG;
-                if (menu_config_items[menu_config->items[menu_item_index]].tiles[tile_index] == 0U)
+                if (menu_config_items[menu_item_itx].tiles[tile_index] == 0U)
                 {
                     ROM_BANK_RESET;
                     continue;
                 }
 
-                tile_data_index = tile_data_offset + menu_config_items[menu_config->items[menu_item_index]].tiles[tile_index];
+                tile_data_index = tile_data_offset + menu_config_items[menu_item_itx].tiles[tile_index];
 
                 ROM_BANK_TILE_DATA;
 
@@ -685,8 +688,8 @@ void load_menu_tiles() NONBANKED
 
                 // Override color palette from menu_item palette tile overrides
                 ROM_BANK_MENU_CONFIG;
-                if (menu_config_items[menu_config->items[menu_item_index]].palette[tile_index])
-                    tile_data[0] = menu_config_items[menu_config->items[menu_item_index]].palette[tile_index];
+                if (menu_config_items[menu_item_itx].palette[tile_index])
+                    tile_data[0] = menu_config_items[menu_item_itx].palette[tile_index];
                 ROM_BANK_RESET;
 
                 // Set palette data in VBK_REG1 for tile
@@ -704,9 +707,9 @@ void load_menu_tiles() NONBANKED
 
 void set_menu_item_color(unsigned char palette)
 {
-    unsigned int itx_y, itx_x, tile_index;
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_index = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
+    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
@@ -715,9 +718,10 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            menu_item_index = menu_config->items[menu_item_itx];
             ROM_BANK_MENU_CONFIG;
-            if (menu_config_items[menu_config->items[menu_item_index]].palette[tile_index] != 0U)
-                palette_colors[itx_x] = menu_config_items[menu_config->items[menu_item_index]].palette[tile_index];
+            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
+                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
             ROM_BANK_RESET;
          }
         set_bkg_tiles(
