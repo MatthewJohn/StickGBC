@@ -59,7 +59,7 @@ typedef struct {
 } menu_state_t;
 
 
-extern const menu_config_item_t menu_config_item_blank;
+extern const menu_config_item_t menu_config_item_exit;
 extern const menu_config_item_t menu_config_item_sleep;
 extern const menu_config_item_t menu_config_item_milkshake;
 extern const menu_config_item_t menu_config_item_fries;
