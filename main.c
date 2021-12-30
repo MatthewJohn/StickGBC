@@ -938,7 +938,9 @@ void update_state()
         user_pos_y += travel_y;
         
         // Check if sprite too close to edge of screen
-        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+        // If character at left of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_x != 0)
         {
             // If player hit LHS of screen, move screen to the left
             move_x = -1;
@@ -954,8 +956,10 @@ void update_state()
             user_screen_pos_x = user_pos_x - screen_location_x;
             move_x = 0;
         }
-            
-        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+
+        // If character at top of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_y != 0)
         {
             move_y = -1;
         }
