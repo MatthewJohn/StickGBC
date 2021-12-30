@@ -46,7 +46,7 @@
 
 typedef struct {
     // Menu can contain 8 items, split into tile data and palette data, each with 12 tiles
-    const unsigned int menu_item_tiles[8][2][12];
+    const unsigned short menu_item_tiles[8][2][12];
 
     // Bit mask of menu items. Lower nibble is left column (x = 0), upper nibble is right (x = 1)
     const UINT8 menu_items;
