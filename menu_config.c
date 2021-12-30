@@ -413,14 +413,14 @@ const menu_config_item_t menu_config_item_alarm_clock = {
 const menu_config_t menu_config_house = {
     {
         // Blank item 1
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_sleep,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_sleep,
     },
     0x82U,
 };
@@ -428,14 +428,14 @@ const menu_config_t menu_config_house = {
 // RESTAURANT
 const menu_config_t menu_config_restaurant = {
     {
-        menu_config_item_milkshake,
-        menu_config_item_blank,
-        menu_config_item_fries,
-        menu_config_item_work,
-        menu_config_item_cheese_burger,
-        menu_config_item_blank,
-        menu_config_item_triple_burger,
-        menu_config_item_blank,
+        &menu_config_item_milkshake,
+        &menu_config_item_blank,
+        &menu_config_item_fries,
+        &menu_config_item_work,
+        &menu_config_item_cheese_burger,
+        &menu_config_item_blank,
+        &menu_config_item_triple_burger,
+        &menu_config_item_blank,
     },
     0x5FU,
 };
@@ -444,14 +444,14 @@ const menu_config_t menu_config_restaurant = {
 // SHOP
 const menu_config_t menu_config_shop = {
     {
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_slushee,
-        menu_config_item_smokes,
-        menu_config_item_candy_bar,
-        menu_config_item_caffeine_pills,
-        menu_config_item_nachos,
-        menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_slushee,
+        &menu_config_item_smokes,
+        &menu_config_item_candy_bar,
+        &menu_config_item_caffeine_pills,
+        &menu_config_item_nachos,
+        &menu_config_item_blank,
     },
     0x7EU,
 };
@@ -461,14 +461,14 @@ const menu_config_t menu_config_shop = {
 // PAWN SHOP
 const menu_config_t menu_config_pawn = {
     {
-        menu_config_item_blank,
-        menu_config_item_blank,
-        menu_config_item_hand_gun,
-        menu_config_item_cell_phone,
-        menu_config_item_knife,
-        menu_config_item_blank,
-        menu_config_item_alarm_clock,
-        menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_blank,
+        &menu_config_item_hand_gun,
+        &menu_config_item_cell_phone,
+        &menu_config_item_knife,
+        &menu_config_item_blank,
+        &menu_config_item_alarm_clock,
+        &menu_config_item_blank,
     },
     0x5EU,
 };
