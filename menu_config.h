@@ -48,7 +48,7 @@ typedef struct {
 
 typedef struct {
     // Menu can contain 8 items
-    menu_config_item_t items[8];
+    menu_config_item_t* items[8];
     
     const unsigned int tile_offset;
 } menu_config_t;
