@@ -42,7 +42,7 @@
 #define SPRITE_OFFSET_X 0x04U
 #define SPRITE_OFFSET_Y 0x0dU
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
