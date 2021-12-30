@@ -43,6 +43,9 @@ unsigned int user_pos_y;
 UBYTE tile_data[12];
 UWORD word_data[4];
 
+// Storage for scratch palette data
+UWORD scratch_palette_data[3][4];
+
 // Location of screen compared to map
 unsigned int screen_location_x;
 unsigned int screen_location_y;
@@ -142,13 +145,23 @@ void load_building_tile_data() NONBANKED
     if (screen_state.displayed_buildings & SC_SHOP)
     {
         ROM_BANK_TILE_DATA;
-        set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
         ROM_BANK_RESET;
         word_data[0] = RGB(31, 21, 5);
         word_data[1] = RGB(1, 0, 2);
         word_data[2] = RGB(4, 20, 0);
         word_data[3] = RGB(26, 16, 0 );
         set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
+    }
+    if (screen_state.displayed_buildings & SC_PAWN)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
+        scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
+        scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
+        set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
     }
 }
 
@@ -823,6 +836,8 @@ void update_loaded_buildings_y_up()
         screen_state.displayed_buildings &= ~SC_RESTAURANT;
     if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_SHOP;
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+        screen_state.displayed_buildings &= ~SC_PAWN;
 }
 void update_loaded_buildings_y_down()
 {
@@ -835,6 +850,11 @@ void update_loaded_buildings_y_down()
     if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
     {
         screen_state.displayed_buildings |= SC_SHOP;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings |= SC_PAWN;
         load_building_tile_data();
     }
 }
