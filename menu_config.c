@@ -333,3 +333,128 @@ const menu_config_t menu_config_shop = {
     0x7EU,
     0x00U,
 };
+
+
+
+// PAWN SHOP
+const menu_config_t menu_config_pawn = {
+    {
+        MENU_BLANK_ITEM,
+        MENU_BLANK_ITEM,
+        {
+            // HAND GUN
+            0x37U,  // HA
+            0x2BU,  // ND
+            0x38U,  // GU
+            0x39U,  // N
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x5U, // 4
+            0x1U, // 0
+            0x1U, // 0
+        },
+        {
+            // CELL PHONE
+            0x41U,  // CE
+            0x42U,  // LL
+            0x43U,  // PH
+            0x44U,  // ON
+            0x1AU,  // E
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x3U, // 2
+            0x1U, // 0
+            0x1U, // 0
+        },
+        {
+            // KNIFE
+            0x3AU,  // KN
+            0x3BU,  // IF
+            0x1AU,  // E
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x2U, // 1
+            0x1U, // 0
+            0x1U, // 0
+        },
+        MENU_BLANK_ITEM,
+        {
+            // ALARM CLOCK
+            0x3CU,  // AL
+            0x3DU,  // AR
+            0x3EU,  // M
+            0x3EU,  // CL
+            0x3FU,  // OC
+            0x40U,  // K
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0xBU, // $
+            0x3U, // 2
+            0x1U, // 0
+            0x1U, // 0
+        },
+        MENU_BLANK_ITEM,
+    },
+    {
+        MENU_BLANK_ITEM_PALETTE,
+        MENU_BLANK_ITEM_PALETTE,
+        {
+            // HAND GUN
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        {
+            // CELL PHONE
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        {
+            // KNIFE
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        MENU_BLANK_ITEM_PALETTE,
+        {
+            // ALARM CLOCK
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+        MENU_BLANK_ITEM_PALETTE,
+    },
+    0x5EU,
+    0x00U,
+};
+

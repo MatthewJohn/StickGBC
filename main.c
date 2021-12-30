@@ -757,9 +757,17 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_SHOP)
     {
+        // Default to slushee
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_shop;
+    }
+    else if (game_state.current_building == S_B_PAWN)
+    {
+        // Default to hand gun
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_pawn;
     }
 
     HIDE_SPRITES;
@@ -798,6 +806,12 @@ void check_building_enter()
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
+        setup_building_menu();
+    }
+    // Check for entering pawn shop
+    else if (tile_itx == 0xDF1U)
+    {
+        game_state.current_building = S_B_PAWN;
         setup_building_menu();
     }
     
