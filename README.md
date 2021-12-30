@@ -7,7 +7,11 @@ Stick GBC is a gameboy colour re-implementation of XGen Studio's Stick RPG.
 
 ## Building
 
-### Using 
+### Using original repository
+
+    cd games/stickrpg
+    make
+    make
 
 ### Pre-built binaries
 
