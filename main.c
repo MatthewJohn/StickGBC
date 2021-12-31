@@ -164,6 +164,17 @@ void load_building_tile_data() NONBANKED
         scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
         set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
     }
+    if (screen_state.displayed_buildings & SC_UNIVERSITY)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[0U][0U] = RGB(15U, 19U, 0U);
+        scratch_palette_data[0U][1U] = RGB(31U, 22U, 8U);
+        scratch_palette_data[0U][2U] = RGB(31U, 13U, 2U);
+        scratch_palette_data[0U][3U] = RGB(30U, 31U, 9U);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[0]));
+    }
 }
 
 void setup_globals()
@@ -854,12 +865,19 @@ void load_buildings_x_left()
         screen_state.displayed_buildings |= SC_HOUSE;
         load_building_tile_data();
     }
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+        screen_state.displayed_buildings &= ~SC_UNIVERSITY;
 }
 void load_buildings_x_right()
 {
     // Disable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings &= ~SC_HOUSE;
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        screen_state.displayed_buildings |= SC_UNIVERSITY;
+        load_building_tile_data();
+    }
 }
 void load_buildings_y_up()
 {
