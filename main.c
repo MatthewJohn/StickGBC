@@ -1075,7 +1075,6 @@ void update_state()
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
-            ROM_BANK_TILE_DATA;
             if (
                     (
                         (travel_x == 1 && menu_state.current_item_x == 0U) ||
@@ -1109,7 +1108,6 @@ void update_state()
                         break;
                     }
             }
-            ROM_BANK_RESET;
                 
             set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
