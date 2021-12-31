@@ -1142,7 +1142,7 @@ void update_state()
                         break;
                     }
             }
-            else if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
+            if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
