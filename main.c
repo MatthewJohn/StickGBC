@@ -834,10 +834,9 @@ void check_building_enter()
         setup_building_menu();
     }
     
-    // Temporary jump to restaurant
-//    game_state.current_building = S_B_RESTAURANT;
+//    // Temporary jump to building
+//    game_state.current_building = S_B_PAWN;
 //    setup_building_menu();
-        
 }
 
 // Check if win/lose conditions have been met
@@ -981,7 +980,7 @@ void update_state()
     unsigned int user_screen_pos_y;
     signed int move_x;
     signed int move_y;
-
+    unsigned short new_menu_x;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1106,40 +1105,46 @@ void update_state()
 
         if (travel_x != 0 || travel_y != 0)
         {
+            // Setup new Y search to use current X
+            new_menu_x = menu_state.current_item_x;
 
-            
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
             if (
-                    (
-                        (travel_x == 1 && menu_state.current_item_x == 0U) ||
-                        (travel_x == -1 && menu_state.current_item_x == 1U)
-                    ) &&
-                    IS_MENU_ITEM_ENABLED(menu_state.current_item_x + travel_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X))
+                    (travel_x == 1 && menu_state.current_item_x == 0U) ||
+                    (travel_x == -1 && menu_state.current_item_x == 1U)
                 )
-                move_to_menu_item(menu_state.current_item_x + travel_x, menu_state.current_item_y);
+            {
+                // Setup new X value that user is attempting to access
+                new_menu_x = menu_state.current_item_x + travel_x;
+
+                // This will update item and mean that any checks against new_menu_x vs state will show
+                // them as equal
+                if (IS_MENU_ITEM_ENABLED(new_menu_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X)))
+                    move_to_menu_item(new_menu_x, menu_state.current_item_y);
+            }
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
-        
-            if (travel_y == 1)
+            // If moving up or attempting to travel in X, but no item directly beside it
+            if (travel_y == 1 || new_menu_x != menu_state.current_item_x)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + (itx * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        move_to_menu_item(menu_state.current_item_x, itx);
+                        move_to_menu_item(new_menu_x, itx);
                         break;
                     }
             }
-            else if (travel_y == -1 && menu_state.current_item_y != 0U)
+            else if ((travel_y == -1 || new_menu_x != menu_state.current_item_x) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
                 for (itx = menu_state.current_item_y; itx != 0U; itx --)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        move_to_menu_item(menu_state.current_item_x, itx - 1U);
+                        move_to_menu_item(new_menu_x, itx - 1U);
                         break;
                     }
             }
