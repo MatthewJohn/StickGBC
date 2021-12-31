@@ -322,8 +322,8 @@ const menu_config_item_t menu_config_items[0x12] = {
         {
             0x79U,  // CE
             0x76U,  // LL
-            0x44U,  // PH
-            0x45U,  // ON
+            0x42U,  // PH
+            0x43U,  // ON
             0x1AU,  // E
             MENU_ITEM_NO_TILE,
             // Row 2
