@@ -950,6 +950,42 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
+void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.intelligence != S_MAX_INTELLIGENCE &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.intelligence += intelligence;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.strength != S_MAX_STRENGTH &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.strength += strength;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
 UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
 {
     // Breaking the rules using >=, but
@@ -1328,6 +1364,22 @@ void update_state()
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_UNIVERSITY)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Study -1 intelligence, 2 hours
+                        increase_intelligence(0U, 2U, 1U);
+                    else if (menu_state.current_item_y == 2U)  // Class -$20, 1 intelligence, 2 hours
+                        increase_intelligence(20U, 2U, 2U);
+                }
+                else
+                {
+                    if (menu_state.current_item_y == 1U)
+                        increase_strength(0U, 2U, 1U);
+                }
                 delay(DELAY_PURCHASE_ITEM);
             }
         }
