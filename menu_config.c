@@ -11,8 +11,12 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x11] = {
+const menu_config_item_t menu_config_items[0x12] = {
     // Exit
+    {
+        MENU_BLANK_ITEM,
+        MENU_BLANK_ITEM_PALETTE,
+    },
     {
         MENU_BLANK_ITEM,
         MENU_BLANK_ITEM_PALETTE,
