@@ -837,7 +837,7 @@ void check_end_game()
 }
 
 
-void update_loaded_buildings_x_left()
+void load_buildings_x_left()
 {
     // Enable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
@@ -846,13 +846,13 @@ void update_loaded_buildings_x_left()
         load_building_tile_data();
     }
 }
-void update_loaded_buildings_x_right()
+void load_buildings_x_right()
 {
     // Disable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings &= ~SC_HOUSE;
 }
-void update_loaded_buildings_y_up()
+void load_buildings_y_up()
 {
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
@@ -862,7 +862,7 @@ void update_loaded_buildings_y_up()
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_PAWN;
 }
-void update_loaded_buildings_y_down()
+void load_buildings_y_down()
 {
     // Enable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
@@ -1007,9 +1007,9 @@ void update_state()
             // but doesn't matter for now).
             if (screen_location_x_tilepixel == 0U)
                 if (move_x == 1)
-                    update_loaded_buildings_x_right();
+                    load_buildings_x_right();
                 else
-                    update_loaded_buildings_x_left();
+                    load_buildings_x_left();
         }
         if (move_y != 0)
         {
@@ -1017,9 +1017,9 @@ void update_state()
             
             if (screen_location_y_tilepixel == 0U)
                 if (move_y == 1)
-                    update_loaded_buildings_y_down();
+                    load_buildings_y_down();
                 else
-                    update_loaded_buildings_y_up();
+                    load_buildings_y_up();
         }
 
         // Move sprite to new location
