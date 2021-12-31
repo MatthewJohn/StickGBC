@@ -286,12 +286,12 @@ void move_ai_sprites()
         }
     }
     
-    // Update location of sprite.
+    // Move AI sprites
     // This must always be done, as it is required when the screen moves
     move_sprite(
         skater_sprite.sprite_itx,
-        skater_sprite.current_location_x,
-        skater_sprite.current_location_y
+        (skater_sprite.current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+        (skater_sprite.current_location_y - screen_location_y) + SPRITE_OFFSET_Y
     );
 }
 
@@ -619,16 +619,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 &(tile_data[0])
             );        
            VBK_REG = 0; 
-
         }
     }
-    
-    // Move AI sprites
-    move_sprite(
-        skater_sprite.sprite_itx,
-        (skater_sprite.current_location_x - screen_location_x) + SPRITE_OFFSET_X,
-        (skater_sprite.current_location_y - screen_location_y) + SPRITE_OFFSET_Y
-    );
 }
 
 // Check if next position will hit a boundary
