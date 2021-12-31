@@ -283,7 +283,7 @@ void set_background_tiles() NONBANKED
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 21U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
     ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
