@@ -878,7 +878,12 @@ void load_buildings_x_left()
         load_building_tile_data();
     }
     if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        // Disable university and re-enable restaurant
         screen_state.displayed_buildings &= ~SC_UNIVERSITY;
+        screen_state.displayed_buildings |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
 }
 void load_buildings_x_right()
 {
