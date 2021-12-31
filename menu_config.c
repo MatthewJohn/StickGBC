@@ -411,7 +411,7 @@ menu_config_t menu_config_house = {
         MENU_ITEM_INDEX_EMPTY,
         MENU_ITEM_INDEX_SLEEP,
     },
-    0x82U,
+    0x10U,
 };
 
 
@@ -427,7 +427,7 @@ menu_config_t menu_config_restaurant = {
         MENU_ITEM_INDEX_TRIPLE_BURGER,
         MENU_ITEM_INDEX_EMPTY,
     },
-    0x5FU,
+    0x15U,
 };
 
 
@@ -443,7 +443,7 @@ menu_config_t menu_config_shop = {
         MENU_ITEM_INDEX_NACHOS,
         MENU_ITEM_INDEX_EMPTY,
     },
-    0x7EU,
+    0x00U,
 };
 
 
@@ -459,6 +459,6 @@ menu_config_t menu_config_pawn = {
         MENU_ITEM_INDEX_ALARM_CLOCK,
         MENU_ITEM_INDEX_EMPTY,
     },
-    0x5EU,
+    0x00U,
 };
 
