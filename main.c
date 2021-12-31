@@ -618,10 +618,8 @@ void load_menu_tiles() NONBANKED
                 continue;
 
             // Check if tile is a valid tile
-            ROM_BANK_TILE_DATA;
             if (! IS_MENU_ITEM_ENABLED(menu_item_index))
                 continue;
-            ROM_BANK_RESET;
 
             second_tile_row = 0U;
 
