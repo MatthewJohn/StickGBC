@@ -115,6 +115,24 @@ UINT8 tile_itx_y;
 UINT8 second_tile_row;
 unsigned int tile_data_offset;
 
+// Setup skater sprite
+ai_sprite skater_sprite = {
+    // Speed
+    0x05U,
+    // Sprite number
+    0x01U,
+    // Travel X (right)
+    0x01U,
+    // Travel Y
+    0x00U,
+    // Start location x, y
+    0xD8U,
+    0x58U,
+    // Min/max X location
+    0xD8U,
+    0xE8U,
+};
+
 
 void add_debug(UBYTE val)
 {
@@ -209,7 +227,7 @@ void setup_globals()
     user_pos_y = 0x70U;
 }
 
-void setup_sprite()
+void setup_sprites()
 {
     // Load single sprite tile
     HIDE_SPRITES;
@@ -222,19 +240,39 @@ void setup_sprite()
     set_sprite_data(0, 3, sprite_tiles);
 
     // Load sprite palette into VRAM
-    set_sprite_palette(0, 1, sprite_palette);
+    set_sprite_palette(0, 2, sprite_palette);
 
     ROM_BANK_RESET;
 
-    // Configure palette for sprite
+    // Configure palette for sprites
     VBK_REG = 1;
-    tile_data[0] = 0x01U;
-    set_sprite_data(0U, 1U, &tile_data);
+    // Main player
+    tile_data[0] = 0x00U;
+    // Skater
+    tile_data[skater_sprite.sprite_itx] = 0x02U;
+    set_sprite_data(0U, 2U, &tile_data);
+    VBK_REG = 0;
+
     VBK_REG = 0;
 
     // Configure sprite to sprite tile
+    //  Main player
     set_sprite_tile(0U, 0U);
+    //  Skater
+    set_sprite_tile(skater_sprite.sprite_itx, 0U);
+
+    // Move AI sprites
+    move_sprite(
+        skater_sprite.sprite_itx,
+        skater_sprite.current_location_x,
+        skater_sprite.current_location_y
+    );
     SHOW_SPRITES;
+}
+
+void move_ai_sprites()
+{
+
 }
 
 void setup_window()
@@ -561,9 +599,16 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 &(tile_data[0])
             );        
            VBK_REG = 0; 
-    
+
         }
     }
+    
+    // Move AI sprites
+    move_sprite(
+        skater_sprite.sprite_itx,
+        (skater_sprite.current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+        (skater_sprite.current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+    );
 }
 
 // Check if next position will hit a boundary
@@ -618,7 +663,7 @@ void setup_main_map()
     sprite_tiles = mainmapspritetiles;
     sprite_palette = main_map_sprite_palette;
     set_background_tiles();
-    setup_sprite();
+    setup_sprites();
     
     // Move background to screen location
     scroll_bkg(
@@ -1437,6 +1482,7 @@ void main()
                 wait_vbl_done();
 
                 check_user_input();
+                move_ai_sprites();
                 update_state();
 
                 // Temporarily remove delay to speed debugging

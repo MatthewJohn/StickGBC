@@ -67,3 +67,21 @@ typedef struct {
     // Inventory items
     UINT8 inventory[6U];
 } game_state_t;
+
+
+// The sprite is placed into place and moved from min_location to max_location.
+// Travel direction that is set to 0 is ignored, meaning that the initla
+typedef struct {
+    // Modulus of SYSTIME by the speed is used to determine if to move.
+    UINT8 move_speed;
+    // Sprite number
+    UINT8 sprite_itx;
+    // These are initially setup to determine initial movement.
+    // The direction is inverted when max/min location is reached.
+    UINT8 travel_direction_x;
+    UINT8 travel_direction_y;
+    UINT8 current_location_x;
+    UINT8 current_location_y;
+    unsigned int min_location;
+    unsigned int max_location;
+} ai_sprite;
