@@ -909,7 +909,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
-void purchase_item(unsigned int cost, UINT8 inventory_item)
+UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -925,7 +925,12 @@ void purchase_item(unsigned int cost, UINT8 inventory_item)
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
+
+        return 0x1U;
     }
+
+    // If item not purchased, return 0
+    return 0x0U;
 }
 
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
@@ -1214,22 +1219,36 @@ void update_state()
                 {
                     if (menu_state.current_item_y == 1U)  // Handgun
                     {
-                        purchase_item(400U, S_INVENTORY_HAND_GUN);
+                        // Attempt to purchase item
+                        if (purchase_item(400U, S_INVENTORY_HAND_GUN))
+                        {
+                            // Remove from menu, if successful
+                            menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                        }
                     }
                     else if (menu_state.current_item_y == 2U)  // Knife
                     {
-                        purchase_item(100U, S_INVENTORY_KNIFE);
+                        if (purchase_item(100U, S_INVENTORY_KNIFE))
+                        {
+                            menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
+                        }
                     }
                     else if (menu_state.current_item_y == 3U)  // Alarm Clock
                     {
-                        purchase_item(200U, S_INVENTORY_ALARM_CLOCK);
+                        if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
+                        {
+                            menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
+                        }
                     }
                 }
                 else  // x row 1
                 {
                     if (menu_state.current_item_y == 1U)  // Cellphone
                     {
-                        purchase_item(200U, S_INVENTORY_CELL_PHONE);
+                        if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
+                        {
+                            menu_config->items[1U] = MENU_ITEM_INDEX_EMPTY;
+                        }
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
