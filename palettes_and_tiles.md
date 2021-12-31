@@ -1,10 +1,10 @@
 ## Tile Palette Main
 
  0.
-    * 0 - Sky/house windows/shop door inner/pawn shop window inner
-    * 1 - Background/house roof/shop door rim/pawn shop window outer
+    * 0 - Sky/house windows/shop door inner/pawn shop window inner/university window inner
+    * 1 - Background/house roof/shop door rim/pawn shop window outer/university window edge/university door inner
     * 2 - Status window background
-    * 3 - House bricks/Static window text
+    * 3 - House bricks/Static window text/university door rim
  1. Road/markings
     * 0 - House roof/road/status bar background
     * 1 - Road markings/status bar foreground
@@ -94,29 +94,46 @@
  63. CL
  64. OC
  65. K
- 66. CE
- 67. LL
- 68. PH
- 69. ON
+ 66. PH
+ 67. ON
+ 68. UD
+ 69. GY
+ 70. OU
+ 71. T
+ 72. GO
+ 73. TO
+ 74. AS
+ 
  
 
  
 
- 110. 0
- 111. 1
- 112. 2
- 113. 3
- 114. 4
- 115. 5
- 116. 6
- 117. 7
- 118. 8
- 119. 9
- 120. $
- 121. HP
- 122. /HR
- 133. DA
- 134. YS
+ 100. 0
+ 101. 1
+ 102. 2
+ 103. 3
+ 104. 4
+ 105. 5
+ 106. 6
+ 107. 7
+ 108. 8
+ 109. 9
+ 110. $
+ 111. HP
+ 112. /HR
+ 113. DA
+ 114. YS
+ 115. /
+ 116. IN
+ 117. TE
+ 118. LL
+ 119. IG
+ 120. EN
+ 121. CE
+ 122. ST
+ 123. RE
+ 124. NG
+ 125. TH
  
 
 ## Tiles
@@ -141,4 +158,8 @@
  - 22 - shop bottom grafitti 2
  - 23 - pawn shop door
  - 24 - pawn shop window
- - 25 - pawn shop grafitti
+ - 25 - pawn shop grafitti 1
+ - 26 - pawn shop grafitti 2
+ - 27 - university door bottom
+ - 28 - university door top
+ - 30 - university temple 1

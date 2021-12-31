@@ -21,6 +21,7 @@
 #define S_B_RESTAURANT 0x03U
 #define S_B_SHOP 0x04U
 #define S_B_PAWN 0x05U
+#define S_B_UNIVERSITY 0x06U
 
 // Maximum of 99 of each item.
 // This is too high for singleton items (such as alarm clock),
@@ -36,21 +37,29 @@
 #define S_INVENTORY_ALARM_CLOCK 0x4U
 #define S_INVENTORY_CELL_PHONE 0x5U
 
+// Maximum intelligence/strenth
+#define S_MAX_INTELLIGENCE 999U
+#define S_MAX_STRENGTH 999U
+
 typedef struct {
     // Current building
     UINT8 current_building;
     // In-game days passed. Might need to be int (not required for limited game plays).
     unsigned int days_passed;
-    
+
     // Current hour of day (out of 12).
     UINT8 hour;
-    
+
     // Max HP the user can have
     UINT8 max_hp;
-    
+
     // Current amount of HP the user has
     UINT8 hp;
-    
+
+    // Current amount of strength and intelligence
+    unsigned int intelligence;
+    unsigned int strength;
+
     // Money the user has.
     unsigned int balance;
 
