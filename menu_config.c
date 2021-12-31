@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x12] = {
+const menu_config_item_t menu_config_items[0x15] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -398,6 +398,92 @@ const menu_config_item_t menu_config_items[0x12] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+    // STUDY
+    {
+        {
+            0x7AU,  // ST
+            0x44U,  // UD
+            0x2CU,  // Y
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0x2U,  // 1
+            0x11U,  // IN
+            0x12U, // TE
+            0x13U, // LL
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+        },
+    },
+    // GO TO GYM
+    {
+        {
+            0x48U,  // GO
+            MENU_ITEM_NO_TILE,
+            0x49U,  // TO
+            MENU_ITEM_NO_TILE,
+            0x45U,  // GY
+            0x3EU,  // M
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            0x02U,  // 1
+            0x17U,  // ST
+            0x18U, // RE
+            0x19U, // NG
+            0X1AU,  // TH
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+        },
+    },
+    // CLASS
+    {
+        {
+            0x3FU,  // CL
+            0x4AU,  // AS
+            0x1DU,  // S
+            0x6EU,  // $
+            0x66U,  // 2
+            0x64U,  // 0
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            0x3U,  // 2
+            0x11U,  // IN
+            0x12U, // TE
+            0x13U, // LL
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+        },
+    },
 };
 
 // BUILDING MENU DEFINITIONS
@@ -466,3 +552,17 @@ menu_config_t menu_config_pawn = {
     0x00U,
 };
 
+// University
+menu_config_t menu_config_university = {
+  {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_STUDY,
+      MENU_ITEM_INDEX_GYM,
+      MENU_ITEM_INDEX_CLASS,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+  },
+  0x00U,
+};
