@@ -58,7 +58,7 @@
 #define MENU_ITEM_INDEX_KNIFE 0x0EU
 #define MENU_ITEM_INDEX_ALARM_CLOCK 0x0FU
 
-#define IS_MENU_ITEM_ENABLED(index) menu_config->items[index] != MENU_ITEM_INDEX_EMPTY
+#define IS_MENU_ITEM_ENABLED(index) (menu_config->items[index] != MENU_ITEM_INDEX_EMPTY)
 
 typedef struct {
     // Item is split into tile data and palette data, each with 12 tiles
