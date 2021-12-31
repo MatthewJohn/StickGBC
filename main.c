@@ -954,6 +954,25 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
+// Move selected menu item to new value and update highlighting
+void move_to_menu_item(UINT8 new_x, UINT8 new_y)
+{
+    // Deselect currently selected item
+    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+
+    menu_state.current_item_x = new_x;
+    menu_state.current_item_y = new_y;
+
+    // Highlight new menu item
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+}
+
+// Move current menu item to exit
+void move_menu_to_exit()
+{
+    move_to_menu_item(1U, 0U);
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1087,8 +1106,7 @@ void update_state()
 
         if (travel_x != 0 || travel_y != 0)
         {
-            // Deselect currently selected item
-            set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+
             
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
@@ -1099,7 +1117,7 @@ void update_state()
                     ) &&
                     IS_MENU_ITEM_ENABLED(menu_state.current_item_x + travel_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X))
                 )
-                menu_state.current_item_x += travel_x;
+                move_to_menu_item(menu_state.current_item_x + travel_x, menu_state.current_item_y);
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
@@ -1110,7 +1128,7 @@ void update_state()
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
                     if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx;
+                        move_to_menu_item(menu_state.current_item_x, itx);
                         break;
                     }
             }
@@ -1121,12 +1139,10 @@ void update_state()
                 for (itx = menu_state.current_item_y; itx != 0U; itx --)
                     if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx - 1U;
+                        move_to_menu_item(menu_state.current_item_x, itx - 1U);
                         break;
                     }
             }
-                
-            set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
             // Sleep to stop double pressed
             delay(DELAY_MENU_ITEM_MOVE);
@@ -1232,6 +1248,7 @@ void update_state()
                             // Remove from menu, if successful and reload menu tiles
                             menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
                             load_menu_tiles();
+                            move_menu_to_exit();
                         }
                     }
                     else if (menu_state.current_item_y == 2U)  // Knife
@@ -1240,6 +1257,7 @@ void update_state()
                         {
                             menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
                             load_menu_tiles();
+                            move_menu_to_exit();
                         }
                     }
                     else if (menu_state.current_item_y == 3U)  // Alarm Clock
@@ -1248,6 +1266,7 @@ void update_state()
                         {
                             menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
                             load_menu_tiles();
+                            move_menu_to_exit();
                         }
                     }
                 }
@@ -1259,6 +1278,7 @@ void update_state()
                         {
                             menu_config->items[1U] = MENU_ITEM_INDEX_EMPTY;
                             load_menu_tiles();
+                            move_menu_to_exit();
                         }
                     }
                 }
