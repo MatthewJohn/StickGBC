@@ -13,6 +13,7 @@
 #define S_HOURS_PER_DAY 24U
 // 8AM
 #define S_HOUR_WAKEUP_NORMAL 0x08U
+#define S_HOUR_CAFFEINE_BONUS 0x04U
 
 // Buildings
 #define S_B_NO_BUILDING 0x00U
