@@ -180,8 +180,13 @@ void setup_globals()
 
     screen_state.displayed_buildings = SC_HOUSE;
 
+    // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
     game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] = 0x0U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x0U;
+    game_state.inventory[S_INVENTORY_KNIFE] = 0x0U;
+    game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
+    game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -904,7 +909,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
-void purchase_item(UINT8 cost, UINT8 inventory_item)
+void purchase_item(unsigned int cost, UINT8 inventory_item)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -1197,6 +1202,34 @@ void update_state()
                     else if (menu_state.current_item_y == 2U)  // Caffeine Pills
                     {
                         purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
+                    }
+                }
+                // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+
+            else if (game_state.current_building == S_B_PAWN)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Handgun
+                    {
+                        purchase_item(400U, S_INVENTORY_HAND_GUN);
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Knife
+                    {
+                        purchase_item(100U, S_INVENTORY_KNIFE);
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Alarm Clock
+                    {
+                        purchase_item(200U, S_INVENTORY_ALARM_CLOCK);
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Cellphone
+                    {
+                        purchase_item(200U, S_INVENTORY_CELL_PHONE);
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
