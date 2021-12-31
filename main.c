@@ -608,6 +608,9 @@ void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
     move_bkg(0, 0);
+
+    // Reset VBK_REG
+    VBK_REG = 0;
     
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
@@ -620,10 +623,6 @@ void load_menu_tiles() NONBANKED
 
             // Ignore top right exit
             if (itx_x == 1U && itx_y == 0U)
-                continue;
-
-            // Check if tile is a valid tile
-            if (! IS_MENU_ITEM_ENABLED(menu_item_index))
                 continue;
 
             second_tile_row = 0U;
@@ -652,25 +651,24 @@ void load_menu_tiles() NONBANKED
                 menu_item_itx = menu_config->items[menu_item_index];
 
                 ROM_BANK_MENU_CONFIG;
-                if (menu_config_items[menu_item_itx].tiles[tile_index] == 0U)
+                tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
+
+                // Only load data if tile contains data
+                if (tile_data_index != 0U)
                 {
+                    tile_data_index += tile_data_offset;
+
+                    ROM_BANK_TILE_DATA;
+
+                    // Load tile data for menu item based on tile data offset
+                    // in menu config and tile config in menu tile array
+                    set_bkg_data(
+                        tile_data_index,
+                        1,
+                        &(buildingmenutiles[tile_data_index << 4])
+                    );
                     ROM_BANK_RESET;
-                    continue;
                 }
-
-                tile_data_index = tile_data_offset + menu_config_items[menu_item_itx].tiles[tile_index];
-
-                ROM_BANK_TILE_DATA;
-
-                VBK_REG = 0; 
-                // Load tile data for menu item based on tile data offset
-                // in menu config and tile config in menu tile array
-                set_bkg_data(
-                    tile_data_index,
-                    1,
-                    &(buildingmenutiles[tile_data_index << 4])
-                );
-                ROM_BANK_RESET;
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;
@@ -683,17 +681,24 @@ void load_menu_tiles() NONBANKED
                     1U, 1U,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                if (tile_data_index == MENU_ITEM_NO_TILE)
+                    // If tile is empty, use blank palette
+                    tile_data[0] = MENU_ITEM_NO_PALETTE;
+                else
+                {
+                    ROM_BANK_MENU_CONFIG;
 
-                VBK_REG = 1;
-
-                // Load default palette
-                tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
-
-                // Override color palette from menu_item palette tile overrides
-                ROM_BANK_MENU_CONFIG;
-                if (menu_config_items[menu_item_itx].palette[tile_index])
+                    // Load default palette
                     tile_data[0] = menu_config_items[menu_item_itx].palette[tile_index];
-                ROM_BANK_RESET;
+                    ROM_BANK_RESET;
+
+                    // If not palette data, specified, use default
+                    if (tile_data[0] == MENU_ITEM_NO_PALETTE)
+                        tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
+                }
+                
+                VBK_REG = 1;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -702,6 +707,8 @@ void load_menu_tiles() NONBANKED
                     1, 1,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                VBK_REG = 0;
             }
         }
     }
@@ -1222,8 +1229,9 @@ void update_state()
                         // Attempt to purchase item
                         if (purchase_item(400U, S_INVENTORY_HAND_GUN))
                         {
-                            // Remove from menu, if successful
+                            // Remove from menu, if successful and reload menu tiles
                             menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
                         }
                     }
                     else if (menu_state.current_item_y == 2U)  // Knife
@@ -1231,6 +1239,7 @@ void update_state()
                         if (purchase_item(100U, S_INVENTORY_KNIFE))
                         {
                             menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
                         }
                     }
                     else if (menu_state.current_item_y == 3U)  // Alarm Clock
@@ -1238,6 +1247,7 @@ void update_state()
                         if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
                         {
                             menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
                         }
                     }
                 }
@@ -1248,6 +1258,7 @@ void update_state()
                         if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
                         {
                             menu_config->items[1U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
                         }
                     }
                 }
