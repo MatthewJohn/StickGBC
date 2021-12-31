@@ -80,8 +80,8 @@ typedef struct {
     // The direction is inverted when max/min location is reached.
     INT8 travel_direction_x;
     INT8 travel_direction_y;
-    UINT8 current_location_x;
-    UINT8 current_location_y;
+    unsigned int current_location_x;
+    unsigned int current_location_y;
     unsigned int min_location;
     unsigned int max_location;
 } ai_sprite;
