@@ -164,6 +164,17 @@ void load_building_tile_data() NONBANKED
         scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
         set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
     }
+    if (screen_state.displayed_buildings & SC_UNIVERSITY)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[0U][0U] = RGB(15U, 19U, 0U);
+        scratch_palette_data[0U][1U] = RGB(31U, 22U, 8U);
+        scratch_palette_data[0U][2U] = RGB(31U, 13U, 2U);
+        scratch_palette_data[0U][3U] = RGB(30U, 31U, 9U);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[0]));
+    }
 }
 
 void setup_globals()
@@ -272,7 +283,7 @@ void set_background_tiles() NONBANKED
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 21U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
     ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
@@ -788,6 +799,13 @@ void setup_building_menu()
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_pawn;
     }
+    else if (game_state.current_building == S_B_UNIVERSITY)
+    {
+        // Default to study
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_university;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -833,9 +851,14 @@ void check_building_enter()
         game_state.current_building = S_B_PAWN;
         setup_building_menu();
     }
+    else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
+    {
+        game_state.current_building = S_B_UNIVERSITY;
+        setup_building_menu();
+    }
     
 //    // Temporary jump to building
-//    game_state.current_building = S_B_PAWN;
+//    game_state.current_building = S_B_UNIVERSITY;
 //    setup_building_menu();
 }
 
@@ -854,12 +877,24 @@ void load_buildings_x_left()
         screen_state.displayed_buildings |= SC_HOUSE;
         load_building_tile_data();
     }
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        // Disable university and re-enable restaurant
+        screen_state.displayed_buildings &= ~SC_UNIVERSITY;
+        screen_state.displayed_buildings |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
 }
 void load_buildings_x_right()
 {
     // Disable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings &= ~SC_HOUSE;
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        screen_state.displayed_buildings |= SC_UNIVERSITY;
+        load_building_tile_data();
+    }
 }
 void load_buildings_y_up()
 {
@@ -909,6 +944,42 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
             
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.intelligence != S_MAX_INTELLIGENCE &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.intelligence += intelligence;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.strength != S_MAX_STRENGTH &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.strength += strength;
+
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
@@ -1293,6 +1364,22 @@ void update_state()
                     }
                 }
                 // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_UNIVERSITY)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Study -1 intelligence, 2 hours
+                        increase_intelligence(0U, 2U, 1U);
+                    else if (menu_state.current_item_y == 2U)  // Class -$20, 1 intelligence, 2 hours
+                        increase_intelligence(20U, 2U, 2U);
+                }
+                else
+                {
+                    if (menu_state.current_item_y == 1U)
+                        increase_strength(0U, 2U, 1U);
+                }
                 delay(DELAY_PURCHASE_ITEM);
             }
         }

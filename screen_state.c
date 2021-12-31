@@ -5,16 +5,18 @@
  */
 
 
-#define SC_HOUSE 0x1U
-#define SC_RESTAURANT 0x2U
-#define SC_SHOP 0x4U
-#define SC_PAWN 0x8U
+#define SC_HOUSE 0x01U
+#define SC_RESTAURANT 0x02U
+#define SC_SHOP 0x04U
+#define SC_PAWN 0x08U
+#define SC_UNIVERSITY 0x10U
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
 #define SC_RESTAURANT_TRANSITION_Y 0x7U
 #define SC_SHOP_TRANSITION_Y 0x15U
 #define SC_PAWN_TRANSITION_Y 0x20U
+#define SC_UNIVERSITY_TRANSITION_X 0x1DU
 
 typedef struct {
     UINT8 displayed_buildings;
