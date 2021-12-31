@@ -2,3 +2,5 @@ main.gb
 *.o
 main.lst
 main.map
+*.asm
+*.i
