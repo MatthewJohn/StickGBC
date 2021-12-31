@@ -981,6 +981,7 @@ void update_state()
     signed int move_x;
     signed int move_y;
     unsigned short new_menu_x;
+    unsigned short attempting_x_move;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1107,6 +1108,7 @@ void update_state()
         {
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
+            attempting_x_move = 0U;
 
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
@@ -1122,22 +1124,25 @@ void update_state()
                 // them as equal
                 if (IS_MENU_ITEM_ENABLED(new_menu_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X)))
                     move_to_menu_item(new_menu_x, menu_state.current_item_y);
+                else
+                    attempting_x_move = 1U;
             }
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
             // If moving up or attempting to travel in X, but no item directly beside it
-            if (travel_y == 1 || new_menu_x != menu_state.current_item_x)
+            if (travel_y == 1 || attempting_x_move)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
                     if (IS_MENU_ITEM_ENABLED(new_menu_x + (itx * MENU_MAX_ITEMS_X)))
                     {
                         move_to_menu_item(new_menu_x, itx);
+                        attempting_x_move = 0U;
                         break;
                     }
             }
-            else if ((travel_y == -1 || new_menu_x != menu_state.current_item_x) && menu_state.current_item_y != 0U)
+            else if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
