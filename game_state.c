@@ -78,8 +78,8 @@ typedef struct {
     UINT8 sprite_itx;
     // These are initially setup to determine initial movement.
     // The direction is inverted when max/min location is reached.
-    UINT8 travel_direction_x;
-    UINT8 travel_direction_y;
+    INT8 travel_direction_x;
+    INT8 travel_direction_y;
     UINT8 current_location_x;
     UINT8 current_location_y;
     unsigned int min_location;

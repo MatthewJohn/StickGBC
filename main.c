@@ -122,9 +122,9 @@ ai_sprite skater_sprite = {
     // Sprite number
     0x01U,
     // Travel X (right)
-    0x01U,
+    0x01,
     // Travel Y
-    0x00U,
+    0x00,
     // Start location x, y
     0xD8U,
     0x58U,
@@ -261,18 +261,38 @@ void setup_sprites()
     //  Skater
     set_sprite_tile(skater_sprite.sprite_itx, 0U);
 
-    // Move AI sprites
-    move_sprite(
-        skater_sprite.sprite_itx,
-        skater_sprite.current_location_x,
-        skater_sprite.current_location_y
-    );
     SHOW_SPRITES;
 }
 
 void move_ai_sprites()
 {
-
+    if ((sys_time % skater_sprite.move_speed) == 0U)
+    {
+        // Check if moving right
+        if (skater_sprite.travel_direction_x == 1)
+        {
+            // Check if hit max
+            if (skater_sprite.current_location_x == skater_sprite.max_location)
+                skater_sprite.travel_direction_x = -1;
+            else
+                skater_sprite.current_location_x += 1;
+        }
+        else if (skater_sprite.travel_direction_x == -1)
+        {
+            if (skater_sprite.current_location_x == skater_sprite.min_location)
+                skater_sprite.travel_direction_x = 1;
+            else
+                skater_sprite.current_location_x -= 1;
+        }
+    }
+    
+    // Update location of sprite.
+    // This must always be done, as it is required when the screen moves
+    move_sprite(
+        skater_sprite.sprite_itx,
+        skater_sprite.current_location_x,
+        skater_sprite.current_location_y
+    );
 }
 
 void setup_window()
