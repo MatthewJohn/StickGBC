@@ -264,35 +264,50 @@ void setup_sprites()
     SHOW_SPRITES;
 }
 
-void move_ai_sprites()
+void move_ai_sprite(ai_sprite* sprite_to_move)
 {
-    if ((sys_time % skater_sprite.move_speed) == 0U)
+    if ((sys_time % sprite_to_move->move_speed) == 0U)
     {
         // Check if moving right
-        if (skater_sprite.travel_direction_x == 1)
+        if (sprite_to_move->travel_direction_x == 1)
         {
             // Check if hit max
-            if (skater_sprite.current_location_x == skater_sprite.max_location)
-                skater_sprite.travel_direction_x = -1;
+            if (sprite_to_move->current_location_x == sprite_to_move->max_location)
+                sprite_to_move->travel_direction_x = -1;
             else
-                skater_sprite.current_location_x += 1;
+                sprite_to_move->current_location_x += 1;
         }
-        else if (skater_sprite.travel_direction_x == -1)
+        else if (sprite_to_move->travel_direction_x == -1)
         {
-            if (skater_sprite.current_location_x == skater_sprite.min_location)
-                skater_sprite.travel_direction_x = 1;
+            if (sprite_to_move->current_location_x == sprite_to_move->min_location)
+                sprite_to_move->travel_direction_x = 1;
             else
-                skater_sprite.current_location_x -= 1;
+                sprite_to_move->current_location_x -= 1;
         }
     }
-    
-    // Move AI sprites
-    // This must always be done, as it is required when the screen moves
-    move_sprite(
-        skater_sprite.sprite_itx,
-        (skater_sprite.current_location_x - screen_location_x) + SPRITE_OFFSET_X,
-        (skater_sprite.current_location_y - screen_location_y) + SPRITE_OFFSET_Y
-    );
+
+    // Check if sprite should be on-screen
+    if (
+        sprite_to_move->current_location_x < screen_location_x ||
+        sprite_to_move->current_location_x > (screen_location_x + SCREEN_WIDTH) ||
+        sprite_to_move->current_location_y < screen_location_y ||
+        sprite_to_move->current_location_y > (screen_location_y + SCREEN_HEIGHT)
+    )
+        // Move sprite off-screen
+        move_sprite(sprite_to_move->sprite_itx, 0, 0);
+    else
+        // Move AI sprites
+        // This must always be done, as it is required when the screen moves
+        move_sprite(
+            sprite_to_move->sprite_itx,
+            (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+            (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+        );
+}
+
+void update_ai_positions()
+{
+    move_ai_sprite(&skater_sprite);
 }
 
 void setup_window()
@@ -1494,7 +1509,7 @@ void main()
                 wait_vbl_done();
 
                 check_user_input();
-                move_ai_sprites();
+                update_ai_positions();
                 update_state();
 
                 // Temporarily remove delay to speed debugging
