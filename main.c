@@ -780,7 +780,7 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_RESTAURANT)
     {
-        // Menu has 3 items, default to sleep
+        // Menu has 3 items, default to fries
         menu_state.current_item_x = 0;
         menu_state.current_item_y = 1;
         menu_config = &menu_config_restaurant;
@@ -1240,7 +1240,13 @@ void update_state()
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
+                // Check if user has caffeine
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
+                if (game_state.inventory[S_INVENTORY_CAFFEINE_PILLS])
+                {
+                    game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
+                    game_state.hour -= S_HOUR_CAFFEINE_BONUS;
+                }
                 game_state.days_passed ++;
                 check_end_game();
 
