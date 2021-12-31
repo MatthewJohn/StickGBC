@@ -19,8 +19,6 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
-#define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
-
 #define WINDOW_MAX_DIGITS_DAYS 5U
 #define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
 #define WINDOW_MAX_DIGITS_BALANCE 0x6U
@@ -42,7 +40,7 @@
 #define SPRITE_OFFSET_X 0x04U
 #define SPRITE_OFFSET_Y 0x0dU
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)

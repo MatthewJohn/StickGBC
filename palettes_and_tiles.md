@@ -1,8 +1,8 @@
 ## Tile Palette Main
 
  0.
-    * 0 - Sky/house windows/shop door inner
-    * 1 - Background/house roof/shop door rim
+    * 0 - Sky/house windows/shop door inner/pawn shop window inner
+    * 1 - Background/house roof/shop door rim/pawn shop window outer
     * 2 - Status window background
     * 3 - House bricks/Static window text
  1. Road/markings
@@ -16,18 +16,18 @@
     * 2 -
     * 3 - 
  3.
-    * 0 - Pavement inner
-    * 1 - Pavement outer
-    * 2 - 
+    * 0 - Pavement inner/pawn shop door inner
+    * 1 - Pavement outer/pawn shop door frame
+    * 2 - pawn shop door handle
     * 3 -
  4.
     * 0 - 
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1 - pawn shop
- 6. scratch for building 2 - shop
- 7. scratch for building 3 - mcstick/castle/university
+ 5. scratch for building 1 - pawn shop wall + grafitti (color 0+1+4)
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)
+ 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university
 
 ## Tile Palette Building Menu
  0. Background
@@ -83,6 +83,23 @@
  52. FF
  53. EI
  54. NE
+ 55. HA
+ 56. GU
+ 57. N
+ 58. KN
+ 59. IF
+ 60. AL
+ 61. AR
+ 62. M
+ 63. CL
+ 64. OC
+ 65. K
+ 66. CE
+ 67. LL
+ 68. PH
+ 69. ON
+ 
+
  
 
  110. 0
@@ -122,4 +139,6 @@
  - 20 - Shop exit sign 2 
  - 21 - shop bottom grafitti 1
  - 22 - shop bottom grafitti 2
- 
+ - 23 - pawn shop door
+ - 24 - pawn shop window
+ - 25 - pawn shop grafitti

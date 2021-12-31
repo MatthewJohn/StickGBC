@@ -30,6 +30,7 @@
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+#define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 
 
 UBYTE * debug_address;
@@ -42,6 +43,9 @@ unsigned int user_pos_y;
 // Temporary storege for transfer of tile data and tile data vram1 data
 UBYTE tile_data[12];
 UWORD word_data[4];
+
+// Storage for scratch palette data
+UWORD scratch_palette_data[3][4];
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -150,6 +154,16 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(26, 16, 0 );
         set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
     }
+    if (screen_state.displayed_buildings & SC_PAWN)
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
+        scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
+        scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
+        set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+    }
 }
 
 void setup_globals()
@@ -166,8 +180,13 @@ void setup_globals()
 
     screen_state.displayed_buildings = SC_HOUSE;
 
+    // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
     game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] = 0x0U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x0U;
+    game_state.inventory[S_INVENTORY_KNIFE] = 0x0U;
+    game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
+    game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -585,9 +604,13 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
-void load_menu_tiles()
+void load_menu_tiles() NONBANKED
 {
+    unsigned int menu_item_itx;
     move_bkg(0, 0);
+
+    // Reset VBK_REG
+    VBK_REG = 0;
     
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
@@ -602,10 +625,6 @@ void load_menu_tiles()
             if (itx_x == 1U && itx_y == 0U)
                 continue;
 
-            // Check if tile is a valid tile
-            if (! IS_MENU_ITEM_ENABLED(menu_item_index))
-                continue;
-
             second_tile_row = 0U;
 
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
@@ -613,7 +632,7 @@ void load_menu_tiles()
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
             
             // For tiles on top row, use offset from menu config
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_MENU_CONFIG;
             tile_data_offset = menu_config->tile_offset;
             ROM_BANK_RESET;
 
@@ -629,24 +648,27 @@ void load_menu_tiles()
                     tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
-                ROM_BANK_TILE_DATA;
-                if (menu_config->menu_item_tiles[menu_item_index][tile_index] == 0U)
+                menu_item_itx = menu_config->items[menu_item_index];
+
+                ROM_BANK_MENU_CONFIG;
+                tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
+
+                // Only load data if tile contains data
+                if (tile_data_index != 0U)
                 {
+                    tile_data_index += tile_data_offset;
+
+                    ROM_BANK_TILE_DATA;
+
+                    // Load tile data for menu item based on tile data offset
+                    // in menu config and tile config in menu tile array
+                    set_bkg_data(
+                        tile_data_index,
+                        1,
+                        &(buildingmenutiles[tile_data_index << 4])
+                    );
                     ROM_BANK_RESET;
-                    continue;
                 }
-
-                tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
-
-                VBK_REG = 0; 
-                // Load tile data for menu item based on tile data offset
-                // in menu config and tile config in menu tile array
-                set_bkg_data(
-                    tile_data_index,
-                    1,
-                    &(buildingmenutiles[tile_data_index << 4])
-                );
-                ROM_BANK_RESET;
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;
@@ -659,17 +681,24 @@ void load_menu_tiles()
                     1U, 1U,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                if (tile_data_index == MENU_ITEM_NO_TILE)
+                    // If tile is empty, use blank palette
+                    tile_data[0] = MENU_ITEM_NO_PALETTE;
+                else
+                {
+                    ROM_BANK_MENU_CONFIG;
 
+                    // Load default palette
+                    tile_data[0] = menu_config_items[menu_item_itx].palette[tile_index];
+                    ROM_BANK_RESET;
+
+                    // If not palette data, specified, use default
+                    if (tile_data[0] == MENU_ITEM_NO_PALETTE)
+                        tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
+                }
+                
                 VBK_REG = 1;
-
-                // Load default palette
-                tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
-
-                // Override color palette from menu_item palette tile overrides
-                ROM_BANK_TILE_DATA;
-                if (menu_config->menu_item_palette[menu_item_index][tile_index])
-                    tile_data[0] = menu_config->menu_item_palette[menu_item_index][tile_index];
-                ROM_BANK_RESET;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -678,6 +707,8 @@ void load_menu_tiles()
                     1, 1,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                VBK_REG = 0;
             }
         }
     }
@@ -686,9 +717,9 @@ void load_menu_tiles()
 
 void set_menu_item_color(unsigned char palette)
 {
-    unsigned int itx_y, itx_x, tile_index;
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_index = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
+    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
@@ -697,9 +728,10 @@ void set_menu_item_color(unsigned char palette)
         {
             palette_colors[itx_x] = palette;
             tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            ROM_BANK_TILE_DATA;
-            if (menu_config->menu_item_palette[menu_item_index][tile_index] != 0U)
-                palette_colors[itx_x] = menu_config->menu_item_palette[menu_item_index][tile_index];
+            menu_item_index = menu_config->items[menu_item_itx];
+            ROM_BANK_MENU_CONFIG;
+            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
+                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
             ROM_BANK_RESET;
          }
         set_bkg_tiles(
@@ -744,9 +776,17 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_SHOP)
     {
+        // Default to slushee
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_shop;
+    }
+    else if (game_state.current_building == S_B_PAWN)
+    {
+        // Default to hand gun
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_pawn;
     }
 
     HIDE_SPRITES;
@@ -787,11 +827,16 @@ void check_building_enter()
         game_state.current_building = S_B_SHOP;
         setup_building_menu();
     }
+    // Check for entering pawn shop
+    else if (tile_itx == 0xDF1U)
+    {
+        game_state.current_building = S_B_PAWN;
+        setup_building_menu();
+    }
     
-    // Temporary jump to restaurant
-//    game_state.current_building = S_B_RESTAURANT;
+//    // Temporary jump to building
+//    game_state.current_building = S_B_PAWN;
 //    setup_building_menu();
-        
 }
 
 // Check if win/lose conditions have been met
@@ -823,6 +868,8 @@ void load_buildings_y_up()
         screen_state.displayed_buildings &= ~SC_RESTAURANT;
     if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_SHOP;
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+        screen_state.displayed_buildings &= ~SC_PAWN;
 }
 void load_buildings_y_down()
 {
@@ -835,6 +882,11 @@ void load_buildings_y_down()
     if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
     {
         screen_state.displayed_buildings |= SC_SHOP;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings |= SC_PAWN;
         load_building_tile_data();
     }
 }
@@ -863,7 +915,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
-void purchase_item(UINT8 cost, UINT8 inventory_item)
+UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -879,7 +931,12 @@ void purchase_item(UINT8 cost, UINT8 inventory_item)
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
+
+        return 0x1U;
     }
+
+    // If item not purchased, return 0
+    return 0x0U;
 }
 
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
@@ -896,6 +953,25 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
+// Move selected menu item to new value and update highlighting
+void move_to_menu_item(UINT8 new_x, UINT8 new_y)
+{
+    // Deselect currently selected item
+    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+
+    menu_state.current_item_x = new_x;
+    menu_state.current_item_y = new_y;
+
+    // Highlight new menu item
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+}
+
+// Move current menu item to exit
+void move_menu_to_exit()
+{
+    move_to_menu_item(1U, 0U);
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -904,7 +980,8 @@ void update_state()
     unsigned int user_screen_pos_y;
     signed int move_x;
     signed int move_y;
-
+    unsigned short new_menu_x;
+    unsigned short attempting_x_move;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -918,7 +995,9 @@ void update_state()
         user_pos_y += travel_y;
         
         // Check if sprite too close to edge of screen
-        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+        // If character at left of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_x != 0)
         {
             // If player hit LHS of screen, move screen to the left
             move_x = -1;
@@ -934,8 +1013,10 @@ void update_state()
             user_screen_pos_x = user_pos_x - screen_location_x;
             move_x = 0;
         }
-            
-        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+
+        // If character at top of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_y != 0)
         {
             move_y = -1;
         }
@@ -1025,48 +1106,53 @@ void update_state()
 
         if (travel_x != 0 || travel_y != 0)
         {
-            // Deselect currently selected item
-            set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
-            
+            // Setup new Y search to use current X
+            new_menu_x = menu_state.current_item_x;
+            attempting_x_move = 0U;
+
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
-            ROM_BANK_TILE_DATA;
             if (
-                    (
-                        (travel_x == 1 && menu_state.current_item_x == 0U) ||
-                        (travel_x == -1 && menu_state.current_item_x == 1U)
-                    ) &&
-                    IS_MENU_ITEM_ENABLED(menu_state.current_item_x + travel_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X))
+                    (travel_x == 1 && menu_state.current_item_x == 0U) ||
+                    (travel_x == -1 && menu_state.current_item_x == 1U)
                 )
-                menu_state.current_item_x += travel_x;
+            {
+                // Setup new X value that user is attempting to access
+                new_menu_x = menu_state.current_item_x + travel_x;
+
+                // This will update item and mean that any checks against new_menu_x vs state will show
+                // them as equal
+                if (IS_MENU_ITEM_ENABLED(new_menu_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X)))
+                    move_to_menu_item(new_menu_x, menu_state.current_item_y);
+                else
+                    attempting_x_move = 1U;
+            }
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
-        
-            if (travel_y == 1)
+            // If moving up or attempting to travel in X, but no item directly beside it
+            if (travel_y == 1 || attempting_x_move)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + (itx * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx;
+                        move_to_menu_item(new_menu_x, itx);
+                        attempting_x_move = 0U;
                         break;
                     }
             }
-            else if (travel_y == -1 && menu_state.current_item_y != 0U)
+            if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
                 for (itx = menu_state.current_item_y; itx != 0U; itx --)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx - 1U;
+                        move_to_menu_item(new_menu_x, itx - 1U);
                         break;
                     }
             }
-            ROM_BANK_RESET;
-                
-            set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
             // Sleep to stop double pressed
             delay(DELAY_MENU_ITEM_MOVE);
@@ -1154,6 +1240,56 @@ void update_state()
                     else if (menu_state.current_item_y == 2U)  // Caffeine Pills
                     {
                         purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
+                    }
+                }
+                // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+
+            else if (game_state.current_building == S_B_PAWN)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Handgun
+                    {
+                        // Attempt to purchase item
+                        if (purchase_item(400U, S_INVENTORY_HAND_GUN))
+                        {
+                            // Remove from menu, if successful and reload menu tiles
+                            menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Knife
+                    {
+                        if (purchase_item(100U, S_INVENTORY_KNIFE))
+                        {
+                            menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Alarm Clock
+                    {
+                        if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
+                        {
+                            menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Cellphone
+                    {
+                        if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
+                        {
+                            menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
                     }
                 }
                 // Delay after purchasing, to avoid double purchase

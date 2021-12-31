@@ -20,13 +20,21 @@
 #define S_B_HOUSE 0x02U
 #define S_B_RESTAURANT 0x03U
 #define S_B_SHOP 0x04U
+#define S_B_PAWN 0x05U
 
-// Maximum of 99 of each item
+// Maximum of 99 of each item.
+// This is too high for singleton items (such as alarm clock),
+// but rely on the functionality to remove the item from the menu
+// after purchase
 #define S_MAX_INVENTORY_ITEM 99U
 
 // Inventory items
 #define S_INVENTORY_SMOKES 0x0U
 #define S_INVENTORY_CAFFEINE_PILLS 0x1U
+#define S_INVENTORY_HAND_GUN 0x2U
+#define S_INVENTORY_KNIFE 0x3U
+#define S_INVENTORY_ALARM_CLOCK 0x4U
+#define S_INVENTORY_CELL_PHONE 0x5U
 
 typedef struct {
     // Current building
@@ -47,5 +55,5 @@ typedef struct {
     unsigned int balance;
 
     // Inventory items
-    UINT8 inventory[2];
+    UINT8 inventory[6U];
 } game_state_t;
