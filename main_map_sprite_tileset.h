@@ -59,7 +59,7 @@
 /* Gameboy Color palette 0 */
 #define mainmapspritetilesCGBPal0c0 32767
 #define mainmapspritetilesCGBPal0c1 0
-#define mainmapspritetilesCGBPal0c2 1230
+#define mainmapspritetilesCGBPal0c2 19584
 #define mainmapspritetilesCGBPal0c3 1006
 
 /* Gameboy Color palette 1 */

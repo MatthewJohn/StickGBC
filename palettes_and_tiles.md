@@ -38,6 +38,24 @@
  5. Strength
  6. Intelligence
 
+## Sprite palettes
+
+ 0. Main player (normal)
+   0. Background
+   1. Outline
+   2. Sprite center
+   3.
+ 1. Skater
+   0. Background
+   1. Outline
+   2. Sprite center
+ 2.
+ 3.
+ 4.
+ 5.
+ 6.
+ 7.
+
 ## Building map tiles
 
  0. Background

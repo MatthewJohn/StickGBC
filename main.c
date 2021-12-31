@@ -21,6 +21,7 @@
 #include "building_menu_palette.h"
 
 #include "main_map_sprite_tileset.h"
+#include "main_map_sprite_palette.h"
 
 #include "game_constants.h"
 #include "game_state.c"
@@ -212,11 +213,27 @@ void setup_sprite()
 {
     // Load single sprite tile
     HIDE_SPRITES;
+
+    VBK_REG = 0;
+
     ROM_BANK_TILE_DATA;
+
+    // Load spirte tile data into VRAM
     set_sprite_data(0, 3, sprite_tiles);
+
+    // Load sprite palette into VRAM
     set_sprite_palette(0, 1, sprite_palette);
+
     ROM_BANK_RESET;
-    set_sprite_tile(0, 0);
+
+    // Configure palette for sprite
+    VBK_REG = 1;
+    tile_data[0] = 0x01U;
+    set_sprite_data(0U, 1U, &tile_data);
+    VBK_REG = 0;
+
+    // Configure sprite to sprite tile
+    set_sprite_tile(0U, 0U);
     SHOW_SPRITES;
 }
 
@@ -599,7 +616,7 @@ void setup_main_map()
     DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
 
     sprite_tiles = mainmapspritetiles;
-    sprite_palette = mainmapspritetilesCGB;
+    sprite_palette = main_map_sprite_palette;
     set_background_tiles();
     setup_sprite();
     
