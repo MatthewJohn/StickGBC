@@ -2,7 +2,7 @@
 BIN	= main.gb
 CC	= ../../bin/lcc
 ROMUSAGE	= ../../tools/romusage.exe
-CFLAGS	= -c -o
+CFLAGS	=  -v -c -o
 
 all:	$(BIN)
 
