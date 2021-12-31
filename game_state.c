@@ -21,6 +21,7 @@
 #define S_B_RESTAURANT 0x03U
 #define S_B_SHOP 0x04U
 #define S_B_PAWN 0x05U
+#define S_B_UNIVERSITY 0x06U
 
 // Maximum of 99 of each item.
 // This is too high for singleton items (such as alarm clock),
