@@ -1276,7 +1276,7 @@ void update_state()
                     {
                         if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
                         {
-                            menu_config->items[1U] = MENU_ITEM_INDEX_EMPTY;
+                            menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
                             load_menu_tiles();
                             move_menu_to_exit();
                         }
