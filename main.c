@@ -241,6 +241,14 @@ void setup_globals()
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
+
+#ifdef IN_TESTING
+    // Add hacks for testing
+    game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
+    game_state.balance = 1000U;
+    game_state.max_hp = 100U;
+    game_state.intelligence = 150U;
+#endif
 }
 
 void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
