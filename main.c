@@ -131,6 +131,9 @@ ai_sprite skater_sprite = {
     // Min/max X location
     0xD8U,
     0xE8U,
+    // Min/max Y location
+    0x58U,
+    0x58U,
 };
 
 
@@ -209,6 +212,8 @@ void setup_globals()
     game_state.hp = 23U;
 
     screen_state.displayed_buildings = SC_HOUSE;
+    screen_state.displayed_sprites_x = 0x00;
+    screen_state.displayed_sprites_y = SC_SPRITE_SKATER;
 
     // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
@@ -265,21 +270,21 @@ void setup_sprites()
 }
 
 void move_ai_sprite(ai_sprite* sprite_to_move)
-{
+{    
     if ((sys_time % sprite_to_move->move_speed) == 0U)
     {
         // Check if moving right
         if (sprite_to_move->travel_direction_x == 1)
         {
             // Check if hit max
-            if (sprite_to_move->current_location_x == sprite_to_move->max_location)
+            if (sprite_to_move->current_location_x == sprite_to_move->max_location_x)
                 sprite_to_move->travel_direction_x = -1;
             else
                 sprite_to_move->current_location_x += 1;
         }
         else if (sprite_to_move->travel_direction_x == -1)
         {
-            if (sprite_to_move->current_location_x == sprite_to_move->min_location)
+            if (sprite_to_move->current_location_x == sprite_to_move->min_location_x)
                 sprite_to_move->travel_direction_x = 1;
             else
                 sprite_to_move->current_location_x -= 1;
@@ -288,12 +293,8 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
 
     // Check if sprite should be on-screen
     if (
-        sprite_to_move->current_location_x > screen_location_x &&
-        // Should be SCREEN_WIDTH, but that constant appears to be incorrect.
-        sprite_to_move->current_location_x < (screen_location_x + 0x98U) &&
-        sprite_to_move->current_location_y > screen_location_y  &&
-        // Should be SCREEN_HEIGHT, but that constant appears to be incorrect.
-        sprite_to_move->current_location_y < (screen_location_y + 0xA0)
+        screen_state.displayed_sprites_x & SC_SPRITE_SKATER &&
+        screen_state.displayed_sprites_y & SC_SPRITE_SKATER
     )
         // Move AI sprites
         // This must always be done, as it is required when the screen moves
@@ -975,6 +976,13 @@ void load_buildings_x_left()
         screen_state.displayed_buildings |= SC_RESTAURANT;
         load_building_tile_data();
     }
+
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+
 }
 void load_buildings_x_right()
 {
@@ -986,6 +994,12 @@ void load_buildings_x_right()
         screen_state.displayed_buildings |= SC_UNIVERSITY;
         load_building_tile_data();
     }
+ 
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
 }
 void load_buildings_y_up()
 {
@@ -996,6 +1010,12 @@ void load_buildings_y_up()
         screen_state.displayed_buildings &= ~SC_SHOP;
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_PAWN;
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
+        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
+        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
 }
 void load_buildings_y_down()
 {
@@ -1015,6 +1035,12 @@ void load_buildings_y_down()
         screen_state.displayed_buildings |= SC_PAWN;
         load_building_tile_data();
     }
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
+        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
+        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)

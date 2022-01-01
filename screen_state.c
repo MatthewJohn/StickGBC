@@ -18,6 +18,11 @@
 #define SC_PAWN_TRANSITION_Y 0x20U
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
 
+// Sprites
+#define SC_SPRITE_SKATER 0x01U
+
 typedef struct {
     UINT8 displayed_buildings;
+    UINT8 displayed_sprites_x;
+    UINT8 displayed_sprites_y;
 } screen_state_t;
