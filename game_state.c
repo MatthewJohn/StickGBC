@@ -79,6 +79,8 @@ typedef struct {
     UINT8 move_speed;
     // Sprite number
     UINT8 sprite_index;
+    // Sprite color palette
+    UINT8 color_palette;
     // These are initially setup to determine initial movement.
     // The direction is inverted when max/min location is reached.
     INT8 travel_direction_x;
