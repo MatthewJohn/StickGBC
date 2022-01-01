@@ -1268,18 +1268,18 @@ void update_state()
     signed int move_y;
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
-    unsigned int movement_wait_time;
+    UINT8 movement_bit_push;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
         check_boundary_hit();
         
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
-            movement_wait_time = game_state.last_movement_time + SKATEBOARD_SPEED_DELAY;
+            movement_bit_push = SKATEBOARD_SPEED_DELAY;
         else
-            movement_wait_time = game_state.last_movement_time + WALK_SPEED_DELAY;
+            movement_bit_push = WALK_SPEED_DELAY;
         // If movement happened too recently, disable movement
-        if (movement_wait_time > sys_time)
+        if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
         {
             travel_x = 0;
             travel_y = 0;
@@ -1287,7 +1287,7 @@ void update_state()
         else
             // Otherwise, update last movement time
             game_state.last_movement_time = sys_time;
-            
+
 
         // Set user screen position based on current location
         user_screen_pos_x = user_pos_x - screen_location_x;
