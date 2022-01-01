@@ -272,6 +272,39 @@ void setup_sprites()
     SHOW_SPRITES;
 }
 
+void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
+{
+    // Update flip of sprite tile
+    sprite_prop_data = 0x00;
+    // Check for just vertical movement
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
+
 void move_ai_sprite(ai_sprite* sprite_to_move)
 {    
     if ((sys_time % sprite_to_move->move_speed) == 0U)
@@ -291,7 +324,14 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
             }
             else
+            {
                 sprite_to_move->current_location_x += 1;
+                set_sprite_direction(
+                    sprite_to_move->sprite_itx,
+                    sprite_to_move->travel_direction_x,
+                    sprite_to_move->travel_direction_y
+                );
+            }
         }
         else if (sprite_to_move->travel_direction_x == -1)
         {
@@ -302,7 +342,14 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
             }
             else
+            {
                 sprite_to_move->current_location_x -= 1;
+                set_sprite_direction(
+                    sprite_to_move->sprite_itx,
+                    sprite_to_move->travel_direction_x,
+                    sprite_to_move->travel_direction_y
+                );
+            }
         }
     }
 
@@ -1175,38 +1222,6 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
-void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
-{
-    // Update flip of sprite tile
-    sprite_prop_data = 0x00;
-    // Check for just vertical movement 
-    if (direction_y != 0)
-    {
-        if (direction_x == 0)
-        {
-            // If travelling up, flip Y
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(sprite_index, 0);
-        } else {
-            // Handle diagonal movement
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            if (direction_x == -1)
-                sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(sprite_index, 2);
-        }
-    }
-    else if (direction_x != 0)
-    {
-        set_sprite_tile(sprite_index, 1);
-        if (direction_x == -1)
-            sprite_prop_data |= S_FLIPX;
-    }
-    // Only update flipping if actually moving
-    if (direction_x != 0 || direction_y != 0)
-        set_sprite_prop(sprite_index, sprite_prop_data);
-}
 
 // Called per cycle to update background position and sprite
 void update_state()
