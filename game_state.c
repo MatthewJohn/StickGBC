@@ -24,6 +24,7 @@
 #define S_B_PAWN 0x05U
 #define S_B_UNIVERSITY 0x06U
 
+
 // Maximum of 99 of each item.
 // This is too high for singleton items (such as alarm clock),
 // but rely on the functionality to remove the item from the menu
@@ -82,6 +83,8 @@ typedef struct {
     INT8 travel_direction_y;
     unsigned int current_location_x;
     unsigned int current_location_y;
-    unsigned int min_location;
-    unsigned int max_location;
+    unsigned int min_location_x;
+    unsigned int max_location_x;
+    unsigned int min_location_y;
+    unsigned int max_location_y;
 } ai_sprite;
