@@ -215,11 +215,24 @@ void load_building_tile_data() NONBANKED
         ROM_BANK_TILE_DATA;
         set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
         ROM_BANK_RESET;
-        scratch_palette_data[0U][0U] = RGB(15U, 19U, 0U);
-        scratch_palette_data[0U][1U] = RGB(31U, 22U, 8U);
-        scratch_palette_data[0U][2U] = RGB(31U, 13U, 2U);
-        scratch_palette_data[0U][3U] = RGB(30U, 31U, 9U);
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[0]));
+        scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
+        scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
+        scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
+        scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+    }
+
+    if (
+        screen_state.displayed_buildings_x & SC_NLI &&
+        screen_state.displayed_buildings_y & SC_NLI
+    )
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
+        scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
+        set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
     }
 }
 
@@ -242,7 +255,7 @@ void setup_globals()
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
-    screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY;
+    screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
 
     // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
@@ -1111,6 +1124,15 @@ void load_buildings_x_left()
         screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+        
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
 
 }
 void load_buildings_x_right()
@@ -1129,14 +1151,27 @@ void load_buildings_x_right()
         screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
 }
 void load_buildings_y_up()
 {
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_NLI;
         screen_state.displayed_buildings_y &= ~SC_SHOP;
+        load_building_tile_data();
+    }
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_PAWN;
 
@@ -1154,8 +1189,9 @@ void load_buildings_y_down()
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
+        screen_state.displayed_buildings_y &= ~SC_NLI;
         screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
