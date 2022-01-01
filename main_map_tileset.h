@@ -32,8 +32,8 @@
 /* Bank of tiles. */
 #define mainmaptilesBank 0
 /* CGBpalette entries. */
-extern unsigned char mainmaptilesCGB[];
+extern const unsigned char mainmaptilesCGB[];
 /* Start of tile array. */
-extern unsigned char mainmaptiles[];
+extern const unsigned char mainmaptiles[];
 
 /* End of MAIN_MAP_TILESET.H */
