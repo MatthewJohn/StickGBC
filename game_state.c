@@ -32,13 +32,14 @@
 // after purchase
 #define S_MAX_INVENTORY_ITEM 99U
 
-// Inventory items
+// Inventory items array index
 #define S_INVENTORY_SMOKES 0x0U
 #define S_INVENTORY_CAFFEINE_PILLS 0x1U
 #define S_INVENTORY_HAND_GUN 0x2U
 #define S_INVENTORY_KNIFE 0x3U
 #define S_INVENTORY_ALARM_CLOCK 0x4U
 #define S_INVENTORY_CELL_PHONE 0x5U
+#define S_INVENTORY_SKATEBOARD 0x6U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
@@ -67,7 +68,7 @@ typedef struct {
     unsigned int balance;
 
     // Inventory items
-    UINT8 inventory[6U];
+    UINT8 inventory[7U];
 } game_state_t;
 
 
