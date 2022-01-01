@@ -228,6 +228,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_KNIFE] = 0x0U;
     game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
+    game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -1571,6 +1572,18 @@ void update_state()
                         increase_strength(0U, 2U, 1U);
                 }
                 delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_SKATER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
+                {
+                    if (game_state.inventory[S_INVENTORY_SMOKES])
+                    {
+                        // Remove smokes and give skateboard
+                        game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                        game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                    }
+                }
             }
         }
     }
