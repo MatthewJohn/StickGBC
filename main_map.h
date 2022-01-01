@@ -28,6 +28,6 @@
 #define mainmapHeight 57
 #define mainmapBank 0
 
-extern unsigned char mainmap[];
+extern const unsigned char mainmap[];
 
 /* End of MAIN_MAP.H */
