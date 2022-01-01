@@ -39,6 +39,8 @@
 // of character is at 0,0 location
 #define SPRITE_OFFSET_X 0x04U
 #define SPRITE_OFFSET_Y 0x0dU
+#define PLAYER_SPRITE_INDEX 0x00U
+#define PLAYER_SPRITE_PALETTE 0x00U
 
 #define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
 

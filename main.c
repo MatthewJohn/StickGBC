@@ -21,6 +21,7 @@
 #include "building_menu_palette.h"
 
 #include "main_map_sprite_tileset.h"
+#include "main_map_sprite_palette.h"
 
 #include "game_constants.h"
 #include "game_state.c"
@@ -114,6 +115,35 @@ UINT8 tile_itx_y;
 UINT8 second_tile_row;
 unsigned int tile_data_offset;
 
+// Setup skater sprite
+ai_sprite skater_sprite = {
+    // Speed
+    0x05U,
+    // Sprite index
+    0x01U,
+    // Color palette,
+    0x01U,
+    // Travel X (right)
+    0x01,
+    // Travel Y
+    0x00,
+    // Rest direction X/Y (face down)
+    0x00,
+    0x01,
+    // Start location x, y
+    0xD8U,
+    0x58U,
+    // Min/max X location
+    0xD8U,
+    0xE8U,
+    // Min/max Y location
+    0x58U,
+    0x58U,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
+};
+
 
 void add_debug(UBYTE val)
 {
@@ -190,6 +220,8 @@ void setup_globals()
     game_state.hp = 23U;
 
     screen_state.displayed_buildings = SC_HOUSE;
+    screen_state.displayed_sprites_x = 0x00;
+    screen_state.displayed_sprites_y = SC_SPRITE_SKATER;
 
     // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
@@ -198,6 +230,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_KNIFE] = 0x0U;
     game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
+    game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -208,16 +241,156 @@ void setup_globals()
     user_pos_y = 0x70U;
 }
 
-void setup_sprite()
+void set_sprite_direction(UINT8 sprite_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
+{
+    // Update flip of sprite tile
+    sprite_prop_data = color_palette & 0x07U;
+    // Check for just vertical movement/
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
+
+void setup_sprites()
 {
     // Load single sprite tile
     HIDE_SPRITES;
+
+    VBK_REG = 0;
+
     ROM_BANK_TILE_DATA;
+
+    // Load spirte tile data into VRAM
     set_sprite_data(0, 3, sprite_tiles);
-    set_sprite_palette(0, 1, sprite_palette);
+
+    // Load sprite palette into VRAM
+    set_sprite_palette(0, 2, sprite_palette);
+
     ROM_BANK_RESET;
-    set_sprite_tile(0, 0);
+
+    VBK_REG = 0;
+
+    // Configure sprite to sprite tile
+    //  Main player
+    set_sprite_tile(0U, 0U);
+    //  Skater
+    set_sprite_tile(skater_sprite.sprite_index, 0U);
+
+    set_sprite_direction(
+        skater_sprite.sprite_index,
+        skater_sprite.color_palette,
+        skater_sprite.travel_direction_x,
+        skater_sprite.travel_direction_y
+    );
+
     SHOW_SPRITES;
+}
+
+void move_ai_sprite(ai_sprite* sprite_to_move)
+{
+    // Check if sprite should be disabled
+    if (
+        !(
+            screen_state.displayed_sprites_x & SC_SPRITE_SKATER &&
+            screen_state.displayed_sprites_y & SC_SPRITE_SKATER
+        )
+    )
+    {
+        // Move sprite off-screen
+        move_sprite(sprite_to_move->sprite_index, 0, 0);
+        return;
+    }
+
+    if ((sys_time % sprite_to_move->move_speed) == 0U)
+    {
+        if (sprite_to_move->current_pause)
+        {
+            sprite_to_move->current_pause -= 1U;
+
+            if (sprite_to_move->current_pause == 0U)
+                // Check if now at 0 current pause and change direction ready for travel
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->travel_direction_x,
+                    sprite_to_move->travel_direction_y
+                );
+        }
+        // Check if moving right
+        else if (sprite_to_move->travel_direction_x == 1)
+        {
+            // Check if hit max
+            if (sprite_to_move->current_location_x == sprite_to_move->max_location_x)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_x = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite movement
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_x += 1;
+        }
+        else if (sprite_to_move->travel_direction_x == -1)
+        {
+            if (sprite_to_move->current_location_x == sprite_to_move->min_location_x)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_x = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_x -= 1;
+        }
+    }
+
+    // Move AI sprites
+    // This must always be done, as it is required when the screen moves
+    move_sprite(
+        sprite_to_move->sprite_index,
+        (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+        (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+    );
+}
+
+void update_ai_positions()
+{
+    move_ai_sprite(&skater_sprite);
 }
 
 void setup_window()
@@ -544,7 +717,6 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 &(tile_data[0])
             );        
            VBK_REG = 0; 
-    
         }
     }
 }
@@ -599,9 +771,9 @@ void setup_main_map()
     DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
 
     sprite_tiles = mainmapspritetiles;
-    sprite_palette = mainmapspritetilesCGB;
+    sprite_palette = main_map_sprite_palette;
     set_background_tiles();
-    setup_sprite();
+    setup_sprites();
     
     // Move background to screen location
     scroll_bkg(
@@ -806,6 +978,13 @@ void setup_building_menu()
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_university;
     }
+    else if (game_state.current_building == S_B_SKATER)
+    {
+        // Default to study
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 0U;
+        menu_config = &menu_config_skater;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -856,6 +1035,11 @@ void check_building_enter()
         game_state.current_building = S_B_UNIVERSITY;
         setup_building_menu();
     }
+    else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
+    {
+        game_state.current_building = S_B_SKATER;
+        setup_building_menu();
+    }
     
 //    // Temporary jump to building
 //    game_state.current_building = S_B_UNIVERSITY;
@@ -884,6 +1068,13 @@ void load_buildings_x_left()
         screen_state.displayed_buildings |= SC_RESTAURANT;
         load_building_tile_data();
     }
+
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+
 }
 void load_buildings_x_right()
 {
@@ -895,6 +1086,12 @@ void load_buildings_x_right()
         screen_state.displayed_buildings |= SC_UNIVERSITY;
         load_building_tile_data();
     }
+ 
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
 }
 void load_buildings_y_up()
 {
@@ -905,6 +1102,12 @@ void load_buildings_y_up()
         screen_state.displayed_buildings &= ~SC_SHOP;
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings &= ~SC_PAWN;
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
+        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
+        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
 }
 void load_buildings_y_down()
 {
@@ -924,6 +1127,12 @@ void load_buildings_y_down()
         screen_state.displayed_buildings |= SC_PAWN;
         load_building_tile_data();
     }
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
+        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
+        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)
@@ -1043,6 +1252,7 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1134,35 +1344,12 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        // Update flip of sprite tile
-        sprite_prop_data = 0x00;
-        // Check for just vertical movement 
-        if (travel_y != 0)
-        {
-            if (travel_x == 0)
-            {
-                // If travelling up, flip Y
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                set_sprite_tile(0, 0);
-            } else {
-                // Handle diagonal movement
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                if (travel_x == -1)
-                    sprite_prop_data |= S_FLIPX;
-                set_sprite_tile(0, 2);
-            }
-        }
-        else if (travel_x != 0)
-        {
-            set_sprite_tile(0, 1);
-            if (travel_x == -1)
-                sprite_prop_data |= S_FLIPX;
-        }
-        // Only update flipping if actually moving
-        if (travel_x != 0 || travel_y != 0)
-            set_sprite_prop(0, sprite_prop_data);
+        set_sprite_direction(
+            PLAYER_SPRITE_INDEX,
+            PLAYER_SPRITE_PALETTE,
+            travel_x,
+            travel_y
+        );
 
         if (a_pressed)
             check_building_enter();
@@ -1388,6 +1575,18 @@ void update_state()
                 }
                 delay(DELAY_PURCHASE_ITEM);
             }
+            else if (game_state.current_building == S_B_SKATER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
+                {
+                    if (game_state.inventory[S_INVENTORY_SMOKES])
+                    {
+                        // Remove smokes and give skateboard
+                        game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                        game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                    }
+                }
+            }
         }
     }
 }
@@ -1420,6 +1619,7 @@ void main()
                 wait_vbl_done();
 
                 check_user_input();
+                update_ai_positions();
                 update_state();
 
                 // Temporarily remove delay to speed debugging
