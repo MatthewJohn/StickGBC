@@ -1175,6 +1175,39 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
+void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
+{
+    // Update flip of sprite tile
+    sprite_prop_data = 0x00;
+    // Check for just vertical movement 
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1266,35 +1299,7 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        // Update flip of sprite tile
-        sprite_prop_data = 0x00;
-        // Check for just vertical movement 
-        if (travel_y != 0)
-        {
-            if (travel_x == 0)
-            {
-                // If travelling up, flip Y
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                set_sprite_tile(0, 0);
-            } else {
-                // Handle diagonal movement
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                if (travel_x == -1)
-                    sprite_prop_data |= S_FLIPX;
-                set_sprite_tile(0, 2);
-            }
-        }
-        else if (travel_x != 0)
-        {
-            set_sprite_tile(0, 1);
-            if (travel_x == -1)
-                sprite_prop_data |= S_FLIPX;
-        }
-        // Only update flipping if actually moving
-        if (travel_x != 0 || travel_y != 0)
-            set_sprite_prop(0, sprite_prop_data);
+        set_sprite_direction(PLAYER_SPRITE_INDEX, travel_x, travel_y);
 
         if (a_pressed)
             check_building_enter();
