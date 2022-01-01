@@ -10,15 +10,18 @@ OBJ_FILES	= $(addsuffix .o,$(SOURCE))
 I_FILE	= lcc25200.i
 ASM_FILE	= lcc25201.asm
 
+DEMO	:= $(filter demo,$(MAKECMDGOALS))
+
 all:	$(BIN)
 
 $(SOURCE) %.o: %.c
 	bash ./scripts/convert_main_main.sh
-	$(CC) $(CFLAGS) $@ $<
+	$(CC) $(if $(DEMO),-Wp-DIN_TESTING=1,) $(CFLAGS) $@ $<
 
 
 main.gb: $(OBJ_FILES)
-	$(CC) -Wl-yt2 -Wl-yo16 -Wl-ya4 -Wl-m -Wl-yp0x143=0x80 -o $@ $(OBJ_FILES) 
+	$(CC) -Wl-yt2 -Wl-yo16 -Wl-ya4 -Wl-m -Wl-yp0x143=0x80 -v -o $@ $(OBJ_FILES) 
+
 asm:	$(C_FILES)
 	rm -f lcc25201.asm
 	../../bin/sdcpp -Wall -lang-c++ -DSDCC=1 -DSDCC_PORT=gbz80 -DSDCC_PLAT=gb -DSDCC_MODEL_SMALL -DGB=1 -DGAMEBOY=1 -DINT_16_BITS -D__LCC__ -I..\..\include $< $(I_FILE)
@@ -27,6 +30,8 @@ asm:	$(C_FILES)
 
 usage:	$(BIN)
 	$(ROMUSAGE) $(BIN) -a
+
+demo:	$(BIN)
 
 clean:
 	rm -f *.o $(BIN) $(I_FILE) $(ASM_FILE)
