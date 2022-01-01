@@ -22,7 +22,8 @@
 #define SC_SPRITE_SKATER 0x01U
 
 typedef struct {
-    UINT8 displayed_buildings;
+    UINT8 displayed_buildings_x;
+    UINT8 displayed_buildings_y;
     UINT8 displayed_sprites_x;
     UINT8 displayed_sprites_y;
 } screen_state_t;
