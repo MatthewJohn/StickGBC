@@ -66,6 +66,7 @@ unsigned int screen_location_y_tilepixel;
 signed int travel_x;
 signed int travel_y;
 unsigned short a_pressed;
+unsigned short b_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
 
@@ -541,6 +542,7 @@ void check_user_input()
     travel_x = 0;
     travel_y = 0;
     a_pressed = 0U;
+    b_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
@@ -553,6 +555,8 @@ void check_user_input()
         travel_x ++;
     if (keys & J_A)
         a_pressed = 1U;
+    if (keys & J_B)
+        b_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -1591,6 +1595,14 @@ void update_state()
     }
 }
 
+void travel_delay()
+{
+    // Check if skateboard owned and holding B
+    if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+        delay(SKATEBOARD_SPEED_DELAY);
+    else
+        delay(WALK_SPEED_DELAY);
+}
 
 void main()
 {
@@ -1621,6 +1633,7 @@ void main()
                 check_user_input();
                 update_ai_positions();
                 update_state();
+                travel_delay();
 
                 // Temporarily remove delay to speed debugging
                 //delay(50);

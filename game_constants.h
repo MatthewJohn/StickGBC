@@ -42,6 +42,9 @@
 #define PLAYER_SPRITE_INDEX 0x00U
 #define PLAYER_SPRITE_PALETTE 0x00U
 
+#define WALK_SPEED_DELAY 0x20
+#define SKATEBOARD_SPEED_DELAY 0x10
+
 #define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
