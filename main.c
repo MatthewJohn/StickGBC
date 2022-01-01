@@ -121,6 +121,8 @@ ai_sprite skater_sprite = {
     0x05U,
     // Sprite index
     0x01U,
+    // Color palette,
+    0x01U,
     // Travel X (right)
     0x01,
     // Travel Y
@@ -239,10 +241,10 @@ void setup_globals()
     user_pos_y = 0x70U;
 }
 
-void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
+void set_sprite_direction(UINT8 sprite_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
 {
     // Update flip of sprite tile
-    sprite_prop_data = 0x00;
+    sprite_prop_data = color_palette & 0x07U;
     // Check for just vertical movement/
     if (direction_y != 0)
     {
@@ -289,15 +291,6 @@ void setup_sprites()
 
     ROM_BANK_RESET;
 
-    // Configure palette for sprites
-    VBK_REG = 1;
-    // Main player
-    tile_data[0] = 0x00U;
-    // Skater
-    tile_data[skater_sprite.sprite_index] = 0x02U;
-    set_sprite_data(0U, 2U, &tile_data);
-    VBK_REG = 0;
-
     VBK_REG = 0;
 
     // Configure sprite to sprite tile
@@ -308,6 +301,7 @@ void setup_sprites()
 
     set_sprite_direction(
         skater_sprite.sprite_index,
+        skater_sprite.color_palette,
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
     );
@@ -340,6 +334,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Check if now at 0 current pause and change direction ready for travel
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
                     sprite_to_move->travel_direction_x,
                     sprite_to_move->travel_direction_y
                 );
@@ -356,6 +351,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite movement
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
                 );
@@ -373,6 +369,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    sprite_to_move->color_palette,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
                 );
@@ -1347,7 +1344,12 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        set_sprite_direction(PLAYER_SPRITE_INDEX, travel_x, travel_y);
+        set_sprite_direction(
+            PLAYER_SPRITE_INDEX,
+            PLAYER_SPRITE_PALETTE,
+            travel_x,
+            travel_y
+        );
 
         if (a_pressed)
             check_building_enter();
