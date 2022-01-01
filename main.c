@@ -980,6 +980,13 @@ void setup_building_menu()
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_university;
     }
+    else if (game_state.current_building == S_B_SKATER)
+    {
+        // Default to study
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 0U;
+        menu_config = &menu_config_skater;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1028,6 +1035,11 @@ void check_building_enter()
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
     {
         game_state.current_building = S_B_UNIVERSITY;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
+    {
+        game_state.current_building = S_B_SKATER;
         setup_building_menu();
     }
     
