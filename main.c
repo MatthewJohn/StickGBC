@@ -125,6 +125,9 @@ ai_sprite skater_sprite = {
     0x01,
     // Travel Y
     0x00,
+    // Rest direction X/Y (face down)
+    0x00,
+    0x01,
     // Start location x, y
     0xD8U,
     0x58U,
@@ -312,6 +315,14 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
         if (sprite_to_move->current_pause)
         {
             sprite_to_move->current_pause -= 1U;
+
+            if (sprite_to_move->current_pause == 0U)
+                // Check if now at 0 current pause and change direction ready for travel
+                set_sprite_direction(
+                    sprite_to_move->sprite_itx,
+                    sprite_to_move->travel_direction_x,
+                    sprite_to_move->travel_direction_y
+                );
         }
         // Check if moving right
         else if (sprite_to_move->travel_direction_x == 1)
@@ -325,8 +336,8 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite movement
                 set_sprite_direction(
                     sprite_to_move->sprite_itx,
-                    sprite_to_move->travel_direction_x,
-                    sprite_to_move->travel_direction_y
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
                 );
             }
             else
@@ -342,8 +353,8 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite
                 set_sprite_direction(
                     sprite_to_move->sprite_itx,
-                    sprite_to_move->travel_direction_x,
-                    sprite_to_move->travel_direction_y
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
                 );
             }
             else
