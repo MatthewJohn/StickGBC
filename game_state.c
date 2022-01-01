@@ -70,7 +70,7 @@ typedef struct {
     // Inventory items
     UINT8 inventory[7U];
     
-    UINT8 last_movement_time;
+    unsigned int last_movement_time;
 } game_state_t;
 
 

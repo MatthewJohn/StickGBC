@@ -211,6 +211,7 @@ void load_building_tile_data() NONBANKED
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
+    game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
@@ -1267,10 +1268,26 @@ void update_state()
     signed int move_y;
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
+    unsigned int movement_wait_time;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
         check_boundary_hit();
+        
+        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+            movement_wait_time = game_state.last_movement_time + SKATEBOARD_SPEED_DELAY;
+        else
+            movement_wait_time = game_state.last_movement_time + WALK_SPEED_DELAY;
+        // If movement happened too recently, disable movement
+        if (movement_wait_time > sys_time)
+        {
+            travel_x = 0;
+            travel_y = 0;
+        }
+        else
+            // Otherwise, update last movement time
+            game_state.last_movement_time = sys_time;
+            
 
         // Set user screen position based on current location
         user_screen_pos_x = user_pos_x - screen_location_x;
@@ -1595,15 +1612,6 @@ void update_state()
     }
 }
 
-void travel_delay()
-{
-    // Check if skateboard owned and holding B
-    if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
-        delay(SKATEBOARD_SPEED_DELAY);
-    else
-        delay(WALK_SPEED_DELAY);
-}
-
 void main()
 {
     debug_address = 0xFFFA;
@@ -1633,7 +1641,6 @@ void main()
                 check_user_input();
                 update_ai_positions();
                 update_state();
-                travel_delay();
 
                 // Temporarily remove delay to speed debugging
                 //delay(50);
