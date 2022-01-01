@@ -243,8 +243,9 @@ void setup_globals()
     user_pos_y = 0x70U;
 }
 
-void set_sprite_direction(UINT8 sprite_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
+void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
 {
+    UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
     // Update flip of sprite tile
     sprite_prop_data = color_palette & 0x07U;
     // Check for just vertical movement/
@@ -255,19 +256,19 @@ void set_sprite_direction(UINT8 sprite_index, UINT8 color_palette, INT8 directio
             // If travelling up, flip Y
             if (direction_y == 1)
                 sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(sprite_index, 0);
+            set_sprite_tile(sprite_index, 0U + sprite_tile_offset);
         } else {
             // Handle diagonal movement
             if (direction_y == 1)
                 sprite_prop_data |= S_FLIPY;
             if (direction_x == -1)
                 sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(sprite_index, 2);
+            set_sprite_tile(sprite_index, 2U + sprite_tile_offset);
         }
     }
     else if (direction_x != 0)
     {
-        set_sprite_tile(sprite_index, 1);
+        set_sprite_tile(sprite_index, 1U + sprite_tile_offset);
         if (direction_x == -1)
             sprite_prop_data |= S_FLIPX;
     }
@@ -286,7 +287,7 @@ void setup_sprites()
     ROM_BANK_TILE_DATA;
 
     // Load spirte tile data into VRAM
-    set_sprite_data(0, 3, sprite_tiles);
+    set_sprite_data(0U, 6U, sprite_tiles);
 
     // Load sprite palette into VRAM
     set_sprite_palette(0, 2, sprite_palette);
@@ -303,6 +304,7 @@ void setup_sprites()
 
     set_sprite_direction(
         skater_sprite.sprite_index,
+        SPRITE_TILESET_WALK,
         skater_sprite.color_palette,
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
@@ -336,6 +338,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Check if now at 0 current pause and change direction ready for travel
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
                     sprite_to_move->color_palette,
                     sprite_to_move->travel_direction_x,
                     sprite_to_move->travel_direction_y
@@ -353,6 +356,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite movement
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
                     sprite_to_move->color_palette,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
@@ -371,6 +375,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Update direction of sprite
                 set_sprite_direction(
                     sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
                     sprite_to_move->color_palette,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
@@ -1269,15 +1274,22 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
+    UINT8 main_player_tileset;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
         check_boundary_hit();
         
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+        {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
+            main_player_tileset = SPRITE_TILESET_SKATEBOARD;
+        }
         else
+        {
             movement_bit_push = WALK_SPEED_DELAY;
+            main_player_tileset = SPRITE_TILESET_WALK;
+        }
         // If movement happened too recently, disable movement
         if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
         {
@@ -1367,6 +1379,7 @@ void update_state()
 
         set_sprite_direction(
             PLAYER_SPRITE_INDEX,
+            main_player_tileset,
             PLAYER_SPRITE_PALETTE,
             travel_x,
             travel_y
