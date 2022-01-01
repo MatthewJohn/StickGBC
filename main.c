@@ -309,7 +309,20 @@ void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y
 }
 
 void move_ai_sprite(ai_sprite* sprite_to_move)
-{    
+{
+    // Check if sprite should be disabled
+    if (
+        !(
+            screen_state.displayed_sprites_x & SC_SPRITE_SKATER &&
+            screen_state.displayed_sprites_y & SC_SPRITE_SKATER
+        )
+    )
+    {
+        // Move sprite off-screen
+        move_sprite(sprite_to_move->sprite_itx, 0, 0);
+        return;
+    }
+
     if ((sys_time % sprite_to_move->move_speed) == 0U)
     {
         if (sprite_to_move->current_pause)
@@ -362,21 +375,13 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
         }
     }
 
-    // Check if sprite should be on-screen
-    if (
-        screen_state.displayed_sprites_x & SC_SPRITE_SKATER &&
-        screen_state.displayed_sprites_y & SC_SPRITE_SKATER
-    )
-        // Move AI sprites
-        // This must always be done, as it is required when the screen moves
-        move_sprite(
-            sprite_to_move->sprite_itx,
-            (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
-            (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
-        );
-    else
-        // Move sprite off-screen
-        move_sprite(sprite_to_move->sprite_itx, 0, 0);
+    // Move AI sprites
+    // This must always be done, as it is required when the screen moves
+    move_sprite(
+        sprite_to_move->sprite_itx,
+        (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+        (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+    );
 }
 
 void update_ai_positions()
