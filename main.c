@@ -238,6 +238,39 @@ void setup_globals()
     user_pos_y = 0x70U;
 }
 
+void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
+{
+    // Update flip of sprite tile
+    sprite_prop_data = 0x00;
+    // Check for just vertical movement/
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
+
 void setup_sprites()
 {
     // Load single sprite tile
@@ -272,40 +305,13 @@ void setup_sprites()
     //  Skater
     set_sprite_tile(skater_sprite.sprite_itx, 0U);
 
-    SHOW_SPRITES;
-}
+    set_sprite_direction(
+        skater_sprite.sprite_itx,
+        skater_sprite.travel_direction_x,
+        skater_sprite.travel_direction_y
+    );
 
-void set_sprite_direction(UINT8 sprite_index, INT8 direction_x, INT8 direction_y)
-{
-    // Update flip of sprite tile
-    sprite_prop_data = 0x00;
-    // Check for just vertical movement
-    if (direction_y != 0)
-    {
-        if (direction_x == 0)
-        {
-            // If travelling up, flip Y
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(sprite_index, 0);
-        } else {
-            // Handle diagonal movement
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            if (direction_x == -1)
-                sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(sprite_index, 2);
-        }
-    }
-    else if (direction_x != 0)
-    {
-        set_sprite_tile(sprite_index, 1);
-        if (direction_x == -1)
-            sprite_prop_data |= S_FLIPX;
-    }
-    // Only update flipping if actually moving
-    if (direction_x != 0 || direction_y != 0)
-        set_sprite_prop(sprite_index, sprite_prop_data);
+    SHOW_SPRITES;
 }
 
 void move_ai_sprite(ai_sprite* sprite_to_move)
