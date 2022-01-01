@@ -119,7 +119,7 @@ unsigned int tile_data_offset;
 ai_sprite skater_sprite = {
     // Speed
     0x05U,
-    // Sprite number
+    // Sprite index
     0x01U,
     // Travel X (right)
     0x01,
@@ -294,7 +294,7 @@ void setup_sprites()
     // Main player
     tile_data[0] = 0x00U;
     // Skater
-    tile_data[skater_sprite.sprite_itx] = 0x02U;
+    tile_data[skater_sprite.sprite_index] = 0x02U;
     set_sprite_data(0U, 2U, &tile_data);
     VBK_REG = 0;
 
@@ -304,10 +304,10 @@ void setup_sprites()
     //  Main player
     set_sprite_tile(0U, 0U);
     //  Skater
-    set_sprite_tile(skater_sprite.sprite_itx, 0U);
+    set_sprite_tile(skater_sprite.sprite_index, 0U);
 
     set_sprite_direction(
-        skater_sprite.sprite_itx,
+        skater_sprite.sprite_index,
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
     );
@@ -326,7 +326,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
     )
     {
         // Move sprite off-screen
-        move_sprite(sprite_to_move->sprite_itx, 0, 0);
+        move_sprite(sprite_to_move->sprite_index, 0, 0);
         return;
     }
 
@@ -339,7 +339,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
             if (sprite_to_move->current_pause == 0U)
                 // Check if now at 0 current pause and change direction ready for travel
                 set_sprite_direction(
-                    sprite_to_move->sprite_itx,
+                    sprite_to_move->sprite_index,
                     sprite_to_move->travel_direction_x,
                     sprite_to_move->travel_direction_y
                 );
@@ -355,7 +355,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
                 set_sprite_direction(
-                    sprite_to_move->sprite_itx,
+                    sprite_to_move->sprite_index,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
                 );
@@ -372,7 +372,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
                 set_sprite_direction(
-                    sprite_to_move->sprite_itx,
+                    sprite_to_move->sprite_index,
                     sprite_to_move->rest_direction_x,
                     sprite_to_move->rest_direction_y
                 );
@@ -385,7 +385,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
     // Move AI sprites
     // This must always be done, as it is required when the screen moves
     move_sprite(
-        sprite_to_move->sprite_itx,
+        sprite_to_move->sprite_index,
         (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
         (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
     );
