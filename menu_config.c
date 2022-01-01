@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x15] = {
+const menu_config_item_t menu_config_items[0x16] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -484,6 +484,23 @@ const menu_config_item_t menu_config_items[0x15] = {
             MENU_ITEM_INTELLIGENCE_PALETTE,
         },
     },
+    // Give Smokes
+    {
+        {
+            0x4BU,  // GI
+            0x4CU,  // VE
+            MENU_ITEM_NO_TILE,
+            0x31U,  // SM
+            0x32U,  // OK
+            0x33U,  // ES
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 // BUILDING MENU DEFINITIONS
@@ -560,6 +577,21 @@ menu_config_t menu_config_university = {
       MENU_ITEM_INDEX_STUDY,
       MENU_ITEM_INDEX_GYM,
       MENU_ITEM_INDEX_CLASS,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+  },
+  0x00U,
+};
+
+// Skater
+menu_config_t menu_config_skater = {
+  {
+      MENU_ITEM_INDEX_GIVE_SMOKES,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,

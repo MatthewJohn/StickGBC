@@ -60,6 +60,7 @@
 #define MENU_ITEM_INDEX_STUDY 0x11U
 #define MENU_ITEM_INDEX_GYM 0x12U
 #define MENU_ITEM_INDEX_CLASS 0x13U
+#define MENU_ITEM_INDEX_GIVE_SMOKES 0x14U
 
 #define IS_MENU_ITEM_ENABLED(index) (menu_config->items[index] != MENU_ITEM_INDEX_EMPTY)
 
@@ -88,3 +89,4 @@ extern menu_config_t menu_config_restaurant;
 extern menu_config_t menu_config_shop;
 extern menu_config_t menu_config_pawn;
 extern menu_config_t menu_config_university;
+extern menu_config_t menu_config_skater;
