@@ -87,4 +87,6 @@ typedef struct {
     unsigned int max_location_x;
     unsigned int min_location_y;
     unsigned int max_location_y;
+    UINT8 pause_period;
+    UINT8 current_pause;
 } ai_sprite;

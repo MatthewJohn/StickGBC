@@ -134,6 +134,9 @@ ai_sprite skater_sprite = {
     // Min/max Y location
     0x58U,
     0x58U,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
 };
 
 
@@ -273,19 +276,31 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
 {    
     if ((sys_time % sprite_to_move->move_speed) == 0U)
     {
+        if (sprite_to_move->current_pause)
+        {
+            sprite_to_move->current_pause -= 1U;
+        }
         // Check if moving right
-        if (sprite_to_move->travel_direction_x == 1)
+        else if (sprite_to_move->travel_direction_x == 1)
         {
             // Check if hit max
             if (sprite_to_move->current_location_x == sprite_to_move->max_location_x)
+            {
+                // Switch direction and set pause period
                 sprite_to_move->travel_direction_x = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+            }
             else
                 sprite_to_move->current_location_x += 1;
         }
         else if (sprite_to_move->travel_direction_x == -1)
         {
             if (sprite_to_move->current_location_x == sprite_to_move->min_location_x)
+            {
+                // Switch direction and set pause period
                 sprite_to_move->travel_direction_x = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+            }
             else
                 sprite_to_move->current_location_x -= 1;
         }
