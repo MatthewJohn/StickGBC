@@ -322,16 +322,15 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Switch direction and set pause period
                 sprite_to_move->travel_direction_x = -1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
-            }
-            else
-            {
-                sprite_to_move->current_location_x += 1;
+                // Update direction of sprite movement
                 set_sprite_direction(
                     sprite_to_move->sprite_itx,
                     sprite_to_move->travel_direction_x,
                     sprite_to_move->travel_direction_y
                 );
             }
+            else
+                sprite_to_move->current_location_x += 1;
         }
         else if (sprite_to_move->travel_direction_x == -1)
         {
@@ -340,16 +339,15 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
                 // Switch direction and set pause period
                 sprite_to_move->travel_direction_x = 1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
-            }
-            else
-            {
-                sprite_to_move->current_location_x -= 1;
+                // Update direction of sprite
                 set_sprite_direction(
                     sprite_to_move->sprite_itx,
                     sprite_to_move->travel_direction_x,
                     sprite_to_move->travel_direction_y
                 );
             }
+            else
+                sprite_to_move->current_location_x -= 1;
         }
     }
 
