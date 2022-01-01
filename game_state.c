@@ -81,6 +81,8 @@ typedef struct {
     // The direction is inverted when max/min location is reached.
     INT8 travel_direction_x;
     INT8 travel_direction_y;
+    INT8 rest_direction_x;
+    INT8 rest_direction_y;
     unsigned int current_location_x;
     unsigned int current_location_y;
     unsigned int min_location_x;
