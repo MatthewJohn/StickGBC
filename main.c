@@ -1033,9 +1033,16 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_NLI)
     {
-        menu_state.current_item_x = 1U;
-        menu_state.current_item_y = 2U;
         menu_config = &menu_config_nli;
+
+        // If no 'work' item is available, select 'apply for job'
+        if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_EMPTY)
+            menu_state.current_item_y = 2U;
+
+        // Otherwise, select 'work' item
+        else
+            menu_state.current_item_y = 3U;
+        menu_state.current_item_x = 1U;
     }
 
     HIDE_SPRITES;
