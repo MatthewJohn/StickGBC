@@ -13,6 +13,7 @@
 #include "game_constants.h"
 #include "game_state.c"
 #include "external_bank_globals.h"
+#include "menu_config.h"
 
 void update_window(game_state_t game_state)
 {
@@ -37,7 +38,7 @@ void update_window(game_state_t game_state)
     VBK_REG = 0;
 
     // CLOCK
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET - 1U;
+    tile_data[0] = MENU_TILE_CLOCK;
     set_win_tiles(0U, 0U, 1, 1, &(tile_data[0]));
     set_win_tiles(0U, 1U, 1, 1, &(tile_data[0]));
     set_win_tiles(1U, 1U, 1, 1, &(tile_data[0]));
@@ -52,11 +53,11 @@ void update_window(game_state_t game_state)
     VBK_REG = 0;
 
     // Set 24 hour time e.g. 17:00
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + game_state->hour / 10U;
-    tile_data[1] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + game_state->hour % 10U;
-    tile_data[2] = MENU_ROW_2_TILE_DATA_OFFSET;
-    tile_data[3] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
-    tile_data[4] = MENU_ROW_2_TILE_DATA_OFFSET + 1U;
+    tile_data[0] = MENU_TILE_0 + game_state->hour / 10U;
+    tile_data[1] = MENU_TILE_0 + game_state->hour % 10U;
+    tile_data[2] = MENU_TILE_COLON;
+    tile_data[3] = MENU_TILE_0;
+    tile_data[4] = MENU_TILE_0;
     // Display time
     set_win_tiles(2U, 1U, 5, 1, &tile_data);
 
@@ -84,7 +85,7 @@ void update_window(game_state_t game_state)
             break;
 
         // Display current digit
-        tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+        tile_data[0] = MENU_TILE_0 + current_digit;
         set_win_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
 
         // Prepare for next digit
@@ -122,7 +123,7 @@ void update_window(game_state_t game_state)
             // Display dollar symbol, if not already shown
             if (shown_symbol == 0U)
             {
-                tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 11U;
+                tile_data[0] = MENU_TILE_DOLLAR;
                 shown_symbol = 1U;
             }
             else
@@ -133,7 +134,7 @@ void update_window(game_state_t game_state)
         }
         else
         {
-            tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+            tile_data[0] = MENU_TILE_0 + current_digit;
         }
 
         // Display current digit
@@ -149,7 +150,7 @@ void update_window(game_state_t game_state)
     // Start at right hand side
     itx_x = SCREEN_WIDTH_TILES - 2U;
     // Draw HP symbol
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 12U;
+    tile_data[0] = MENU_TILE_HP;
     set_win_tiles(itx_x, 1U, 1, 1, &(tile_data[0]));
     itx_x -= 1U;
     shown_symbol = 0U;
@@ -172,10 +173,10 @@ void update_window(game_state_t game_state)
     
         if (remainder == 0U && current_digit == 0U && itx != 0)
         {
-            // Display dollar symbol, if not already shown
+            // Display slash symbol, if not already shown
             if (shown_symbol == 0U)
             {
-                tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 16U;
+                tile_data[0] = MENU_TILE_SLASH;
                 shown_symbol = 1U;
                 
                 // Once complete with max_hp, continue to actual HP value
@@ -192,7 +193,7 @@ void update_window(game_state_t game_state)
         }
         else
         {
-            tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 1U + current_digit;
+            tile_data[0] = MENU_TILE_0 + current_digit;
         }
 
         // Display current digit
