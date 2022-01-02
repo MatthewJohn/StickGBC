@@ -8,7 +8,7 @@
  1. Road/markings
     * 0 - House roof/road/status bar background
     * 1 - Road markings/status bar foreground
-    * 2 - 
+    * 2 - Black text NLI sign
     * 3 - 
  2.
     * 0 - Grass
@@ -26,7 +26,7 @@
     * 2 - 
     * 3 - 
  5. scratch for building 1 - pawn shop wall + grafitti (color 0+1+4)
- 6. scratch for building 2 - shop (0 + 1 + 2 + 3)
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university
 
 ## Tile Palette Building Menu
@@ -84,9 +84,9 @@
  35. ER
  36. TR'
  37. PL
- 38. WO (half O)
- 39. ORK (half O, half K)
- 40. K (Half K)
+ 38. WO
+ 39. RK
+ 40. 
  41. US
  42. CA
  43. ND
@@ -123,9 +123,27 @@
  74. AS
  75. GI
  76. VE
- 
-
- 
+ 77. AP
+ 78. A
+ 79. JO
+ 80. B
+ 81. FO
+ 82. JA
+ 83. NI
+ 84. MA
+ 85. IL
+ 86. SA
+ 87. LE
+ 88. AN
+ 89. EC
+ 90. UT
+ 91. IV
+ 92. VP
+ 93. O
+ 94. PR
+ 95. OM
+ 96. OT
+ 97. IO
 
  100. 0
  101. 1
@@ -153,6 +171,7 @@
  123. RE
  124. NG
  125. TH
+ 126. -
  
 
 ## Tiles
@@ -182,3 +201,12 @@
  - 27 - university door bottom
  - 28 - university door top
  - 30 - university temple 1
+ - 31 - NLI Sign 1
+ - 32 - NLI Sign 2
+ - 33 - NLI Sign 3
+ - 34 - NLI Sign 4
+ - 35 - NLI Sign 5
+ - 36 - NLI Sign 6
+ - 37 - NLI Sign 7
+ - 38 - NLI Door 1
+ - 38 - NLI Door 2
