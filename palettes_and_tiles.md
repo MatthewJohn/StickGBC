@@ -64,6 +64,7 @@
  3. Border side
  4. Ex
  5. it
+ 15. G
  16. E
  17. SL
  18. EE

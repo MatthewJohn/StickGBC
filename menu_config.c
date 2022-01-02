@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x1DU] = {
+const menu_config_item_t menu_config_items[0x1EU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -706,6 +706,33 @@ const menu_config_item_t menu_config_items[0x1DU] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+    // 1g Cocaine
+    {
+        {
+            MENU_TILE_1,  // 1
+            MENU_TILE_G,  // G
+            MENU_TILE_CO,  // CO
+            MENU_TILE_CA,  // CA
+            MENU_TILE_IN,  // IN
+            MENU_TILE_E,  // E
+            // Row 2
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_4,
+            MENU_TILE_0,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
 };
 
 
@@ -809,6 +836,20 @@ menu_config_t menu_config_nli = {
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_APPLY_FOR_JOB,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+  },
+};
+
+// Dealer
+menu_config_t menu_config_dealer = {
+  {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_COCAINE,
+      MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
   },

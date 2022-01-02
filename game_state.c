@@ -25,6 +25,7 @@
 #define S_B_UNIVERSITY 0x06U
 #define S_B_SKATER 0x07U
 #define S_B_NLI 0x08U
+#define S_B_DEALER 0x09U
 
 
 // Maximum of 99 of each item.
