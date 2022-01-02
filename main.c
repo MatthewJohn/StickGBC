@@ -1125,6 +1125,12 @@ void setup_building_menu()
             menu_state.current_item_y = 3U;
         menu_state.current_item_x = 1U;
     }
+    else if (game_state.current_building == S_B_DEALER)
+    {
+        menu_config = &menu_config_dealer;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 2U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1186,7 +1192,12 @@ void check_building_enter()
         game_state.current_building = S_B_NLI;
         setup_building_menu();
     }
-    
+    else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
+    {
+        game_state.current_building = S_B_DEALER;
+        setup_building_menu();
+    }
+
 //    // Temporary jump to building
 //    game_state.current_building = S_B_UNIVERSITY;
 //    setup_building_menu();
