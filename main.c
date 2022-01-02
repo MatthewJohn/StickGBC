@@ -147,6 +147,36 @@ ai_sprite skater_sprite = {
     0x00U,
 };
 
+// Setup dealer sprite
+ai_sprite dealer_sprite = {
+    // Speed
+    0x05U,
+    // Sprite index
+    0x02U,
+    // Sprite bit index
+    0x01U,
+    // Color palette,
+    0x02U,
+    // Travel X (right)
+    0x00,
+    // Travel Y
+    0x01,
+    // Rest direction X/Y (face down)
+    -0x01,
+    0x00,
+    // Start location x, y
+    0x157U,
+    0x173U,
+    // Min/max X location
+    0x157U,
+    0x157U,
+    // Min/max Y location
+    0x173U,
+    0x17BU,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
+};
 
 
 void add_debug(UBYTE val)
@@ -254,6 +284,8 @@ void setup_globals()
 
     screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
@@ -333,7 +365,7 @@ void setup_sprites()
     set_sprite_data(0U, 6U, sprite_tiles);
 
     // Load sprite palette into VRAM
-    set_sprite_palette(0, 2, sprite_palette);
+    set_sprite_palette(0U, 3U, sprite_palette);
 
     ROM_BANK_RESET;
 
@@ -351,6 +383,17 @@ void setup_sprites()
         skater_sprite.color_palette,
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
+    );
+
+    // Dealer
+    set_sprite_tile(dealer_sprite.sprite_index, 0U);
+
+    set_sprite_direction(
+        dealer_sprite.sprite_index,
+        SPRITE_TILESET_WALK,
+        dealer_sprite.color_palette,
+        dealer_sprite.travel_direction_x,
+        dealer_sprite.travel_direction_y
     );
 
     SHOW_SPRITES;
@@ -439,6 +482,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
 void update_ai_positions()
 {
     move_ai_sprite(&skater_sprite);
+    move_ai_sprite(&dealer_sprite);
 }
 
 void setup_window()
@@ -1137,7 +1181,13 @@ void load_buildings_x_left()
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-        
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
@@ -1164,6 +1214,12 @@ void load_buildings_x_right()
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
     if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
 
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
@@ -1193,6 +1249,12 @@ void load_buildings_y_up()
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
     if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
@@ -1219,6 +1281,12 @@ void load_buildings_y_down()
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
     if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)
