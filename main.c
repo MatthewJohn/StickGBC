@@ -156,13 +156,19 @@ void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
-    if (screen_state.displayed_buildings & SC_HOUSE)
+    if (
+        screen_state.displayed_buildings_x & SC_HOUSE &&
+        screen_state.displayed_buildings_y & SC_HOUSE
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
         ROM_BANK_RESET;
     }
-    if (screen_state.displayed_buildings & SC_RESTAURANT)
+    if (
+        screen_state.displayed_buildings_x & SC_RESTAURANT &&
+        screen_state.displayed_buildings_y & SC_RESTAURANT
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
@@ -174,7 +180,10 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
-    if (screen_state.displayed_buildings & SC_SHOP)
+    if (
+        screen_state.displayed_buildings_x & SC_SHOP &&
+        screen_state.displayed_buildings_y & SC_SHOP
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
@@ -185,7 +194,10 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(26, 16, 0 );
         set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
     }
-    if (screen_state.displayed_buildings & SC_PAWN)
+    if (
+        screen_state.displayed_buildings_x & SC_PAWN &&
+        screen_state.displayed_buildings_y & SC_PAWN
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
@@ -195,16 +207,32 @@ void load_building_tile_data() NONBANKED
         scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
         set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
     }
-    if (screen_state.displayed_buildings & SC_UNIVERSITY)
+    if (
+        screen_state.displayed_buildings_x & SC_UNIVERSITY &&
+        screen_state.displayed_buildings_y & SC_UNIVERSITY
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
         ROM_BANK_RESET;
-        scratch_palette_data[0U][0U] = RGB(15U, 19U, 0U);
-        scratch_palette_data[0U][1U] = RGB(31U, 22U, 8U);
-        scratch_palette_data[0U][2U] = RGB(31U, 13U, 2U);
-        scratch_palette_data[0U][3U] = RGB(30U, 31U, 9U);
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[0]));
+        scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
+        scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
+        scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
+        scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+    }
+
+    if (
+        screen_state.displayed_buildings_x & SC_NLI &&
+        screen_state.displayed_buildings_y & SC_NLI
+    )
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
+        scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
+        set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
     }
 }
 
@@ -221,9 +249,13 @@ void setup_globals()
     game_state.max_hp = 23U;
     game_state.hp = 23U;
 
-    screen_state.displayed_buildings = SC_HOUSE;
     screen_state.displayed_sprites_x = 0x00;
     screen_state.displayed_sprites_y = SC_SPRITE_SKATER;
+
+    // Setup buildings that do not transition in some axis
+    // and those that are displayed on start of game.
+    screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
+    screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
 
     // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
@@ -247,7 +279,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
-    game_state.intelligence = 150U;
+    game_state.intelligence = 250U;
 #endif
 }
 
@@ -439,9 +471,9 @@ void setup_window()
     set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
     
     // Setup 'days''
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    tile_data[0] = MENU_TILE_DA;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    tile_data[0] = MENU_TILE_YS;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
 
     // Move window up to only display 2 rows at top of screen
@@ -471,7 +503,7 @@ void set_background_tiles() NONBANKED
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
@@ -805,6 +837,36 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
+// Update palette for currently selected menu item
+void set_menu_item_color(unsigned char palette)
+{
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
+    unsigned char palette_colors[MENU_ITEM_WIDTH];
+    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
+
+    VBK_REG = 1;
+    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
+        {
+            palette_colors[itx_x] = palette;
+            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            menu_item_index = menu_config->items[menu_item_itx];
+            ROM_BANK_MENU_CONFIG;
+            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
+                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
+            ROM_BANK_RESET;
+         }
+        set_bkg_tiles(
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
+            MENU_ITEM_WIDTH, 1,
+            &palette_colors
+        );
+    }
+    VBK_REG = 0;
+}
+
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
@@ -831,11 +893,6 @@ void load_menu_tiles() NONBANKED
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
             tile_itx_x_start = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
-            
-            // For tiles on top row, use offset from menu config
-            ROM_BANK_MENU_CONFIG;
-            tile_data_offset = menu_config->tile_offset;
-            ROM_BANK_RESET;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -845,8 +902,6 @@ void load_menu_tiles() NONBANKED
                 {
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
-                    // Use row 2 offset for numbers and symbols
-                    tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
                 menu_item_itx = menu_config->items[menu_item_index];
@@ -915,36 +970,6 @@ void load_menu_tiles() NONBANKED
     }
 }
 
-
-void set_menu_item_color(unsigned char palette)
-{
-    unsigned int itx_y, itx_x, tile_index, menu_item_index;
-    unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
-
-    VBK_REG = 1;
-    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
-    {
-        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
-        {
-            palette_colors[itx_x] = palette;
-            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            menu_item_index = menu_config->items[menu_item_itx];
-            ROM_BANK_MENU_CONFIG;
-            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
-                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
-            ROM_BANK_RESET;
-         }
-        set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
-            MENU_ITEM_WIDTH, 1,
-            &palette_colors
-        );
-    }
-    VBK_REG = 0;
-}
-
 void setup_building_menu()
 {
     DISPLAY_OFF;
@@ -1003,6 +1028,19 @@ void setup_building_menu()
         menu_state.current_item_y = 0U;
         menu_config = &menu_config_skater;
     }
+    else if (game_state.current_building == S_B_NLI)
+    {
+        menu_config = &menu_config_nli;
+
+        // If no 'work' item is available, select 'apply for job'
+        if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_EMPTY)
+            menu_state.current_item_y = 2U;
+
+        // Otherwise, select 'work' item
+        else
+            menu_state.current_item_y = 3U;
+        menu_state.current_item_x = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1010,6 +1048,7 @@ void setup_building_menu()
     
     load_menu_tiles();
 
+    // Highlight currently selected item
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
     DISPLAY_ON;
@@ -1058,6 +1097,11 @@ void check_building_enter()
         game_state.current_building = S_B_SKATER;
         setup_building_menu();
     }
+    else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
+    {
+        game_state.current_building = S_B_NLI;
+        setup_building_menu();
+    }
     
 //    // Temporary jump to building
 //    game_state.current_building = S_B_UNIVERSITY;
@@ -1076,14 +1120,14 @@ void load_buildings_x_left()
     // Enable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
-        screen_state.displayed_buildings |= SC_HOUSE;
+        screen_state.displayed_buildings_x |= SC_HOUSE;
         load_building_tile_data();
     }
     if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
-        screen_state.displayed_buildings &= ~SC_UNIVERSITY;
-        screen_state.displayed_buildings |= SC_RESTAURANT;
+        screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
+        screen_state.displayed_buildings_x |= SC_RESTAURANT;
         load_building_tile_data();
     }
 
@@ -1092,16 +1136,25 @@ void load_buildings_x_left()
         screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
+        
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
 
 }
 void load_buildings_x_right()
 {
     // Disable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
-        screen_state.displayed_buildings &= ~SC_HOUSE;
+        screen_state.displayed_buildings_x &= ~SC_HOUSE;
     if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
-        screen_state.displayed_buildings |= SC_UNIVERSITY;
+        screen_state.displayed_buildings_x |= SC_UNIVERSITY;
         load_building_tile_data();
     }
  
@@ -1110,16 +1163,29 @@ void load_buildings_x_right()
         screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
 }
 void load_buildings_y_up()
 {
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
-        screen_state.displayed_buildings &= ~SC_RESTAURANT;
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
-        screen_state.displayed_buildings &= ~SC_SHOP;
+        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_NLI;
+        screen_state.displayed_buildings_y &= ~SC_SHOP;
+        load_building_tile_data();
+    }
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
-        screen_state.displayed_buildings &= ~SC_PAWN;
+        screen_state.displayed_buildings_y &= ~SC_PAWN;
 
     // Check skater
     if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
@@ -1132,17 +1198,18 @@ void load_buildings_y_down()
     // Enable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
-        screen_state.displayed_buildings |= SC_RESTAURANT;
+        screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
-        screen_state.displayed_buildings |= SC_SHOP;
+        screen_state.displayed_buildings_y &= ~SC_NLI;
+        screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
     {
-        screen_state.displayed_buildings |= SC_PAWN;
+        screen_state.displayed_buildings_y |= SC_PAWN;
         load_building_tile_data();
     }
 
@@ -1264,12 +1331,93 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 }
 
+void apply_for_job_promotion()
+{
+    // Check current if applying for job
+    if (
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB &&
+        game_state.intelligence >= 20U
+    )
+    {
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+    }
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR &&
+        game_state.intelligence >= 40U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK &&
+        game_state.intelligence >= 75U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN &&
+        game_state.intelligence >= 120U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
+        game_state.intelligence >= 180U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP &&
+        game_state.intelligence >= 250U
+    )
+    {
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+    }
+    else
+    {
+        // If no job available, return early
+        return;
+    }
+
+    // Update menu with tiles for new job
+    load_menu_tiles();
+    
+    // Select 'work' item for new job
+    move_to_menu_item(1U, 3U);
+}
+
+void do_nli_work()
+{
+    // Calculate current job
+    switch (menu_config->items[MENU_NLI_WORK_ITEM])
+    {
+        case MENU_ITEM_INDEX_WORK_JANITOR :
+            do_work(8U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_MAIL_CLERK :
+            do_work(10U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_SALESMAN :
+            do_work(15U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_EXECUTIVE :
+            do_work(25U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_VP :
+            do_work(50U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_CEO :
+            do_work(100U, 6U);
+            break;
+    }
+}
+
 // Move current menu item to exit
 void move_menu_to_exit()
 {
     move_to_menu_item(1U, 0U);
 }
-
 
 // Called per cycle to update background position and sprite
 void update_state()
@@ -1628,6 +1776,22 @@ void update_state()
                         game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
                     }
                 }
+            }
+            else if (game_state.current_building == S_B_NLI)
+            {
+                if (menu_state.current_item_x == 1U)
+                {
+                    if (menu_state.current_item_y == 2U)
+                    {
+                        // Check if applying for job
+                        apply_for_job_promotion();
+                    }
+                    else if (menu_state.current_item_y == 3U)
+                    {
+                        do_nli_work();
+                    }
+                }
+                delay(DELAY_PURCHASE_ITEM);
             }
         }
     }
