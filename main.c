@@ -300,6 +300,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
+    game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -1910,6 +1911,12 @@ void update_state()
                         do_nli_work();
                     }
                 }
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_DEALER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
+                    purchase_item(400U, S_INVENTORY_COCAINE);
                 delay(DELAY_PURCHASE_ITEM);
             }
         }

@@ -42,6 +42,7 @@
 #define S_INVENTORY_ALARM_CLOCK 0x4U
 #define S_INVENTORY_CELL_PHONE 0x5U
 #define S_INVENTORY_SKATEBOARD 0x6U
+#define S_INVENTORY_COCAINE 0x7U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
@@ -70,7 +71,7 @@ typedef struct {
     unsigned int balance;
 
     // Inventory items
-    UINT8 inventory[7U];
+    UINT8 inventory[8U];
     
     UINT16 last_movement_time;
 } game_state_t;
