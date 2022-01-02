@@ -70,6 +70,10 @@
 #define MENU_ITEM_INDEX_WORK_VP 0x1BU
 #define MENU_ITEM_INDEX_WORK_CEO 0x1CU
 
+// Menu item indexes for NLI
+#define MENU_NLI_PROMOTION_ITEM 0x05U
+#define MENU_NLI_WORK_ITEM 0x07U
+
 #define IS_MENU_ITEM_ENABLED(index) (menu_config->items[index] != MENU_ITEM_INDEX_EMPTY)
 
 typedef struct {

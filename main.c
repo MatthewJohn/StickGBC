@@ -1310,6 +1310,32 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
+void apply_for_job_promotion()
+{
+    // Check current if applying for job
+    if (
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB &&
+        game_state.intelligence >= 20U
+    )
+    {
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+    }
+    // Update menu with tiles for new job
+    load_menu_tiles();
+}
+
+void do_nli_work()
+{
+    // Calculate current job
+    switch (menu_config->items[MENU_NLI_WORK_ITEM])
+    {
+        case MENU_ITEM_INDEX_WORK_JANITOR :
+            do_work(8U, 6U);
+            break;
+    }
+}
+
 // Move selected menu item to new value and update highlighting
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
@@ -1328,7 +1354,6 @@ void move_menu_to_exit()
 {
     move_to_menu_item(1U, 0U);
 }
-
 
 // Called per cycle to update background position and sprite
 void update_state()
@@ -1687,6 +1712,22 @@ void update_state()
                         game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
                     }
                 }
+            }
+            else if (game_state.current_building == S_B_NLI)
+            {
+                if (menu_state.current_item_x == 1U)
+                {
+                    if (menu_state.current_item_y == 2U)
+                    {
+                        // Check if applying for job
+                        apply_for_job_promotion();
+                    }
+                    else if (menu_state.current_item_y == 3U)
+                    {
+                        do_nli_work();
+                    }
+                }
+                delay(DELAY_PURCHASE_ITEM);
             }
         }
     }
