@@ -69,6 +69,7 @@
 #define MENU_ITEM_INDEX_WORK_EXECUTIVE 0x1AU
 #define MENU_ITEM_INDEX_WORK_VP 0x1BU
 #define MENU_ITEM_INDEX_WORK_CEO 0x1CU
+#define MENU_ITEM_INDEX_COCAINE 0x1DU
 
 // Menu item indexes for NLI
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -101,14 +102,18 @@ extern menu_config_t menu_config_pawn;
 extern menu_config_t menu_config_university;
 extern menu_config_t menu_config_skater;
 extern menu_config_t menu_config_nli;
+extern menu_config_t menu_config_dealer;
 
 #define MENU_TILE_EX 0x4U
-#define MENU_TILE_E 0x10U
+#define MENU_TILE_G 0x0FU
+#define MENU_TILE_E 0x1AU
 
 #define MENU_TILE_ER 0x23U
 #define MENU_TILE_PL 0x25U
 #define MENU_TILE_WO 0x26U
 #define MENU_TILE_RK 0x27U
+#define MENU_TILE_CO 0x28U
+#define MENU_TILE_CA 0x2AU
 #define MENU_TILE_Y 0x2CU
 #define MENU_TILE_R 0x2EU
 

@@ -64,6 +64,7 @@
  3. Border side
  4. Ex
  5. it
+ 15. G
  16. E
  17. SL
  18. EE
@@ -86,7 +87,7 @@
  37. PL
  38. WO
  39. RK
- 40. 
+ 40. CO
  41. US
  42. CA
  43. ND
@@ -144,7 +145,8 @@
  95. OM
  96. OT
  97. IO
-
+ 98. Clock face
+ 99. Colon
  100. 0
  101. 1
  102. 2
