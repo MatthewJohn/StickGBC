@@ -25,6 +25,7 @@
 #define S_B_UNIVERSITY 0x06U
 #define S_B_SKATER 0x07U
 #define S_B_NLI 0x08U
+#define S_B_DEALER 0x09U
 
 
 // Maximum of 99 of each item.
@@ -41,6 +42,7 @@
 #define S_INVENTORY_ALARM_CLOCK 0x4U
 #define S_INVENTORY_CELL_PHONE 0x5U
 #define S_INVENTORY_SKATEBOARD 0x6U
+#define S_INVENTORY_COCAINE 0x7U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
@@ -69,7 +71,7 @@ typedef struct {
     unsigned int balance;
 
     // Inventory items
-    UINT8 inventory[7U];
+    UINT8 inventory[8U];
     
     UINT16 last_movement_time;
 } game_state_t;
@@ -82,6 +84,8 @@ typedef struct {
     UINT8 move_speed;
     // Sprite number
     UINT8 sprite_index;
+    // displayed_sprites_x/y bit
+    UINT8 sprite_display_bit;
     // Sprite color palette
     UINT8 color_palette;
     // These are initially setup to determine initial movement.
@@ -90,12 +94,12 @@ typedef struct {
     INT8 travel_direction_y;
     INT8 rest_direction_x;
     INT8 rest_direction_y;
-    unsigned int current_location_x;
-    unsigned int current_location_y;
-    unsigned int min_location_x;
-    unsigned int max_location_x;
-    unsigned int min_location_y;
-    unsigned int max_location_y;
+    UINT16 current_location_x;
+    UINT16 current_location_y;
+    UINT16 min_location_x;
+    UINT16 max_location_x;
+    UINT16 min_location_y;
+    UINT16 max_location_y;
     UINT8 pause_period;
     UINT8 current_pause;
 } ai_sprite;

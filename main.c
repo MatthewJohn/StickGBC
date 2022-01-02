@@ -122,6 +122,8 @@ ai_sprite skater_sprite = {
     0x05U,
     // Sprite index
     0x01U,
+    // Sprite bit index
+    0x00U,
     // Color palette,
     0x01U,
     // Travel X (right)
@@ -140,6 +142,37 @@ ai_sprite skater_sprite = {
     // Min/max Y location
     0x58U,
     0x58U,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
+};
+
+// Setup dealer sprite
+ai_sprite dealer_sprite = {
+    // Speed
+    0x05U,
+    // Sprite index
+    0x02U,
+    // Sprite bit index
+    0x01U,
+    // Color palette,
+    0x02U,
+    // Travel X
+    0x00,
+    // Travel Y (down)
+    0x01,
+    // Rest direction X/Y (face down)
+    -1,
+    0x00,
+    // Start location x, y
+    0x157U,
+    0x173U,
+    // Min/max X location
+    0x157U,
+    0x157U,
+    // Min/max Y location
+    0x173U,
+    0x17BU,
     // Pause period and current pause.
     0x0FU,
     0x00U,
@@ -249,8 +282,10 @@ void setup_globals()
     game_state.max_hp = 23U;
     game_state.hp = 23U;
 
-    screen_state.displayed_sprites_x = 0x00;
-    screen_state.displayed_sprites_y = SC_SPRITE_SKATER;
+    screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
@@ -265,6 +300,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
+    game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -330,7 +366,7 @@ void setup_sprites()
     set_sprite_data(0U, 6U, sprite_tiles);
 
     // Load sprite palette into VRAM
-    set_sprite_palette(0, 2, sprite_palette);
+    set_sprite_palette(0U, 3U, sprite_palette);
 
     ROM_BANK_RESET;
 
@@ -350,18 +386,27 @@ void setup_sprites()
         skater_sprite.travel_direction_y
     );
 
+    // Dealer
+    set_sprite_tile(dealer_sprite.sprite_index, 0U);
+
+    set_sprite_direction(
+        dealer_sprite.sprite_index,
+        SPRITE_TILESET_WALK,
+        dealer_sprite.color_palette,
+        dealer_sprite.travel_direction_x,
+        dealer_sprite.travel_direction_y
+    );
+
     SHOW_SPRITES;
 }
 
-void move_ai_sprite(ai_sprite* sprite_to_move)
+void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
 {
     // Check if sprite should be disabled
-    if (
-        !(
-            screen_state.displayed_sprites_x & SC_SPRITE_SKATER &&
-            screen_state.displayed_sprites_y & SC_SPRITE_SKATER
-        )
-    )
+    if (! (
+        screen_state.displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
+        screen_state.displayed_sprites_x[sprite_to_move->sprite_display_bit]
+    ))
     {
         // Move sprite off-screen
         move_sprite(sprite_to_move->sprite_index, 0, 0);
@@ -424,6 +469,45 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
             else
                 sprite_to_move->current_location_x -= 1;
         }
+        else if (sprite_to_move->travel_direction_y == 1)
+        {
+            // Check if hit max
+            if (sprite_to_move->current_location_y == sprite_to_move->max_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite movement
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y += 1;
+        }
+        else if (sprite_to_move->travel_direction_y == -1)
+        {
+            if (sprite_to_move->current_location_y == sprite_to_move->min_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y -= 1;
+        }
     }
 
     // Move AI sprites
@@ -438,6 +522,7 @@ void move_ai_sprite(ai_sprite* sprite_to_move)
 void update_ai_positions()
 {
     move_ai_sprite(&skater_sprite);
+    move_ai_sprite(&dealer_sprite);
 }
 
 void setup_window()
@@ -1041,6 +1126,12 @@ void setup_building_menu()
             menu_state.current_item_y = 3U;
         menu_state.current_item_x = 1U;
     }
+    else if (game_state.current_building == S_B_DEALER)
+    {
+        menu_config = &menu_config_dealer;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 2U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1102,7 +1193,12 @@ void check_building_enter()
         game_state.current_building = S_B_NLI;
         setup_building_menu();
     }
-    
+    else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
+    {
+        game_state.current_building = S_B_DEALER;
+        setup_building_menu();
+    }
+
 //    // Temporary jump to building
 //    game_state.current_building = S_B_UNIVERSITY;
 //    setup_building_menu();
@@ -1133,10 +1229,16 @@ void load_buildings_x_left()
 
     // Check skater
     if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
-        
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
@@ -1160,9 +1262,15 @@ void load_buildings_x_right()
  
     // Check skater
     if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x |= SC_SPRITE_SKATER;
-    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x &= ~SC_SPRITE_SKATER;
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
 
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
@@ -1188,10 +1296,16 @@ void load_buildings_y_up()
         screen_state.displayed_buildings_y &= ~SC_PAWN;
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
-        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
-        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
@@ -1214,10 +1328,16 @@ void load_buildings_y_down()
     }
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
-        screen_state.displayed_sprites_y |= SC_SPRITE_SKATER;
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
-        screen_state.displayed_sprites_y &= ~SC_SPRITE_SKATER;
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)
@@ -1791,6 +1911,12 @@ void update_state()
                         do_nli_work();
                     }
                 }
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_DEALER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
+                    purchase_item(400U, S_INVENTORY_COCAINE);
                 delay(DELAY_PURCHASE_ITEM);
             }
         }
