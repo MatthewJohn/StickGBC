@@ -157,12 +157,12 @@ ai_sprite dealer_sprite = {
     0x01U,
     // Color palette,
     0x02U,
-    // Travel X (right)
+    // Travel X
     0x00,
-    // Travel Y
+    // Travel Y (down)
     0x01,
     // Rest direction X/Y (face down)
-    -0x01,
+    -1,
     0x00,
     // Start location x, y
     0x157U,
@@ -467,6 +467,45 @@ void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
             }
             else
                 sprite_to_move->current_location_x -= 1;
+        }
+        else if (sprite_to_move->travel_direction_y == 1)
+        {
+            // Check if hit max
+            if (sprite_to_move->current_location_y == sprite_to_move->max_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite movement
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y += 1;
+        }
+        else if (sprite_to_move->travel_direction_y == -1)
+        {
+            if (sprite_to_move->current_location_y == sprite_to_move->min_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y -= 1;
         }
     }
 
