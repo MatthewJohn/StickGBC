@@ -1318,6 +1318,19 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
+// Move selected menu item to new value and update highlighting
+void move_to_menu_item(UINT8 new_x, UINT8 new_y)
+{
+    // Deselect currently selected item
+    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+
+    menu_state.current_item_x = new_x;
+    menu_state.current_item_y = new_y;
+
+    // Highlight new menu item
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+}
+
 void apply_for_job_promotion()
 {
     // Check current if applying for job
@@ -1398,19 +1411,6 @@ void do_nli_work()
             do_work(100U, 6U);
             break;
     }
-}
-
-// Move selected menu item to new value and update highlighting
-void move_to_menu_item(UINT8 new_x, UINT8 new_y)
-{
-    // Deselect currently selected item
-    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
-
-    menu_state.current_item_x = new_x;
-    menu_state.current_item_y = new_y;
-
-    // Highlight new menu item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 }
 
 // Move current menu item to exit
