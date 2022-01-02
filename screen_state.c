@@ -21,7 +21,7 @@
 #define SC_NLI_TRANSITION_X_MIN 0x16U
 #define SC_NLI_TRANSITION_X_MAX 0x46U
 
-#define SC_AI_SPRITE_COUNT 0x01U
+#define SC_AI_SPRITE_COUNT 0x02U
 
 typedef struct {
     UINT8 displayed_buildings_x;
