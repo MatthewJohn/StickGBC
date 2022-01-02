@@ -1031,7 +1031,7 @@ void setup_building_menu()
     else if (game_state.current_building == S_B_NLI)
     {
         menu_state.current_item_x = 1U;
-        menu_state.current_item_y = 3U;
+        menu_state.current_item_y = 2U;
         menu_config = &menu_config_nli;
     }
 
@@ -1321,6 +1321,39 @@ void apply_for_job_promotion()
         menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
     }
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR &&
+        game_state.intelligence >= 40U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK &&
+        game_state.intelligence >= 75U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN &&
+        game_state.intelligence >= 120U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
+        game_state.intelligence >= 180U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
+        game_state.intelligence >= 250U
+    )
+    {
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+    }
+
     // Update menu with tiles for new job
     load_menu_tiles();
 }
@@ -1332,6 +1365,21 @@ void do_nli_work()
     {
         case MENU_ITEM_INDEX_WORK_JANITOR :
             do_work(8U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_MAIL_CLERK :
+            do_work(10U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_SALESMAN :
+            do_work(15U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_EXECUTIVE :
+            do_work(25U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_VP :
+            do_work(50U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_CEO :
+            do_work(100U, 6U);
             break;
     }
 }
