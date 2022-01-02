@@ -1162,7 +1162,7 @@ void load_buildings_x_right()
     // Check skater
     if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+    if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
 
     // NLI
@@ -1217,7 +1217,7 @@ void load_buildings_y_down()
     // Check skater
     if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+    if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
 }
 
