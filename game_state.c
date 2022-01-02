@@ -82,6 +82,8 @@ typedef struct {
     UINT8 move_speed;
     // Sprite number
     UINT8 sprite_index;
+    // displayed_sprites_x/y bit
+    UINT8 sprite_display_bit;
     // Sprite color palette
     UINT8 color_palette;
     // These are initially setup to determine initial movement.
@@ -90,12 +92,12 @@ typedef struct {
     INT8 travel_direction_y;
     INT8 rest_direction_x;
     INT8 rest_direction_y;
-    unsigned int current_location_x;
-    unsigned int current_location_y;
-    unsigned int min_location_x;
-    unsigned int max_location_x;
-    unsigned int min_location_y;
-    unsigned int max_location_y;
+    UINT16 current_location_x;
+    UINT16 current_location_y;
+    UINT16 min_location_x;
+    UINT16 max_location_x;
+    UINT16 min_location_y;
+    UINT16 max_location_y;
     UINT8 pause_period;
     UINT8 current_pause;
 } ai_sprite;

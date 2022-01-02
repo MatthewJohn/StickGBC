@@ -18,12 +18,9 @@
 #define SC_SHOP_NLI_TRANSITION_Y 0x16U
 #define SC_PAWN_TRANSITION_Y 0x20U
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
-//#define SC_NLI_TRANSITION_X_MIN 0x16U
 #define SC_NLI_TRANSITION_X_MIN 0x16U
 #define SC_NLI_TRANSITION_X_MAX 0x46U
 
-// Sprites
-#define SC_SPRITE_SKATER 0x01U
 
 typedef struct {
     UINT8 displayed_buildings_x;
