@@ -252,8 +252,8 @@ void setup_globals()
     game_state.max_hp = 23U;
     game_state.hp = 23U;
 
-    screen_state.displayed_sprites_x = 0x00U;
-    screen_state.displayed_sprites_y = (1 << skater_sprite.sprite_display_bit);
+    screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
 
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
@@ -356,15 +356,13 @@ void setup_sprites()
     SHOW_SPRITES;
 }
 
-void move_ai_sprite(ai_sprite* sprite_to_move)
+void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
 {
     // Check if sprite should be disabled
-    if (
-        !(
-            screen_state.displayed_sprites_x & (1 << sprite_to_move->sprite_display_bit) &&
-            screen_state.displayed_sprites_y & (1 << sprite_to_move->sprite_display_bit)
-        )
-    )
+    if (! (
+        screen_state.displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
+        screen_state.displayed_sprites_x[sprite_to_move->sprite_display_bit]
+    ))
     {
         // Move sprite off-screen
         move_sprite(sprite_to_move->sprite_index, 0, 0);
@@ -1136,9 +1134,9 @@ void load_buildings_x_left()
 
     // Check skater
     if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x &= ~(1 << skater_sprite.sprite_display_bit);
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x |= (1 << skater_sprite.sprite_display_bit);
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
         
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
@@ -1163,9 +1161,9 @@ void load_buildings_x_right()
  
     // Check skater
     if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x |= (1 << skater_sprite.sprite_display_bit);
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
     if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x &= ~(1 << skater_sprite.sprite_display_bit);
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
 
     // NLI
     if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
@@ -1191,10 +1189,10 @@ void load_buildings_y_up()
         screen_state.displayed_buildings_y &= ~SC_PAWN;
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
-        screen_state.displayed_sprites_y &= ~(1 << skater_sprite.sprite_display_bit);
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
-        screen_state.displayed_sprites_y |= (1 << skater_sprite.sprite_display_bit);
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
@@ -1217,10 +1215,10 @@ void load_buildings_y_down()
     }
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3))
-        screen_state.displayed_sprites_y |= (1 << skater_sprite.sprite_display_bit);
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3))
-        screen_state.displayed_sprites_y &= ~(1 << skater_sprite.sprite_display_bit);
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)
