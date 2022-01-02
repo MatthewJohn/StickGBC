@@ -84,9 +84,9 @@
  35. ER
  36. TR'
  37. PL
- 38. WO (half O)
- 39. ORK (half O, half K)
- 40. K (Half K)
+ 38. WO
+ 39. RK
+ 40. 
  41. US
  42. CA
  43. ND
