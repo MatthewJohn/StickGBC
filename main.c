@@ -279,7 +279,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
-    game_state.intelligence = 150U;
+    game_state.intelligence = 250U;
 #endif
 }
 
@@ -1346,7 +1346,7 @@ void apply_for_job_promotion()
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
 
     else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP &&
         game_state.intelligence >= 250U
     )
     {
