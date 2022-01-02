@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x16] = {
+const menu_config_item_t menu_config_items[0x1DU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -89,10 +89,9 @@ const menu_config_item_t menu_config_items[0x16] = {
     },
     {
         {
-            0x26U,   // WO
-            0x27U,   // RK
-            0x28U,   //  K
-            MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE,
+            MENU_TILE_WO,   // WO
+            MENU_TILE_RK,   // RK
+            MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE,
 
             MENU_TILE_DOLLAR,  // $
             MENU_TILE_6,  // 6
@@ -501,7 +500,214 @@ const menu_config_item_t menu_config_items[0x16] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
+    // Apply for job
+    {
+        {
+            MENU_TILE_AP,  // AP
+            MENU_TILE_PL,  // PL
+            MENU_TILE_Y,  // Y
+            MENU_TILE_FO,  // FO
+            MENU_TILE_R,  // R
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_A,  // A
+            MENU_TILE_JO,  // JO
+            MENU_TILE_B,  // B
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Apply for Promotion
+    {
+        {
+            MENU_TILE_AP,  // AP
+            MENU_TILE_PL,  // PL
+            MENU_TILE_Y,  // Y
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_FO,  // FO
+            MENU_TILE_R,  // R
+            // Row 2
+            MENU_TILE_PR,  // PR
+            MENU_TILE_OM,  // OM
+            MENU_TILE_OT,  // OT
+            MENU_TILE_IO,  // IO
+            MENU_TILE_N,  // N
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work Janitor
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_TILE_DOLLAR,
+            MENU_TILE_8,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_JA,  // JA
+            MENU_TILE_NI,  // NI
+            MENU_TILE_TO,  // TO
+            MENU_TILE_R,  // R
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work Mail Clerk
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+            // Row 2
+            MENU_TILE_MA,  // MA
+            MENU_TILE_IL,  // IL
+            MENU_TILE_CL,  // CL
+            MENU_TILE_ER,  // ER
+            MENU_TILE_K,  // K
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work Salesman
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_5,
+            // Row 2
+            MENU_TILE_SA,  // SA
+            MENU_TILE_LE,  // LE
+            MENU_TILE_SM,  // SM
+            MENU_TILE_AN,  // AN
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work Executive
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_TILE_DOLLAR,
+            MENU_TILE_2,
+            MENU_TILE_5,
+            // Row 2
+            MENU_TILE_EX,  // EX
+            MENU_TILE_EC,  // EC
+            MENU_TILE_UT,  // UT
+            MENU_TILE_IV,  // IV
+            MENU_TILE_E,  // E
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work VP
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_TILE_DOLLAR,
+            MENU_TILE_5,
+            MENU_TILE_0,
+            // Row 2
+            MENU_TILE_VP,  // VP
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    // Work CEO
+    {
+        {
+            MENU_TILE_WO,  // WO
+            MENU_TILE_RK,  // RK
+            MENU_TILE_DASH,  // -
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_CE,
+            MENU_TILE_O,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
 };
+
 
 // BUILDING MENU DEFINITIONS
 
@@ -591,5 +797,19 @@ menu_config_t menu_config_skater = {
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
+  },
+};
+
+// NLI
+menu_config_t menu_config_nli = {
+  {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_APPLY_FOR_JOB,
   },
 };

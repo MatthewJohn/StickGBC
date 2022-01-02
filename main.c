@@ -1028,6 +1028,12 @@ void setup_building_menu()
         menu_state.current_item_y = 0U;
         menu_config = &menu_config_skater;
     }
+    else if (game_state.current_building == S_B_NLI)
+    {
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 3U;
+        menu_config = &menu_config_nli;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1081,6 +1087,11 @@ void check_building_enter()
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
+    {
+        game_state.current_building = S_B_NLI;
         setup_building_menu();
     }
     
