@@ -73,8 +73,6 @@ typedef struct {
 typedef struct {
     // Menu can contain 8 items
     unsigned short items[8];
-    
-    unsigned short tile_offset;
 } menu_config_t;
 
 typedef struct {
@@ -90,3 +88,32 @@ extern menu_config_t menu_config_shop;
 extern menu_config_t menu_config_pawn;
 extern menu_config_t menu_config_university;
 extern menu_config_t menu_config_skater;
+
+#define MENU_TILE_CLOCK 0x62U
+#define MENU_TILE_COLON 0x63U
+#define MENU_TILE_0 0x64U
+#define MENU_TILE_1 0x65U
+#define MENU_TILE_2 0x66U
+#define MENU_TILE_3 0x67U
+#define MENU_TILE_4 0x68U
+#define MENU_TILE_5 0x69U
+#define MENU_TILE_6 0x6AU
+#define MENU_TILE_7 0x6BU
+#define MENU_TILE_8 0x6CU
+#define MENU_TILE_9 0x6DU
+#define MENU_TILE_DOLLAR 0x6EU
+#define MENU_TILE_HP 0x6FU
+#define MENU_TILE_PER_HOUR 0x70U
+#define MENU_TILE_DA 0x71U
+#define MENU_TILE_YS 0x72U
+#define MENU_TILE_SLASH 0x73U
+#define MENU_TILE_IN 0x74U
+#define MENU_TILE_TE 0x75U
+#define MENU_TILE_LL 0x76U
+#define MENU_TILE_IG 0x77U
+#define MENU_TILE_EN 0x78U
+#define MENU_TILE_CE 0x79U
+#define MENU_TILE_ST 0x7AU
+#define MENU_TILE_RE 0x7BU
+#define MENU_TILE_NG 0x7CU
+#define MENU_TILE_TH 0x7DU

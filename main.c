@@ -471,9 +471,9 @@ void setup_window()
     set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
     
     // Setup 'days''
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    tile_data[0] = MENU_TILE_DA;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    tile_data[0] = MENU_TILE_YS;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
 
     // Move window up to only display 2 rows at top of screen
@@ -503,7 +503,7 @@ void set_background_tiles() NONBANKED
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
@@ -863,11 +863,6 @@ void load_menu_tiles() NONBANKED
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
             tile_itx_x_start = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
-            
-            // For tiles on top row, use offset from menu config
-            ROM_BANK_MENU_CONFIG;
-            tile_data_offset = menu_config->tile_offset;
-            ROM_BANK_RESET;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -877,8 +872,6 @@ void load_menu_tiles() NONBANKED
                 {
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
-                    // Use row 2 offset for numbers and symbols
-                    tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
                 menu_item_itx = menu_config->items[menu_item_index];
