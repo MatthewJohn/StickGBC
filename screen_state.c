@@ -25,6 +25,6 @@
 typedef struct {
     UINT8 displayed_buildings_x;
     UINT8 displayed_buildings_y;
-    UINT8 displayed_sprites_x;
-    UINT8 displayed_sprites_y;
+    UBYTE displayed_sprites_x;
+    UBYTE displayed_sprites_y;
 } screen_state_t;
