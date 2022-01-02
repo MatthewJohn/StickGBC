@@ -968,9 +968,6 @@ void load_menu_tiles() NONBANKED
             }
         }
     }
-
-    // Highlight currently selected item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 }
 
 void setup_building_menu()
@@ -1050,6 +1047,9 @@ void setup_building_menu()
     set_background_tiles();
     
     load_menu_tiles();
+
+    // Highlight currently selected item
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
     DISPLAY_ON;
 }
@@ -1361,9 +1361,17 @@ void apply_for_job_promotion()
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
         menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
     }
+    else
+    {
+        // If no job available, return early
+        return;
+    }
 
     // Update menu with tiles for new job
     load_menu_tiles();
+    
+    // Select 'work' item for new job
+    move_to_menu_item(1U, 3U);
 }
 
 void do_nli_work()
