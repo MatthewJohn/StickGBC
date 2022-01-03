@@ -21,6 +21,7 @@
 #include "building_menu_palette.h"
 
 #include "main_map_sprite_tileset.h"
+#include "main_map_sprite_palette.h"
 
 #include "game_constants.h"
 #include "game_state.c"
@@ -30,6 +31,7 @@
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+#define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 
 
 UBYTE * debug_address;
@@ -42,6 +44,9 @@ unsigned int user_pos_y;
 // Temporary storege for transfer of tile data and tile data vram1 data
 UBYTE tile_data[12];
 UWORD word_data[4];
+
+// Storage for scratch palette data
+UWORD scratch_palette_data[3][4];
 
 // Location of screen compared to map
 unsigned int screen_location_x;
@@ -61,6 +66,7 @@ unsigned int screen_location_y_tilepixel;
 signed int travel_x;
 signed int travel_y;
 unsigned short a_pressed;
+unsigned short b_pressed;
 UINT8 sprite_traveling_x;
 UINT8 sprite_prop_data;
 
@@ -110,6 +116,68 @@ UINT8 tile_itx_y;
 UINT8 second_tile_row;
 unsigned int tile_data_offset;
 
+// Setup skater sprite
+ai_sprite skater_sprite = {
+    // Speed
+    0x05U,
+    // Sprite index
+    0x01U,
+    // Sprite bit index
+    0x00U,
+    // Color palette,
+    0x01U,
+    // Travel X (right)
+    0x01,
+    // Travel Y
+    0x00,
+    // Rest direction X/Y (face down)
+    0x00,
+    0x01,
+    // Start location x, y
+    0xD8U,
+    0x58U,
+    // Min/max X location
+    0xD8U,
+    0xE8U,
+    // Min/max Y location
+    0x58U,
+    0x58U,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
+};
+
+// Setup dealer sprite
+ai_sprite dealer_sprite = {
+    // Speed
+    0x05U,
+    // Sprite index
+    0x02U,
+    // Sprite bit index
+    0x01U,
+    // Color palette,
+    0x02U,
+    // Travel X
+    0x00,
+    // Travel Y (down)
+    0x01,
+    // Rest direction X/Y (face down)
+    -1,
+    0x00,
+    // Start location x, y
+    0x157U,
+    0x173U,
+    // Min/max X location
+    0x157U,
+    0x157U,
+    // Min/max Y location
+    0x173U,
+    0x17BU,
+    // Pause period and current pause.
+    0x0FU,
+    0x00U,
+};
+
 
 void add_debug(UBYTE val)
 {
@@ -121,13 +189,19 @@ void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
-    if (screen_state.displayed_buildings & SC_HOUSE)
+    if (
+        screen_state.displayed_buildings_x & SC_HOUSE &&
+        screen_state.displayed_buildings_y & SC_HOUSE
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
         ROM_BANK_RESET;
     }
-    if (screen_state.displayed_buildings & SC_RESTAURANT)
+    if (
+        screen_state.displayed_buildings_x & SC_RESTAURANT &&
+        screen_state.displayed_buildings_y & SC_RESTAURANT
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
@@ -139,7 +213,10 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(13, 12, 1 );
         set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
     }
-    if (screen_state.displayed_buildings & SC_SHOP)
+    if (
+        screen_state.displayed_buildings_x & SC_SHOP &&
+        screen_state.displayed_buildings_y & SC_SHOP
+    )
     {
         ROM_BANK_TILE_DATA;
         set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
@@ -150,24 +227,82 @@ void load_building_tile_data() NONBANKED
         word_data[3] = RGB(26, 16, 0 );
         set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
     }
+    if (
+        screen_state.displayed_buildings_x & SC_PAWN &&
+        screen_state.displayed_buildings_y & SC_PAWN
+    )
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
+        scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
+        scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
+        set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+    }
+    if (
+        screen_state.displayed_buildings_x & SC_UNIVERSITY &&
+        screen_state.displayed_buildings_y & SC_UNIVERSITY
+    )
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
+        scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
+        scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
+        scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
+        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+    }
+
+    if (
+        screen_state.displayed_buildings_x & SC_NLI &&
+        screen_state.displayed_buildings_y & SC_NLI
+    )
+    {
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+        ROM_BANK_RESET;
+        scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
+        scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
+        set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
+    }
 }
 
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
+    game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
     // Start with $100
     game_state.balance = 100U;
 
-    game_state.max_hp = 23U;
-    game_state.hp = 23U;
+    game_state.strength = 0U;
 
-    screen_state.displayed_buildings = SC_HOUSE;
+    game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
+    game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
 
+    screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+
+    // Setup buildings that do not transition in some axis
+    // and those that are displayed on start of game.
+    screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
+    screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
+
+    // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
     game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] = 0x0U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x0U;
+    game_state.inventory[S_INVENTORY_KNIFE] = 0x0U;
+    game_state.inventory[S_INVENTORY_ALARM_CLOCK] = 0x0U;
+    game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
+    game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
+    game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
 
     screen_location_x = 0x00U;
     screen_location_x_tiles = 0x00U;
@@ -176,18 +311,220 @@ void setup_globals()
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
+
+#ifdef IN_TESTING
+    // Add hacks for testing
+    game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
+    game_state.balance = 1000U;
+    game_state.max_hp = 100U;
+    game_state.intelligence = 250U;
+#endif
 }
 
-void setup_sprite()
+void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
+{
+    UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
+    // Update flip of sprite tile
+    sprite_prop_data = color_palette & 0x07U;
+    // Check for just vertical movement/
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0U + sprite_tile_offset);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2U + sprite_tile_offset);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1U + sprite_tile_offset);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
+
+void setup_sprites()
 {
     // Load single sprite tile
     HIDE_SPRITES;
+
+    VBK_REG = 0;
+
     ROM_BANK_TILE_DATA;
-    set_sprite_data(0, 3, sprite_tiles);
-    set_sprite_palette(0, 1, sprite_palette);
+
+    // Load spirte tile data into VRAM
+    set_sprite_data(0U, 6U, sprite_tiles);
+
+    // Load sprite palette into VRAM
+    set_sprite_palette(0U, 3U, sprite_palette);
+
     ROM_BANK_RESET;
-    set_sprite_tile(0, 0);
+
+    VBK_REG = 0;
+
+    // Configure sprite to sprite tile
+    //  Main player
+    set_sprite_tile(0U, 0U);
+    //  Skater
+    set_sprite_tile(skater_sprite.sprite_index, 0U);
+
+    set_sprite_direction(
+        skater_sprite.sprite_index,
+        SPRITE_TILESET_WALK,
+        skater_sprite.color_palette,
+        skater_sprite.travel_direction_x,
+        skater_sprite.travel_direction_y
+    );
+
+    // Dealer
+    set_sprite_tile(dealer_sprite.sprite_index, 0U);
+
+    set_sprite_direction(
+        dealer_sprite.sprite_index,
+        SPRITE_TILESET_WALK,
+        dealer_sprite.color_palette,
+        dealer_sprite.travel_direction_x,
+        dealer_sprite.travel_direction_y
+    );
+
     SHOW_SPRITES;
+}
+
+void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
+{
+    // Check if sprite should be disabled
+    if (! (
+        screen_state.displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
+        screen_state.displayed_sprites_x[sprite_to_move->sprite_display_bit]
+    ))
+    {
+        // Move sprite off-screen
+        move_sprite(sprite_to_move->sprite_index, 0, 0);
+        return;
+    }
+
+    if ((sys_time % sprite_to_move->move_speed) == 0U)
+    {
+        if (sprite_to_move->current_pause)
+        {
+            sprite_to_move->current_pause -= 1U;
+
+            if (sprite_to_move->current_pause == 0U)
+                // Check if now at 0 current pause and change direction ready for travel
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->travel_direction_x,
+                    sprite_to_move->travel_direction_y
+                );
+        }
+        // Check if moving right
+        else if (sprite_to_move->travel_direction_x == 1)
+        {
+            // Check if hit max
+            if (sprite_to_move->current_location_x == sprite_to_move->max_location_x)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_x = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite movement
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_x += 1;
+        }
+        else if (sprite_to_move->travel_direction_x == -1)
+        {
+            if (sprite_to_move->current_location_x == sprite_to_move->min_location_x)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_x = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_x -= 1;
+        }
+        else if (sprite_to_move->travel_direction_y == 1)
+        {
+            // Check if hit max
+            if (sprite_to_move->current_location_y == sprite_to_move->max_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = -1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite movement
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y += 1;
+        }
+        else if (sprite_to_move->travel_direction_y == -1)
+        {
+            if (sprite_to_move->current_location_y == sprite_to_move->min_location_y)
+            {
+                // Switch direction and set pause period
+                sprite_to_move->travel_direction_y = 1;
+                sprite_to_move->current_pause = sprite_to_move->pause_period;
+                // Update direction of sprite
+                set_sprite_direction(
+                    sprite_to_move->sprite_index,
+                    SPRITE_TILESET_WALK,
+                    sprite_to_move->color_palette,
+                    sprite_to_move->rest_direction_x,
+                    sprite_to_move->rest_direction_y
+                );
+            }
+            else
+                sprite_to_move->current_location_y -= 1;
+        }
+    }
+
+    // Move AI sprites
+    // This must always be done, as it is required when the screen moves
+    move_sprite(
+        sprite_to_move->sprite_index,
+        (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
+        (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+    );
+}
+
+void update_ai_positions()
+{
+    move_ai_sprite(&skater_sprite);
+    move_ai_sprite(&dealer_sprite);
 }
 
 void setup_window()
@@ -221,9 +558,9 @@ void setup_window()
     set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
     
     // Setup 'days''
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 14U;
+    tile_data[0] = MENU_TILE_DA;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
-    tile_data[0] = MENU_ROW_2_TILE_DATA_OFFSET + 15U;
+    tile_data[0] = MENU_TILE_YS;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
 
     // Move window up to only display 2 rows at top of screen
@@ -253,7 +590,7 @@ void set_background_tiles() NONBANKED
     set_bkg_data(0, 8, background_tiles);
 
     // Load in digits/symbols from building menu tiles, including clock tiles before it
-    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET - 3U, 21U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET - 3U) << 4U]));
+    set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
     for (background_palette_itx_x = DRAW_OFFSET_X;
@@ -338,6 +675,7 @@ void check_user_input()
     travel_x = 0;
     travel_y = 0;
     a_pressed = 0U;
+    b_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
@@ -350,6 +688,8 @@ void check_user_input()
         travel_x ++;
     if (keys & J_A)
         a_pressed = 1U;
+    if (keys & J_B)
+        b_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -514,7 +854,6 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 &(tile_data[0])
             );        
            VBK_REG = 0; 
-    
         }
     }
 }
@@ -569,9 +908,9 @@ void setup_main_map()
     DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
 
     sprite_tiles = mainmapspritetiles;
-    sprite_palette = mainmapspritetilesCGB;
+    sprite_palette = main_map_sprite_palette;
     set_background_tiles();
-    setup_sprite();
+    setup_sprites();
     
     // Move background to screen location
     scroll_bkg(
@@ -585,9 +924,43 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
-void load_menu_tiles()
+// Update palette for currently selected menu item
+void set_menu_item_color(unsigned char palette)
 {
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
+    unsigned char palette_colors[MENU_ITEM_WIDTH];
+    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
+
+    VBK_REG = 1;
+    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
+        {
+            palette_colors[itx_x] = palette;
+            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            menu_item_index = menu_config->items[menu_item_itx];
+            ROM_BANK_MENU_CONFIG;
+            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
+                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
+            ROM_BANK_RESET;
+         }
+        set_bkg_tiles(
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
+            MENU_ITEM_WIDTH, 1,
+            &palette_colors
+        );
+    }
+    VBK_REG = 0;
+}
+
+void load_menu_tiles() NONBANKED
+{
+    unsigned int menu_item_itx;
     move_bkg(0, 0);
+
+    // Reset VBK_REG
+    VBK_REG = 0;
     
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
@@ -602,20 +975,11 @@ void load_menu_tiles()
             if (itx_x == 1U && itx_y == 0U)
                 continue;
 
-            // Check if tile is a valid tile
-            if (! IS_MENU_ITEM_ENABLED(menu_item_index))
-                continue;
-
             second_tile_row = 0U;
 
             // Pad from left with offset on screen. The menu items are 7 + margin of 1, so times with itx_x.
             tile_itx_x_start = MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * itx_x);
             tile_itx_y_start = MENU_ITEM_SCREEN_OFFSET_TOP + (3U * itx_y);
-            
-            // For tiles on top row, use offset from menu config
-            ROM_BANK_TILE_DATA;
-            tile_data_offset = menu_config->tile_offset;
-            ROM_BANK_RESET;
 
             for (tile_index = 0U; tile_index != MENU_ITEM_TILE_COUNT; tile_index ++)
             {
@@ -625,28 +989,29 @@ void load_menu_tiles()
                 {
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
-                    // Use row 2 offset for numbers and symbols
-                    tile_data_offset = MENU_ROW_2_TILE_DATA_OFFSET;
                 }
 
-                ROM_BANK_TILE_DATA;
-                if (menu_config->menu_item_tiles[menu_item_index][tile_index] == 0U)
+                menu_item_itx = menu_config->items[menu_item_index];
+
+                ROM_BANK_MENU_CONFIG;
+                tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
+
+                // Only load data if tile contains data
+                if (tile_data_index != 0U)
                 {
+                    tile_data_index += tile_data_offset;
+
+                    ROM_BANK_TILE_DATA;
+
+                    // Load tile data for menu item based on tile data offset
+                    // in menu config and tile config in menu tile array
+                    set_bkg_data(
+                        tile_data_index,
+                        1,
+                        &(buildingmenutiles[tile_data_index << 4])
+                    );
                     ROM_BANK_RESET;
-                    continue;
                 }
-
-                tile_data_index = tile_data_offset + menu_config->menu_item_tiles[menu_item_index][tile_index];
-
-                VBK_REG = 0; 
-                // Load tile data for menu item based on tile data offset
-                // in menu config and tile config in menu tile array
-                set_bkg_data(
-                    tile_data_index,
-                    1,
-                    &(buildingmenutiles[tile_data_index << 4])
-                );
-                ROM_BANK_RESET;
 
                 tile_itx_x = tile_itx_x_start + tile_index;
                 tile_itx_y = tile_itx_y_start + second_tile_row;
@@ -659,17 +1024,24 @@ void load_menu_tiles()
                     1U, 1U,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                if (tile_data_index == MENU_ITEM_NO_TILE)
+                    // If tile is empty, use blank palette
+                    tile_data[0] = MENU_ITEM_NO_PALETTE;
+                else
+                {
+                    ROM_BANK_MENU_CONFIG;
 
+                    // Load default palette
+                    tile_data[0] = menu_config_items[menu_item_itx].palette[tile_index];
+                    ROM_BANK_RESET;
+
+                    // If not palette data, specified, use default
+                    if (tile_data[0] == MENU_ITEM_NO_PALETTE)
+                        tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
+                }
+                
                 VBK_REG = 1;
-
-                // Load default palette
-                tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
-
-                // Override color palette from menu_item palette tile overrides
-                ROM_BANK_TILE_DATA;
-                if (menu_config->menu_item_palette[menu_item_index][tile_index])
-                    tile_data[0] = menu_config->menu_item_palette[menu_item_index][tile_index];
-                ROM_BANK_RESET;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
@@ -678,38 +1050,11 @@ void load_menu_tiles()
                     1, 1,  // Only setting 1 tile
                     &(tile_data[0])
                 );
+                
+                VBK_REG = 0;
             }
         }
     }
-}
-
-
-void set_menu_item_color(unsigned char palette)
-{
-    unsigned int itx_y, itx_x, tile_index;
-    unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_index = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
-
-    VBK_REG = 1;
-    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
-    {
-        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
-        {
-            palette_colors[itx_x] = palette;
-            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            ROM_BANK_TILE_DATA;
-            if (menu_config->menu_item_palette[menu_item_index][tile_index] != 0U)
-                palette_colors[itx_x] = menu_config->menu_item_palette[menu_item_index][tile_index];
-            ROM_BANK_RESET;
-         }
-        set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
-            MENU_ITEM_WIDTH, 1,
-            &palette_colors
-        );
-    }
-    VBK_REG = 0;
 }
 
 void setup_building_menu()
@@ -737,16 +1082,57 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_RESTAURANT)
     {
-        // Menu has 3 items, default to sleep
+        // Menu has 3 items, default to fries
         menu_state.current_item_x = 0;
         menu_state.current_item_y = 1;
         menu_config = &menu_config_restaurant;
     }
     else if (game_state.current_building == S_B_SHOP)
     {
+        // Default to slushee
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
         menu_config = &menu_config_shop;
+    }
+    else if (game_state.current_building == S_B_PAWN)
+    {
+        // Default to hand gun
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_pawn;
+    }
+    else if (game_state.current_building == S_B_UNIVERSITY)
+    {
+        // Default to study
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+        menu_config = &menu_config_university;
+    }
+    else if (game_state.current_building == S_B_SKATER)
+    {
+        // Default to study
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 0U;
+        menu_config = &menu_config_skater;
+    }
+    else if (game_state.current_building == S_B_NLI)
+    {
+        menu_config = &menu_config_nli;
+
+        // If no 'work' item is available, select 'apply for job'
+        if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_EMPTY)
+            menu_state.current_item_y = 2U;
+
+        // Otherwise, select 'work' item
+        else
+            menu_state.current_item_y = 3U;
+        menu_state.current_item_x = 1U;
+    }
+    else if (game_state.current_building == S_B_DEALER)
+    {
+        menu_config = &menu_config_dealer;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 2U;
     }
 
     HIDE_SPRITES;
@@ -755,6 +1141,7 @@ void setup_building_menu()
     
     load_menu_tiles();
 
+    // Highlight currently selected item
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
     DISPLAY_ON;
@@ -787,11 +1174,36 @@ void check_building_enter()
         game_state.current_building = S_B_SHOP;
         setup_building_menu();
     }
-    
-    // Temporary jump to restaurant
-//    game_state.current_building = S_B_RESTAURANT;
+    // Check for entering pawn shop
+    else if (tile_itx == 0xDF1U)
+    {
+        game_state.current_building = S_B_PAWN;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
+    {
+        game_state.current_building = S_B_UNIVERSITY;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
+    {
+        game_state.current_building = S_B_SKATER;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
+    {
+        game_state.current_building = S_B_NLI;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
+    {
+        game_state.current_building = S_B_DEALER;
+        setup_building_menu();
+    }
+
+//    // Temporary jump to building
+//    game_state.current_building = S_B_UNIVERSITY;
 //    setup_building_menu();
-        
 }
 
 // Check if win/lose conditions have been met
@@ -806,37 +1218,128 @@ void load_buildings_x_left()
     // Enable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
-        screen_state.displayed_buildings |= SC_HOUSE;
+        screen_state.displayed_buildings_x |= SC_HOUSE;
         load_building_tile_data();
     }
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        // Disable university and re-enable restaurant
+        screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
+        screen_state.displayed_buildings_x |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
+
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
+
 }
 void load_buildings_x_right()
 {
     // Disable house
     if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
-        screen_state.displayed_buildings &= ~SC_HOUSE;
+        screen_state.displayed_buildings_x &= ~SC_HOUSE;
+    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        screen_state.displayed_buildings_x |= SC_UNIVERSITY;
+        load_building_tile_data();
+    }
+ 
+    // Check skater
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
+        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
+
+    // NLI
+    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    {
+        screen_state.displayed_buildings_x |= SC_NLI;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+        screen_state.displayed_buildings_x &= ~SC_NLI;
 }
 void load_buildings_y_up()
 {
     // Disable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
-        screen_state.displayed_buildings &= ~SC_RESTAURANT;
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
-        screen_state.displayed_buildings &= ~SC_SHOP;
+        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_NLI;
+        screen_state.displayed_buildings_y &= ~SC_SHOP;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+        screen_state.displayed_buildings_y &= ~SC_PAWN;
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+    if (screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
     // Enable restaurant
     if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
-        screen_state.displayed_buildings |= SC_RESTAURANT;
+        screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_SHOP_TRANSITION_Y)
+    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
-        screen_state.displayed_buildings |= SC_SHOP;
+        screen_state.displayed_buildings_y &= ~SC_NLI;
+        screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
+    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_PAWN;
+        load_building_tile_data();
+    }
+
+    // Check skater
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
+    if ((screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
+        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 }
 
 void purchase_food(UINT8 cost, UINT8 gained_hp)
@@ -863,7 +1366,44 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
-void purchase_item(UINT8 cost, UINT8 inventory_item)
+void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.intelligence != S_MAX_INTELLIGENCE &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.intelligence += intelligence;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.strength != S_MAX_STRENGTH &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.strength += strength;
+        game_state.max_hp += strength;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -879,7 +1419,12 @@ void purchase_item(UINT8 cost, UINT8 inventory_item)
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
+
+        return 0x1U;
     }
+
+    // If item not purchased, return 0
+    return 0x0U;
 }
 
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
@@ -896,6 +1441,108 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
+// Move selected menu item to new value and update highlighting
+void move_to_menu_item(UINT8 new_x, UINT8 new_y)
+{
+    // Deselect currently selected item
+    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+
+    menu_state.current_item_x = new_x;
+    menu_state.current_item_y = new_y;
+
+    // Highlight new menu item
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+}
+
+void apply_for_job_promotion()
+{
+    // Check current if applying for job
+    if (
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB &&
+        game_state.intelligence >= 20U
+    )
+    {
+        menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+    }
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR &&
+        game_state.intelligence >= 40U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK &&
+        game_state.intelligence >= 75U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN &&
+        game_state.intelligence >= 120U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
+        game_state.intelligence >= 180U
+    )
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
+
+    else if (
+        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP &&
+        game_state.intelligence >= 250U
+    )
+    {
+        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
+        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+    }
+    else
+    {
+        // If no job available, return early
+        return;
+    }
+
+    // Update menu with tiles for new job
+    load_menu_tiles();
+    
+    // Select 'work' item for new job
+    move_to_menu_item(1U, 3U);
+}
+
+void do_nli_work()
+{
+    // Calculate current job
+    switch (menu_config->items[MENU_NLI_WORK_ITEM])
+    {
+        case MENU_ITEM_INDEX_WORK_JANITOR :
+            do_work(8U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_MAIL_CLERK :
+            do_work(10U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_SALESMAN :
+            do_work(15U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_EXECUTIVE :
+            do_work(25U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_VP :
+            do_work(50U, 6U);
+            break;
+        case MENU_ITEM_INDEX_WORK_CEO :
+            do_work(100U, 6U);
+            break;
+    }
+}
+
+// Move current menu item to exit
+void move_menu_to_exit()
+{
+    move_to_menu_item(1U, 0U);
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -904,11 +1551,35 @@ void update_state()
     unsigned int user_screen_pos_y;
     signed int move_x;
     signed int move_y;
-
+    unsigned short new_menu_x;
+    unsigned short attempting_x_move;
+    UINT8 movement_bit_push;
+    UINT8 main_player_tileset;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
         check_boundary_hit();
+        
+        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+        {
+            movement_bit_push = SKATEBOARD_SPEED_DELAY;
+            main_player_tileset = SPRITE_TILESET_SKATEBOARD;
+        }
+        else
+        {
+            movement_bit_push = WALK_SPEED_DELAY;
+            main_player_tileset = SPRITE_TILESET_WALK;
+        }
+        // If movement happened too recently, disable movement
+        if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
+        {
+            travel_x = 0;
+            travel_y = 0;
+        }
+        else
+            // Otherwise, update last movement time
+            game_state.last_movement_time = sys_time;
+
 
         // Set user screen position based on current location
         user_screen_pos_x = user_pos_x - screen_location_x;
@@ -918,7 +1589,9 @@ void update_state()
         user_pos_y += travel_y;
         
         // Check if sprite too close to edge of screen
-        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN)
+        // If character at left of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_x != 0)
         {
             // If player hit LHS of screen, move screen to the left
             move_x = -1;
@@ -934,8 +1607,10 @@ void update_state()
             user_screen_pos_x = user_pos_x - screen_location_x;
             move_x = 0;
         }
-            
-        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN)
+
+        // If character at top of screen, begin to scroll, unless at top of map (allowing character
+        // to continue moving and not redraw map outside of map tiles)
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_y != 0)
         {
             move_y = -1;
         }
@@ -982,35 +1657,13 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        // Update flip of sprite tile
-        sprite_prop_data = 0x00;
-        // Check for just vertical movement 
-        if (travel_y != 0)
-        {
-            if (travel_x == 0)
-            {
-                // If travelling up, flip Y
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                set_sprite_tile(0, 0);
-            } else {
-                // Handle diagonal movement
-                if (travel_y == 1)
-                    sprite_prop_data |= S_FLIPY;
-                if (travel_x == -1)
-                    sprite_prop_data |= S_FLIPX;
-                set_sprite_tile(0, 2);
-            }
-        }
-        else if (travel_x != 0)
-        {
-            set_sprite_tile(0, 1);
-            if (travel_x == -1)
-                sprite_prop_data |= S_FLIPX;
-        }
-        // Only update flipping if actually moving
-        if (travel_x != 0 || travel_y != 0)
-            set_sprite_prop(0, sprite_prop_data);
+        set_sprite_direction(
+            PLAYER_SPRITE_INDEX,
+            main_player_tileset,
+            PLAYER_SPRITE_PALETTE,
+            travel_x,
+            travel_y
+        );
 
         if (a_pressed)
             check_building_enter();
@@ -1025,48 +1678,53 @@ void update_state()
 
         if (travel_x != 0 || travel_y != 0)
         {
-            // Deselect currently selected item
-            set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
-            
+            // Setup new Y search to use current X
+            new_menu_x = menu_state.current_item_x;
+            attempting_x_move = 0U;
+
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
-            ROM_BANK_TILE_DATA;
             if (
-                    (
-                        (travel_x == 1 && menu_state.current_item_x == 0U) ||
-                        (travel_x == -1 && menu_state.current_item_x == 1U)
-                    ) &&
-                    IS_MENU_ITEM_ENABLED(menu_state.current_item_x + travel_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X))
+                    (travel_x == 1 && menu_state.current_item_x == 0U) ||
+                    (travel_x == -1 && menu_state.current_item_x == 1U)
                 )
-                menu_state.current_item_x += travel_x;
+            {
+                // Setup new X value that user is attempting to access
+                new_menu_x = menu_state.current_item_x + travel_x;
+
+                // This will update item and mean that any checks against new_menu_x vs state will show
+                // them as equal
+                if (IS_MENU_ITEM_ENABLED(new_menu_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X)))
+                    move_to_menu_item(new_menu_x, menu_state.current_item_y);
+                else
+                    attempting_x_move = 1U;
+            }
 
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
-        
-            if (travel_y == 1)
+            // If moving up or attempting to travel in X, but no item directly beside it
+            if (travel_y == 1 || attempting_x_move)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + (itx * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx;
+                        move_to_menu_item(new_menu_x, itx);
+                        attempting_x_move = 0U;
                         break;
                     }
             }
-            else if (travel_y == -1 && menu_state.current_item_y != 0U)
+            if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
                 for (itx = menu_state.current_item_y; itx != 0U; itx --)
-                    if (IS_MENU_ITEM_ENABLED(menu_state.current_item_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
+                    if (IS_MENU_ITEM_ENABLED(new_menu_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        menu_state.current_item_y = itx - 1U;
+                        move_to_menu_item(new_menu_x, itx - 1U);
                         break;
                     }
             }
-            ROM_BANK_RESET;
-                
-            set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
 
             // Sleep to stop double pressed
             delay(DELAY_MENU_ITEM_MOVE);
@@ -1083,16 +1741,26 @@ void update_state()
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
+                // Check if user has caffeine
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
+                if (game_state.inventory[S_INVENTORY_CAFFEINE_PILLS])
+                {
+                    game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
+                    game_state.hour -= S_HOUR_CAFFEINE_BONUS;
+                }
                 game_state.days_passed ++;
                 check_end_game();
+                
+                DISPLAY_OFF;
+                
+                // 'Purchase food' to increase HP by 20
+                purchase_food(0U, 20U);
 
                 ROM_BANK_TILE_DATA;
                 update_window(&game_state);
                 ROM_BANK_RESET;
 
-                // TURN OFF DISPLAY FOR 1 second
-                DISPLAY_OFF;
+                // Wait for 1 second 1 second
                 delay(DELAY_SLEEP);
                 DISPLAY_ON;
             }
@@ -1159,10 +1827,109 @@ void update_state()
                 // Delay after purchasing, to avoid double purchase
                 delay(DELAY_PURCHASE_ITEM);
             }
+
+            else if (game_state.current_building == S_B_PAWN)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Handgun
+                    {
+                        // Attempt to purchase item
+                        if (purchase_item(400U, S_INVENTORY_HAND_GUN))
+                        {
+                            // Remove from menu, if successful and reload menu tiles
+                            menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                    else if (menu_state.current_item_y == 2U)  // Knife
+                    {
+                        if (purchase_item(100U, S_INVENTORY_KNIFE))
+                        {
+                            menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                    else if (menu_state.current_item_y == 3U)  // Alarm Clock
+                    {
+                        if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
+                        {
+                            menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                }
+                else  // x row 1
+                {
+                    if (menu_state.current_item_y == 1U)  // Cellphone
+                    {
+                        if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
+                        {
+                            menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
+                            load_menu_tiles();
+                            move_menu_to_exit();
+                        }
+                    }
+                }
+                // Delay after purchasing, to avoid double purchase
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_UNIVERSITY)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)  // Study -1 intelligence, 2 hours
+                        increase_intelligence(0U, 2U, 1U);
+                    else if (menu_state.current_item_y == 2U)  // Class -$20, 1 intelligence, 2 hours
+                        increase_intelligence(20U, 2U, 2U);
+                }
+                else
+                {
+                    if (menu_state.current_item_y == 1U)
+                        increase_strength(0U, 2U, 1U);
+                }
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_SKATER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
+                {
+                    if (game_state.inventory[S_INVENTORY_SMOKES])
+                    {
+                        // Remove smokes and give skateboard
+                        game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                        game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                    }
+                }
+            }
+            else if (game_state.current_building == S_B_NLI)
+            {
+                if (menu_state.current_item_x == 1U)
+                {
+                    if (menu_state.current_item_y == 2U)
+                    {
+                        // Check if applying for job
+                        apply_for_job_promotion();
+                    }
+                    else if (menu_state.current_item_y == 3U)
+                    {
+                        do_nli_work();
+                    }
+                }
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_DEALER)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
+                    purchase_item(400U, S_INVENTORY_COCAINE);
+                delay(DELAY_PURCHASE_ITEM);
+            }
         }
     }
 }
-
 
 void main()
 {
@@ -1191,6 +1958,7 @@ void main()
                 wait_vbl_done();
 
                 check_user_input();
+                update_ai_positions();
                 update_state();
 
                 // Temporarily remove delay to speed debugging

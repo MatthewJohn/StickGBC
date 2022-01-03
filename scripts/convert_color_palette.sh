@@ -3,7 +3,7 @@
 # http://creativecommons.org/licenses/by-nc-nd/4.0/.
 
 
-for filename in main_map_palette building_menu_palette
+for filename in main_map_palette building_menu_palette main_map_sprite_palette
 do
   cat > $filename.c <<EOF
 #pragma bank=5
