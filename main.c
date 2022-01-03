@@ -23,6 +23,8 @@
 #include "main_map_sprite_tileset.h"
 #include "main_map_sprite_palette.h"
 
+#include "background_time_colors.h"
+
 #include "game_constants.h"
 #include "game_state.c"
 #include "menu_config.h"
@@ -296,42 +298,14 @@ void load_building_tile_data() NONBANKED
 void update_background_color()
 {
     UWORD palette_data[4];
-    UINT16 r, g, b;
 
     // Copy palette 1
     ROM_BANK_TILE_DATA;
-    palette_data[0U] = background_color_palette[0U],
-    palette_data[1U] = background_color_palette[1U];
-    palette_data[2U] = background_color_palette[3U];
-    palette_data[3U] = background_color_palette[4U];
+    palette_data[0U] = background_time_colors[game_state.hour],
+    palette_data[1U] = main_map_palette[1U];
+    palette_data[2U] = main_map_palette[2U];
+    palette_data[3U] = main_map_palette[3U];
     ROM_BANK_RESET;
-
-    // Do shade of blue for up to 1PM
-    if (game_state.hour <= 13)
-    {
-//        palette_data[0U] = (
-//            (UINT16)((game_state.hour & 0x1FU) << 0) &
-//            (UINT16)((game_state.hour * 2) & 0x1FU) << 5 &
-//            (UINT16)((game_state.hour * 2) & 0x1FU) << 10
-//        );
-        r = game_state.hour;
-        g = game_state.hour * 2;
-        b = game_state.hour * 2;
-        palette_data[0U] = RGB(r, g, b);
-    }
-    else
-    {
-        palette_data[0U] = RGB(
-            (6U + (hour / 2)) & 0x1FU,
-            (hour * 2) & 0x1FU,
-            (hour * 2) & 0x1FU
-        );
-//        palette_data[0U] = (
-//            ((6U + (game_state.hour / 2)) & 0x1FU) &
-//            ((game_state.hour * 2) & 0x1FU) &
-//            ((game_state.hour * 2) & 0x1FU)
-//        );
-    }
 
     set_bkg_palette(0U, 1U, &palette_data);
 }
