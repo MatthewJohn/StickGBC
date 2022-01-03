@@ -52,6 +52,7 @@
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
 #define S_MAX_STRENGTH 999U
+#define S_MAX_CHARM 999U
 
 typedef struct {
     // Current building
@@ -68,9 +69,10 @@ typedef struct {
     // Current amount of HP the user has
     UINT8 hp;
 
-    // Current amount of strength and intelligence
+    // Current amount of strength, intelligence and charm
     unsigned int intelligence;
     unsigned int strength;
+    unsigned int charm;
 
     // Money the user has.
     unsigned int balance;
