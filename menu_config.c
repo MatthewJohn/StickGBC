@@ -159,12 +159,13 @@ const menu_config_item_t menu_config_items[0x1EU] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+    // Slushee
     {
         {
-            0x11U,  // SL
-            0x29U,  // US
-            0x1FU,  // EE
-            MENU_ITEM_NO_TILE,
+            MENU_TILE_SL,  // SL
+            MENU_TILE_US,  // US
+            MENU_TILE_HE,  // HE
+            MENU_TILE_E,  // E
             MENU_ITEM_NO_TILE,
             MENU_ITEM_NO_TILE,
             // Row 2
