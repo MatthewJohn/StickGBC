@@ -81,6 +81,8 @@ typedef struct {
     UINT8 inventory[8U];
     
     UINT16 last_movement_time;
+
+    BOOLEAN visited_hobo;
 } game_state_t;
 
 
