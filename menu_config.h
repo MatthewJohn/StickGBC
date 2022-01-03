@@ -105,7 +105,10 @@ extern menu_config_t menu_config_nli;
 extern menu_config_t menu_config_dealer;
 
 #define MENU_TILE_EX 0x4U
+#define MENU_TILE_HE 0xEU
 #define MENU_TILE_G 0x0FU
+
+#define MENU_TILE_SL 0x11U
 #define MENU_TILE_E 0x1AU
 
 #define MENU_TILE_ER 0x23U
@@ -113,6 +116,7 @@ extern menu_config_t menu_config_dealer;
 #define MENU_TILE_WO 0x26U
 #define MENU_TILE_RK 0x27U
 #define MENU_TILE_CO 0x28U
+#define MENU_TILE_US 0x29U
 #define MENU_TILE_CA 0x2AU
 #define MENU_TILE_Y 0x2CU
 #define MENU_TILE_R 0x2EU
