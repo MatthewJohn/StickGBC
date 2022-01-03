@@ -1181,8 +1181,10 @@ void load_buildings_y_up()
 {
     if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MAX)
+
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
     {
+        screen_state.displayed_buildings_y &= ~SC_PAWN;
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
@@ -1193,8 +1195,6 @@ void load_buildings_y_up()
         screen_state.displayed_buildings_y &= ~SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
-        screen_state.displayed_buildings_y &= ~SC_PAWN;
 
     if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_BAR;
@@ -1213,8 +1213,6 @@ void load_buildings_y_up()
 }
 void load_buildings_y_down()
 {
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MAX)
-        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
     if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
@@ -1227,8 +1225,9 @@ void load_buildings_y_down()
         screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
     {
+        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
         screen_state.displayed_buildings_y |= SC_PAWN;
         load_building_tile_data();
     }
