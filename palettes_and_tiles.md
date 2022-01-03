@@ -25,9 +25,9 @@
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1 - pawn shop wall + grafitti (color 0+1+4)
- 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI
- 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university
+ 5. scratch for building 1 - bus station
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
+ 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
 
 ## Tile Palette Building Menu
  0. Background
