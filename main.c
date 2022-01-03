@@ -303,6 +303,7 @@ void setup_globals()
     game_state.balance = 100U;
 
     game_state.strength = 0U;
+    game_state.charm = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -1289,6 +1290,24 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
         game_state.balance -= cost;
         game_state.hour += number_of_hours;
         game_state.intelligence += intelligence;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.charm != S_MAX_CHARM &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.charm += charm;
 
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
