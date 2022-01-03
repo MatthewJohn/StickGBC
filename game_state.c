@@ -15,6 +15,8 @@
 #define S_HOUR_WAKEUP_NORMAL 0x08U
 #define S_HOUR_CAFFEINE_BONUS 0x04U
 
+#define S_INITIAL_BASE_HP 0xFU
+
 // Buildings
 #define S_B_NO_BUILDING 0x00U
 #define S_B_MAIN_MENU 0x01U
