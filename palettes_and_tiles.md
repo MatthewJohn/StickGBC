@@ -6,26 +6,26 @@
     * 2 - Status window background
     * 3 - House bricks/Static window text/university door rim
  1. Road/markings
-    * 0 - House roof/road/status bar background
-    * 1 - Road markings/status bar foreground
-    * 2 - Black text NLI sign
+    * 0 - House roof/road/status bar background/Pavement outer/pawn shop door frame
+    * 1 - Road markings/status bar foreground/Pavement inner/pawn shop door inner
+    * 2 - Black text NLI sign/pawn shop door handle
     * 3 - 
  2.
     * 0 - Green - Grass/Hobo background
-    * 1 - Orange - Hobo
-    * 2 - Black - Hobo
-    * 3 - 
+    * 1 - Orange - Hobo/Bar beer sign
+    * 2 - Black - Hobo/Bar beer sign
+    * 3 - Pale - Bar beer sign
  3.
-    * 0 - Pavement inner/pawn shop door inner
-    * 1 - Pavement outer/pawn shop door frame
-    * 2 - pawn shop door handle
+    * 0 - 
+    * 1 - 
+    * 2 - 
     * 3 -
  4.
     * 0 - 
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1 - bus station
+ 5. scratch for building 1 - bus station/
  6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
 
@@ -215,3 +215,6 @@
  - 38 - NLI Door 1
  - 38 - NLI Door 2
  - 39 - Hobo 1
+ - 40 - Hobo 2
+ - 41 - Bar beer top1
+ - 42 - Bar beer top 2
