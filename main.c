@@ -306,6 +306,8 @@ void setup_globals()
     game_state.strength = 0U;
     game_state.charm = 0U;
 
+    game_state.visited_hobo = 0U;
+
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
 
@@ -1858,6 +1860,24 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                     purchase_item(400U, S_INVENTORY_COCAINE);
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_HOBO)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
+                {
+                    if (game_state.visited_hobo == 0U)
+                    {
+                        increase_charm(10U, 1U, 6U);
+                        // Mark as having visited hobo, so he doesn't give us charm again.
+                        game_state.visited_hobo = 1U;
+                    }
+                    else  // Paying money and not getting charm
+                    {
+                        if (game_state.balance >= 10U)
+                            game_state.balance -= 10U;
+                    }
+                }
                 delay(DELAY_PURCHASE_ITEM);
             }
         }
