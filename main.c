@@ -211,10 +211,10 @@ void load_pawn()
     ROM_BANK_TILE_DATA;
     set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
     ROM_BANK_RESET;
-    scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
-    scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
-    scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
-    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+    scratch_palette_data[2U][0U] = RGB(10U, 1U, 16U);
+    scratch_palette_data[2U][1U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[2U][3U] = RGB(15U, 6U, 31U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
 }
 
 void load_university()
