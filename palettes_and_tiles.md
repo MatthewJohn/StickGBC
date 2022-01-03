@@ -218,3 +218,12 @@
  - 40 - Hobo 2
  - 41 - Bar beer top1
  - 42 - Bar beer top 2
+ - 43 - Bar beer middle
+ - 44 - Bar beer base
+ - 45 - Bar beer handle
+ - 46 - Bar Neon Sign 1
+ - 47 - Bar Neon Sign 2
+ - 48 - Bar Neon Sign 3
+ - 49 - Bar Neon sign base
+ - 50 - Bar Side sign 1
+ - 51 - Bar Side sign 2
