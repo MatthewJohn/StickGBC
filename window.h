@@ -6,3 +6,4 @@
 
 
 void update_window(game_state_t *game_state);
+void setup_window();
