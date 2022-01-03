@@ -1746,13 +1746,17 @@ void update_state()
                 }
                 game_state.days_passed ++;
                 check_end_game();
+                
+                DISPLAY_OFF;
+                
+                // 'Purchase food' to increase HP by 20
+                purchase_food(0U, 20U);
 
                 ROM_BANK_TILE_DATA;
                 update_window(&game_state);
                 ROM_BANK_RESET;
 
-                // TURN OFF DISPLAY FOR 1 second
-                DISPLAY_OFF;
+                // Wait for 1 second 1 second
                 delay(DELAY_SLEEP);
                 DISPLAY_ON;
             }
