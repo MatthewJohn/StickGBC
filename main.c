@@ -1179,9 +1179,14 @@ void load_buildings_x_right()
 }
 void load_buildings_y_up()
 {
-    // Disable restaurant
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MAX)
+    {
+        screen_state.displayed_buildings_y |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
+
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_NLI;
@@ -1208,12 +1213,14 @@ void load_buildings_y_up()
 }
 void load_buildings_y_down()
 {
-    // Enable restaurant
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MAX)
+        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
+
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_NLI;

@@ -15,7 +15,8 @@
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
-#define SC_RESTAURANT_TRANSITION_Y 0x7U
+#define SC_RESTAURANT_TRANSITION_Y_MIN 0x7U
+#define SC_RESTAURANT_TRANSITION_Y_MAX 0x1EU
 #define SC_SHOP_NLI_TRANSITION_Y 0x16U
 #define SC_PAWN_TRANSITION_Y 0x20U
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
