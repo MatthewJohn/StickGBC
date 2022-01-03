@@ -4,7 +4,7 @@ CC	= ../../bin/lcc
 ROMUSAGE	= ../../tools/romusage.exe
 CFLAGS	=  -v -c -o
 
-SOURCE	:= main main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset window building_menu_palette main_map_palette main_map_sprite_tileset menu_config main_map_sprite_palette sprite
+SOURCE	:= main main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset window building_menu_palette main_map_palette main_map_sprite_tileset menu_config main_map_sprite_palette sprite background_time_colors
 C_FILES	= $(addsuffix .c,$(SOURCE))
 OBJ_FILES	= $(addsuffix .o,$(SOURCE))
 I_FILE	= lcc25200.i

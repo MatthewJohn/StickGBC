@@ -23,6 +23,8 @@
 #include "main_map_sprite_tileset.h"
 #include "main_map_sprite_palette.h"
 
+#include "background_time_colors.h"
+
 #include "game_constants.h"
 #include "game_state.c"
 #include "menu_config.h"
@@ -292,13 +294,31 @@ void load_building_tile_data() NONBANKED
         load_bar();
 }
 
+// Update background color based on time of day
+void update_background_color()
+{
+    UWORD palette_data[4];
+
+    // Copy palette 1
+    ROM_BANK_TILE_DATA;
+    palette_data[0U] = background_time_colors[game_state.hour],
+    palette_data[1U] = main_map_palette[1U];
+    palette_data[2U] = main_map_palette[2U];
+    palette_data[3U] = main_map_palette[3U];
+    ROM_BANK_RESET;
+
+    set_bkg_palette(0U, 1U, &palette_data);
+}
+
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
-    game_state.hour = S_HOUR_WAKEUP_NORMAL;
+    //game_state.hour = S_HOUR_WAKEUP_NORMAL;
+    game_state.hour = 0U;
+
     // Start with $100
     game_state.balance = 100U;
 
@@ -800,7 +820,9 @@ void setup_main_map()
     
     // Load currently displayed buildings
     load_building_tile_data();
-    
+
+    update_background_color();
+ 
     DISPLAY_ON;
 }
 
