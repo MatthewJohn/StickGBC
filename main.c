@@ -1846,6 +1846,7 @@ void update_state()
                             ROM_BANK_RESET;
                         }
                     }
+                    delay(DELAY_PURCHASE_ITEM);
                 }
             }
             else if (game_state.current_building == S_B_NLI)
