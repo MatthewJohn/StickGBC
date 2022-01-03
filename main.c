@@ -36,7 +36,7 @@
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
 #define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
-
+#define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 
 UBYTE * debug_address;
 
@@ -330,7 +330,8 @@ void setup_globals()
     game_state.strength = 0U;
     game_state.charm = 0U;
 
-    game_state.visited_hobo = 0U;
+    game_state.hobo_given_money = 0U;
+    game_state.hobo_given_beer = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -1845,7 +1846,7 @@ void update_state()
                     if (game_state.inventory[S_INVENTORY_SMOKES])
                     {
                         // Remove smokes and give skateboard
-                        if ((S_HOURS_PER_DAY - game_state.hour) >= 1U)
+                        if (DAY_TIME_REMAINING >= 1U)
                         {
                             game_state.hour += 1U;
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
@@ -1884,11 +1885,11 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                 {
-                    if (game_state.visited_hobo == 0U)
+                    if (game_state.hobo_given_money == 0U)
                     {
                         increase_charm(10U, 1U, 6U);
                         // Mark as having visited hobo, so he doesn't give us charm again.
-                        game_state.visited_hobo = 1U;
+                        game_state.hobo_given_money = 1U;
                     }
                     else  // Paying money and not getting charm
                     {
@@ -1899,6 +1900,23 @@ void update_state()
                             update_window(&game_state);
                             ROM_BANK_RESET;
                         }
+                    }
+                }
+                else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 2U)
+                {
+                    // Give bottle of beer
+                    if (game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] && DAY_TIME_REMAINING >= 1U)
+                    {
+                        if (game_state.hobo_given_beer == 0U)
+                        {
+                            increase_charm(0U, 1U, 8U);
+                            game_state.hobo_given_beer = 1U;
+                        }
+                        else
+                        {
+                            game_state.hour += 1U;
+                        }
+                        game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] -= 1U;
                     }
                 }
                 delay(DELAY_PURCHASE_ITEM);
@@ -1912,6 +1930,8 @@ void update_state()
                 else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 1U)
                 {
                     purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
+                    // Enable give bottle of beer in hobo menu
+                    menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
                 delay(DELAY_PURCHASE_ITEM);
             }
