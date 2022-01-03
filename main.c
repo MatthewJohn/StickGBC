@@ -816,7 +816,12 @@ void setup_main_map()
         screen_state.screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
         screen_state.screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
-    
+
+    // Load additional tiles required for main map
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(8U, 3U, &(mainmaptiles[8U << 4]));
+    ROM_BANK_RESET;
+
     // Load currently displayed buildings
     load_building_tile_data();
 
