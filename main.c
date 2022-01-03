@@ -1746,6 +1746,9 @@ void update_state()
                 }
                 game_state.days_passed ++;
                 check_end_game();
+                
+                // 'Purchase food' to increase HP by 20
+                purchase_food(0U, 20U);
 
                 ROM_BANK_TILE_DATA;
                 update_window(&game_state);
