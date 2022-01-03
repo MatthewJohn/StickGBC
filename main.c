@@ -292,6 +292,50 @@ void load_building_tile_data() NONBANKED
         load_bar();
 }
 
+// Update background color based on time of day
+void update_background_color()
+{
+    UWORD palette_data[4];
+    UINT16 r, g, b;
+
+    // Copy palette 1
+    ROM_BANK_TILE_DATA;
+    palette_data[0U] = background_color_palette[0U],
+    palette_data[1U] = background_color_palette[1U];
+    palette_data[2U] = background_color_palette[3U];
+    palette_data[3U] = background_color_palette[4U];
+    ROM_BANK_RESET;
+
+    // Do shade of blue for up to 1PM
+    if (game_state.hour <= 13)
+    {
+//        palette_data[0U] = (
+//            (UINT16)((game_state.hour & 0x1FU) << 0) &
+//            (UINT16)((game_state.hour * 2) & 0x1FU) << 5 &
+//            (UINT16)((game_state.hour * 2) & 0x1FU) << 10
+//        );
+        r = game_state.hour;
+        g = game_state.hour * 2;
+        b = game_state.hour * 2;
+        palette_data[0U] = RGB(r, g, b);
+    }
+    else
+    {
+        palette_data[0U] = RGB(
+            (6U + (hour / 2)) & 0x1FU,
+            (hour * 2) & 0x1FU,
+            (hour * 2) & 0x1FU
+        );
+//        palette_data[0U] = (
+//            ((6U + (game_state.hour / 2)) & 0x1FU) &
+//            ((game_state.hour * 2) & 0x1FU) &
+//            ((game_state.hour * 2) & 0x1FU)
+//        );
+    }
+
+    set_bkg_palette(0U, 1U, &palette_data);
+}
+
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
@@ -299,6 +343,7 @@ void setup_globals()
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
+
     // Start with $100
     game_state.balance = 100U;
 
@@ -800,7 +845,9 @@ void setup_main_map()
     
     // Load currently displayed buildings
     load_building_tile_data();
-    
+
+    update_background_color();
+ 
     DISPLAY_ON;
 }
 
