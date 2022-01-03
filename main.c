@@ -185,99 +185,124 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
+void load_house()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+    ROM_BANK_RESET;
+}
+
+void load_restaurant()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+    ROM_BANK_RESET;
+    // Set palette data
+    word_data[0] = RGB(0, 0, 0);
+    word_data[1] = RGB(31, 22, 8);
+    word_data[2] = RGB(25, 0, 0);
+    word_data[3] = RGB(13, 12, 1 );
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
+}
+
+void load_shop()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+    ROM_BANK_RESET;
+    word_data[0] = RGB(31, 21, 5);
+    word_data[1] = RGB(1, 0, 2);
+    word_data[2] = RGB(4, 20, 0);
+    word_data[3] = RGB(26, 16, 0 );
+    set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
+}
+
+void load_pawn()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
+    scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+}
+
+void load_university()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
+    scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
+    scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
+    scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+}
+
+void load_nli()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
+    scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
+}
+
+void load_bar()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
+    ROM_BANK_RESET;
+}
+
 void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
+
     if (
         screen_state.displayed_buildings_x & SC_HOUSE &&
         screen_state.displayed_buildings_y & SC_HOUSE
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
-        ROM_BANK_RESET;
-    }
+        load_house();
+
     if (
         screen_state.displayed_buildings_x & SC_RESTAURANT &&
         screen_state.displayed_buildings_y & SC_RESTAURANT
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
-        ROM_BANK_RESET;
-        // Set palette data
-        word_data[0] = RGB(0, 0, 0);
-        word_data[1] = RGB(31, 22, 8);
-        word_data[2] = RGB(25, 0, 0);
-        word_data[3] = RGB(13, 12, 1 );
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
-    }
+        load_restaurant();
+
     if (
         screen_state.displayed_buildings_x & SC_SHOP &&
         screen_state.displayed_buildings_y & SC_SHOP
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
-        ROM_BANK_RESET;
-        word_data[0] = RGB(31, 21, 5);
-        word_data[1] = RGB(1, 0, 2);
-        word_data[2] = RGB(4, 20, 0);
-        word_data[3] = RGB(26, 16, 0 );
-        set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
-    }
+        load_shop();
+
     if (
         screen_state.displayed_buildings_x & SC_PAWN &&
         screen_state.displayed_buildings_y & SC_PAWN
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
-        scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
-        scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
-        set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
-    }
+        load_pawn();
+
     if (
         screen_state.displayed_buildings_x & SC_UNIVERSITY &&
         screen_state.displayed_buildings_y & SC_UNIVERSITY
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
-        scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
-        scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
-        scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
-    }
+        load_university();
 
     if (
         screen_state.displayed_buildings_x & SC_NLI &&
         screen_state.displayed_buildings_y & SC_NLI
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
-        scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
-        set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
-    }
+        load_nli();
 
     if (
         screen_state.displayed_buildings_x & SC_BAR &&
         screen_state.displayed_buildings_y & SC_BAR
     )
-    {
-        // Load tiles for Hobo
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
-        ROM_BANK_RESET;
-    }
+        load_bar();
 }
 
 void setup_globals()
