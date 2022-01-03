@@ -1082,6 +1082,11 @@ void check_building_enter()
         game_state.current_building = S_B_DEALER;
         setup_building_menu();
     }
+    else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
+    {
+        game_state.current_building = S_B_HOBO;
+        setup_building_menu();
+    }
 //
 //    // Temporary jump to building
 //    game_state.current_building = S_B_HOBO;
