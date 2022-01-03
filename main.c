@@ -279,8 +279,10 @@ void setup_globals()
     // Start with $100
     game_state.balance = 100U;
 
-    game_state.max_hp = 23U;
-    game_state.hp = 23U;
+    game_state.strength = 0U;
+
+    game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
+    game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
 
     screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
