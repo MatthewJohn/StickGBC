@@ -65,12 +65,17 @@
  3. Border side
  4. Ex
  5. it
+ 6. PL
+ 7. AY
+ 8. RT
+ 9. FI
  10. BE
  11. BO
  12. TT
  13. OF
  14. HE
  15. G
+ 16. GH
  17. SL
  18. EE
  19. P
