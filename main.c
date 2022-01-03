@@ -1836,8 +1836,12 @@ void update_state()
                     if (game_state.inventory[S_INVENTORY_SMOKES])
                     {
                         // Remove smokes and give skateboard
-                        game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
-                        game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                        if ((S_HOURS_PER_DAY - game_state.hour) >= 1U)
+                        {
+                            game_state.hour += 1U;
+                            game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                            game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                        }
                     }
                 }
             }
