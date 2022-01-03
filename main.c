@@ -1875,7 +1875,13 @@ void update_state()
                     else  // Paying money and not getting charm
                     {
                         if (game_state.balance >= 10U)
+                        {
                             game_state.balance -= 10U;
+                            ROM_BANK_TILE_DATA;
+                            update_window(&game_state);
+                            ROM_BANK_RESET;
+
+                        }
                     }
                 }
                 delay(DELAY_PURCHASE_ITEM);
