@@ -267,6 +267,17 @@ void load_building_tile_data() NONBANKED
         scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
         set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
     }
+
+    if (
+        screen_state.displayed_buildings_x & SC_BAR &&
+        screen_state.displayed_buildings_y & SC_BAR
+    )
+    {
+        // Load tiles for Hobo
+        ROM_BANK_TILE_DATA;
+        set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
+        ROM_BANK_RESET;
+    }
 }
 
 void setup_globals()
@@ -1250,6 +1261,14 @@ void load_buildings_x_left()
     else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_NLI;
 
+    // Bar
+    if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+    {
+        screen_state.displayed_buildings_x |= SC_BAR;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+        screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_x_right()
 {
@@ -1282,6 +1301,15 @@ void load_buildings_x_right()
     }
     else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_NLI;
+
+    // Bar
+    if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+    {
+        screen_state.displayed_buildings_x |= SC_BAR;
+        load_building_tile_data();
+    }
+    else if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+        screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_y_up()
 {
@@ -1296,6 +1324,9 @@ void load_buildings_y_up()
     }
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_PAWN;
+
+    if (screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+        screen_state.displayed_buildings_y &= ~SC_BAR;
 
     // Check skater
     if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
@@ -1326,6 +1357,11 @@ void load_buildings_y_down()
     if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_PAWN;
+        load_building_tile_data();
+    }
+    if (screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_BAR;
         load_building_tile_data();
     }
 

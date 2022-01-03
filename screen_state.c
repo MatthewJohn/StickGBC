@@ -11,6 +11,7 @@
 #define SC_PAWN 0x08U
 #define SC_UNIVERSITY 0x10U
 #define SC_NLI 0x20U
+#define SC_BAR 0x40U
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
@@ -20,6 +21,9 @@
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
 #define SC_NLI_TRANSITION_X_MIN 0x16U
 #define SC_NLI_TRANSITION_X_MAX 0x46U
+#define SC_BAR_TRANSITION_Y 0x78U
+#define SC_BAR_TRANSITION_X_MIN 0xE8U
+#define SC_BAR_TRANSITION_X_MAX 0xF0U
 
 #define SC_AI_SPRITE_COUNT 0x02U
 
