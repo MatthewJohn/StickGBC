@@ -279,8 +279,10 @@ void setup_globals()
     // Start with $100
     game_state.balance = 100U;
 
-    game_state.max_hp = 23U;
-    game_state.hp = 23U;
+    game_state.strength = 0U;
+
+    game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
+    game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
 
     screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
@@ -1393,6 +1395,7 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         game_state.balance -= cost;
         game_state.hour += number_of_hours;
         game_state.strength += strength;
+        game_state.max_hp += strength;
 
         ROM_BANK_TILE_DATA;
         update_window(&game_state);

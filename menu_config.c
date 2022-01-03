@@ -436,7 +436,7 @@ const menu_config_item_t menu_config_items[0x1EU] = {
             0x3EU,  // M
             // Row 2
             MENU_ITEM_NO_TILE,
-            MENU_TILE_2,  // 1
+            MENU_TILE_1,  // 1
             MENU_TILE_ST,  // ST
             MENU_TILE_RE, // RE
             MENU_TILE_NG, // NG
