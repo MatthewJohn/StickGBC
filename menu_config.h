@@ -99,8 +99,10 @@ typedef struct {
     unsigned short current_item_y;
 } menu_state_t;
 
+// Menu items
 extern const menu_config_item_t menu_config_items[];
 
+// Menu configs
 extern menu_config_t menu_config_house;
 extern menu_config_t menu_config_restaurant;
 extern menu_config_t menu_config_shop;
@@ -112,7 +114,10 @@ extern menu_config_t menu_config_dealer;
 extern menu_config_t menu_config_hobo;
 extern menu_config_t menu_config_bar;
 
+// Methods for menu
+void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette);
 
+// Constants for menu tiles
 #define MENU_TILE_EX 0x04U
 #define MENU_TILE_AY 0x07U
 #define MENU_TILE_RT 0x08U
