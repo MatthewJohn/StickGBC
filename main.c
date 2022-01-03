@@ -1462,6 +1462,7 @@ void apply_for_job_promotion()
         game_state.intelligence >= 20U
     )
     {
+        menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
         menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
     }
