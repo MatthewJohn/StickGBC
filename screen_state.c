@@ -32,4 +32,18 @@ typedef struct {
     UINT8 displayed_buildings_y;
     BOOLEAN displayed_sprites_x[SC_AI_SPRITE_COUNT];
     BOOLEAN displayed_sprites_y[SC_AI_SPRITE_COUNT];
+    
+    // Location of screen compared to map
+    unsigned int screen_location_x;
+    unsigned int screen_location_y;
+    // These are pre-calculated bit shifts of screen_location.
+    // DO NOT manually change outside of position updating method.
+    // This is the current user position in tiles.
+    unsigned int screen_location_x_tiles;
+    unsigned int screen_location_y_tiles;
+    // These are pre-calculated ANDs of screen_location
+    // DO NOT  manually change outside of position updating method.
+    // This is the current pixel location of user within current tile.
+    unsigned int screen_location_x_tilepixel;
+    unsigned int screen_location_y_tilepixel;
 } screen_state_t;

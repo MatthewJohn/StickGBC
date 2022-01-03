@@ -11,7 +11,7 @@
 
 UINT8 sprite_prop_data;
 
-void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y) BANKED
+void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
 {
     UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
     // Update flip of sprite tile
@@ -45,7 +45,7 @@ void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 
         set_sprite_prop(sprite_index, sprite_prop_data);
 }
 
-void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move) BANKED
+void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
     // Check if sprite should be disabled
     if (! (
@@ -159,7 +159,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move) BAN
     // This must always be done, as it is required when the screen moves
     move_sprite(
         sprite_to_move->sprite_index,
-        (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
-        (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
+        (sprite_to_move->current_location_x - screen_state->screen_location_x) + SPRITE_OFFSET_X,
+        (sprite_to_move->current_location_y - screen_state->screen_location_y) + SPRITE_OFFSET_Y
     );
 }
