@@ -1836,9 +1836,17 @@ void update_state()
                     if (game_state.inventory[S_INVENTORY_SMOKES])
                     {
                         // Remove smokes and give skateboard
-                        game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
-                        game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                        if ((S_HOURS_PER_DAY - game_state.hour) >= 1U)
+                        {
+                            game_state.hour += 1U;
+                            game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                            game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                            ROM_BANK_TILE_DATA;
+                            update_window(&game_state);
+                            ROM_BANK_RESET;
+                        }
                     }
+                    delay(DELAY_PURCHASE_ITEM);
                 }
             }
             else if (game_state.current_building == S_B_NLI)
@@ -1881,7 +1889,6 @@ void update_state()
                             ROM_BANK_TILE_DATA;
                             update_window(&game_state);
                             ROM_BANK_RESET;
-
                         }
                     }
                 }
