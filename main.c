@@ -406,8 +406,8 @@ void setup_sprites()
 
 void update_ai_positions()
 {
-    move_ai_sprite(&skater_sprite);
-    move_ai_sprite(&dealer_sprite);
+    move_ai_sprite(&screen_state, &skater_sprite);
+    move_ai_sprite(&screen_state, &dealer_sprite);
 }
 
 void setup_window()
