@@ -32,6 +32,7 @@
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 
 
@@ -368,7 +369,7 @@ void setup_sprites()
     //  Skater
     set_sprite_tile(skater_sprite.sprite_index, 0U);
 
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_SPRITE;
     set_sprite_direction(
         skater_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -381,7 +382,7 @@ void setup_sprites()
     // Dealer
     set_sprite_tile(dealer_sprite.sprite_index, 0U);
 
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_SPRITE;
     set_sprite_direction(
         dealer_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -396,7 +397,7 @@ void setup_sprites()
 
 void update_ai_positions()
 {
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_SPRITE;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
     ROM_BANK_RESET;
@@ -1556,7 +1557,7 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_SPRITE;
         set_sprite_direction(
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
