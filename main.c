@@ -242,8 +242,13 @@ void load_nli()
 void load_bar()
 {
     ROM_BANK_TILE_DATA;
-    set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
+    set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
     ROM_BANK_RESET;
+    scratch_palette_data[0U][0U] = RGB(1U, 14U, 1U);
+    scratch_palette_data[0U][1U] = RGB(10U, 8U, 1U);
+    scratch_palette_data[0U][2U] = RGB(31U, 1U, 1U);
+    scratch_palette_data[0U][3U] = RGB(3U, 8U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
 }
 
 void load_building_tile_data() NONBANKED
