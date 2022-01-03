@@ -302,6 +302,7 @@ void setup_globals()
     // Start with $100
     game_state.balance = 100U;
 
+    game_state.intelligence = 0U;
     game_state.strength = 0U;
     game_state.charm = 0U;
 
