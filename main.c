@@ -28,9 +28,11 @@
 #include "menu_config.h"
 #include "screen_state.c"
 #include "window.h"
+#include "sprite.h"
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
+#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 
 
@@ -48,27 +50,12 @@ UWORD word_data[4];
 // Storage for scratch palette data
 UWORD scratch_palette_data[3][4];
 
-// Location of screen compared to map
-unsigned int screen_location_x;
-unsigned int screen_location_y;
-// These are pre-calculated bit shifts of screen_location.
-// DO NOT manually change outside of position updating method.
-// This is the current user position in tiles.
-unsigned int screen_location_x_tiles;
-unsigned int screen_location_y_tiles;
-// These are pre-calculated ANDs of screen_location
-// DO NOT  manually change outside of position updating method.
-// This is the current pixel location of user within current tile.
-unsigned int screen_location_x_tilepixel;
-unsigned int screen_location_y_tilepixel;
-
 // Determine which way user needs to travel
 signed int travel_x;
 signed int travel_y;
 unsigned short a_pressed;
 unsigned short b_pressed;
 UINT8 sprite_traveling_x;
-UINT8 sprite_prop_data;
 
 // Game state
 game_state_t game_state;
@@ -185,88 +172,124 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
+void load_house()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+    ROM_BANK_RESET;
+}
+
+void load_restaurant()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+    ROM_BANK_RESET;
+    // Set palette data
+    word_data[0] = RGB(0, 0, 0);
+    word_data[1] = RGB(31, 22, 8);
+    word_data[2] = RGB(25, 0, 0);
+    word_data[3] = RGB(13, 12, 1 );
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
+}
+
+void load_shop()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+    ROM_BANK_RESET;
+    word_data[0] = RGB(31, 21, 5);
+    word_data[1] = RGB(1, 0, 2);
+    word_data[2] = RGB(4, 20, 0);
+    word_data[3] = RGB(26, 16, 0 );
+    set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
+}
+
+void load_pawn()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
+    scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+}
+
+void load_university()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
+    scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
+    scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
+    scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+}
+
+void load_nli()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+    ROM_BANK_RESET;
+    scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
+    scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
+}
+
+void load_bar()
+{
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
+    ROM_BANK_RESET;
+}
+
 void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
+
     if (
         screen_state.displayed_buildings_x & SC_HOUSE &&
         screen_state.displayed_buildings_y & SC_HOUSE
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
-        ROM_BANK_RESET;
-    }
+        load_house();
+
     if (
         screen_state.displayed_buildings_x & SC_RESTAURANT &&
         screen_state.displayed_buildings_y & SC_RESTAURANT
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
-        ROM_BANK_RESET;
-        // Set palette data
-        word_data[0] = RGB(0, 0, 0);
-        word_data[1] = RGB(31, 22, 8);
-        word_data[2] = RGB(25, 0, 0);
-        word_data[3] = RGB(13, 12, 1 );
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
-    }
+        load_restaurant();
+
     if (
         screen_state.displayed_buildings_x & SC_SHOP &&
         screen_state.displayed_buildings_y & SC_SHOP
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
-        ROM_BANK_RESET;
-        word_data[0] = RGB(31, 21, 5);
-        word_data[1] = RGB(1, 0, 2);
-        word_data[2] = RGB(4, 20, 0);
-        word_data[3] = RGB(26, 16, 0 );
-        set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
-    }
+        load_shop();
+
     if (
         screen_state.displayed_buildings_x & SC_PAWN &&
         screen_state.displayed_buildings_y & SC_PAWN
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
-        scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
-        scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
-        set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
-    }
+        load_pawn();
+
     if (
         screen_state.displayed_buildings_x & SC_UNIVERSITY &&
         screen_state.displayed_buildings_y & SC_UNIVERSITY
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
-        scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
-        scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
-        scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
-        set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
-    }
+        load_university();
 
     if (
         screen_state.displayed_buildings_x & SC_NLI &&
         screen_state.displayed_buildings_y & SC_NLI
     )
-    {
-        ROM_BANK_TILE_DATA;
-        set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
-        ROM_BANK_RESET;
-        scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
-        scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
-        set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
-    }
+        load_nli();
+
+    if (
+        screen_state.displayed_buildings_x & SC_BAR &&
+        screen_state.displayed_buildings_y & SC_BAR
+    )
+        load_bar();
 }
 
 void setup_globals()
@@ -279,7 +302,11 @@ void setup_globals()
     // Start with $100
     game_state.balance = 100U;
 
+    game_state.intelligence = 0U;
     game_state.strength = 0U;
+    game_state.charm = 0U;
+
+    game_state.visited_hobo = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -304,10 +331,10 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
 
-    screen_location_x = 0x00U;
-    screen_location_x_tiles = 0x00U;
-    screen_location_y = 0x00U;
-    screen_location_y_tiles = 0x00U;
+    screen_state.screen_location_x = 0x00U;
+    screen_state.screen_location_x_tiles = 0x00U;
+    screen_state.screen_location_y = 0x00U;
+    screen_state.screen_location_y_tiles = 0x00U;
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
@@ -319,40 +346,6 @@ void setup_globals()
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
 #endif
-}
-
-void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
-{
-    UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
-    // Update flip of sprite tile
-    sprite_prop_data = color_palette & 0x07U;
-    // Check for just vertical movement/
-    if (direction_y != 0)
-    {
-        if (direction_x == 0)
-        {
-            // If travelling up, flip Y
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(sprite_index, 0U + sprite_tile_offset);
-        } else {
-            // Handle diagonal movement
-            if (direction_y == 1)
-                sprite_prop_data |= S_FLIPY;
-            if (direction_x == -1)
-                sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(sprite_index, 2U + sprite_tile_offset);
-        }
-    }
-    else if (direction_x != 0)
-    {
-        set_sprite_tile(sprite_index, 1U + sprite_tile_offset);
-        if (direction_x == -1)
-            sprite_prop_data |= S_FLIPX;
-    }
-    // Only update flipping if actually moving
-    if (direction_x != 0 || direction_y != 0)
-        set_sprite_prop(sprite_index, sprite_prop_data);
 }
 
 void setup_sprites()
@@ -380,6 +373,7 @@ void setup_sprites()
     //  Skater
     set_sprite_tile(skater_sprite.sprite_index, 0U);
 
+    ROM_BANK_SPRITE;
     set_sprite_direction(
         skater_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -387,10 +381,12 @@ void setup_sprites()
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
     );
+    ROM_BANK_RESET;
 
     // Dealer
     set_sprite_tile(dealer_sprite.sprite_index, 0U);
 
+    ROM_BANK_SPRITE;
     set_sprite_direction(
         dealer_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -398,133 +394,17 @@ void setup_sprites()
         dealer_sprite.travel_direction_x,
         dealer_sprite.travel_direction_y
     );
+    ROM_BANK_RESET;
 
     SHOW_SPRITES;
 }
 
-void move_ai_sprite(ai_sprite* sprite_to_move) NONBANKED
-{
-    // Check if sprite should be disabled
-    if (! (
-        screen_state.displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
-        screen_state.displayed_sprites_x[sprite_to_move->sprite_display_bit]
-    ))
-    {
-        // Move sprite off-screen
-        move_sprite(sprite_to_move->sprite_index, 0, 0);
-        return;
-    }
-
-    if ((sys_time % sprite_to_move->move_speed) == 0U)
-    {
-        if (sprite_to_move->current_pause)
-        {
-            sprite_to_move->current_pause -= 1U;
-
-            if (sprite_to_move->current_pause == 0U)
-                // Check if now at 0 current pause and change direction ready for travel
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->travel_direction_x,
-                    sprite_to_move->travel_direction_y
-                );
-        }
-        // Check if moving right
-        else if (sprite_to_move->travel_direction_x == 1)
-        {
-            // Check if hit max
-            if (sprite_to_move->current_location_x == sprite_to_move->max_location_x)
-            {
-                // Switch direction and set pause period
-                sprite_to_move->travel_direction_x = -1;
-                sprite_to_move->current_pause = sprite_to_move->pause_period;
-                // Update direction of sprite movement
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
-            }
-            else
-                sprite_to_move->current_location_x += 1;
-        }
-        else if (sprite_to_move->travel_direction_x == -1)
-        {
-            if (sprite_to_move->current_location_x == sprite_to_move->min_location_x)
-            {
-                // Switch direction and set pause period
-                sprite_to_move->travel_direction_x = 1;
-                sprite_to_move->current_pause = sprite_to_move->pause_period;
-                // Update direction of sprite
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
-            }
-            else
-                sprite_to_move->current_location_x -= 1;
-        }
-        else if (sprite_to_move->travel_direction_y == 1)
-        {
-            // Check if hit max
-            if (sprite_to_move->current_location_y == sprite_to_move->max_location_y)
-            {
-                // Switch direction and set pause period
-                sprite_to_move->travel_direction_y = -1;
-                sprite_to_move->current_pause = sprite_to_move->pause_period;
-                // Update direction of sprite movement
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
-            }
-            else
-                sprite_to_move->current_location_y += 1;
-        }
-        else if (sprite_to_move->travel_direction_y == -1)
-        {
-            if (sprite_to_move->current_location_y == sprite_to_move->min_location_y)
-            {
-                // Switch direction and set pause period
-                sprite_to_move->travel_direction_y = 1;
-                sprite_to_move->current_pause = sprite_to_move->pause_period;
-                // Update direction of sprite
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
-            }
-            else
-                sprite_to_move->current_location_y -= 1;
-        }
-    }
-
-    // Move AI sprites
-    // This must always be done, as it is required when the screen moves
-    move_sprite(
-        sprite_to_move->sprite_index,
-        (sprite_to_move->current_location_x - screen_location_x) + SPRITE_OFFSET_X,
-        (sprite_to_move->current_location_y - screen_location_y) + SPRITE_OFFSET_Y
-    );
-}
-
 void update_ai_positions()
 {
-    move_ai_sprite(&skater_sprite);
-    move_ai_sprite(&dealer_sprite);
+    ROM_BANK_SPRITE;
+    move_ai_sprite(&screen_state, &skater_sprite);
+    move_ai_sprite(&screen_state, &dealer_sprite);
+    ROM_BANK_RESET;
 }
 
 void setup_window()
@@ -713,17 +593,17 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
     scroll_bkg(move_x, move_y);
 
-    screen_location_x += move_x;
-    screen_location_y += move_y;
-    screen_location_x_tiles = screen_location_x >> 3;
-    screen_location_y_tiles = screen_location_y >> 3;
-    screen_location_x_tilepixel = screen_location_x & 0x07U;
-    screen_location_y_tilepixel = screen_location_y & 0x07U;
+    screen_state.screen_location_x += move_x;
+    screen_state.screen_location_y += move_y;
+    screen_state.screen_location_x_tiles = screen_state.screen_location_x >> 3;
+    screen_state.screen_location_y_tiles = screen_state.screen_location_y >> 3;
+    screen_state.screen_location_x_tilepixel = screen_state.screen_location_x & 0x07U;
+    screen_state.screen_location_y_tilepixel = screen_state.screen_location_y & 0x07U;
 
     // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
     // current frame buffer size + redraw offset.
     // Mask with vram tile size in X, as a form of cheap modulus (which we can do as it is a power of 2)
-    base_itx_x = screen_location_x >> 3;
+    base_itx_x = screen_state.screen_location_x >> 3;
     if (move_x == 1)
         // If moving to right, start redraw tile after
         // Calulate entire width of screen, plus one tile either side.
@@ -733,7 +613,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         base_itx_x -= 1U;
 
     // See X alternative
-    base_itx_y = screen_location_y >> 3;
+    base_itx_y = screen_state.screen_location_y >> 3;
     if (move_y == 1)
         // If moving to right, start redraw tile after
         base_itx_y += (SCREEN_TILE_MAX_Y + 2U);
@@ -749,8 +629,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
         // Use screen_location_x_subpixel to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
-        itx_y_max = base_itx_y + (3U * (screen_location_x_tilepixel + 1U)) + 1U;
-        for (itx_y = base_itx_y + (3U * screen_location_x_tilepixel) - 1U;
+        itx_y_max = base_itx_y + (3U * (screen_state.screen_location_x_tilepixel + 1U)) + 1U;
+        for (itx_y = base_itx_y + (3U * screen_state.screen_location_x_tilepixel) - 1U;
                itx_y != itx_y_max;
                itx_y ++)
         {
@@ -806,8 +686,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = base_itx_x + (3U * (screen_location_y_tilepixel + 1U)) + 1U;
-        for (itx_x = base_itx_x + (3U * screen_location_y_tilepixel) - 1U;
+        itx_x_max = base_itx_x + (3U * (screen_state.screen_location_y_tilepixel + 1U)) + 1U;
+        for (itx_x = base_itx_x + (3U * screen_state.screen_location_y_tilepixel) - 1U;
                itx_x != itx_x_max;
                itx_x ++)
         {
@@ -902,8 +782,8 @@ void setup_main_map()
     background_tile_palette = mainmaptilesCGB;
     background_width = mainmapWidth;
     
-    DRAW_OFFSET_X = screen_location_x >> 3;
-    DRAW_OFFSET_Y = screen_location_y >> 3;
+    DRAW_OFFSET_X = screen_state.screen_location_x >> 3;
+    DRAW_OFFSET_Y = screen_state.screen_location_y >> 3;
     DRAW_MAX_X = BACKGROUND_BUFFER_SIZE_X;
     DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
 
@@ -914,8 +794,8 @@ void setup_main_map()
     
     // Move background to screen location
     scroll_bkg(
-        screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
-        screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
+        screen_state.screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
+        screen_state.screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
     
     // Load currently displayed buildings
@@ -1134,6 +1014,12 @@ void setup_building_menu()
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 2U;
     }
+    else if (game_state.current_building == S_B_HOBO)
+    {
+        menu_config = &menu_config_hobo;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 2U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1200,9 +1086,14 @@ void check_building_enter()
         game_state.current_building = S_B_DEALER;
         setup_building_menu();
     }
-
+    else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
+    {
+        game_state.current_building = S_B_HOBO;
+        setup_building_menu();
+    }
+//
 //    // Temporary jump to building
-//    game_state.current_building = S_B_UNIVERSITY;
+//    game_state.current_building = S_B_HOBO;
 //    setup_building_menu();
 }
 
@@ -1216,12 +1107,12 @@ void check_end_game()
 void load_buildings_x_left()
 {
     // Enable house
-    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_HOUSE;
         load_building_tile_data();
     }
-    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
         screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
@@ -1230,115 +1121,140 @@ void load_buildings_x_left()
     }
 
     // Check skater
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+    if (screen_state.screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
 
     // Check dealer
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
+    if (screen_state.screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
 
     // NLI
-    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_NLI;
 
+    // Bar
+    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+    {
+        screen_state.displayed_buildings_x |= SC_BAR;
+        load_building_tile_data();
+    }
+    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+        screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_x_right()
 {
     // Disable house
-    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings_x &= ~SC_HOUSE;
-    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_UNIVERSITY;
         load_building_tile_data();
     }
  
     // Check skater
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
 
     // Check dealer
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
 
     // NLI
-    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_NLI;
+
+    // Bar
+    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+    {
+        screen_state.displayed_buildings_x |= SC_BAR;
+        load_building_tile_data();
+    }
+    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+        screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_y_up()
 {
     // Disable restaurant
-    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_NLI;
         screen_state.displayed_buildings_y &= ~SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_PAWN;
 
+    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+        screen_state.displayed_buildings_y &= ~SC_BAR;
+
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+    if (screen_state.screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
 
     // Check dealer
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
+    if (screen_state.screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
     // Enable restaurant
-    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_NLI;
         screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_PAWN;
         load_building_tile_data();
     }
+    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y |= SC_BAR;
+        load_building_tile_data();
+    }
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
 
     // Check dealer
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 }
 
@@ -1377,6 +1293,24 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
         game_state.balance -= cost;
         game_state.hour += number_of_hours;
         game_state.intelligence += intelligence;
+
+        ROM_BANK_TILE_DATA;
+        update_window(&game_state);
+        ROM_BANK_RESET;
+    }
+}
+
+void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
+{
+    if (
+        game_state.balance >= cost &&
+        game_state.charm != S_MAX_CHARM &&
+        (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
+    )
+    {
+        game_state.balance -= cost;
+        game_state.hour += number_of_hours;
+        game_state.charm += charm;
 
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
@@ -1582,8 +1516,8 @@ void update_state()
 
 
         // Set user screen position based on current location
-        user_screen_pos_x = user_pos_x - screen_location_x;
-        user_screen_pos_y = user_pos_y - screen_location_y;
+        user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
+        user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
 
         user_pos_x += travel_x;
         user_pos_y += travel_y;
@@ -1591,7 +1525,7 @@ void update_state()
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
         // to continue moving and not redraw map outside of map tiles)
-        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_x != 0)
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_state.screen_location_x != 0)
         {
             // If player hit LHS of screen, move screen to the left
             move_x = -1;
@@ -1604,13 +1538,13 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_x = user_pos_x - screen_location_x;
+            user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
             move_x = 0;
         }
 
         // If character at top of screen, begin to scroll, unless at top of map (allowing character
         // to continue moving and not redraw map outside of map tiles)
-        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_y != 0)
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_state.screen_location_y != 0)
         {
             move_y = -1;
         }
@@ -1621,7 +1555,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_y = user_pos_y - screen_location_y;
+            user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
             move_y = 0;
         }
 
@@ -1633,7 +1567,7 @@ void update_state()
 
             // Check when on tile boundary (NOTE this only works for movement in positive directions,
             // but doesn't matter for now).
-            if (screen_location_x_tilepixel == 0U)
+            if (screen_state.screen_location_x_tilepixel == 0U)
                 if (move_x == 1)
                     load_buildings_x_right();
                 else
@@ -1643,7 +1577,7 @@ void update_state()
         {
             move_background(0, move_y);
             
-            if (screen_location_y_tilepixel == 0U)
+            if (screen_state.screen_location_y_tilepixel == 0U)
                 if (move_y == 1)
                     load_buildings_y_down();
                 else
@@ -1657,6 +1591,7 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
+        ROM_BANK_SPRITE;
         set_sprite_direction(
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
@@ -1664,6 +1599,7 @@ void update_state()
             travel_x,
             travel_y
         );
+        ROM_BANK_RESET;
 
         if (a_pressed)
             check_building_enter();
@@ -1925,6 +1861,30 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                     purchase_item(400U, S_INVENTORY_COCAINE);
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_HOBO)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
+                {
+                    if (game_state.visited_hobo == 0U)
+                    {
+                        increase_charm(10U, 1U, 6U);
+                        // Mark as having visited hobo, so he doesn't give us charm again.
+                        game_state.visited_hobo = 1U;
+                    }
+                    else  // Paying money and not getting charm
+                    {
+                        if (game_state.balance >= 10U)
+                        {
+                            game_state.balance -= 10U;
+                            ROM_BANK_TILE_DATA;
+                            update_window(&game_state);
+                            ROM_BANK_RESET;
+
+                        }
+                    }
+                }
                 delay(DELAY_PURCHASE_ITEM);
             }
         }

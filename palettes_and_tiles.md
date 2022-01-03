@@ -11,9 +11,9 @@
     * 2 - Black text NLI sign
     * 3 - 
  2.
-    * 0 - Grass
-    * 1 - 
-    * 2 -
+    * 0 - Green - Grass/Hobo background
+    * 1 - Orange - Hobo
+    * 2 - Black - Hobo
     * 3 - 
  3.
     * 0 - Pavement inner/pawn shop door inner
@@ -212,3 +212,4 @@
  - 37 - NLI Sign 7
  - 38 - NLI Door 1
  - 38 - NLI Door 2
+ - 39 - Hobo 1

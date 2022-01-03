@@ -11,6 +11,7 @@
 #define SC_PAWN 0x08U
 #define SC_UNIVERSITY 0x10U
 #define SC_NLI 0x20U
+#define SC_BAR 0x40U
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
@@ -20,6 +21,9 @@
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
 #define SC_NLI_TRANSITION_X_MIN 0x16U
 #define SC_NLI_TRANSITION_X_MAX 0x46U
+#define SC_BAR_TRANSITION_Y 0xFU
+#define SC_BAR_TRANSITION_X_MIN 0xEU
+#define SC_BAR_TRANSITION_X_MAX 0x1EU
 
 #define SC_AI_SPRITE_COUNT 0x02U
 
@@ -28,4 +32,18 @@ typedef struct {
     UINT8 displayed_buildings_y;
     BOOLEAN displayed_sprites_x[SC_AI_SPRITE_COUNT];
     BOOLEAN displayed_sprites_y[SC_AI_SPRITE_COUNT];
+    
+    // Location of screen compared to map
+    unsigned int screen_location_x;
+    unsigned int screen_location_y;
+    // These are pre-calculated bit shifts of screen_location.
+    // DO NOT manually change outside of position updating method.
+    // This is the current user position in tiles.
+    unsigned int screen_location_x_tiles;
+    unsigned int screen_location_y_tiles;
+    // These are pre-calculated ANDs of screen_location
+    // DO NOT  manually change outside of position updating method.
+    // This is the current pixel location of user within current tile.
+    unsigned int screen_location_x_tilepixel;
+    unsigned int screen_location_y_tilepixel;
 } screen_state_t;
