@@ -73,6 +73,8 @@
 #define MENU_ITEM_INDEX_GIVE_10 0x1EU
 #define MENU_ITEM_INDEX_DRINK_BEER 0x1FU
 #define MENU_ITEM_INDEX_BOTTLE_OF_BEER 0x20U
+#define MENU_ITEM_INDEX_BAR_FIGHT 0x21U
+#define MENU_ITEM_INDEX_PLAY_DARTS 0x22U
 
 // Menu item indexes for NLI
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -111,15 +113,19 @@ extern menu_config_t menu_config_bar;
 
 
 #define MENU_TILE_EX 0x04U
+#define MENU_TILE_AY 0x07U
+#define MENU_TILE_RT 0x08U
+#define MENU_TILE_FI 0x09U
 #define MENU_TILE_BE 0x0AU
 #define MENU_TILE_BO 0x0BU
 #define MENU_TILE_TT 0x0CU
 #define MENU_TILE_OF 0x0DU
 #define MENU_TILE_HE 0x0EU
 #define MENU_TILE_G 0x0FU
-
+#define MENU_TILE_GH 0x10U
 #define MENU_TILE_SL 0x11U
 #define MENU_TILE_E 0x1AU
+#define MENU_TILE_S 0x1DU
 #define MENU_TILE_CH 0x1EU
 
 #define MENU_TILE_ER 0x23U
@@ -130,6 +136,7 @@ extern menu_config_t menu_config_bar;
 #define MENU_TILE_US 0x29U
 #define MENU_TILE_CA 0x2AU
 #define MENU_TILE_Y 0x2CU
+#define MENU_TILE_BA 0x2DU
 #define MENU_TILE_R 0x2EU
 
 #define MENU_TILE_SM 0x31U
@@ -139,6 +146,7 @@ extern menu_config_t menu_config_bar;
 #define MENU_TILE_CL 0x3FU
 
 #define MENU_TILE_K 0x41U
+#define MENU_TILE_T 0x47U
 #define MENU_TILE_TO 0x49U
 #define MENU_TILE_GI 0x4BU
 #define MENU_TILE_VE 0x4CU

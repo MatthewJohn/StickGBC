@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x21U] = {
+const menu_config_item_t menu_config_items[0x23U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -813,6 +813,42 @@ const menu_config_item_t menu_config_items[0x21U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+
+    // Bar Fight
+    {
+        {
+            MENU_TILE_BA,
+            MENU_TILE_R,
+            MENU_TILE_FI,
+            MENU_TILE_GH,
+            MENU_TILE_T,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Play Darts
+    {
+        {
+            MENU_TILE_PL,
+            MENU_TILE_AY,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DA,
+            MENU_TILE_RT,
+            MENU_TILE_S,
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 
@@ -955,8 +991,8 @@ menu_config_t menu_config_bar = {
       MENU_ITEM_INDEX_EXIT,
       MENU_ITEM_INDEX_DRINK_BEER,
       MENU_ITEM_INDEX_BOTTLE_OF_BEER,
-      MENU_ITEM_INDEX_EMPTY,
-      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_BAR_FIGHT,
+      MENU_ITEM_INDEX_PLAY_DARTS,
       MENU_ITEM_INDEX_EMPTY,
       MENU_ITEM_INDEX_EMPTY,
     }
