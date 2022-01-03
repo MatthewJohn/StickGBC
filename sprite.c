@@ -45,12 +45,12 @@ void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 
         set_sprite_prop(sprite_index, sprite_prop_data);
 }
 
-void move_ai_sprite(ai_sprite* sprite_to_move) BANKED
+void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move) BANKED
 {
     // Check if sprite should be disabled
     if (! (
-        screen_state.displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
-        screen_state.displayed_sprites_x[sprite_to_move->sprite_display_bit]
+        screen_state->displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
+        screen_state->displayed_sprites_x[sprite_to_move->sprite_display_bit]
     ))
     {
         // Move sprite off-screen
