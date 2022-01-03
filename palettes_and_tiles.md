@@ -12,7 +12,7 @@
     * 3 - 
  2.
     * 0 - Green - Grass/Hobo background
-    * 1 - Gray - Hobo
+    * 1 - Orange - Hobo
     * 2 - Black - Hobo
     * 3 - 
  3.
