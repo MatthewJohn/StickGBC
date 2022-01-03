@@ -797,36 +797,6 @@ void setup_main_map()
     DISPLAY_ON;
 }
 
-// Update palette for currently selected menu item
-void set_menu_item_color(unsigned char palette)
-{
-    unsigned int itx_y, itx_x, tile_index, menu_item_index;
-    unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
-
-    VBK_REG = 1;
-    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
-    {
-        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
-        {
-            palette_colors[itx_x] = palette;
-            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            menu_item_index = menu_config->items[menu_item_itx];
-            ROM_BANK_MENU_CONFIG;
-            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
-                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
-            ROM_BANK_RESET;
-         }
-        set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
-            MENU_ITEM_WIDTH, 1,
-            &palette_colors
-        );
-    }
-    VBK_REG = 0;
-}
-
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
@@ -1027,7 +997,9 @@ void setup_building_menu()
     load_menu_tiles();
 
     // Highlight currently selected item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_RESET;
 
     DISPLAY_ON;
 }
@@ -1389,13 +1361,17 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
-    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
+    ROM_BANK_RESET;
 
     menu_state.current_item_x = new_x;
     menu_state.current_item_y = new_y;
 
     // Highlight new menu item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_RESET;
 }
 
 void apply_for_job_promotion()
