@@ -15,7 +15,7 @@ DEMO	:= $(filter demo,$(MAKECMDGOALS))
 all:	$(BIN)
 
 $(SOURCE) %.o: %.c
-	bash ./scripts/convert_main_main.sh
+	bash ./scripts/convert_maps.sh
 	$(CC) $(if $(DEMO),-Wp-DIN_TESTING=1,) $(CFLAGS) $@ $<
 
 
