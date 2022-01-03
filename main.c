@@ -1011,6 +1011,12 @@ void setup_building_menu()
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 2U;
     }
+    else if (game_state.current_building == S_B_BAR)
+    {
+        menu_config = &menu_config_bar;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1080,6 +1086,11 @@ void check_building_enter()
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
+    {
+        game_state.current_building = S_B_BAR;
         setup_building_menu();
     }
 //
