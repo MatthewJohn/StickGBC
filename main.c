@@ -1841,6 +1841,9 @@ void update_state()
                             game_state.hour += 1U;
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
                             game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                            ROM_BANK_TILE_DATA;
+                            update_window(&game_state);
+                            ROM_BANK_RESET;
                         }
                     }
                 }
@@ -1885,7 +1888,6 @@ void update_state()
                             ROM_BANK_TILE_DATA;
                             update_window(&game_state);
                             ROM_BANK_RESET;
-
                         }
                     }
                 }
