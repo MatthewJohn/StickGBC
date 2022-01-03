@@ -6,7 +6,44 @@
 
 #pragma bank=5
 
+#include "game_constants.h"
 #include "sprite.h"
+
+UINT8 sprite_prop_data;
+
+void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y) BANKED
+{
+    UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
+    // Update flip of sprite tile
+    sprite_prop_data = color_palette & 0x07U;
+    // Check for just vertical movement/
+    if (direction_y != 0)
+    {
+        if (direction_x == 0)
+        {
+            // If travelling up, flip Y
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            set_sprite_tile(sprite_index, 0U + sprite_tile_offset);
+        } else {
+            // Handle diagonal movement
+            if (direction_y == 1)
+                sprite_prop_data |= S_FLIPY;
+            if (direction_x == -1)
+                sprite_prop_data |= S_FLIPX;
+            set_sprite_tile(sprite_index, 2U + sprite_tile_offset);
+        }
+    }
+    else if (direction_x != 0)
+    {
+        set_sprite_tile(sprite_index, 1U + sprite_tile_offset);
+        if (direction_x == -1)
+            sprite_prop_data |= S_FLIPX;
+    }
+    // Only update flipping if actually moving
+    if (direction_x != 0 || direction_y != 0)
+        set_sprite_prop(sprite_index, sprite_prop_data);
+}
 
 void move_ai_sprite(ai_sprite* sprite_to_move) BANKED
 {
