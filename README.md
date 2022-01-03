@@ -11,7 +11,6 @@ Stick GBC is a gameboy colour re-implementation of XGen Studio's Stick RPG.
 
     cd games/stickrpg
     make
-    make
 
 ### Pre-built binaries
 
@@ -23,6 +22,11 @@ To find an individual commit, each commit in the Github repository contains the 
 
 ## Contributing
 
+See `CONTRIBUTING.md`
+
 ## Raising issues
+
+Feel free to raise a Github issue, but keep in mind that they will be migrated to internal Gitlab issues.
+As a result, commit messages do not align with Github issues.
 
 ## License
