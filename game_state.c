@@ -84,7 +84,8 @@ typedef struct {
     
     UINT16 last_movement_time;
 
-    BOOLEAN visited_hobo;
+    BOOLEAN hobo_given_money;
+    BOOLEAN hobo_given_beer;
 } game_state_t;
 
 

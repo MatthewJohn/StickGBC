@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x23U] = {
+const menu_config_item_t menu_config_items[0x24U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -843,6 +843,29 @@ const menu_config_item_t menu_config_items[0x23U] = {
             MENU_TILE_S,
             // Row 2
             MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Give Beer
+    {
+        {
+            MENU_TILE_GI,
+            MENU_TILE_VE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_8,
+            MENU_TILE_CH,
+            MENU_TILE_AR,
+            MENU_TILE_M,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
