@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x1FU] = {
+const menu_config_item_t menu_config_items[0x21U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -757,6 +757,62 @@ const menu_config_item_t menu_config_items[0x1FU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
+
+    // Drink Beer
+    {
+        {
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_TILE_DASH,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_2,
+            MENU_TILE_0,
+            // Row 2
+            MENU_TILE_2,
+            MENU_TILE_CH,
+            MENU_TILE_AR,
+            MENU_TILE_M,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Bottle of Beer
+    {
+        {
+            MENU_TILE_BO,
+            MENU_TILE_TT,
+            MENU_TILE_LE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_OF,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_3,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
 };
 
 
@@ -893,3 +949,15 @@ menu_config_t menu_config_hobo = {
   },
 };
 
+menu_config_t menu_config_bar = {
+    {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_DRINK_BEER,
+      MENU_ITEM_INDEX_BOTTLE_OF_BEER,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+    }
+};

@@ -31,6 +31,7 @@
 #define S_B_NLI 0x08U
 #define S_B_DEALER 0x09U
 #define S_B_HOBO 0x0AU
+#define S_B_BAR 0x0BU
 
 
 // Maximum of 99 of each item.
