@@ -7,4 +7,5 @@
 
 #include "game_state.c"
 
+void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y);
 void move_ai_sprite(ai_sprite* sprite_to_move);
