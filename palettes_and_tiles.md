@@ -55,6 +55,7 @@
  5.
  6.
  7.
+ 
 
 ## Building map tiles
 
@@ -64,6 +65,10 @@
  3. Border side
  4. Ex
  5. it
+ 10. BE
+ 11. BO
+ 12. TT
+ 13. OF
  14. HE
  15. G
  17. SL
