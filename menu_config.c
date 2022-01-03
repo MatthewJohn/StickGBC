@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x1EU] = {
+const menu_config_item_t menu_config_items[0x1FU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -734,6 +734,29 @@ const menu_config_item_t menu_config_items[0x1EU] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+
+    // Give $10
+    {
+        {
+            MENU_TILE_GI,
+            MENU_TILE_VE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 
@@ -855,3 +878,18 @@ menu_config_t menu_config_dealer = {
       MENU_ITEM_INDEX_EMPTY,
   },
 };
+
+// Dealer
+menu_config_t menu_config_hobo = {
+  {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_GIVE_10,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+  },
+};
+
