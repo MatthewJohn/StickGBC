@@ -316,8 +316,7 @@ void setup_globals()
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
-    //game_state.hour = S_HOUR_WAKEUP_NORMAL;
-    game_state.hour = 0U;
+    game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
     // Start with $100
     game_state.balance = 100U;
