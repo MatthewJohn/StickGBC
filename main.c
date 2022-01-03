@@ -1395,6 +1395,7 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         game_state.balance -= cost;
         game_state.hour += number_of_hours;
         game_state.strength += strength;
+        game_state.max_hp += strength;
 
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
