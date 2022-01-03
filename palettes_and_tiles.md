@@ -1,14 +1,14 @@
 ## Tile Palette Main
 
  0.
-    * 0 - Sky/house windows/shop door inner
-    * 1 - Background/house roof/shop door rim
+    * 0 - Sky/house windows/shop door inner/pawn shop window inner/university window inner
+    * 1 - Background/house roof/shop door rim/pawn shop window outer/university window edge/university door inner
     * 2 - Status window background
-    * 3 - House bricks/Static window text
+    * 3 - House bricks/Static window text/university door rim
  1. Road/markings
     * 0 - House roof/road/status bar background
     * 1 - Road markings/status bar foreground
-    * 2 - 
+    * 2 - Black text NLI sign
     * 3 - 
  2.
     * 0 - Grass
@@ -16,18 +16,18 @@
     * 2 -
     * 3 - 
  3.
-    * 0 - Pavement inner
-    * 1 - Pavement outer
-    * 2 - 
+    * 0 - Pavement inner/pawn shop door inner
+    * 1 - Pavement outer/pawn shop door frame
+    * 2 - pawn shop door handle
     * 3 -
  4.
     * 0 - 
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1 - pawn shop
- 6. scratch for building 2 - shop
- 7. scratch for building 3 - mcstick/castle/university
+ 5. scratch for building 1 - pawn shop wall + grafitti (color 0+1+4)
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI
+ 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university
 
 ## Tile Palette Building Menu
  0. Background
@@ -38,6 +38,24 @@
  5. Strength
  6. Intelligence
 
+## Sprite palettes
+
+ 0. Main player (normal)
+   0. Background
+   1. Outline
+   2. Sprite center
+   3.
+ 1. Skater
+   0. Background
+   1. Outline
+   2. Sprite center
+ 2.
+ 3.
+ 4.
+ 5.
+ 6.
+ 7.
+
 ## Building map tiles
 
  0. Background
@@ -46,7 +64,8 @@
  3. Border side
  4. Ex
  5. it
- 16. E
+ 14. HE
+ 15. G
  17. SL
  18. EE
  19. P
@@ -66,9 +85,9 @@
  35. ER
  36. TR'
  37. PL
- 38. WO (half O)
- 39. ORK (half O, half K)
- 40. K (Half K)
+ 38. WO
+ 39. RK
+ 40. CO
  41. US
  42. CA
  43. ND
@@ -83,23 +102,78 @@
  52. FF
  53. EI
  54. NE
- 
-
- 110. 0
- 111. 1
- 112. 2
- 113. 3
- 114. 4
- 115. 5
- 116. 6
- 117. 7
- 118. 8
- 119. 9
- 120. $
- 121. HP
- 122. /HR
- 133. DA
- 134. YS
+ 55. HA
+ 56. GU
+ 57. N
+ 58. KN
+ 59. IF
+ 60. AL
+ 61. AR
+ 62. M
+ 63. CL
+ 64. OC
+ 65. K
+ 66. PH
+ 67. ON
+ 68. UD
+ 69. GY
+ 70. OU
+ 71. T
+ 72. GO
+ 73. TO
+ 74. AS
+ 75. GI
+ 76. VE
+ 77. AP
+ 78. A
+ 79. JO
+ 80. B
+ 81. FO
+ 82. JA
+ 83. NI
+ 84. MA
+ 85. IL
+ 86. SA
+ 87. LE
+ 88. AN
+ 89. EC
+ 90. UT
+ 91. IV
+ 92. VP
+ 93. O
+ 94. PR
+ 95. OM
+ 96. OT
+ 97. IO
+ 98. Clock face
+ 99. Colon
+ 100. 0
+ 101. 1
+ 102. 2
+ 103. 3
+ 104. 4
+ 105. 5
+ 106. 6
+ 107. 7
+ 108. 8
+ 109. 9
+ 110. $
+ 111. HP
+ 112. /HR
+ 113. DA
+ 114. YS
+ 115. /
+ 116. IN
+ 117. TE
+ 118. LL
+ 119. IG
+ 120. EN
+ 121. CE
+ 122. ST
+ 123. RE
+ 124. NG
+ 125. TH
+ 126. -
  
 
 ## Tiles
@@ -122,4 +196,19 @@
  - 20 - Shop exit sign 2 
  - 21 - shop bottom grafitti 1
  - 22 - shop bottom grafitti 2
- 
+ - 23 - pawn shop door
+ - 24 - pawn shop window
+ - 25 - pawn shop grafitti 1
+ - 26 - pawn shop grafitti 2
+ - 27 - university door bottom
+ - 28 - university door top
+ - 30 - university temple 1
+ - 31 - NLI Sign 1
+ - 32 - NLI Sign 2
+ - 33 - NLI Sign 3
+ - 34 - NLI Sign 4
+ - 35 - NLI Sign 5
+ - 36 - NLI Sign 6
+ - 37 - NLI Sign 7
+ - 38 - NLI Door 1
+ - 38 - NLI Door 2

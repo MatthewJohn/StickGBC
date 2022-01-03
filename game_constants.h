@@ -19,14 +19,12 @@
 #define X_Y_TO_TILE_INDEX(x, y) ((y * mainmapWidth) + x)
 #define TILE_INDEX_BIT_MAP_VALUE(mapping, tile_index) mapping[tile_index >> 3] & (1 << (tile_index & 0x07U))
 
-#define IS_MENU_ITEM_ENABLED(index) menu_config->menu_items & (1 << index)
-
 #define WINDOW_MAX_DIGITS_DAYS 5U
 #define WINDOW_VERTICAL_DRAW_OFFSET 0x09U
 #define WINDOW_MAX_DIGITS_BALANCE 0x6U
 #define WINDOW_MAX_DIGITS_HP 0x5U
 
-#define MENU_ROW_2_TILE_DATA_OFFSET 0x6DU
+#define MENU_ROW_2_TILE_DATA_OFFSET 0x60U
 
 // Screen size 160x168
 #define SCREEN_WIDTH 0xA8U
@@ -41,8 +39,19 @@
 // of character is at 0,0 location
 #define SPRITE_OFFSET_X 0x04U
 #define SPRITE_OFFSET_Y 0x0dU
+#define PLAYER_SPRITE_INDEX 0x00U
+#define PLAYER_SPRITE_PALETTE 0x00U
+// Three tiles per sprite tileset (up, sideways, diagonal)
+#define SPRITE_TILESET_COUNT 0x3U
+// First tileset is for walking
+#define SPRITE_TILESET_WALK 0x00U
+// Second tileset is for skateboarding
+#define SPRITE_TILESET_SKATEBOARD 0x01U
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
+#define WALK_SPEED_DELAY 0x01U
+#define SKATEBOARD_SPEED_DELAY 0x00U
+
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
