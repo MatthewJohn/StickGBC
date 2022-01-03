@@ -49,20 +49,6 @@ UWORD word_data[4];
 // Storage for scratch palette data
 UWORD scratch_palette_data[3][4];
 
-// Location of screen compared to map
-unsigned int screen_location_x;
-unsigned int screen_location_y;
-// These are pre-calculated bit shifts of screen_location.
-// DO NOT manually change outside of position updating method.
-// This is the current user position in tiles.
-unsigned int screen_location_x_tiles;
-unsigned int screen_location_y_tiles;
-// These are pre-calculated ANDs of screen_location
-// DO NOT  manually change outside of position updating method.
-// This is the current pixel location of user within current tile.
-unsigned int screen_location_x_tilepixel;
-unsigned int screen_location_y_tilepixel;
-
 // Determine which way user needs to travel
 signed int travel_x;
 signed int travel_y;
@@ -340,10 +326,10 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
 
-    screen_location_x = 0x00U;
-    screen_location_x_tiles = 0x00U;
-    screen_location_y = 0x00U;
-    screen_location_y_tiles = 0x00U;
+    screen_state.screen_location_x = 0x00U;
+    screen_state.screen_location_x_tiles = 0x00U;
+    screen_state.screen_location_y = 0x00U;
+    screen_state.screen_location_y_tiles = 0x00U;
     sprite_traveling_x = 0;
     user_pos_x = 0x70U;
     user_pos_y = 0x70U;
@@ -382,6 +368,7 @@ void setup_sprites()
     //  Skater
     set_sprite_tile(skater_sprite.sprite_index, 0U);
 
+    ROM_BANK_TILE_DATA;
     set_sprite_direction(
         skater_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -389,10 +376,12 @@ void setup_sprites()
         skater_sprite.travel_direction_x,
         skater_sprite.travel_direction_y
     );
+    ROM_BANK_RESET;
 
     // Dealer
     set_sprite_tile(dealer_sprite.sprite_index, 0U);
 
+    ROM_BANK_TILE_DATA;
     set_sprite_direction(
         dealer_sprite.sprite_index,
         SPRITE_TILESET_WALK,
@@ -400,14 +389,17 @@ void setup_sprites()
         dealer_sprite.travel_direction_x,
         dealer_sprite.travel_direction_y
     );
+    ROM_BANK_RESET;
 
     SHOW_SPRITES;
 }
 
 void update_ai_positions()
 {
+    ROM_BANK_TILE_DATA;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
+    ROM_BANK_RESET;
 }
 
 void setup_window()
@@ -596,17 +588,17 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
     scroll_bkg(move_x, move_y);
 
-    screen_location_x += move_x;
-    screen_location_y += move_y;
-    screen_location_x_tiles = screen_location_x >> 3;
-    screen_location_y_tiles = screen_location_y >> 3;
-    screen_location_x_tilepixel = screen_location_x & 0x07U;
-    screen_location_y_tilepixel = screen_location_y & 0x07U;
+    screen_state.screen_location_x += move_x;
+    screen_state.screen_location_y += move_y;
+    screen_state.screen_location_x_tiles = screen_state.screen_location_x >> 3;
+    screen_state.screen_location_y_tiles = screen_state.screen_location_y >> 3;
+    screen_state.screen_location_x_tilepixel = screen_state.screen_location_x & 0x07U;
+    screen_state.screen_location_y_tilepixel = screen_state.screen_location_y & 0x07U;
 
     // Set current redraw in X to current user position (bit shift to remove pixels within tile) plus
     // current frame buffer size + redraw offset.
     // Mask with vram tile size in X, as a form of cheap modulus (which we can do as it is a power of 2)
-    base_itx_x = screen_location_x >> 3;
+    base_itx_x = screen_state.screen_location_x >> 3;
     if (move_x == 1)
         // If moving to right, start redraw tile after
         // Calulate entire width of screen, plus one tile either side.
@@ -616,7 +608,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         base_itx_x -= 1U;
 
     // See X alternative
-    base_itx_y = screen_location_y >> 3;
+    base_itx_y = screen_state.screen_location_y >> 3;
     if (move_y == 1)
         // If moving to right, start redraw tile after
         base_itx_y += (SCREEN_TILE_MAX_Y + 2U);
@@ -632,8 +624,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
         // Use screen_location_x_subpixel to divide up tile in entire row. Start with 0 on first pixel. Set end of iterator to start of next block of tiles.
-        itx_y_max = base_itx_y + (3U * (screen_location_x_tilepixel + 1U)) + 1U;
-        for (itx_y = base_itx_y + (3U * screen_location_x_tilepixel) - 1U;
+        itx_y_max = base_itx_y + (3U * (screen_state.screen_location_x_tilepixel + 1U)) + 1U;
+        for (itx_y = base_itx_y + (3U * screen_state.screen_location_x_tilepixel) - 1U;
                itx_y != itx_y_max;
                itx_y ++)
         {
@@ -689,8 +681,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
         // If moving in X, redraw column.
         // The iterator is the frame buffer position (not the map position)
-        itx_x_max = base_itx_x + (3U * (screen_location_y_tilepixel + 1U)) + 1U;
-        for (itx_x = base_itx_x + (3U * screen_location_y_tilepixel) - 1U;
+        itx_x_max = base_itx_x + (3U * (screen_state.screen_location_y_tilepixel + 1U)) + 1U;
+        for (itx_x = base_itx_x + (3U * screen_state.screen_location_y_tilepixel) - 1U;
                itx_x != itx_x_max;
                itx_x ++)
         {
@@ -785,8 +777,8 @@ void setup_main_map()
     background_tile_palette = mainmaptilesCGB;
     background_width = mainmapWidth;
     
-    DRAW_OFFSET_X = screen_location_x >> 3;
-    DRAW_OFFSET_Y = screen_location_y >> 3;
+    DRAW_OFFSET_X = screen_state.screen_location_x >> 3;
+    DRAW_OFFSET_Y = screen_state.screen_location_y >> 3;
     DRAW_MAX_X = BACKGROUND_BUFFER_SIZE_X;
     DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
 
@@ -797,8 +789,8 @@ void setup_main_map()
     
     // Move background to screen location
     scroll_bkg(
-        screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
-        screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
+        screen_state.screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
+        screen_state.screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
     
     // Load currently displayed buildings
@@ -1099,12 +1091,12 @@ void check_end_game()
 void load_buildings_x_left()
 {
     // Enable house
-    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_HOUSE;
         load_building_tile_data();
     }
-    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
         screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
@@ -1113,140 +1105,140 @@ void load_buildings_x_left()
     }
 
     // Check skater
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
+    if (screen_state.screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
 
     // Check dealer
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
+    if (screen_state.screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
 
     // NLI
-    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_NLI;
 
     // Bar
-    if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
     {
         screen_state.displayed_buildings_x |= SC_BAR;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_x_right()
 {
     // Disable house
-    if (screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state.displayed_buildings_x &= ~SC_HOUSE;
-    if (screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_UNIVERSITY;
         load_building_tile_data();
     }
  
     // Check skater
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
 
     // Check dealer
-    if ((screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
+    if ((screen_state.screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
         screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
 
     // NLI
-    if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_NLI;
 
     // Bar
-    if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
     {
         screen_state.displayed_buildings_x |= SC_BAR;
         load_building_tile_data();
     }
-    else if (screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_BAR;
 }
 void load_buildings_y_up()
 {
     // Disable restaurant
-    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_NLI;
         screen_state.displayed_buildings_y &= ~SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_PAWN;
 
-    if (screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_BAR;
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
+    if (screen_state.screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
 
     // Check dealer
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
+    if (screen_state.screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
 }
 void load_buildings_y_down()
 {
     // Enable restaurant
-    if (screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_NLI;
         screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_PAWN;
         load_building_tile_data();
     }
-    if (screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_BAR;
         load_building_tile_data();
     }
 
     // Check skater
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
 
     // Check dealer
-    if ((screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
+    if ((screen_state.screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
         screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
 }
 
@@ -1489,8 +1481,8 @@ void update_state()
 
 
         // Set user screen position based on current location
-        user_screen_pos_x = user_pos_x - screen_location_x;
-        user_screen_pos_y = user_pos_y - screen_location_y;
+        user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
+        user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
 
         user_pos_x += travel_x;
         user_pos_y += travel_y;
@@ -1498,7 +1490,7 @@ void update_state()
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
         // to continue moving and not redraw map outside of map tiles)
-        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_x != 0)
+        if (user_screen_pos_x == CHARACTER_SCREEN_LOCATION_MARGIN && screen_state.screen_location_x != 0)
         {
             // If player hit LHS of screen, move screen to the left
             move_x = -1;
@@ -1511,13 +1503,13 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_x = user_pos_x - screen_location_x;
+            user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
             move_x = 0;
         }
 
         // If character at top of screen, begin to scroll, unless at top of map (allowing character
         // to continue moving and not redraw map outside of map tiles)
-        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_location_y != 0)
+        if (user_screen_pos_y == CHARACTER_SCREEN_LOCATION_MARGIN && screen_state.screen_location_y != 0)
         {
             move_y = -1;
         }
@@ -1528,7 +1520,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_y = user_pos_y - screen_location_y;
+            user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
             move_y = 0;
         }
 
@@ -1540,7 +1532,7 @@ void update_state()
 
             // Check when on tile boundary (NOTE this only works for movement in positive directions,
             // but doesn't matter for now).
-            if (screen_location_x_tilepixel == 0U)
+            if (screen_state.screen_location_x_tilepixel == 0U)
                 if (move_x == 1)
                     load_buildings_x_right();
                 else
@@ -1550,7 +1542,7 @@ void update_state()
         {
             move_background(0, move_y);
             
-            if (screen_location_y_tilepixel == 0U)
+            if (screen_state.screen_location_y_tilepixel == 0U)
                 if (move_y == 1)
                     load_buildings_y_down();
                 else
@@ -1564,6 +1556,7 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
+        ROM_BANK_TILE_DATA;
         set_sprite_direction(
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
@@ -1571,6 +1564,7 @@ void update_state()
             travel_x,
             travel_y
         );
+        ROM_BANK_RESET;
 
         if (a_pressed)
             check_building_enter();
