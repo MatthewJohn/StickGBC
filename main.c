@@ -36,7 +36,7 @@
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
 #define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
-
+#define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 
 UBYTE * debug_address;
 
@@ -211,10 +211,10 @@ void load_pawn()
     ROM_BANK_TILE_DATA;
     set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
     ROM_BANK_RESET;
-    scratch_palette_data[0U][0U] = RGB(10U, 1U, 16U);
-    scratch_palette_data[0U][1U] = RGB(31U, 31U, 31U);
-    scratch_palette_data[0U][3U] = RGB(15U, 6U, 31U);
-    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0]));
+    scratch_palette_data[2U][0U] = RGB(10U, 1U, 16U);
+    scratch_palette_data[2U][1U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[2U][3U] = RGB(15U, 6U, 31U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
 }
 
 void load_university()
@@ -242,8 +242,13 @@ void load_nli()
 void load_bar()
 {
     ROM_BANK_TILE_DATA;
-    set_bkg_data(39U, 2U, &(mainmaptiles[39U << 4]));
+    set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
     ROM_BANK_RESET;
+    scratch_palette_data[0U][0U] = RGB(1U, 14U, 1U);
+    scratch_palette_data[0U][1U] = RGB(10U, 8U, 1U);
+    scratch_palette_data[0U][2U] = RGB(31U, 1U, 1U);
+    scratch_palette_data[0U][3U] = RGB(3U, 8U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
 }
 
 void load_building_tile_data() NONBANKED
@@ -325,7 +330,8 @@ void setup_globals()
     game_state.strength = 0U;
     game_state.charm = 0U;
 
-    game_state.visited_hobo = 0U;
+    game_state.hobo_given_money = 0U;
+    game_state.hobo_given_beer = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -349,6 +355,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x0U;
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
+    game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0x0U;
 
     screen_state.screen_location_x = 0x00U;
     screen_state.screen_location_x_tiles = 0x00U;
@@ -424,46 +431,6 @@ void update_ai_positions()
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
     ROM_BANK_RESET;
-}
-
-void setup_window()
-{
-    // Set transparency for all tiles
-    tile_data[0] = 0x00U;
-    // bit 0-2 palette
-    // bit 3 - tile bank
-    // bit 4 - unused
-    // bit 5 - horizontal flip
-    // bit 6 - verical flip
-    // bit 7 Set piority flag and color palette to 1
-    tile_data[1] = 0x81U;
-    for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
-    {
-        for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
-        {
-            VBK_REG = 0;
-            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[0]));
-            VBK_REG = 1;
-            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[1]));
-        }
-    }
-    VBK_REG = 0;
-    
-    // Setup borders
-    tile_data[0] = 0U;
-    set_win_tiles(0U, 0U, 1U, 1U, &(tile_data[0]));
-    set_win_tiles(0U, 1U, 1U, 1U, &(tile_data[0]));
-    set_win_tiles(19U, 0U, 1U, 1U, &(tile_data[0]));
-    set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
-    
-    // Setup 'days''
-    tile_data[0] = MENU_TILE_DA;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
-    tile_data[0] = MENU_TILE_YS;
-    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
-
-    // Move window up to only display 2 rows at top of screen
-    move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
 
 void set_background_tiles() NONBANKED
@@ -816,43 +783,18 @@ void setup_main_map()
         screen_state.screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
         screen_state.screen_location_y & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_Y
     );
-    
+
+    // Load additional tiles required for main map
+    ROM_BANK_TILE_DATA;
+    set_bkg_data(8U, 3U, &(mainmaptiles[8U << 4]));
+    ROM_BANK_RESET;
+
     // Load currently displayed buildings
     load_building_tile_data();
 
     update_background_color();
  
     DISPLAY_ON;
-}
-
-// Update palette for currently selected menu item
-void set_menu_item_color(unsigned char palette)
-{
-    unsigned int itx_y, itx_x, tile_index, menu_item_index;
-    unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
-
-    VBK_REG = 1;
-    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
-    {
-        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
-        {
-            palette_colors[itx_x] = palette;
-            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
-            menu_item_index = menu_config->items[menu_item_itx];
-            ROM_BANK_MENU_CONFIG;
-            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
-                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
-            ROM_BANK_RESET;
-         }
-        set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
-            MENU_ITEM_WIDTH, 1,
-            &palette_colors
-        );
-    }
-    VBK_REG = 0;
 }
 
 void load_menu_tiles() NONBANKED
@@ -1041,6 +983,12 @@ void setup_building_menu()
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 2U;
     }
+    else if (game_state.current_building == S_B_BAR)
+    {
+        menu_config = &menu_config_bar;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1049,7 +997,9 @@ void setup_building_menu()
     load_menu_tiles();
 
     // Highlight currently selected item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_RESET;
 
     DISPLAY_ON;
 }
@@ -1110,6 +1060,11 @@ void check_building_enter()
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
+        setup_building_menu();
+    }
+    else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
+    {
+        game_state.current_building = S_B_BAR;
         setup_building_menu();
     }
 //
@@ -1214,17 +1169,22 @@ void load_buildings_x_right()
 }
 void load_buildings_y_up()
 {
-    // Disable restaurant
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
+
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
+    {
+        screen_state.displayed_buildings_y &= ~SC_PAWN;
+        screen_state.displayed_buildings_y |= SC_RESTAURANT;
+        load_building_tile_data();
+    }
+
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_NLI;
         screen_state.displayed_buildings_y &= ~SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
-        screen_state.displayed_buildings_y &= ~SC_PAWN;
 
     if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state.displayed_buildings_y &= ~SC_BAR;
@@ -1243,20 +1203,21 @@ void load_buildings_y_up()
 }
 void load_buildings_y_down()
 {
-    // Enable restaurant
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
         load_building_tile_data();
     }
+
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_NLI;
         screen_state.displayed_buildings_y |= SC_SHOP;
         load_building_tile_data();
     }
-    if (screen_state.screen_location_y_tiles == SC_PAWN_TRANSITION_Y)
+    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
     {
+        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
         screen_state.displayed_buildings_y |= SC_PAWN;
         load_building_tile_data();
     }
@@ -1400,13 +1361,17 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
-    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
+    ROM_BANK_RESET;
 
     menu_state.current_item_x = new_x;
     menu_state.current_item_y = new_y;
 
     // Highlight new menu item
-    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_RESET;
 }
 
 void apply_for_job_promotion()
@@ -1857,7 +1822,7 @@ void update_state()
                     if (game_state.inventory[S_INVENTORY_SMOKES])
                     {
                         // Remove smokes and give skateboard
-                        if ((S_HOURS_PER_DAY - game_state.hour) >= 1U)
+                        if (DAY_TIME_REMAINING >= 1U)
                         {
                             game_state.hour += 1U;
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
@@ -1896,11 +1861,11 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                 {
-                    if (game_state.visited_hobo == 0U)
+                    if (game_state.hobo_given_money == 0U)
                     {
                         increase_charm(10U, 1U, 6U);
                         // Mark as having visited hobo, so he doesn't give us charm again.
-                        game_state.visited_hobo = 1U;
+                        game_state.hobo_given_money = 1U;
                     }
                     else  // Paying money and not getting charm
                     {
@@ -1912,6 +1877,37 @@ void update_state()
                             ROM_BANK_RESET;
                         }
                     }
+                }
+                else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 2U)
+                {
+                    // Give bottle of beer
+                    if (game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] && DAY_TIME_REMAINING >= 1U)
+                    {
+                        if (game_state.hobo_given_beer == 0U)
+                        {
+                            increase_charm(0U, 1U, 8U);
+                            game_state.hobo_given_beer = 1U;
+                        }
+                        else
+                        {
+                            game_state.hour += 1U;
+                        }
+                        game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] -= 1U;
+                    }
+                }
+                delay(DELAY_PURCHASE_ITEM);
+            }
+            else if (game_state.current_building == S_B_BAR)
+            {
+                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 1U)
+                {
+                    increase_charm(20U, 2U, 2U);
+                }
+                else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 1U)
+                {
+                    purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
+                    // Enable give bottle of beer in hobo menu
+                    menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
                 delay(DELAY_PURCHASE_ITEM);
             }
@@ -1930,8 +1926,8 @@ void main()
     SHOW_BKG;
     
     // Initial setup of window and update with starting stats
-    setup_window();
     ROM_BANK_TILE_DATA;
+    setup_window();
     update_window(&game_state);
     ROM_BANK_RESET;
     SHOW_WIN;

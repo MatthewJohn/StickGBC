@@ -31,6 +31,7 @@
 #define S_B_NLI 0x08U
 #define S_B_DEALER 0x09U
 #define S_B_HOBO 0x0AU
+#define S_B_BAR 0x0BU
 
 
 // Maximum of 99 of each item.
@@ -48,6 +49,7 @@
 #define S_INVENTORY_CELL_PHONE 0x5U
 #define S_INVENTORY_SKATEBOARD 0x6U
 #define S_INVENTORY_COCAINE 0x7U
+#define S_INVENTORY_BOTTLE_OF_BEER 0x8U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
@@ -78,11 +80,12 @@ typedef struct {
     unsigned int balance;
 
     // Inventory items
-    UINT8 inventory[8U];
+    UINT8 inventory[9U];
     
     UINT16 last_movement_time;
 
-    BOOLEAN visited_hobo;
+    BOOLEAN hobo_given_money;
+    BOOLEAN hobo_given_beer;
 } game_state_t;
 
 

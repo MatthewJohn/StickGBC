@@ -203,3 +203,47 @@ void update_window(game_state_t* game_state)
         itx_x -= 1U;
     }
 }
+
+void setup_window()
+{
+    UBYTE tile_data[2U];
+    unsigned int itx_x, itx_y;
+
+    // Set transparency for all tiles
+    tile_data[0] = 0x00U;
+    // bit 0-2 palette
+    // bit 3 - tile bank
+    // bit 4 - unused
+    // bit 5 - horizontal flip
+    // bit 6 - verical flip
+    // bit 7 Set piority flag and color palette to 1
+    tile_data[1] = 0x81U;
+    for (itx_x = 0U; itx_x != SCREEN_WIDTH_TILES; itx_x ++)
+    {
+        for (itx_y = 0U; itx_y != SCREEN_HEIGHT_TILES; itx_y ++)
+        {
+            VBK_REG = 0;
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[0]));
+            VBK_REG = 1;
+            set_win_tiles(itx_x, itx_y, 1, 1, &(tile_data[1]));
+        }
+    }
+    VBK_REG = 0;
+    
+    // Setup borders
+    tile_data[0] = 0U;
+    set_win_tiles(0U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(0U, 1U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 0U, 1U, 1U, &(tile_data[0]));
+    set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
+    
+    // Setup 'days''
+    tile_data[0] = MENU_TILE_DA;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
+    tile_data[0] = MENU_TILE_YS;
+    set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 3U, 0U, 1U, 1U, &(tile_data[0]));
+
+    // Move window up to only display 2 rows at top of screen
+    move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
+}
+
