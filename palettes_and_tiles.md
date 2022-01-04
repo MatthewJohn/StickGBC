@@ -6,28 +6,28 @@
     * 2 - Status window background
     * 3 - House bricks/Static window text/university door rim
  1. Road/markings
-    * 0 - House roof/road/status bar background
-    * 1 - Road markings/status bar foreground
-    * 2 - Black text NLI sign
+    * 0 - House roof/road/status bar background/Pavement outer/pawn shop door frame
+    * 1 - Road markings/status bar foreground/Pavement inner/pawn shop door inner
+    * 2 - Black text NLI sign/pawn shop door handle
     * 3 - 
  2.
     * 0 - Green - Grass/Hobo background
-    * 1 - Orange - Hobo
-    * 2 - Black - Hobo
-    * 3 - 
+    * 1 - Orange - Hobo/Bar beer sign
+    * 2 - Black - Hobo/Bar beer sign
+    * 3 - Pale - Bar beer sign
  3.
-    * 0 - Pavement inner/pawn shop door inner
-    * 1 - Pavement outer/pawn shop door frame
-    * 2 - pawn shop door handle
+    * 0 - 
+    * 1 - 
+    * 2 - 
     * 3 -
  4.
     * 0 - 
     * 1 - 
     * 2 - 
     * 3 - 
- 5. scratch for building 1 - pawn shop wall + grafitti (color 0+1+4)
- 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI
- 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university
+ 5. scratch for building 1 - bus station/Bar
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
+ 7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
 
 ## Tile Palette Building Menu
  0. Background
@@ -55,6 +55,7 @@
  5.
  6.
  7.
+ 
 
 ## Building map tiles
 
@@ -64,8 +65,17 @@
  3. Border side
  4. Ex
  5. it
+ 6. PL
+ 7. AY
+ 8. RT
+ 9. FI
+ 10. BE
+ 11. BO
+ 12. TT
+ 13. OF
  14. HE
  15. G
+ 16. GH
  17. SL
  18. EE
  19. P
@@ -178,13 +188,15 @@
 
 ## Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
- - 1 Pavement edge/road markings (blank palette colour 0/1)
- - 2 Vertical Pavement edge/road markings/shop roof edge (blank palette colour 0/1)
- - 3  (blank palette colour 3) (used for house bricks/window background/shop front)
+ - 1 Road markings (blank palette colour 0/1)
+ - 2 Road markings/shop roof edge (blank palette colour 0/1)
+ - 3 (blank palette colour 3) (used for house bricks/window background/shop front)
  - 4 
  - 5 - scratch for building 1
  - 6 - scratch for building 2 
  - 7 - scratch for building 3
+ - 8 - Pavement edge
+ - 9 - Vertical Pavement edge/road markings/shop roof edge
  - 13 - house - 1 window (moved into scratch 1)
  - 14 - house - 2 (unused)
  - 15 - house - 3 (unused)
@@ -213,3 +225,15 @@
  - 38 - NLI Door 1
  - 38 - NLI Door 2
  - 39 - Hobo 1
+ - 40 - Hobo 2
+ - 41 - Bar beer top1
+ - 42 - Bar beer top 2
+ - 43 - Bar beer middle
+ - 44 - Bar beer base
+ - 45 - Bar beer handle
+ - 46 - Bar Neon Sign 1
+ - 47 - Bar Neon Sign 2
+ - 48 - Bar Neon Sign 3
+ - 49 - Bar Neon sign base
+ - 50 - Bar Side sign 1
+ - 51 - Bar Side sign 2

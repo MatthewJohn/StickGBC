@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x1FU] = {
+const menu_config_item_t menu_config_items[0x24U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -757,6 +757,121 @@ const menu_config_item_t menu_config_items[0x1FU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
+
+    // Drink Beer
+    {
+        {
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_TILE_DASH,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_2,
+            MENU_TILE_0,
+            // Row 2
+            MENU_TILE_2,
+            MENU_TILE_CH,
+            MENU_TILE_AR,
+            MENU_TILE_M,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Bottle of Beer
+    {
+        {
+            MENU_TILE_BO,
+            MENU_TILE_TT,
+            MENU_TILE_LE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_OF,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_3,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+
+    // Bar Fight
+    {
+        {
+            MENU_TILE_BA,
+            MENU_TILE_R,
+            MENU_TILE_FI,
+            MENU_TILE_GH,
+            MENU_TILE_T,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Play Darts
+    {
+        {
+            MENU_TILE_PL,
+            MENU_TILE_AY,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DA,
+            MENU_TILE_RT,
+            MENU_TILE_S,
+            // Row 2
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Give Beer
+    {
+        {
+            MENU_TILE_GI,
+            MENU_TILE_VE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_8,
+            MENU_TILE_CH,
+            MENU_TILE_AR,
+            MENU_TILE_M,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 
@@ -893,3 +1008,43 @@ menu_config_t menu_config_hobo = {
   },
 };
 
+menu_config_t menu_config_bar = {
+    {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_DRINK_BEER,
+      MENU_ITEM_INDEX_BOTTLE_OF_BEER,
+      MENU_ITEM_INDEX_BAR_FIGHT,
+      MENU_ITEM_INDEX_PLAY_DARTS,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
+// Update palette for currently selected menu item
+void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
+{
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
+    unsigned char palette_colors[MENU_ITEM_WIDTH];
+    unsigned int menu_item_itx = menu_state->current_item_x + (MENU_MAX_ITEMS_X * menu_state->current_item_y);
+
+    VBK_REG = 1;
+    for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_ITEM_WIDTH; itx_x ++)
+        {
+            palette_colors[itx_x] = palette;
+            tile_index = itx_x + (itx_y * MENU_ITEM_WIDTH);
+            menu_item_index = menu_config->items[menu_item_itx];
+            if (menu_config_items[menu_item_index].palette[tile_index] != 0U)
+                palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
+         }
+        set_bkg_tiles(
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state->current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state->current_item_y),
+            MENU_ITEM_WIDTH, 1,
+            &palette_colors
+        );
+    }
+    VBK_REG = 0;
+}
