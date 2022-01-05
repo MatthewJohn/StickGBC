@@ -1489,7 +1489,6 @@ void show_stats_screen() NONBANKED
     show_number(3U, 6U, 3U, game_state.intelligence);
     show_number(11U, 6U, 3U, game_state.strength);
     show_number(3U, 9U, 3U, game_state.charm);
-    game_state.karma = -5;
     show_signed_number(11U, 9U, 3U, game_state.karma);
     ROM_BANK_RESET;
 }
