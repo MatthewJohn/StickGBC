@@ -1473,45 +1473,6 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
-void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
-{
-    unsigned int remainder, current_digit;
-
-    itx_x = start_x + max_digits;
-
-    for (itx = 0; itx != max_digits; itx ++)
-    {
-        // If on last iteration, update digit with remainder
-        if (value != 0U || current_digit != 0U)
-        {
-            if (itx == (max_digits - 1U))
-            {
-                current_digit = value;
-            } else {
-                current_digit = value % 10U;
-
-                // Update remainder
-                value = value / 10U;
-            }
-        }
-    
-        if (value == 0U && current_digit == 0U && itx != 0)
-        {
-            tile_data[0] = 0x00;
-        }
-        else
-        {
-            tile_data[0] = MENU_TILE_0 + current_digit;
-        }
-
-        // Display current digit
-        set_bkg_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
-
-        // Prepare for next digit
-        itx_x -= 1U;
-    }
-}
-
 // Show stats screen
 void show_stats_screen()
 {
@@ -1521,8 +1482,10 @@ void show_stats_screen()
     // Update tiles for each of the stats to display the current values
 
     // Intelligence
+    ROM_BANK_TILE_DATA;
     // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
-    show_number_on_screen(MENU_ITEM_SCREEN_OFFSET_LEFT, 6U, 3U, game_state.intelligence);
+    show_number_on_screen(3U, 6U, 3U, game_state.intelligence);
+    ROM_BANK_RESET;
 }
 
 // Called per cycle to update background position and sprite

@@ -5,5 +5,6 @@
  */
 
 
+void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value);
 void update_window(game_state_t *game_state);
 void setup_window();

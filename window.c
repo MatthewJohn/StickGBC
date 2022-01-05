@@ -15,6 +15,46 @@
 #include "external_bank_globals.h"
 #include "menu_config.h"
 
+void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
+{
+    unsigned int remainder, current_digit;
+    UINT8 itx_x, itx;
+
+    itx_x = start_x + max_digits;
+
+    for (itx = 0; itx != max_digits; itx ++)
+    {
+        // If on last iteration, update digit with remainder
+        if (value != 0U || current_digit != 0U)
+        {
+            if (itx == (max_digits - 1U))
+            {
+                current_digit = value;
+            } else {
+                current_digit = value % 10U;
+
+                // Update remainder
+                value = value / 10U;
+            }
+        }
+    
+        if (value == 0U && current_digit == 0U && itx != 0)
+        {
+            tile_data[0] = 0x00;
+        }
+        else
+        {
+            tile_data[0] = MENU_TILE_0 + current_digit;
+        }
+
+        // Display current digit
+        set_bkg_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
+
+        // Prepare for next digit
+        itx_x -= 1U;
+    }
+}
+
 void update_window(game_state_t* game_state)
 {
     unsigned int current_digit, remainder, itx, itx_x;
