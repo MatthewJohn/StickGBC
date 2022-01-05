@@ -997,8 +997,9 @@ void setup_building_menu()
     else if (game_state.current_building == S_B_STATS)
     {
         menu_config = &menu_config_stats;
-        menu_state.current_item_x = 0U;
-        menu_state.current_item_y = 1U;
+        // Select exit by default
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 0U;
     }
 
     HIDE_SPRITES;
