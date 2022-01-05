@@ -49,7 +49,7 @@ void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsig
         }
 
         // Display current digit
-        set_bkg_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
+        set_bkg_tiles(itx_x, start_y, 1, 1, &(tile_data[0]));
 
         // Prepare for next digit
         itx_x -= 1U;
