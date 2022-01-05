@@ -62,6 +62,7 @@ void show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int va
 void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value)
 {
     unsigned int pos_value;
+    UBYTE tile_data;
     BOOLEAN is_negative = 0U;
     if (value < 0)
     {
@@ -69,6 +70,10 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
         pos_value = 0 - value;
     }
     show_number(start_x + 1U, start_y, max_digits - 1U, value);
+    tile_data = 0x00U;
+    if (is_negative)
+        tile_data = MENU_TILE_DASH;
+    set_bkg_tiles(start_x, start_y, 1, 1, &tile_data);
 }
 
 void update_window(game_state_t* game_state)
