@@ -875,7 +875,7 @@ void load_menu_tiles() NONBANKED
                 
                 if (tile_data_index == MENU_ITEM_NO_TILE)
                     // If tile is empty, use blank palette
-                    tile_data[0] = MENU_ITEM_NO_PALETTE;
+                    tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
                 else
                 {
                     ROM_BANK_MENU_CONFIG;
