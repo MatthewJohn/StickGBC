@@ -59,6 +59,18 @@ void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsig
     }
 }
 
+void show_signed_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, signed int value)
+{
+    unsigned int pos_value;
+    BOOLEAN is_negative = 0U;
+    if (value < 0)
+    {
+        is_negative = 1U;
+        pos_value = 0 - value;
+    }
+    show_number_on_screen(start_x + 1U, start_y, max_digits - 1U, value);
+}
+
 void update_window(game_state_t* game_state)
 {
     unsigned int current_digit, remainder, itx, itx_x;
