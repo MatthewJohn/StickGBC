@@ -67,9 +67,9 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
     if (value < 0)
     {
         is_negative = 1U;
-        pos_value = 0 - value;
+        pos_value = 0U - value;
     }
-    show_number(start_x + 1U, start_y, max_digits - 1U, value);
+    show_number(start_x + 1U, start_y, max_digits - 1U, pos_value);
     tile_data = 0x00U;
     if (is_negative)
         tile_data = MENU_TILE_DASH;
