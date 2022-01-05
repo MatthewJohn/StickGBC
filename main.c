@@ -1474,7 +1474,7 @@ void move_menu_to_exit()
 }
 
 // Show stats screen
-void show_stats_screen()
+void show_stats_screen() NONBANKED
 {
     game_state.current_building = S_B_STATS;
     setup_building_menu();
