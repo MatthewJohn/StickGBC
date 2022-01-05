@@ -20,6 +20,7 @@ void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsig
     unsigned int current_digit;
     UINT8 itx_x;
     UINT8 itx;
+    UBYTE tile_data;
 
     itx_x = start_x + max_digits;
 
@@ -31,7 +32,9 @@ void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsig
             if (itx == (max_digits - 1U))
             {
                 current_digit = value;
-            } else {
+            }
+            else
+            {
                 current_digit = value % 10U;
 
                 // Update remainder
@@ -41,15 +44,15 @@ void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsig
     
         if (value == 0U && current_digit == 0U && itx != 0)
         {
-            tile_data[0] = 0x00;
+            tile_data = 0x00;
         }
         else
         {
-            tile_data[0] = MENU_TILE_0 + current_digit;
+            tile_data = MENU_TILE_0 + current_digit;
         }
 
         // Display current digit
-        set_bkg_tiles(itx_x, start_y, 1, 1, &(tile_data[0]));
+        set_bkg_tiles(itx_x, start_y, 1, 1, &tile_data);
 
         // Prepare for next digit
         itx_x -= 1U;
