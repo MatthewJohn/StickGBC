@@ -330,7 +330,7 @@ void setup_globals()
     game_state.intelligence = 0U;
     game_state.strength = 0U;
     game_state.charm = 0U;
-    game_state.karma = 0U;
+    game_state.karma = 0;
 
     game_state.hobo_given_money = 0U;
     game_state.hobo_given_beer = 0U;
