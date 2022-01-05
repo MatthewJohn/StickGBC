@@ -1487,10 +1487,10 @@ void show_stats_screen() NONBANKED
     ROM_BANK_TILE_DATA;
     // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
     show_number(3U, 6U, 3U, game_state.intelligence);
-    show_number(10U, 6U, 3U, game_state.strength);
+    show_number(11U, 6U, 3U, game_state.strength);
     show_number(3U, 9U, 3U, game_state.charm);
     game_state.karma = -5;
-    show_signed_number(10U, 9U, 3U, game_state.karma);
+    show_signed_number(11U, 9U, 3U, game_state.karma);
     ROM_BANK_RESET;
 }
 
