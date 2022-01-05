@@ -1488,7 +1488,7 @@ void show_stats_screen() NONBANKED
     show_number_on_screen(3U, 6U, 3U, game_state.intelligence);
     show_number_on_screen(10U, 6U, 3U, game_state.strength);
     show_number_on_screen(3U, 9U, 3U, game_state.charm);
-    show_number_on_screen(10U, 9U, 3U, game_state.intelligence);
+    show_number_on_screen(10U, 9U, 3U, game_state.karma);
     ROM_BANK_RESET;
 }
 
