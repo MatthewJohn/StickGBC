@@ -5,7 +5,7 @@
  */
 
 
-void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value);
-void show_signed_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, signed int value);
+void show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value);
+void show_signed(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value);
 void update_window(game_state_t *game_state);
 void setup_window();
