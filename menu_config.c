@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x24U] = {
+const menu_config_item_t menu_config_items[0x28U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -872,6 +872,74 @@ const menu_config_item_t menu_config_items[0x24U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
+    
+    // Intelligence
+    {
+        {
+            MENU_ITEM_NO_TILE_ROW,
+            MENU_TILE_IN,
+            MENU_TILE_TE,
+            MENU_TILE_LL,
+            MENU_TILE_IG,
+            MENU_TILE_EN,
+            MENU_TILE_CE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Strength
+    {
+        {
+            MENU_ITEM_NO_TILE_ROW,
+            MENU_TILE_ST,
+            MENU_TILE_RE,
+            MENU_TILE_NG,
+            MENU_TILE_TH,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Charm
+    {
+        {
+            MENU_ITEM_NO_TILE_ROW,
+            MENU_TILE_CH,
+            MENU_TILE_AR,
+            MENU_TILE_M,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Karma
+    {
+        {
+            MENU_ITEM_NO_TILE_ROW,
+            MENU_TILE_KA,
+            MENU_TILE_RM,
+            MENU_TILE_A,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 
@@ -1020,6 +1088,20 @@ menu_config_t menu_config_bar = {
       MENU_ITEM_INDEX_EMPTY,
     }
 };
+
+menu_config_t menu_config_stats = {
+    {
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EXIT,
+      MENU_ITEM_INDEX_INTELLIGENCE,
+      MENU_ITEM_INDEX_STRENGTH,
+      MENU_ITEM_INDEX_CHARM,
+      MENU_ITEM_INDEX_KARMA,
+      MENU_ITEM_INDEX_EMPTY,
+      MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
 
 // Update palette for currently selected menu item
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
