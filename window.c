@@ -17,8 +17,9 @@
 
 void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
 {
-    unsigned int remainder, current_digit;
-    UINT8 itx_x, itx;
+    unsigned int current_digit;
+    UINT8 itx_x;
+    UINT8 itx;
 
     itx_x = start_x + max_digits;
 
