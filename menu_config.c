@@ -876,7 +876,7 @@ const menu_config_item_t menu_config_items[0x28U] = {
     // Intelligence
     {
         {
-            MENU_ITEM_NO_TILE_ROW,
+            MENU_BLANK_ITEM_ROW,
             MENU_TILE_IN,
             MENU_TILE_TE,
             MENU_TILE_LL,
@@ -893,7 +893,7 @@ const menu_config_item_t menu_config_items[0x28U] = {
     // Strength
     {
         {
-            MENU_ITEM_NO_TILE_ROW,
+            MENU_BLANK_ITEM_ROW,
             MENU_TILE_ST,
             MENU_TILE_RE,
             MENU_TILE_NG,
@@ -910,7 +910,7 @@ const menu_config_item_t menu_config_items[0x28U] = {
     // Charm
     {
         {
-            MENU_ITEM_NO_TILE_ROW,
+            MENU_BLANK_ITEM_ROW,
             MENU_TILE_CH,
             MENU_TILE_AR,
             MENU_TILE_M,
@@ -927,7 +927,7 @@ const menu_config_item_t menu_config_items[0x28U] = {
     // Karma
     {
         {
-            MENU_ITEM_NO_TILE_ROW,
+            MENU_BLANK_ITEM_ROW,
             MENU_TILE_KA,
             MENU_TILE_RM,
             MENU_TILE_A,
