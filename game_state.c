@@ -76,6 +76,7 @@ typedef struct {
     unsigned int intelligence;
     unsigned int strength;
     unsigned int charm;
+    unsigned int karma;
 
     // Money the user has.
     unsigned int balance;
