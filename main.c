@@ -57,6 +57,7 @@ signed int travel_x;
 signed int travel_y;
 unsigned short a_pressed;
 unsigned short b_pressed;
+BOOLEAN select_pressed;
 UINT8 sprite_traveling_x;
 
 // Game state
@@ -329,6 +330,7 @@ void setup_globals()
     game_state.intelligence = 0U;
     game_state.strength = 0U;
     game_state.charm = 0U;
+    game_state.karma = 0;
 
     game_state.hobo_given_money = 0U;
     game_state.hobo_given_beer = 0U;
@@ -542,6 +544,7 @@ void check_user_input()
     travel_y = 0;
     a_pressed = 0U;
     b_pressed = 0U;
+    select_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
@@ -556,6 +559,8 @@ void check_user_input()
         a_pressed = 1U;
     if (keys & J_B)
         b_pressed = 1U;
+    if (keys & J_SELECT)
+        select_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -870,7 +875,7 @@ void load_menu_tiles() NONBANKED
                 
                 if (tile_data_index == MENU_ITEM_NO_TILE)
                     // If tile is empty, use blank palette
-                    tile_data[0] = MENU_ITEM_NO_PALETTE;
+                    tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
                 else
                 {
                     ROM_BANK_MENU_CONFIG;
@@ -988,6 +993,13 @@ void setup_building_menu()
         menu_config = &menu_config_bar;
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
+    }
+    else if (game_state.current_building == S_B_STATS)
+    {
+        menu_config = &menu_config_stats;
+        // Select exit by default
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 0U;
     }
 
     HIDE_SPRITES;
@@ -1463,6 +1475,24 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
+// Show stats screen
+void show_stats_screen() NONBANKED
+{
+    game_state.current_building = S_B_STATS;
+    setup_building_menu();
+    
+    // Update tiles for each of the stats to display the current values
+
+    // Intelligence
+    ROM_BANK_TILE_DATA;
+    // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
+    show_number(3U, 6U, 3U, game_state.intelligence);
+    show_number(11U, 6U, 3U, game_state.strength);
+    show_number(3U, 9U, 3U, game_state.charm);
+    show_signed_number(11U, 9U, 3U, game_state.karma);
+    ROM_BANK_RESET;
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1589,6 +1619,10 @@ void update_state()
 
         if (a_pressed)
             check_building_enter();
+
+        else if (select_pressed) {
+            show_stats_screen();
+        }
 
     } else {
         // In a building - move through menu
