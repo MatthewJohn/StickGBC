@@ -76,6 +76,10 @@
 #define MENU_ITEM_INDEX_BAR_FIGHT 0x21U
 #define MENU_ITEM_INDEX_PLAY_DARTS 0x22U
 #define MENU_ITEM_INDEX_GIVE_BEER 0x23U
+#define MENU_ITEM_INDEX_INTELLIGENCE 0x24U
+#define MENU_ITEM_INDEX_STRENGTH 0x25U
+#define MENU_ITEM_INDEX_CHARM 0x26U
+#define MENU_ITEM_INDEX_KARMA 0x27U
 
 // Menu item indexes for NLI
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -113,6 +117,8 @@ extern menu_config_t menu_config_nli;
 extern menu_config_t menu_config_dealer;
 extern menu_config_t menu_config_hobo;
 extern menu_config_t menu_config_bar;
+extern menu_config_t menu_config_stats;
+
 
 // Methods for menu
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette);
@@ -130,6 +136,8 @@ void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, u
 #define MENU_TILE_G 0x0FU
 #define MENU_TILE_GH 0x10U
 #define MENU_TILE_SL 0x11U
+#define MENU_TILE_KA 0x14U
+#define MENU_TILE_RM 0x15U
 #define MENU_TILE_E 0x1AU
 #define MENU_TILE_S 0x1DU
 #define MENU_TILE_CH 0x1EU
