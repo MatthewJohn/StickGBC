@@ -15,14 +15,16 @@
 #include "external_bank_globals.h"
 #include "menu_config.h"
 
-void show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
+UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
 {
     UINT8 itx_x;
     UINT8 itx;
     UBYTE tile_data;
+    UINT8 last_digit_x_pos;
     unsigned int current_digit = 0U;
 
     itx_x = start_x + max_digits;
+    last_digit_x_pos = itx_x;
 
     for (itx = 0; itx != max_digits; itx ++)
     {
@@ -49,6 +51,7 @@ void show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int va
         else
         {
             tile_data = MENU_TILE_0 + current_digit;
+            last_digit_x_pos -= 1U;
         }
 
         // Display current digit
@@ -57,6 +60,7 @@ void show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int va
         // Prepare for next digit
         itx_x -= 1U;
     }
+    return last_digit_x_pos;
 }
 
 void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value)
@@ -64,15 +68,20 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
     unsigned int pos_value;
     UBYTE tile_data;
     BOOLEAN is_negative = 0U;
+
     if (value < 0)
     {
         is_negative = 1U;
         pos_value = 0U - value;
     }
-    show_number(start_x + 1U, start_y, max_digits - 1U, pos_value);
+
+    start_x = show_number(start_x + 1U, start_y, max_digits - 1U, pos_value);
+
     tile_data = 0x00U;
+
     if (is_negative)
         tile_data = MENU_TILE_DASH;
+
     set_bkg_tiles(start_x, start_y, 1, 1, &tile_data);
 }
 
