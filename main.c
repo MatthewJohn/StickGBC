@@ -1473,6 +1473,13 @@ void move_menu_to_exit()
     move_to_menu_item(1U, 0U);
 }
 
+// Show stats screen
+void show_stats_screen()
+{
+    game_state.current_building = S_B_STATS;
+    setup_building_menu();
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1601,8 +1608,7 @@ void update_state()
             check_building_enter();
 
         else if (select_pressed) {
-            game_state.current_building = S_B_STATS;
-            setup_building_menu();
+            show_stats_screen();
         }
 
     } else {
