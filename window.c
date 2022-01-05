@@ -17,10 +17,10 @@
 
 void show_number_on_screen(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
 {
-    unsigned int current_digit;
     UINT8 itx_x;
     UINT8 itx;
     UBYTE tile_data;
+    unsigned int current_digit = 0U;
 
     itx_x = start_x + max_digits;
 
