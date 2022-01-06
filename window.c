@@ -74,6 +74,8 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
         is_negative = 1U;
         pos_value = 0U - value;
     }
+    else
+        pos_value = value;
 
     // Show number using max_digits, except one, which will be used for negative symbol.
     start_x = show_number(start_x + 1U, start_y, max_digits - 1U, pos_value);
