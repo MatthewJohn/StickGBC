@@ -886,7 +886,12 @@ const menu_config_item_t menu_config_items[0x28U] = {
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
-            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
+            MENU_ITEM_INTELLIGENCE_PALETTE,
         },
     },
 
@@ -903,7 +908,12 @@ const menu_config_item_t menu_config_items[0x28U] = {
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
-            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
+            MENU_ITEM_STRENGTH_PALETTE,
         },
     },
 
@@ -920,7 +930,12 @@ const menu_config_item_t menu_config_items[0x28U] = {
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
-            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_CHARM_PALETTE,
+            MENU_ITEM_CHARM_PALETTE,
+            MENU_ITEM_CHARM_PALETTE,
+            MENU_ITEM_CHARM_PALETTE,
+            MENU_ITEM_CHARM_PALETTE,
+            MENU_ITEM_CHARM_PALETTE,
         },
     },
 
@@ -937,7 +952,12 @@ const menu_config_item_t menu_config_items[0x28U] = {
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
-            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_KARMA_PALETTE,
+            MENU_ITEM_KARMA_PALETTE,
+            MENU_ITEM_KARMA_PALETTE,
+            MENU_ITEM_KARMA_PALETTE,
+            MENU_ITEM_KARMA_PALETTE,
+            MENU_ITEM_KARMA_PALETTE,
         },
     },
 };
