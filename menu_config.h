@@ -87,6 +87,9 @@
 #define MENU_NLI_PROMOTION_ITEM 0x05U
 #define MENU_NLI_WORK_ITEM 0x07U
 
+// Value for current X/Y position to disable highlighting
+#define MENU_SELECTED_ITEM_DISABLED 0x8U
+
 #define IS_MENU_ITEM_ENABLED(index) (menu_config->items[index] != MENU_ITEM_INDEX_EMPTY)
 
 typedef struct {
@@ -120,6 +123,7 @@ extern menu_config_t menu_config_dealer;
 extern menu_config_t menu_config_hobo;
 extern menu_config_t menu_config_bar;
 extern menu_config_t menu_config_stats;
+extern menu_config_t menu_config_inventory;
 
 
 // Methods for menu

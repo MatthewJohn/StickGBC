@@ -1122,6 +1122,19 @@ menu_config_t menu_config_stats = {
     }
 };
 
+menu_config_t menu_config_inventory = {
+    {
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
 
 // Update palette for currently selected menu item
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
