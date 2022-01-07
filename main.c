@@ -1001,6 +1001,13 @@ void setup_building_menu()
         menu_state.current_item_x = 1U;
         menu_state.current_item_y = 0U;
     }
+    else if (game_state.current_building == S_B_INVENTORY)
+    {
+        menu_config = &menu_config_inventory;
+        // Select exit by default
+        menu_state.current_item_x = MENU_SELECTED_ITEM_DISABLED;
+        menu_state.current_item_y = MENU_SELECTED_ITEM_DISABLED;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1373,17 +1380,25 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
-    ROM_BANK_MENU_CONFIG;
-    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
-    ROM_BANK_RESET;
+    if (menu_state.current_item_x != MENU_SELECTED_ITEM_DISABLED &&
+        menu_state.current_item_y != MENU_SELECTED_ITEM_DISABLED)
+    {
+        ROM_BANK_MENU_CONFIG;
+        set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
+        ROM_BANK_RESET;
+    }
 
     menu_state.current_item_x = new_x;
     menu_state.current_item_y = new_y;
 
-    // Highlight new menu item
-    ROM_BANK_MENU_CONFIG;
-    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
-    ROM_BANK_RESET;
+    if (menu_state.current_item_x != MENU_SELECTED_ITEM_DISABLED &&
+        menu_state.current_item_y != MENU_SELECTED_ITEM_DISABLED)
+    {
+        // Highlight new menu item
+        ROM_BANK_MENU_CONFIG;
+        set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+        ROM_BANK_RESET;
+    }
 }
 
 void apply_for_job_promotion()
@@ -1491,6 +1506,13 @@ void show_stats_screen() NONBANKED
     show_number(3U, 9U, 3U, game_state.charm);
     show_signed_number(11U, 9U, 3U, game_state.karma);
     ROM_BANK_RESET;
+}
+
+// Show inventory screen
+void show_inventory_screen() NONBANKED
+{
+    game_state.current_building = S_B_INVENTORY;
+    setup_building_menu();
 }
 
 // Called per cycle to update background position and sprite
