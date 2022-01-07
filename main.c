@@ -37,6 +37,7 @@
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
 #define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
+#define ROM_BANK_JOY_CONFIG SWITCH_ROM_MBC5(6)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 
 UBYTE * debug_address;
@@ -531,35 +532,6 @@ void set_background_tiles() NONBANKED
 
     // Reset VKG_REG to original value
     VBK_REG = 0;
-}
-
-void check_user_input()
-{
-    UINT8 keys = joypad();
-    joypad_state.travel_x = 0;
-    joypad_state.travel_y = 0;
-    joypad_state.a_pressed = 0U;
-    joypad_state.b_pressed = 0U;
-    joypad_state.select_pressed = 0U;
-    joypad_state.start_pressed = 0U;
-
-    // Check directional 
-    if (keys & J_UP)
-        joypad_state.travel_y --;
-    if (keys & J_DOWN)
-        joypad_state.travel_y ++;
-    if (keys & J_LEFT)
-        joypad_state.travel_x --;
-    if (keys & J_RIGHT)
-        joypad_state.travel_x ++;
-    if (keys & J_A)
-        joypad_state.a_pressed = 1U;
-    if (keys & J_B)
-        joypad_state.b_pressed = 1U;
-    if (keys & J_SELECT)
-        joypad_state.select_pressed = 1U;
-    if (keys & J_START)
-        joypad_state.start_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -1992,7 +1964,10 @@ void main()
         while(1) {
                 wait_vbl_done();
 
+                ROM_BANK_JOY_CONFIG;
                 check_user_input();
+                ROM_BANK_RESET();
+
                 update_ai_positions();
                 update_state();
 
