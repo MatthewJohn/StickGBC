@@ -1139,14 +1139,14 @@ menu_config_t menu_config_inventory = {
 // Update palette for currently selected menu item
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
 {
+    unsigned int itx_y, itx_x, tile_index, menu_item_index;
+    unsigned char palette_colors[MENU_ITEM_WIDTH];
+    unsigned int menu_item_itx = menu_state->current_item_x + (MENU_MAX_ITEMS_X * menu_state->current_item_y);
+
     // Check if current menu item is disabled
     if (menu_state->current_item_x == MENU_SELECTED_ITEM_DISABLED ||
         menu_state->current_item_y == MENU_SELECTED_ITEM_DISABLED)
         return;
-
-    unsigned int itx_y, itx_x, tile_index, menu_item_index;
-    unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_itx = menu_state->current_item_x + (MENU_MAX_ITEMS_X * menu_state->current_item_y);
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)
