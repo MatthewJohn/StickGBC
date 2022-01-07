@@ -17,3 +17,5 @@ typedef struct {
     BOOLEAN select_pressed;
     BOOLEAN start_pressed;
 } joypad_state_t;
+
+void check_user_input();
