@@ -31,6 +31,7 @@
 #include "screen_state.c"
 #include "window.h"
 #include "sprite.h"
+#include "joy.h"
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
@@ -52,13 +53,7 @@ UWORD word_data[4];
 // Storage for scratch palette data
 UWORD scratch_palette_data[3][4];
 
-// Determine which way user needs to travel
-signed int travel_x;
-signed int travel_y;
-unsigned short a_pressed;
-unsigned short b_pressed;
-BOOLEAN select_pressed;
-BOOLEAN start_pressed;
+joypad_state_t joypad_state;
 UINT8 sprite_traveling_x;
 
 // Game state
@@ -541,30 +536,30 @@ void set_background_tiles() NONBANKED
 void check_user_input()
 {
     UINT8 keys = joypad();
-    travel_x = 0;
-    travel_y = 0;
-    a_pressed = 0U;
-    b_pressed = 0U;
-    select_pressed = 0U;
-    start_pressed = 0U;
+    joypad_state.travel_x = 0;
+    joypad_state.travel_y = 0;
+    joypad_state.a_pressed = 0U;
+    joypad_state.b_pressed = 0U;
+    joypad_state.select_pressed = 0U;
+    joypad_state.start_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
-        travel_y --;
+        joypad_state.travel_y --;
     if (keys & J_DOWN)
-        travel_y ++;
+        joypad_state.travel_y ++;
     if (keys & J_LEFT)
-        travel_x --;
+        joypad_state.travel_x --;
     if (keys & J_RIGHT)
-        travel_x ++;
+        joypad_state.travel_x ++;
     if (keys & J_A)
-        a_pressed = 1U;
+        joypad_state.a_pressed = 1U;
     if (keys & J_B)
-        b_pressed = 1U;
+        joypad_state.b_pressed = 1U;
     if (keys & J_SELECT)
-        select_pressed = 1U;
+        joypad_state.select_pressed = 1U;
     if (keys & J_START)
-        start_pressed = 1U;
+        joypad_state.start_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -740,13 +735,13 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
     
-    new_x = user_pos_x + travel_x;
-    new_y = user_pos_y + travel_y;
+    new_x = user_pos_x + joypad_state.travel_x;
+    new_y = user_pos_y + joypad_state.travel_y;
     // Check if traveling to new tile
-    if ((travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
-        (travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
-        (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
-        (travel_y == -1 && (new_y & 0x07U) == 0x07U))
+    if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
+        (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
+        (joypad_state.travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
+        (joypad_state.travel_y == -1 && (new_y & 0x07U) == 0x07U))
     {
             new_tile_itx = X_Y_TO_TILE_INDEX(
                 PIXEL_LOCATION_TO_TILE_COUNT(new_x),
@@ -758,8 +753,8 @@ void check_boundary_hit() NONBANKED
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
                 // Reset travel directions, acting as if user is not moving.
-                travel_x = 0;
-                travel_y = 0;
+                joypad_state.travel_x = 0;
+                joypad_state.travel_y = 0;
             }
             ROM_BANK_RESET;
     }
@@ -1541,8 +1536,8 @@ void update_state()
         // If movement happened too recently, disable movement
         if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
         {
-            travel_x = 0;
-            travel_y = 0;
+            joypad_state.travel_x = 0;
+            joypad_state.travel_y = 0;
         }
         else
             // Otherwise, update last movement time
@@ -1553,8 +1548,8 @@ void update_state()
         user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
         user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
 
-        user_pos_x += travel_x;
-        user_pos_y += travel_y;
+        user_pos_x += joypad_state.travel_x;
+        user_pos_y += joypad_state.travel_y;
         
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
@@ -1630,15 +1625,15 @@ void update_state()
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
             PLAYER_SPRITE_PALETTE,
-            travel_x,
-            travel_y
+            joypad_state.travel_x,
+            joypad_state.travel_y
         );
         ROM_BANK_RESET;
 
-        if (a_pressed)
+        if (joypad_state.a_pressed)
             check_building_enter();
 
-        else if (select_pressed) {
+        else if (joypad_state.select_pressed) {
             show_stats_screen();
         }
 
@@ -1654,7 +1649,7 @@ void update_state()
         // Each option is 7 tiles wide and 2 tiles high.
         // One tile buffer between each option.
 
-        if (travel_x != 0 || travel_y != 0)
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
         {
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
@@ -1663,12 +1658,12 @@ void update_state()
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
             if (
-                    (travel_x == 1 && menu_state.current_item_x == 0U) ||
-                    (travel_x == -1 && menu_state.current_item_x == 1U)
+                    (joypad_state.travel_x == 1 && menu_state.current_item_x == 0U) ||
+                    (joypad_state.travel_x == -1 && menu_state.current_item_x == 1U)
                 )
             {
                 // Setup new X value that user is attempting to access
-                new_menu_x = menu_state.current_item_x + travel_x;
+                new_menu_x = menu_state.current_item_x + joypad_state.travel_x;
 
                 // This will update item and mean that any checks against new_menu_x vs state will show
                 // them as equal
@@ -1681,7 +1676,7 @@ void update_state()
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
             // If moving up or attempting to travel in X, but no item directly beside it
-            if (travel_y == 1 || attempting_x_move)
+            if (joypad_state.travel_y == 1 || attempting_x_move)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
@@ -1692,7 +1687,7 @@ void update_state()
                         break;
                     }
             }
-            if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
+            if ((joypad_state.travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
@@ -1709,7 +1704,7 @@ void update_state()
         }
 
         // Check if moving menu item
-        if (a_pressed)
+        if (joypad_state.a_pressed)
         {
             // Check if 'exit' selected
             if (menu_state.current_item_y == 0U && menu_state.current_item_x == 1U)
