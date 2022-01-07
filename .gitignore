@@ -5,3 +5,4 @@ main.map
 *.asm
 *.i
 gc.log
+.codelite
