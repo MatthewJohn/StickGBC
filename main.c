@@ -58,6 +58,7 @@ signed int travel_y;
 unsigned short a_pressed;
 unsigned short b_pressed;
 BOOLEAN select_pressed;
+BOOLEAN start_pressed;
 UINT8 sprite_traveling_x;
 
 // Game state
@@ -545,6 +546,7 @@ void check_user_input()
     a_pressed = 0U;
     b_pressed = 0U;
     select_pressed = 0U;
+    start_pressed = 0U;
 
     // Check directional 
     if (keys & J_UP)
@@ -561,6 +563,8 @@ void check_user_input()
         b_pressed = 1U;
     if (keys & J_SELECT)
         select_pressed = 1U;
+    if (keys & J_START)
+        start_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -1636,6 +1640,10 @@ void update_state()
 
         else if (select_pressed) {
             show_stats_screen();
+        }
+
+        else if (start_pressed) {
+            show_inventory_screen();
         }
 
     } else {
