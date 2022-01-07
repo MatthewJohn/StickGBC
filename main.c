@@ -1380,25 +1380,17 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
-    if (menu_state.current_item_x != MENU_SELECTED_ITEM_DISABLED &&
-        menu_state.current_item_y != MENU_SELECTED_ITEM_DISABLED)
-    {
-        ROM_BANK_MENU_CONFIG;
-        set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
-        ROM_BANK_RESET;
-    }
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
+    ROM_BANK_RESET;
 
     menu_state.current_item_x = new_x;
     menu_state.current_item_y = new_y;
 
-    if (menu_state.current_item_x != MENU_SELECTED_ITEM_DISABLED &&
-        menu_state.current_item_y != MENU_SELECTED_ITEM_DISABLED)
-    {
-        // Highlight new menu item
-        ROM_BANK_MENU_CONFIG;
-        set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
-        ROM_BANK_RESET;
-    }
+    // Highlight new menu item
+    ROM_BANK_MENU_CONFIG;
+    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    ROM_BANK_RESET;
 }
 
 void apply_for_job_promotion()
