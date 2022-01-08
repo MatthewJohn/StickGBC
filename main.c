@@ -718,8 +718,10 @@ void load_menu_tiles() NONBANKED
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
 
-            // Ignore top right exit
-            if (itx_x == 1U && itx_y == 0U)
+            menu_item_itx = menu_config->items[menu_item_index];
+
+            // Ignore top right exit and item is exit
+            if (itx_x == 1U && itx_y == 0U && menu_item_itx == MENU_ITEM_INDEX_EXIT)
                 continue;
 
             second_tile_row = 0U;
@@ -737,8 +739,6 @@ void load_menu_tiles() NONBANKED
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
                 }
-
-                menu_item_itx = menu_config->items[menu_item_index];
 
                 ROM_BANK_MENU_CONFIG;
                 tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
