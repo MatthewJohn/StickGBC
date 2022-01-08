@@ -65,7 +65,7 @@
  3. Border side
  4. Ex
  5. it
- 6. PL
+ 6. 
  7. AY
  8. RT
  9. FI
@@ -77,7 +77,7 @@
  15. G
  16. GH
  17. SL
- 18. EE
+ 18. 
  19. P
  20. KA
  21. RM
