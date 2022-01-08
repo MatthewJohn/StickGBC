@@ -25,7 +25,7 @@ const menu_config_item_t menu_config_items[0x30U] = {
         {
             // Item 7 - SLEEP
             0x11U,  // SL
-            0x12U,  // EE
+            0x1FU,  // EE
             0x13U,  // P
             MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE,
             MENU_BLANK_ITEM_ROW,
