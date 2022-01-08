@@ -960,6 +960,34 @@ const menu_config_item_t menu_config_items[0x28U] = {
             MENU_ITEM_KARMA_PALETTE,
         },
     },
+
+    // Inventory Smokes
+    
+    // Inventory Caffeine Pills
+    
+    // Inventory Handgun
+    
+    // Inventory Knife
+    
+    // Inventory Cell Phone
+    
+    // Inventory skateboard
+    
+    // Inventory Cocaine
+    
+    // Inventory Bottle of Beer
+};
+
+UINT8 inventory_menu_item_map[] = {
+    0x28,  // Smokes
+    0x29,  // Caffeine pills
+    0x2A,  // Handgun
+    0x2B,  // Knife
+    0x00, // Alarm clock (hidden item)
+    0x2C,  // Cell Phone
+    0x2D,  // Skateboard
+    0x2E,  // Cocaine
+    0x2F,  // Bottle of beer
 };
 
 

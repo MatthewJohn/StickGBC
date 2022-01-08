@@ -111,6 +111,9 @@ typedef struct {
 // Menu items
 extern const menu_config_item_t menu_config_items[];
 
+// Mapping for inventory item index to menu item index
+extern const UINT8 inventory_menu_item_map[];
+
 // Menu configs
 extern menu_config_t menu_config_house;
 extern menu_config_t menu_config_restaurant;
