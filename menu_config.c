@@ -1104,7 +1104,7 @@ const menu_config_item_t menu_config_items[0x30U] = {
     },
 };
 
-UINT8 inventory_menu_item_map[] = {
+const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
     0x28,  // Smokes
     0x29,  // Caffeine pills
     0x2A,  // Handgun

@@ -10,6 +10,7 @@
 
 #include "gb.h"
 #include "game_constants.h"
+#include "game_state.h"
 
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
