@@ -707,8 +707,8 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
     
-    new_x = user_pos_x + joypad_state.travel_x;
-    new_y = user_pos_y + joypad_state.travel_y;
+    new_x = user_pos_x + (signed int)joypad_state.travel_x;
+    new_y = user_pos_y + (signed int)joypad_state.travel_y;
     // Check if traveling to new tile
     if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
         (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
@@ -1520,8 +1520,8 @@ void update_state()
         user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
         user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
 
-        user_pos_x += joypad_state.travel_x;
-        user_pos_y += joypad_state.travel_y;
+        user_pos_x += (signed int)joypad_state.travel_x;
+        user_pos_y += (signed int)joypad_state.travel_y;
         
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
