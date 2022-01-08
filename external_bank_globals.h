@@ -10,5 +10,7 @@
 
 
 extern UBYTE tile_data[];
+extern UWORD word_data[4];
+extern UWORD scratch_palette_data[3][4];
 
 #endif

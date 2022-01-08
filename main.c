@@ -15,6 +15,7 @@
 #include "main_map.h"
 #include "main_map_palette.h"
 #include "main_map_boundaries.h"
+#include "main_game.h"
 
 #include "building_menu_tiles.h"
 #include "building_menu_map.h"
@@ -31,11 +32,13 @@
 #include "screen_state.c"
 #include "window.h"
 #include "sprite.h"
+#include "joy.h"
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
-#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
+#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(4)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
+#define ROM_BANK_JOY_CONFIG SWITCH_ROM_MBC5(6)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 
 UBYTE * debug_address;
@@ -46,18 +49,13 @@ unsigned int user_pos_x;
 unsigned int user_pos_y;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
-UBYTE tile_data[12];
+UBYTE tile_data[1];
 UWORD word_data[4];
 
 // Storage for scratch palette data
 UWORD scratch_palette_data[3][4];
 
-// Determine which way user needs to travel
-signed int travel_x;
-signed int travel_y;
-unsigned short a_pressed;
-unsigned short b_pressed;
-BOOLEAN select_pressed;
+joypad_state_t joypad_state;
 UINT8 sprite_traveling_x;
 
 // Game state
@@ -175,88 +173,11 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
-void load_house()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
-    ROM_BANK_RESET;
-}
-
-void load_restaurant()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
-    ROM_BANK_RESET;
-    // Set palette data
-    word_data[0] = RGB(0, 0, 0);
-    word_data[1] = RGB(31, 22, 8);
-    word_data[2] = RGB(25, 0, 0);
-    word_data[3] = RGB(13, 12, 1 );
-    set_bkg_palette(PALETTE_SCRATCH_3, 1, word_data);
-}
-
-void load_shop()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
-    ROM_BANK_RESET;
-    word_data[0] = RGB(31, 21, 5);
-    word_data[1] = RGB(1, 0, 2);
-    word_data[2] = RGB(4, 20, 0);
-    word_data[3] = RGB(26, 16, 0 );
-    set_bkg_palette(PALETTE_SCRATCH_2, 1, word_data);
-}
-
-void load_pawn()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
-    ROM_BANK_RESET;
-    scratch_palette_data[2U][0U] = RGB(10U, 1U, 16U);
-    scratch_palette_data[2U][1U] = RGB(31U, 31U, 31U);
-    scratch_palette_data[2U][3U] = RGB(15U, 6U, 31U);
-    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
-}
-
-void load_university()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
-    ROM_BANK_RESET;
-    scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
-    scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
-    scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
-    scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
-    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
-}
-
-void load_nli()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
-    ROM_BANK_RESET;
-    scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
-    scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
-    set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
-}
-
-void load_bar()
-{
-    ROM_BANK_TILE_DATA;
-    set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
-    ROM_BANK_RESET;
-    scratch_palette_data[0U][0U] = RGB(1U, 14U, 1U);
-    scratch_palette_data[0U][1U] = RGB(10U, 8U, 1U);
-    scratch_palette_data[0U][2U] = RGB(31U, 1U, 1U);
-    scratch_palette_data[0U][3U] = RGB(3U, 8U, 1U);
-    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
-}
-
 void load_building_tile_data() NONBANKED
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
-
+    ROM_BANK_TILE_DATA;
     if (
         screen_state.displayed_buildings_x & SC_HOUSE &&
         screen_state.displayed_buildings_y & SC_HOUSE
@@ -298,6 +219,8 @@ void load_building_tile_data() NONBANKED
         screen_state.displayed_buildings_y & SC_BAR
     )
         load_bar();
+
+    ROM_BANK_RESET;
 }
 
 // Update background color based on time of day
@@ -370,61 +293,11 @@ void setup_globals()
 #ifdef IN_TESTING
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
+    game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
 #endif
-}
-
-void setup_sprites()
-{
-    // Load single sprite tile
-    HIDE_SPRITES;
-
-    VBK_REG = 0;
-
-    ROM_BANK_TILE_DATA;
-
-    // Load spirte tile data into VRAM
-    set_sprite_data(0U, 6U, sprite_tiles);
-
-    // Load sprite palette into VRAM
-    set_sprite_palette(0U, 3U, sprite_palette);
-
-    ROM_BANK_RESET;
-
-    VBK_REG = 0;
-
-    // Configure sprite to sprite tile
-    //  Main player
-    set_sprite_tile(0U, 0U);
-    //  Skater
-    set_sprite_tile(skater_sprite.sprite_index, 0U);
-
-    ROM_BANK_SPRITE;
-    set_sprite_direction(
-        skater_sprite.sprite_index,
-        SPRITE_TILESET_WALK,
-        skater_sprite.color_palette,
-        skater_sprite.travel_direction_x,
-        skater_sprite.travel_direction_y
-    );
-    ROM_BANK_RESET;
-
-    // Dealer
-    set_sprite_tile(dealer_sprite.sprite_index, 0U);
-
-    ROM_BANK_SPRITE;
-    set_sprite_direction(
-        dealer_sprite.sprite_index,
-        SPRITE_TILESET_WALK,
-        dealer_sprite.color_palette,
-        dealer_sprite.travel_direction_x,
-        dealer_sprite.travel_direction_y
-    );
-    ROM_BANK_RESET;
-
-    SHOW_SPRITES;
 }
 
 void update_ai_positions()
@@ -535,32 +408,6 @@ void set_background_tiles() NONBANKED
 
     // Reset VKG_REG to original value
     VBK_REG = 0;
-}
-
-void check_user_input()
-{
-    UINT8 keys = joypad();
-    travel_x = 0;
-    travel_y = 0;
-    a_pressed = 0U;
-    b_pressed = 0U;
-    select_pressed = 0U;
-
-    // Check directional
-    if (keys & J_UP)
-        travel_y --;
-    if (keys & J_DOWN)
-        travel_y ++;
-    if (keys & J_LEFT)
-        travel_x --;
-    if (keys & J_RIGHT)
-        travel_x ++;
-    if (keys & J_A)
-        a_pressed = 1U;
-    if (keys & J_B)
-        b_pressed = 1U;
-    if (keys & J_SELECT)
-        select_pressed = 1U;
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -736,13 +583,14 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
 
-    new_x = user_pos_x + travel_x;
-    new_y = user_pos_y + travel_y;
+    new_x = user_pos_x + (signed int)joypad_state.travel_x;
+    new_y = user_pos_y + (signed int)joypad_state.travel_y;
+
     // Check if traveling to new tile
-    if ((travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
-        (travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
-        (travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
-        (travel_y == -1 && (new_y & 0x07U) == 0x07U))
+    if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
+        (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
+        (joypad_state.travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
+        (joypad_state.travel_y == -1 && (new_y & 0x07U) == 0x07U))
     {
             new_tile_itx = X_Y_TO_TILE_INDEX(
                 PIXEL_LOCATION_TO_TILE_COUNT(new_x),
@@ -754,8 +602,8 @@ void check_boundary_hit() NONBANKED
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
                 // Reset travel directions, acting as if user is not moving.
-                travel_x = 0;
-                travel_y = 0;
+                joypad_state.travel_x = 0;
+                joypad_state.travel_y = 0;
             }
             ROM_BANK_RESET;
     }
@@ -781,7 +629,9 @@ void setup_main_map()
     sprite_tiles = mainmapspritetiles;
     sprite_palette = main_map_sprite_palette;
     set_background_tiles();
-    setup_sprites();
+    ROM_BANK_SPRITE;
+    setup_sprites(&skater_sprite, &dealer_sprite);
+    ROM_BANK_RESET;
 
     // Move background to screen location
     scroll_bkg(
@@ -819,8 +669,10 @@ void load_menu_tiles() NONBANKED
             // Work out menu item index, based on co-ords
             menu_item_index = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
 
-            // Ignore top right exit
-            if (itx_x == 1U && itx_y == 0U)
+            menu_item_itx = menu_config->items[menu_item_index];
+
+            // Ignore top right exit and item is exit
+            if (itx_x == 1U && itx_y == 0U && menu_item_itx == MENU_ITEM_INDEX_EXIT)
                 continue;
 
             second_tile_row = 0U;
@@ -838,8 +690,6 @@ void load_menu_tiles() NONBANKED
                     tile_itx_x_start -= MENU_ITEM_WIDTH;
                     second_tile_row = 1U;
                 }
-
-                menu_item_itx = menu_config->items[menu_item_index];
 
                 ROM_BANK_MENU_CONFIG;
                 tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
@@ -1000,6 +850,12 @@ void setup_building_menu()
         // Select exit by default
         menu_state.current_item_x = 1U;
         menu_state.current_item_y = 0U;
+    }
+    else if (game_state.current_building == S_B_INVENTORY)
+    {
+        // Select exit by default
+        menu_state.current_item_x = MENU_SELECTED_ITEM_DISABLED;
+        menu_state.current_item_y = MENU_SELECTED_ITEM_DISABLED;
     }
 
     HIDE_SPRITES;
@@ -1493,6 +1349,93 @@ void show_stats_screen() NONBANKED
     ROM_BANK_RESET;
 }
 
+BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
+{
+    UINT8 menu_item_itx = 0;
+    for (menu_item_itx = 0; menu_item_itx != HIDDEN_ITEM_COUNT; menu_item_itx ++)
+    {
+        if (hidden_inventory_items[menu_item_itx] == menu_item_index)
+            return 1U;
+    }
+    return 0U;
+}
+
+// Show inventory screen
+void show_inventory_screen() NONBANKED
+{
+    // Initialise array to hold numbers to put against
+    // each shown inventory item
+    UINT8 item_quantities[8U] = {
+        0, 0, 0, 0, 0, 0, 0, 0,
+    };
+
+    // Reset inventory menu items
+    menu_config_inventory.items[0] = 0U;
+    menu_config_inventory.items[1] = 0U;
+    menu_config_inventory.items[2] = 0U;
+    menu_config_inventory.items[3] = 0U;
+    menu_config_inventory.items[4] = 0U;
+    menu_config_inventory.items[5] = 0U;
+    menu_config_inventory.items[6] = 0U;
+
+    // Assign dynamic menu config as menu config
+    // to draw
+    menu_config = &menu_config_inventory;
+
+    game_state.current_building = S_B_INVENTORY;
+
+    itx_x = 0;
+    itx_y = 0;
+    // Iterate over inventory items
+    for (itx = 0; itx != S_INVENTORY_ITEM_COUNT; itx ++)
+    {
+        // Check if inventory item has a value
+        if (game_state.inventory[itx] == 0U || is_menu_item_hidden(itx) == 0U)
+            // Skip to next inventory item
+            continue;
+
+        menu_item_index = itx_x + (itx_y * MENU_MAX_ITEMS_X);
+
+        // Add quantity to quantity array
+        item_quantities[menu_item_index] = game_state.inventory[itx];
+
+        // Add inventory item to menu config
+        ROM_BANK_MENU_CONFIG;
+        menu_config_inventory.items[menu_item_index] = inventory_menu_item_map[itx];
+        ROM_BANK_RESET;
+
+        // Go to next item
+        itx_x += 1U;
+        if (itx_x == MENU_MAX_ITEMS_X)
+        {
+            itx_x = 0;
+            itx_y += 1U;
+        }
+        // Check if at max items
+        if (itx_y == MENU_MAX_ITEMS_Y)
+            break;
+    }
+
+    setup_building_menu();
+
+    // Iterate over item quantites and print to screen
+    ROM_BANK_TILE_DATA;
+    for (itx_y = 0; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
+        {
+            itx = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
+            // If the quantity is empty, assume there are no more items,
+            // as inventory items of 0 are not show in the screen
+            if (item_quantities[itx] == 0U)
+                break;
+
+            show_number(3U + (8U * itx_x), 3U + (3U * itx_y), 3U, item_quantities[itx]);
+        }
+    }
+    ROM_BANK_RESET;
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {
@@ -1510,7 +1453,7 @@ void update_state()
     {
         check_boundary_hit();
 
-        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
             main_player_tileset = SPRITE_TILESET_SKATEBOARD;
@@ -1523,8 +1466,8 @@ void update_state()
         // If movement happened too recently, disable movement
         if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
         {
-            travel_x = 0;
-            travel_y = 0;
+            joypad_state.travel_x = 0;
+            joypad_state.travel_y = 0;
         }
         else
             // Otherwise, update last movement time
@@ -1535,8 +1478,8 @@ void update_state()
         user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
         user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
 
-        user_pos_x += travel_x;
-        user_pos_y += travel_y;
+        user_pos_x += (signed int)joypad_state.travel_x;
+        user_pos_y += (signed int)joypad_state.travel_y;
 
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
@@ -1612,16 +1555,20 @@ void update_state()
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
             PLAYER_SPRITE_PALETTE,
-            travel_x,
-            travel_y
+            joypad_state.travel_x,
+            joypad_state.travel_y
         );
         ROM_BANK_RESET;
 
-        if (a_pressed)
+        if (joypad_state.a_pressed)
             check_building_enter();
 
-        else if (select_pressed) {
+        else if (joypad_state.select_pressed) {
             show_stats_screen();
+        }
+
+        else if (joypad_state.start_pressed) {
+            show_inventory_screen();
         }
 
     } else {
@@ -1632,7 +1579,7 @@ void update_state()
         // Each option is 7 tiles wide and 2 tiles high.
         // One tile buffer between each option.
 
-        if (travel_x != 0 || travel_y != 0)
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
         {
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
@@ -1641,12 +1588,12 @@ void update_state()
             // Check the direction of menu item travel and ensure it doesn't go out of bounds
             // Since there's only two items in X direction of menu, do a simple hard coded check
             if (
-                    (travel_x == 1 && menu_state.current_item_x == 0U) ||
-                    (travel_x == -1 && menu_state.current_item_x == 1U)
+                    (joypad_state.travel_x == 1 && menu_state.current_item_x == 0U) ||
+                    (joypad_state.travel_x == -1 && menu_state.current_item_x == 1U)
                 )
             {
                 // Setup new X value that user is attempting to access
-                new_menu_x = menu_state.current_item_x + travel_x;
+                new_menu_x = menu_state.current_item_x + joypad_state.travel_x;
 
                 // This will update item and mean that any checks against new_menu_x vs state will show
                 // them as equal
@@ -1659,7 +1606,7 @@ void update_state()
             // Until I can find a nicer way of doing this. Go in direction of menu travel and
             // check if there is an option available
             // If moving up or attempting to travel in X, but no item directly beside it
-            if (travel_y == 1 || attempting_x_move)
+            if (joypad_state.travel_y == 1 || attempting_x_move)
             {
                 itx_start = menu_state.current_item_y + 1U;
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
@@ -1670,7 +1617,7 @@ void update_state()
                         break;
                     }
             }
-            if ((travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
+            if ((joypad_state.travel_y == -1 || attempting_x_move) && menu_state.current_item_y != 0U)
             {
                 // Since we're going from current itx (Y -1) to 0,
                 // to make iteration easier, iterate from Y to 1 and take 1 during calulcation
@@ -1686,13 +1633,23 @@ void update_state()
             delay(DELAY_MENU_ITEM_MOVE);
         }
 
+        // Check if B or 'start' pressed to exit menu
+        if (joypad_state.b_pressed || joypad_state.start_pressed)
+        {
+            setup_main_map();
+            return;
+        }
+
         // Check if moving menu item
-        if (a_pressed)
+        if (joypad_state.a_pressed)
         {
             // Check if 'exit' selected
             if (menu_state.current_item_y == 0U && menu_state.current_item_x == 1U)
+            {
                 // If exiting menu, load main map
                 setup_main_map();
+                return;
+            }
 
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
@@ -1975,7 +1932,10 @@ void main()
         while(1) {
                 wait_vbl_done();
 
-                check_user_input();
+                ROM_BANK_JOY_CONFIG;
+                check_user_input(&joypad_state);
+                ROM_BANK_RESET;
+
                 update_ai_positions();
                 update_state();
 
