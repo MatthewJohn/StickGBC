@@ -10,10 +10,18 @@
 sed -i 's/^unsigned char/const unsigned char/g' main_map.c main_map_tileset.c building_menu_tiles.c main_map_sprite_tileset.c
 sed -i 's/^extern unsigned char/extern const unsigned char/g' main_map.h main_map_tileset.h building_menu_tiles.h main_map_sprite_tileset.h
 
-for file in main_map building_menu_map main_map_boundaries building_menu_tiles main_map_tileset;
-do
-    grep 'pragma bank' $file.c >/dev/null 2>&1 || echo '#pragma bank=5' > tmp.c && cat $file.c >> tmp.c && mv tmp.c $file.c;
-done
+f_setup_bank() {
+    file=$1
+    bank=$2
+    grep 'pragma bank' $file.c >/dev/null 2>&1 || echo "#pragma bank=$bank" > tmp.c && cat $file.c >> tmp.c && mv tmp.c $file.c;
+}
+
+f_setup_bank main_map 5
+f_setup_bank building_menu_map 5
+f_setup_bank main_map_boundaries 5
+f_setup_bank building_menu_tiles 5
+f_setup_bank main_map_tileset 5
+f_setup_bank main_map_sprite_tileset 4
 
 # Remove end of line whitespace from map files
 sed -E -i 's/[ \t]+$//g' main_map.c main_map_tileset.c building_menu_tiles.c main_map_sprite_tileset.c main_map.h main_map_tileset.h building_menu_tiles.h main_map_sprite_tileset.h

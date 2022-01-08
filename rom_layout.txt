@@ -1,4 +1,9 @@
 
+## 4
+
+ * Sprite data
+ * Sprite functions
+
 ## 5
 
  * Main map
@@ -16,3 +21,4 @@
 
 ## 6
  * Menu config
+ * Joy config

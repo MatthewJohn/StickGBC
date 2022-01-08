@@ -3,10 +3,13 @@
 # http://creativecommons.org/licenses/by-nc-nd/4.0/.
 
 
-for filename in main_map_palette building_menu_palette main_map_sprite_palette
-do
+f_setup_palette()
+{
+    filename=$1
+    bank=$2
+
   cat > $filename.c <<EOF
-#pragma bank=5
+#pragma bank=$bank
 
 #include "gb.h"
 
@@ -17,4 +20,8 @@ EOF
 
   echo >> $filename.c
   echo '};' >> $filename.c
-done
+}
+
+f_setup_palette main_map_palette 5
+f_setup_palette building_menu_palette 5
+f_setup_palette main_map_sprite_palette 4

@@ -4,12 +4,57 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#pragma bank=5
+#pragma bank=4
 
 #include "game_constants.h"
 #include "sprite.h"
+#include "main_map_sprite_tileset.h"
+#include "main_map_sprite_palette.h"
 
 UINT8 sprite_prop_data;
+
+void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+{
+    // Load single sprite tile
+    HIDE_SPRITES;
+
+    VBK_REG = 0;
+
+    // Load spirte tile data into VRAM
+    set_sprite_data(0U, 6U, mainmapspritetiles);
+
+    // Load sprite palette into VRAM
+    set_sprite_palette(0U, 3U, main_map_sprite_palette);
+
+    VBK_REG = 0;
+
+    // Configure sprite to sprite tile
+    //  Main player
+    set_sprite_tile(0U, 0U);
+    //  Skater
+    set_sprite_tile(skater_sprite->sprite_index, 0U);
+
+    set_sprite_direction(
+        skater_sprite->sprite_index,
+        SPRITE_TILESET_WALK,
+        skater_sprite->color_palette,
+        skater_sprite->travel_direction_x,
+        skater_sprite->travel_direction_y
+    );
+
+    // Dealer
+    set_sprite_tile(dealer_sprite->sprite_index, 0U);
+
+    set_sprite_direction(
+        dealer_sprite->sprite_index,
+        SPRITE_TILESET_WALK,
+        dealer_sprite->color_palette,
+        dealer_sprite->travel_direction_x,
+        dealer_sprite->travel_direction_y
+    );
+
+    SHOW_SPRITES;
+}
 
 void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
 {

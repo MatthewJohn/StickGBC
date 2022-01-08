@@ -36,7 +36,7 @@
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
 #define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
-#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(5)
+#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(4)
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 #define ROM_BANK_JOY_CONFIG SWITCH_ROM_MBC5(6)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
@@ -298,57 +298,6 @@ void setup_globals()
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
 #endif
-}
-
-void setup_sprites()
-{
-    // Load single sprite tile
-    HIDE_SPRITES;
-
-    VBK_REG = 0;
-
-    ROM_BANK_TILE_DATA;
-
-    // Load spirte tile data into VRAM
-    set_sprite_data(0U, 6U, sprite_tiles);
-
-    // Load sprite palette into VRAM
-    set_sprite_palette(0U, 3U, sprite_palette);
-
-    ROM_BANK_RESET;
-
-    VBK_REG = 0;
-
-    // Configure sprite to sprite tile
-    //  Main player
-    set_sprite_tile(0U, 0U);
-    //  Skater
-    set_sprite_tile(skater_sprite.sprite_index, 0U);
-
-    ROM_BANK_SPRITE;
-    set_sprite_direction(
-        skater_sprite.sprite_index,
-        SPRITE_TILESET_WALK,
-        skater_sprite.color_palette,
-        skater_sprite.travel_direction_x,
-        skater_sprite.travel_direction_y
-    );
-    ROM_BANK_RESET;
-
-    // Dealer
-    set_sprite_tile(dealer_sprite.sprite_index, 0U);
-
-    ROM_BANK_SPRITE;
-    set_sprite_direction(
-        dealer_sprite.sprite_index,
-        SPRITE_TILESET_WALK,
-        dealer_sprite.color_palette,
-        dealer_sprite.travel_direction_x,
-        dealer_sprite.travel_direction_y
-    );
-    ROM_BANK_RESET;
-
-    SHOW_SPRITES;
 }
 
 void update_ai_positions()
@@ -680,7 +629,9 @@ void setup_main_map()
     sprite_tiles = mainmapspritetiles;
     sprite_palette = main_map_sprite_palette;
     set_background_tiles();
-    setup_sprites();
+    ROM_BANK_SPRITE;
+    setup_sprites(&skater_sprite, &dealer_sprite);
+    ROM_BANK_RESET;
 
     // Move background to screen location
     scroll_bkg(
