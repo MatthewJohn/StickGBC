@@ -1412,6 +1412,12 @@ BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
 // Show inventory screen
 void show_inventory_screen() NONBANKED
 {
+    // Initialise array to hold numbers to put against
+    // each shown inventory item
+    UINT8 item_quantities[8U] = {
+        0, 0, 0, 0, 0, 0, 0, 0,
+    };
+
     // Reset inventory menu items
     menu_config_inventory.items[0] = 0U;
     menu_config_inventory.items[1] = 0U;
@@ -1437,9 +1443,14 @@ void show_inventory_screen() NONBANKED
             // Skip to next inventory item
             continue;
 
+        menu_item_index = itx_x + (itx_y * MENU_MAX_ITEMS_X);
+
+        // Add quantity to quantity array
+        item_quantities[menu_item_index] = game_state.inventory[itx];
+
         // Add inventory item to menu config
         ROM_BANK_MENU_CONFIG;
-        menu_config_inventory.items[itx_x + (itx_y * MENU_MAX_ITEMS_X)] = inventory_menu_item_map[itx];
+        menu_config_inventory.items[menu_item_index] = inventory_menu_item_map[itx];
         ROM_BANK_RESET;
 
         // Go to next item
@@ -1455,6 +1466,23 @@ void show_inventory_screen() NONBANKED
     }
 
     setup_building_menu();
+
+    // Iterate over item quantites and print to screen
+    ROM_BANK_TILE_DATA;
+    for (itx_y = 0; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
+    {
+        for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
+        {
+            itx = (itx_y * MENU_MAX_ITEMS_X) + itx_x;
+            // If the quantity is empty, assume there are no more items,
+            // as inventory items of 0 are not show in the screen
+            if (item_quantities[itx] == 0U)
+                break;
+
+            show_number(3U + (8U * itx_x), 3U + (3U * itx_y), 3U, item_quantities[itx]);
+        }
+    }
+    ROM_BANK_RESET;
 }
 
 // Called per cycle to update background position and sprite
