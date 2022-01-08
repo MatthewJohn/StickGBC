@@ -1058,8 +1058,13 @@ const menu_config_item_t menu_config_items[0x30U] = {
     {
         {
             MENU_BLANK_ITEM_ROW,
-            // @TODO Don't have tiles for skateboard
-            MENU_BLANK_ITEM_ROW
+
+            MENU_TILE_S,
+            MENU_TILE_KA,
+            MENU_TILE_TE,
+            MENU_TILE_BO,
+            MENU_TILE_AR,
+            MENU_TILE_D,
         },
         {
             MENU_ITEM_NO_PALETTE_ROW,
