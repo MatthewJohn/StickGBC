@@ -9,8 +9,8 @@
 
 typedef struct {
     // Determine which way user needs to travel
-    signed int travel_x;
-    signed int travel_y;
+    INT8 travel_x;
+    INT8 travel_y;
 
     unsigned short a_pressed;
     unsigned short b_pressed;
