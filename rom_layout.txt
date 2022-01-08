@@ -12,6 +12,7 @@
  * Boundaries
  * Sprite tiles
  * Background tile colours
+ * Main game (functions to load main map/tiles)
 
 ## 6
  * Menu config

@@ -5,12 +5,13 @@
  */
 
 
-#ifndef EXTERNAL_BANK_GLOBALS_DEF
-#define EXTERNAL_BANK_GLOBALS_DEF 1
+#include "gb.h"
 
-
-extern UBYTE tile_data[];
-extern UWORD word_data[4];
-extern UWORD scratch_palette_data[3][4];
-
-#endif
+// Functions to aid loading main map
+void load_house();
+void load_restaurant();
+void load_shop();
+void load_pawn();
+void load_university();
+void load_nli();
+void load_bar();
