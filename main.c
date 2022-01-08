@@ -48,7 +48,7 @@ unsigned int user_pos_x;
 unsigned int user_pos_y;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
-UBYTE tile_data[12];
+UBYTE tile_data[1];
 UWORD word_data[4];
 
 // Storage for scratch palette data
