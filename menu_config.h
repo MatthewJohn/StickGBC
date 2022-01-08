@@ -135,6 +135,7 @@ void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, u
 
 // Constants for menu tiles
 #define MENU_TILE_EX 0x04U
+#define MENU_TILE_D 0x06U
 #define MENU_TILE_AY 0x07U
 #define MENU_TILE_RT 0x08U
 #define MENU_TILE_FI 0x09U

@@ -65,7 +65,7 @@
  3. Border side
  4. Ex
  5. it
- 6. 
+ 6. D
  7. AY
  8. RT
  9. FI
@@ -186,6 +186,7 @@
  124. NG
  125. TH
  126. -
+ 127. D
  
 
 ## Tiles
