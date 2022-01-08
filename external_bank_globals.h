@@ -9,6 +9,4 @@
 #define EXTERNAL_BANK_GLOBALS_DEF 1
 
 
-extern UBYTE tile_data[];
-
 #endif
