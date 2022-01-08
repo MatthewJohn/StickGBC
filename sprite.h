@@ -5,7 +5,7 @@
  */
 
 
-#include "game_state.c"
+#include "game_state.h"
 #include "screen_state.c"
 
 void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y);

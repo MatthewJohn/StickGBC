@@ -11,7 +11,7 @@
 #include <gb/drawing.h>
 
 #include "game_constants.h"
-#include "game_state.c"
+#include "game_state.h"
 #include "external_bank_globals.h"
 #include "menu_config.h"
 

@@ -975,7 +975,6 @@ void setup_building_menu()
     }
     else if (game_state.current_building == S_B_INVENTORY)
     {
-        menu_config = &menu_config_inventory;
         // Select exit by default
         menu_state.current_item_x = MENU_SELECTED_ITEM_DISABLED;
         menu_state.current_item_y = MENU_SELECTED_ITEM_DISABLED;
@@ -1472,10 +1471,53 @@ void show_stats_screen() NONBANKED
     ROM_BANK_RESET;
 }
 
+BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
+{
+    UINT8 menu_item_itx = 0;
+    for (menu_item_itx = 0; menu_item_itx != HIDDEN_ITEM_COUNT; menu_item_itx ++)
+    {
+        if (hidden_inventory_items[menu_item_itx] == menu_item_index)
+            return 1U;
+    }
+    return 0U;
+}
+
 // Show inventory screen
 void show_inventory_screen() NONBANKED
 {
+    // Create dynamic menu config for inventory
+    menu_config_t inv_menu_config;
+    // Assign dynamic menu config as menu config
+    // to draw
+    menu_config = &inv_menu_config;
+
     game_state.current_building = S_B_INVENTORY;
+
+    itx_x = 0;
+    itx_y = 0;
+    // Iterate over inventory items
+    for (itx = 0; itx != S_INVENTORY_ITEM_COUNT; itx ++)
+    {
+        // Check if inventory item has a value
+        if (game_state.inventory[itx] == 0 || is_menu_item_hidden(itx))
+            // Skip to next inventory item
+            continue;
+
+        // Add inventory item to menu config
+        inv_menu_config.items[itx_x + (itx_y * MENU_MAX_ITEMS_X)] = inventory_menu_item_map[itx];
+
+        // Go to next item
+        itx_x += 1U;
+        if (itx_x == MENU_MAX_ITEMS_X)
+        {
+            itx_x = 0;
+            itx_y += 1U;
+        }
+        // Check if at max items
+        if (itx_y == MENU_MAX_ITEMS_Y)
+            break;
+    }
+    
     setup_building_menu();
 }
 
