@@ -48,7 +48,6 @@ unsigned int user_pos_x;
 unsigned int user_pos_y;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
-UBYTE tile_data[12];
 UWORD word_data[4];
 
 // Storage for scratch palette data
@@ -441,6 +440,7 @@ void set_background_tiles() NONBANKED
     unsigned int current_tile_palette_itx = 0;
     unsigned int max_x;
     unsigned int max_y;
+    UBYTE tile_data[1];
 
     // If loading main map, use screen_location variables
     // to offset tiles
@@ -545,7 +545,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
     UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
-    
+    UBYTE tile_data[1];
 
     if (move_x == 0 && move_y == 0)
     {
@@ -776,6 +776,7 @@ void setup_main_map()
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
+    UBYTE tile_data[1];
     move_bkg(0, 0);
 
     // Reset VBK_REG
