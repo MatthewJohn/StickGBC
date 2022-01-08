@@ -1431,7 +1431,7 @@ void show_inventory_screen() NONBANKED
     for (itx = 0; itx != S_INVENTORY_ITEM_COUNT; itx ++)
     {
         // Check if inventory item has a value
-        if (game_state.inventory[itx] == 0 || is_menu_item_hidden(itx))
+        if (game_state.inventory[itx] == 0U || is_menu_item_hidden(itx) == 0U)
             // Skip to next inventory item
             continue;
 
