@@ -219,7 +219,7 @@ void load_building_tile_data() NONBANKED
         screen_state.displayed_buildings_y & SC_BAR
     )
         load_bar();
-        
+
     ROM_BANK_RESET;
 }
 
@@ -1453,7 +1453,7 @@ void show_inventory_screen() NONBANKED
         if (itx_y == MENU_MAX_ITEMS_Y)
             break;
     }
-    
+
     setup_building_menu();
 }
 

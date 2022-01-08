@@ -999,7 +999,7 @@ const menu_config_item_t menu_config_items[0x30U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Inventory Handgun
     {
         {
@@ -1066,7 +1066,7 @@ const menu_config_item_t menu_config_items[0x30U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Inventory Cocaine
     {
         {
@@ -1084,7 +1084,7 @@ const menu_config_item_t menu_config_items[0x30U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Inventory Bottle of Beer
     {
         {
