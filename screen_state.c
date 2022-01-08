@@ -32,7 +32,7 @@ typedef struct {
     UINT8 displayed_buildings_y;
     BOOLEAN displayed_sprites_x[SC_AI_SPRITE_COUNT];
     BOOLEAN displayed_sprites_y[SC_AI_SPRITE_COUNT];
-    
+
     // Location of screen compared to map
     unsigned int screen_location_x;
     unsigned int screen_location_y;

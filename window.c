@@ -43,7 +43,7 @@ UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int v
                 value = value / 10U;
             }
         }
-    
+
         if (value == 0U && current_digit == 0U && itx != 0)
         {
             tile_data = 0x00;
@@ -153,7 +153,7 @@ void update_window(game_state_t* game_state)
             // Update remainder
             remainder = remainder / 10U;
         }
-        
+
         if (remainder == 0U && current_digit == 0U && itx != 0)
             break;
 
@@ -164,7 +164,7 @@ void update_window(game_state_t* game_state)
         // Prepare for next digit
         itx_x -= 1U;
     }
-    
+
     // BALANCE
     // Iterate over days passed
     remainder = game_state->balance;
@@ -172,7 +172,7 @@ void update_window(game_state_t* game_state)
     shown_symbol = 0U;
 
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
-    // Remove 1 as loop iterator starting at 1 
+    // Remove 1 as loop iterator starting at 1
     itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
 
     for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
@@ -190,7 +190,7 @@ void update_window(game_state_t* game_state)
                 remainder = remainder / 10U;
             }
         }
-    
+
         if (remainder == 0U && current_digit == 0U && itx != 0)
         {
             // Display dollar symbol, if not already shown
@@ -216,7 +216,7 @@ void update_window(game_state_t* game_state)
         // Prepare for next digit
         itx_x -= 1U;
     }
-    
+
 
     // HP
 
@@ -243,7 +243,7 @@ void update_window(game_state_t* game_state)
                 remainder = remainder / 10U;
             }
         }
-    
+
         if (remainder == 0U && current_digit == 0U && itx != 0)
         {
             // Display slash symbol, if not already shown
@@ -251,7 +251,7 @@ void update_window(game_state_t* game_state)
             {
                 tile_data[0] = MENU_TILE_SLASH;
                 shown_symbol = 1U;
-                
+
                 // Once complete with max_hp, continue to actual HP value
                 remainder = game_state->hp;
                 // Set itx back to start. When using high number values (5 digits for each), then this may cause an issue
@@ -302,14 +302,14 @@ void setup_window()
         }
     }
     VBK_REG = 0;
-    
+
     // Setup borders
     tile_data[0] = 0U;
     set_win_tiles(0U, 0U, 1U, 1U, &(tile_data[0]));
     set_win_tiles(0U, 1U, 1U, 1U, &(tile_data[0]));
     set_win_tiles(19U, 0U, 1U, 1U, &(tile_data[0]));
     set_win_tiles(19U, 1U, 1U, 1U, &(tile_data[0]));
-    
+
     // Setup 'days''
     tile_data[0] = MENU_TILE_DA;
     set_win_tiles(WINDOW_MAX_DIGITS_DAYS + 2U, 0U, 1U, 1U, &(tile_data[0]));
