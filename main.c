@@ -1412,16 +1412,18 @@ BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
 // Show inventory screen
 void show_inventory_screen() NONBANKED
 {
-    // Create dynamic menu config for inventory
-    menu_config_t inv_menu_config = {
-        {
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        },
-    };
+    // Reset inventory menu items
+    menu_config_inventory.items[0] = 0U;
+    menu_config_inventory.items[1] = 0U;
+    menu_config_inventory.items[2] = 0U;
+    menu_config_inventory.items[3] = 0U;
+    menu_config_inventory.items[4] = 0U;
+    menu_config_inventory.items[5] = 0U;
+    menu_config_inventory.items[6] = 0U;
 
     // Assign dynamic menu config as menu config
     // to draw
-    menu_config = &inv_menu_config;
+    menu_config = &menu_config_inventory;
 
     game_state.current_building = S_B_INVENTORY;
 
@@ -1437,7 +1439,7 @@ void show_inventory_screen() NONBANKED
 
         // Add inventory item to menu config
         ROM_BANK_MENU_CONFIG;
-        inv_menu_config.items[itx_x + (itx_y * MENU_MAX_ITEMS_X)] = inventory_menu_item_map[itx];
+        menu_config_inventory.items[itx_x + (itx_y * MENU_MAX_ITEMS_X)] = inventory_menu_item_map[itx];
         ROM_BANK_RESET;
 
         // Go to next item
