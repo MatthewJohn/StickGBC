@@ -90,7 +90,6 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
 
 void update_window(game_state_t* game_state)
 {
-    UBYTE tile_data[5];
     unsigned int current_digit, remainder, itx, itx_x;
     unsigned short shown_symbol;
 
