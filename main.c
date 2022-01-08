@@ -1495,7 +1495,7 @@ void update_state()
     {
         check_boundary_hit();
         
-        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && b_pressed)
+        if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
             main_player_tileset = SPRITE_TILESET_SKATEBOARD;
@@ -1609,7 +1609,7 @@ void update_state()
             show_stats_screen();
         }
 
-        else if (start_pressed) {
+        else if (joypad_state.start_pressed) {
             show_inventory_screen();
         }
 
