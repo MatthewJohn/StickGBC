@@ -1,0 +1,24 @@
+
+## 4
+
+ * Sprite data
+ * Sprite functions
+
+## 5
+
+ * Main map
+ * Main palette
+ * Main tiles
+ * Background
+ * Building menu map
+ * Building menu palette
+ * Building menu tiles
+ * Window.c
+ * Boundaries
+ * Sprite tiles
+ * Background tile colours
+ * Main game (functions to load main map/tiles)
+
+## 6
+ * Menu config
+ * Joy config

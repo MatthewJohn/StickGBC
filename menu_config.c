@@ -11,7 +11,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x28U] = {
+const menu_config_item_t menu_config_items[0x30U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -25,7 +25,7 @@ const menu_config_item_t menu_config_items[0x28U] = {
         {
             // Item 7 - SLEEP
             0x11U,  // SL
-            0x12U,  // EE
+            0x1FU,  // EE
             0x13U,  // P
             MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE, MENU_ITEM_NO_TILE,
             MENU_BLANK_ITEM_ROW,
@@ -318,6 +318,8 @@ const menu_config_item_t menu_config_items[0x28U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+
+    // Cell Phone
     {
         {
             0x79U,  // CE
@@ -344,6 +346,8 @@ const menu_config_item_t menu_config_items[0x28U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+
+    // KNIFE
     {
         {
             0x3AU,  // KN
@@ -361,7 +365,6 @@ const menu_config_item_t menu_config_items[0x28U] = {
             MENU_TILE_0, // 0
         },
         {
-            // KNIFE
             MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_NO_PALETTE,
             MENU_ITEM_NO_PALETTE,
@@ -960,6 +963,162 @@ const menu_config_item_t menu_config_items[0x28U] = {
             MENU_ITEM_KARMA_PALETTE,
         },
     },
+
+    // Inventory Smokes
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            0x31U,  // SM
+            0x32U,  // OK
+            0x33U,  // ES
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Caffeine Pills
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            0x2AU,  // CA
+            0x34U,  // FF
+            0x35U,  // EI
+            0x36U,  // NE
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Handgun
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            0x37U,  // HA
+            0x2BU,  // ND
+            0x38U,  // GU
+            0x39U,  // N
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Knife
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            0x3AU,  // KN
+            0x3BU,  // IF
+            0x1AU,  // E
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Cell Phone
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            0x79U,  // CE
+            0x76U,  // LL
+            0x42U,  // PH
+            0x43U,  // ON
+            0x1AU,  // E
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory skateboard
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            MENU_TILE_S,
+            MENU_TILE_KA,
+            MENU_TILE_TE,
+            MENU_TILE_BO,
+            MENU_TILE_AR,
+            MENU_TILE_D,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Cocaine
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            MENU_TILE_1,  // 1
+            MENU_TILE_G,  // G
+            MENU_TILE_CO,  // CO
+            MENU_TILE_CA,  // CA
+            MENU_TILE_IN,  // IN
+            MENU_TILE_E,  // E
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Inventory Bottle of Beer
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            MENU_TILE_BE,
+            MENU_TILE_ER,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+};
+
+const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
+    0x28,  // Smokes
+    0x29,  // Caffeine pills
+    0x2A,  // Handgun
+    0x2B,  // Knife
+    0x00, // Alarm clock (hidden item)
+    0x2C,  // Cell Phone
+    0x2D,  // Skateboard
+    0x2E,  // Cocaine
+    0x2F,  // Bottle of beer
 };
 
 
@@ -1122,6 +1281,19 @@ menu_config_t menu_config_stats = {
     }
 };
 
+menu_config_t menu_config_inventory = {
+    {
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
 
 // Update palette for currently selected menu item
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
@@ -1129,6 +1301,11 @@ void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, u
     unsigned int itx_y, itx_x, tile_index, menu_item_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
     unsigned int menu_item_itx = menu_state->current_item_x + (MENU_MAX_ITEMS_X * menu_state->current_item_y);
+
+    // Check if current menu item is disabled
+    if (menu_state->current_item_x == MENU_SELECTED_ITEM_DISABLED ||
+        menu_state->current_item_y == MENU_SELECTED_ITEM_DISABLED)
+        return;
 
     VBK_REG = 1;
     for (itx_y = 0; itx_y != MENU_ITEM_HEIGHT; itx_y ++)

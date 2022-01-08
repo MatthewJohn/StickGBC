@@ -5,9 +5,13 @@
  */
 
 
-#include "game_state.h"
+#include "gb.h"
 
-// Items hidden from inventory menu
-const UINT8 hidden_inventory_items[HIDDEN_ITEM_COUNT] = {
-    S_INVENTORY_ALARM_CLOCK,
-};
+// Functions to aid loading main map
+void load_house();
+void load_restaurant();
+void load_shop();
+void load_pawn();
+void load_university();
+void load_nli();
+void load_bar();

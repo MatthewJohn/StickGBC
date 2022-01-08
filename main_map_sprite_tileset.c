@@ -4,6 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#pragma bank=4
 /*
 
  MAIN_MAP_SPRITE_TILESET.C

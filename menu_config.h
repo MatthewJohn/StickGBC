@@ -10,6 +10,7 @@
 
 #include "gb.h"
 #include "game_constants.h"
+#include "game_state.h"
 
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
@@ -87,6 +88,9 @@
 #define MENU_NLI_PROMOTION_ITEM 0x05U
 #define MENU_NLI_WORK_ITEM 0x07U
 
+// Value for current X/Y position to disable highlighting
+#define MENU_SELECTED_ITEM_DISABLED 0x8U
+
 #define IS_MENU_ITEM_ENABLED(index) (menu_config->items[index] != MENU_ITEM_INDEX_EMPTY)
 
 typedef struct {
@@ -108,6 +112,9 @@ typedef struct {
 // Menu items
 extern const menu_config_item_t menu_config_items[];
 
+// Mapping for inventory item index to menu item index
+extern const UINT8 inventory_menu_item_map[];
+
 // Menu configs
 extern menu_config_t menu_config_house;
 extern menu_config_t menu_config_restaurant;
@@ -120,6 +127,7 @@ extern menu_config_t menu_config_dealer;
 extern menu_config_t menu_config_hobo;
 extern menu_config_t menu_config_bar;
 extern menu_config_t menu_config_stats;
+extern menu_config_t menu_config_inventory;
 
 
 // Methods for menu
@@ -127,6 +135,7 @@ void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, u
 
 // Constants for menu tiles
 #define MENU_TILE_EX 0x04U
+#define MENU_TILE_D 0x06U
 #define MENU_TILE_AY 0x07U
 #define MENU_TILE_RT 0x08U
 #define MENU_TILE_FI 0x09U

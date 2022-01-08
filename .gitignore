@@ -4,3 +4,5 @@ main.lst
 main.map
 *.asm
 *.i
+gc.log
+.codelite
