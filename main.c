@@ -1965,7 +1965,7 @@ void main()
                 wait_vbl_done();
 
                 ROM_BANK_JOY_CONFIG;
-                check_user_input();
+                check_user_input(&joypad_state);
                 ROM_BANK_RESET;
 
                 update_ai_positions();
