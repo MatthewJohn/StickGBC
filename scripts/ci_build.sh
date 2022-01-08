@@ -31,7 +31,7 @@ bash ./scripts/convert_maps.sh
 f_check_git_changes "Map source file changes dected - run conversion script and commit changes"
 
 # Remove end of line whitespace and check for changes
-sed -i 's/[\t ]+$//g' *.c *.h
+sed -E -i 's/[\t ]+$//g' *.c *.h
 f_check_git_changes "End of line whitespace found - please remove"
 
 make clean
