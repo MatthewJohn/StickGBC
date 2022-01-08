@@ -1654,13 +1654,23 @@ void update_state()
             delay(DELAY_MENU_ITEM_MOVE);
         }
 
+        // Check if B or 'start' pressed to exit menu
+        if (joypad_state.b_pressed || joypad_state.start_pressed)
+        {
+            setup_main_map();
+            return;
+        }
+
         // Check if moving menu item
         if (joypad_state.a_pressed)
         {
             // Check if 'exit' selected
             if (menu_state.current_item_y == 0U && menu_state.current_item_x == 1U)
+            {
                 // If exiting menu, load main map
                 setup_main_map();
+                return;
+            }
 
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
