@@ -1966,7 +1966,7 @@ void main()
 
                 ROM_BANK_JOY_CONFIG;
                 check_user_input();
-                ROM_BANK_RESET();
+                ROM_BANK_RESET;
 
                 update_ai_positions();
                 update_state();
