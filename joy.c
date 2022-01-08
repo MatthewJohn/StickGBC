@@ -19,7 +19,7 @@ void check_user_input(joypad_state_t *joypad_state)
     joypad_state->select_pressed = 0U;
     joypad_state->start_pressed = 0U;
 
-    // Check directional 
+    // Check directional
     if (keys & J_UP)
         joypad_state->travel_y --;
     if (keys & J_DOWN)

@@ -489,7 +489,7 @@ void set_background_tiles() NONBANKED
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0; 
+           VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -498,7 +498,7 @@ void set_background_tiles() NONBANKED
                  // Lookup tile from background tile map
                  &(tile_data[0])
             );
-            
+
             VBK_REG = 1;
 
             ROM_BANK_TILE_DATA;
@@ -525,7 +525,7 @@ void set_background_tiles() NONBANKED
             // @TODO Fix this
             //current_tile_itx ++;
         }
-        
+
         // Add remainig undrawn tiles to itx of tiles
         //current_tile_itx += (mainmapWidth - BACKGROUND_BUFFER_SIZE_Y);
     }
@@ -545,7 +545,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
     UINT16 current_tile_palette_itx;
     unsigned int itx_x_max;
     unsigned int itx_y_max;
-    
+
 
     if (move_x == 0 && move_y == 0)
     {
@@ -606,7 +606,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0; 
+           VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -638,7 +638,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 &(tile_data[0])
             );
 
-            VBK_REG = 0; 
+            VBK_REG = 0;
         }
     }
 
@@ -663,7 +663,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0; 
+           VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -694,8 +694,8 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &(tile_data[0])
-            );        
-           VBK_REG = 0; 
+            );
+           VBK_REG = 0;
         }
     }
 }
@@ -706,9 +706,10 @@ void check_boundary_hit() NONBANKED
     unsigned int new_x;
     unsigned int new_y;
     unsigned int new_tile_itx;
-    
+
     new_x = user_pos_x + (signed int)joypad_state.travel_x;
     new_y = user_pos_y + (signed int)joypad_state.travel_y;
+
     // Check if traveling to new tile
     if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
         (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
@@ -743,7 +744,7 @@ void setup_main_map()
     background_tiles = mainmaptiles;
     background_tile_palette = mainmaptilesCGB;
     background_width = mainmapWidth;
-    
+
     DRAW_OFFSET_X = screen_state.screen_location_x >> 3;
     DRAW_OFFSET_Y = screen_state.screen_location_y >> 3;
     DRAW_MAX_X = BACKGROUND_BUFFER_SIZE_X;
@@ -753,7 +754,7 @@ void setup_main_map()
     sprite_palette = main_map_sprite_palette;
     set_background_tiles();
     setup_sprites();
-    
+
     // Move background to screen location
     scroll_bkg(
         screen_state.screen_location_x & BACKGROUND_BUFFER_SIZE_PIXELS_MAX_X,
@@ -769,7 +770,7 @@ void setup_main_map()
     load_building_tile_data();
 
     update_background_color();
- 
+
     DISPLAY_ON;
 }
 
@@ -780,7 +781,7 @@ void load_menu_tiles() NONBANKED
 
     // Reset VBK_REG
     VBK_REG = 0;
-    
+
     // Iterate over all menu items and load palette data.
     // Start from 1 , as first item column is 'exit'
     for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
@@ -838,12 +839,12 @@ void load_menu_tiles() NONBANKED
 
                 // Set map data
                 set_bkg_tiles(
-                    tile_itx_x, 
+                    tile_itx_x,
                     tile_itx_y,
                     1U, 1U,  // Only setting 1 tile
                     &(tile_data[0])
                 );
-                
+
                 if (tile_data_index == MENU_ITEM_NO_TILE)
                     // If tile is empty, use blank palette
                     tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
@@ -859,17 +860,17 @@ void load_menu_tiles() NONBANKED
                     if (tile_data[0] == MENU_ITEM_NO_PALETTE)
                         tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
                 }
-                
+
                 VBK_REG = 1;
 
                 // Set palette data in VBK_REG1 for tile
                 set_bkg_tiles(
-                    tile_itx_x, 
+                    tile_itx_x,
                     tile_itx_y,
                     1, 1,  // Only setting 1 tile
                     &(tile_data[0])
                 );
-                
+
                 VBK_REG = 0;
             }
         }
@@ -983,7 +984,7 @@ void setup_building_menu()
     HIDE_SPRITES;
     // Reload background tiles
     set_background_tiles();
-    
+
     load_menu_tiles();
 
     // Highlight currently selected item
@@ -1002,7 +1003,7 @@ void check_building_enter()
         PIXEL_LOCATION_TO_TILE_COUNT(user_pos_x),
         PIXEL_LOCATION_TO_TILE_COUNT(user_pos_y)
     );
-    
+
     // Check for entering house
     if (tile_itx == 0x321U)
     {
@@ -1066,7 +1067,7 @@ void check_building_enter()
 // Check if win/lose conditions have been met
 void check_end_game()
 {
-    
+
 }
 
 
@@ -1126,7 +1127,7 @@ void load_buildings_x_right()
         screen_state.displayed_buildings_x |= SC_UNIVERSITY;
         load_building_tile_data();
     }
- 
+
     // Check skater
     if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
         screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
@@ -1240,14 +1241,14 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     if (game_state.balance >= cost)
     {
         game_state.balance -= cost;
-        
+
         // If new HP would exeed max HP, limit new HP to difference
         if (gained_hp >= (game_state.max_hp - game_state.hp))
             game_state.hp = game_state.max_hp;
         else
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
-            
+
         ROM_BANK_TILE_DATA;
         update_window(&game_state);
         ROM_BANK_RESET;
@@ -1341,7 +1342,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
     }
-    
+
     ROM_BANK_TILE_DATA;
     update_window(&game_state);
     ROM_BANK_RESET;
@@ -1416,7 +1417,7 @@ void apply_for_job_promotion()
 
     // Update menu with tiles for new job
     load_menu_tiles();
-    
+
     // Select 'work' item for new job
     move_to_menu_item(1U, 3U);
 }
@@ -1458,7 +1459,7 @@ void show_stats_screen() NONBANKED
 {
     game_state.current_building = S_B_STATS;
     setup_building_menu();
-    
+
     // Update tiles for each of the stats to display the current values
 
     // Intelligence
@@ -1494,7 +1495,7 @@ void update_state()
     if (game_state.current_building == S_B_NO_BUILDING)
     {
         check_boundary_hit();
-        
+
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
@@ -1522,7 +1523,7 @@ void update_state()
 
         user_pos_x += (signed int)joypad_state.travel_x;
         user_pos_y += (signed int)joypad_state.travel_y;
-        
+
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
         // to continue moving and not redraw map outside of map tiles)
@@ -1577,7 +1578,7 @@ void update_state()
         if (move_y != 0)
         {
             move_background(0, move_y);
-            
+
             if (screen_state.screen_location_y_tilepixel == 0U)
                 if (move_y == 1)
                     load_buildings_y_down();
@@ -1682,7 +1683,7 @@ void update_state()
             if (menu_state.current_item_y == 0U && menu_state.current_item_x == 1U)
                 // If exiting menu, load main map
                 setup_main_map();
-                
+
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
@@ -1695,9 +1696,9 @@ void update_state()
                 }
                 game_state.days_passed ++;
                 check_end_game();
-                
+
                 DISPLAY_OFF;
-                
+
                 // 'Purchase food' to increase HP by 20
                 purchase_food(0U, 20U);
 
@@ -1947,20 +1948,20 @@ void main()
 
     wait_vbl_done();
     SHOW_BKG;
-    
+
     // Initial setup of window and update with starting stats
     ROM_BANK_TILE_DATA;
     setup_window();
     update_window(&game_state);
     ROM_BANK_RESET;
     SHOW_WIN;
-    
+
     // Load background tiles. This turns display on, so run last
     setup_main_map();
 
     // And open the curtains!
     DISPLAY_ON;
-        
+
         while(1) {
                 wait_vbl_done();
 

@@ -13,7 +13,7 @@
  Map Source File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 20 x 18
    Tile set      : building_menu_tiles.gbr

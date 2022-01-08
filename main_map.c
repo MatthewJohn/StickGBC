@@ -12,7 +12,7 @@
  Map Source File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 72 x 57
    Tile set      : C:\GBDK\games\stickrpg\main_tiles.gbr
