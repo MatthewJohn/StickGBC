@@ -293,6 +293,7 @@ void setup_globals()
 #ifdef IN_TESTING
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
+    game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
@@ -1412,7 +1413,12 @@ BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
 void show_inventory_screen() NONBANKED
 {
     // Create dynamic menu config for inventory
-    menu_config_t inv_menu_config;
+    menu_config_t inv_menu_config = {
+        {
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        },
+    };
+
     // Assign dynamic menu config as menu config
     // to draw
     menu_config = &inv_menu_config;
