@@ -1,0 +1,17 @@
+
+## 5
+
+ * Main map
+ * Main palette
+ * Main tiles
+ * Background
+ * Building menu map
+ * Building menu palette
+ * Building menu tiles
+ * Window.c
+ * Boundaries
+ * Sprite tiles
+ * Background tile colours
+
+## 6
+ * Menu config
