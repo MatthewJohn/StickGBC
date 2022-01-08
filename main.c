@@ -1425,12 +1425,14 @@ void show_inventory_screen() NONBANKED
     for (itx = 0; itx != S_INVENTORY_ITEM_COUNT; itx ++)
     {
         // Check if inventory item has a value
-//        if (game_state.inventory[itx] == 0 || is_menu_item_hidden(itx))
-//            // Skip to next inventory item
-//            continue;
+        if (game_state.inventory[itx] == 0 || is_menu_item_hidden(itx))
+            // Skip to next inventory item
+            continue;
 
         // Add inventory item to menu config
+        ROM_BANK_MENU_CONFIG;
         inv_menu_config.items[itx_x + (itx_y * MENU_MAX_ITEMS_X)] = inventory_menu_item_map[itx];
+        ROM_BANK_RESET;
 
         // Go to next item
         itx_x += 1U;
