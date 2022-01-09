@@ -40,6 +40,7 @@
 #define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
 #define ROM_BANK_JOY_CONFIG SWITCH_ROM_MBC5(6)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
+#define HAS_MONEY(cost) (game_state.balance + 1U) > cost
 
 UBYTE * debug_address;
 
@@ -1115,7 +1116,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     // and currency is decimal, making very difficult
     // to do using bit shifting (and at least probably
     // less CPU intensive)
-    if (game_state.balance >= cost)
+    if (HAS_MONEY(cost))
     {
         game_state.balance -= cost;
 
@@ -1135,7 +1136,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
 {
     if (
-        game_state.balance >= cost &&
+        HAS_MONEY(cost) &&
         game_state.intelligence != S_MAX_INTELLIGENCE &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
@@ -1153,7 +1154,7 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
 void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
 {
     if (
-        game_state.balance >= cost &&
+        HAS_MONEY(cost) &&
         game_state.charm != S_MAX_CHARM &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
@@ -1171,7 +1172,7 @@ void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
 void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
 {
     if (
-        game_state.balance >= cost &&
+        HAS_MONEY(cost) &&
         game_state.strength != S_MAX_STRENGTH &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
@@ -1195,7 +1196,7 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
     // to do using bit shifting (and at least probably
     // less CPU intensive)
 
-    if (game_state.balance >= cost && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
+    if (HAS_MONEY(cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
     {
         game_state.balance -= cost;
         game_state.inventory[inventory_item] += 1U;
@@ -1860,7 +1861,7 @@ void update_state()
                     }
                     else  // Paying money and not getting charm
                     {
-                        if (game_state.balance >= 10U)
+                        if (HAS_MONEY(10U))
                         {
                             game_state.balance -= 10U;
                             ROM_BANK_TILE_DATA;
