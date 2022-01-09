@@ -955,14 +955,18 @@ void load_buildings_x_left()
     if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_HOUSE;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_house();
+        ROM_BANK_RESET;
     }
     if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
         screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
         screen_state.displayed_buildings_x |= SC_RESTAURANT;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_restaurant();
+        ROM_BANK_RESET;
     }
 
     // Check skater
@@ -981,7 +985,9 @@ void load_buildings_x_left()
     if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_nli();
+        ROM_BANK_RESET;
     }
     else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_NLI;
@@ -990,7 +996,9 @@ void load_buildings_x_left()
     if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
     {
         screen_state.displayed_buildings_x |= SC_BAR;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_bar();
+        ROM_BANK_RESET;
     }
     else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state.displayed_buildings_x &= ~SC_BAR;
@@ -1003,7 +1011,9 @@ void load_buildings_x_right()
     if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         screen_state.displayed_buildings_x |= SC_UNIVERSITY;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_university();
+        ROM_BANK_RESET;
     }
 
     // Check skater
@@ -1022,7 +1032,9 @@ void load_buildings_x_right()
     if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
     {
         screen_state.displayed_buildings_x |= SC_NLI;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_nli();
+        ROM_BANK_RESET;
     }
     else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_NLI;
@@ -1031,7 +1043,9 @@ void load_buildings_x_right()
     if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
     {
         screen_state.displayed_buildings_x |= SC_BAR;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_bar();
+        ROM_BANK_RESET;
     }
     else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
         screen_state.displayed_buildings_x &= ~SC_BAR;
@@ -1045,14 +1059,18 @@ void load_buildings_y_up()
     {
         screen_state.displayed_buildings_y &= ~SC_PAWN;
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_restaurant();
+        ROM_BANK_RESET;
     }
 
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_NLI;
         screen_state.displayed_buildings_y &= ~SC_SHOP;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_nli();
+        ROM_BANK_RESET;
     }
 
     if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
@@ -1075,25 +1093,33 @@ void load_buildings_y_down()
     if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
         screen_state.displayed_buildings_y |= SC_RESTAURANT;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_restaurant();
+        ROM_BANK_RESET;
     }
 
     if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_NLI;
         screen_state.displayed_buildings_y |= SC_SHOP;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_shop();
+        ROM_BANK_RESET;
     }
     if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
         screen_state.displayed_buildings_y |= SC_PAWN;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_pawn();
+        ROM_BANK_RESET;
     }
     if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
     {
         screen_state.displayed_buildings_y |= SC_BAR;
-        load_building_tile_data();
+        ROM_BANK_TILE_DATA;
+        load_bar();
+        ROM_BANK_RESET;
     }
 
     // Check skater
