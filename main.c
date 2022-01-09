@@ -35,10 +35,16 @@
 #include "joy.h"
 
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
-#define ROM_BANK_TILE_DATA SWITCH_ROM_MBC5(5)
-#define ROM_BANK_SPRITE SWITCH_ROM_MBC5(4)
-#define ROM_BANK_MENU_CONFIG SWITCH_ROM_MBC5(6)
-#define ROM_BANK_JOY_CONFIG SWITCH_ROM_MBC5(6)
+#define ROM_BANK_TILE_DATA 5
+#define ROM_BANK_TILE_DATA_SWITCH SWITCH_ROM_MBC5(ROM_BANK_TILE_DATA)
+#define ROM_BANK_BUILDING_MENU 3
+#define ROM_BANK_BUILDING_MENU_SWITCH SWITCH_ROM_MBC5(ROM_BANK_BUILDING_MENU)
+#define ROM_BANK_SPRITE 4
+#define ROM_BANK_SPRITE_SWITCH SWITCH_ROM_MBC5(ROM_BANK_SPRITE)
+#define ROM_BANK_MENU_CONFIG 6
+#define ROM_BANK_MENU_CONFIG_SWITCH SWITCH_ROM_MBC5(ROM_BANK_MENU_CONFIG)
+#define ROM_BANK_JOY_CONFIG 6
+#define ROM_BANK_JOY_CONFIG_SWITCH SWITCH_ROM_MBC5(ROM_BANK_JOY_CONFIG)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 #define HAS_MONEY(cost) (game_state.balance + 1U) > cost
 
@@ -180,7 +186,7 @@ void update_background_color()
     UWORD palette_data[4];
 
     // Copy palette 1
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_TILE_DATA_SWITCH;
     palette_data[0U] = background_time_colors[game_state.hour],
     palette_data[1U] = main_map_palette[1U];
     palette_data[2U] = main_map_palette[2U];
@@ -253,13 +259,13 @@ void setup_globals()
 
 void update_ai_positions()
 {
-    ROM_BANK_SPRITE;
+    ROM_BANK_SPRITE_SWITCH;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
     ROM_BANK_RESET;
 }
 
-void set_background_tiles() NONBANKED
+void set_background_tiles(unsigned int tile_data_bank) NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -275,12 +281,13 @@ void set_background_tiles() NONBANKED
     max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
 
     // Load color palette
-    ROM_BANK_TILE_DATA;
+    SWITCH_ROM_MBC5(tile_data_bank);
     set_bkg_palette(0, 8, background_color_palette);
 
     VBK_REG = 0;
     set_bkg_data(0, 8, background_tiles);
 
+    ROM_BANK_BUILDING_MENU_SWITCH;
     // Load in digits/symbols from building menu tiles, including clock tiles before it
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
@@ -312,7 +319,7 @@ void set_background_tiles() NONBANKED
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            ROM_BANK_TILE_DATA;
+            SWITCH_ROM_MBC5(tile_data_bank);
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
@@ -328,7 +335,7 @@ void set_background_tiles() NONBANKED
 
             VBK_REG = 1;
 
-            ROM_BANK_TILE_DATA;
+            SWITCH_ROM_MBC5(tile_data_bank);
             // Lookup tile from background tile map
             tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -429,7 +436,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_TILE_DATA_SWITCH;
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
@@ -444,7 +451,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             );
 
             // Lookup tile from background tile map
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_TILE_DATA_SWITCH;
             tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
@@ -486,7 +493,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_TILE_DATA_SWITCH;
             tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
@@ -500,7 +507,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                  &(tile_data[0])
             );
 
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_TILE_DATA_SWITCH;
             // Lookup tile from background tile map
             tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -548,7 +555,7 @@ void check_boundary_hit() NONBANKED
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
 
-            ROM_BANK_TILE_DATA;
+            ROM_BANK_TILE_DATA_SWITCH;
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
@@ -579,8 +586,8 @@ void setup_main_map()
 
     sprite_tiles = mainmapspritetiles;
     sprite_palette = main_map_sprite_palette;
-    set_background_tiles();
-    ROM_BANK_SPRITE;
+    set_background_tiles(ROM_BANK_TILE_DATA);
+    ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&skater_sprite, &dealer_sprite);
     ROM_BANK_RESET;
 
@@ -591,7 +598,7 @@ void setup_main_map()
     );
 
     // Load additional tiles required for main map
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_TILE_DATA_SWITCH;
     set_bkg_data(8U, 3U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
@@ -643,7 +650,7 @@ void load_menu_tiles() NONBANKED
                     second_tile_row = 1U;
                 }
 
-                ROM_BANK_MENU_CONFIG;
+                ROM_BANK_MENU_CONFIG_SWITCH;
                 tile_data_index = menu_config_items[menu_item_itx].tiles[tile_index];
 
                 // Only load data if tile contains data
@@ -651,7 +658,7 @@ void load_menu_tiles() NONBANKED
                 {
                     tile_data_index += tile_data_offset;
 
-                    ROM_BANK_TILE_DATA;
+                    ROM_BANK_BUILDING_MENU_SWITCH;
 
                     // Load tile data for menu item based on tile data offset
                     // in menu config and tile config in menu tile array
@@ -680,7 +687,7 @@ void load_menu_tiles() NONBANKED
                     tile_data[0] = MENU_ITEM_DEFAULT_PALETTE;
                 else
                 {
-                    ROM_BANK_MENU_CONFIG;
+                    ROM_BANK_MENU_CONFIG_SWITCH;
 
                     // Load default palette
                     tile_data[0] = menu_config_items[menu_item_itx].palette[tile_index];
@@ -812,12 +819,12 @@ void setup_building_menu()
 
     HIDE_SPRITES;
     // Reload background tiles
-    set_background_tiles();
+    set_background_tiles(ROM_BANK_BUILDING_MENU);
 
     load_menu_tiles();
 
     // Highlight currently selected item
-    ROM_BANK_MENU_CONFIG;
+    ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
     ROM_BANK_RESET;
 
@@ -917,7 +924,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             // Otherwise, add new HP to HP
             game_state.hp += gained_hp;
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
     }
@@ -935,7 +942,7 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
         game_state.hour += number_of_hours;
         game_state.intelligence += intelligence;
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
     }
@@ -953,7 +960,7 @@ void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
         game_state.hour += number_of_hours;
         game_state.charm += charm;
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
     }
@@ -972,7 +979,7 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         game_state.strength += strength;
         game_state.max_hp += strength;
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
     }
@@ -991,7 +998,7 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
         game_state.balance -= cost;
         game_state.inventory[inventory_item] += 1U;
 
-        ROM_BANK_TILE_DATA;
+        ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
 
@@ -1011,7 +1018,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         game_state.hour += number_of_hours;
     }
 
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_BUILDING_MENU_SWITCH;
     update_window(&game_state);
     ROM_BANK_RESET;
 }
@@ -1020,7 +1027,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
-    ROM_BANK_MENU_CONFIG;
+    ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
     ROM_BANK_RESET;
 
@@ -1028,7 +1035,7 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
     menu_state.current_item_y = new_y;
 
     // Highlight new menu item
-    ROM_BANK_MENU_CONFIG;
+    ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
     ROM_BANK_RESET;
 }
@@ -1131,7 +1138,7 @@ void show_stats_screen() NONBANKED
     // Update tiles for each of the stats to display the current values
 
     // Intelligence
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_TILE_DATA_SWITCH;
     // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
     show_number(3U, 6U, 3U, game_state.intelligence);
     show_number(11U, 6U, 3U, game_state.strength);
@@ -1191,7 +1198,7 @@ void show_inventory_screen() NONBANKED
         item_quantities[menu_item_index] = game_state.inventory[itx];
 
         // Add inventory item to menu config
-        ROM_BANK_MENU_CONFIG;
+        ROM_BANK_MENU_CONFIG_SWITCH;
         menu_config_inventory.items[menu_item_index] = inventory_menu_item_map[itx];
         ROM_BANK_RESET;
 
@@ -1210,7 +1217,7 @@ void show_inventory_screen() NONBANKED
     setup_building_menu();
 
     // Iterate over item quantites and print to screen
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_TILE_DATA_SWITCH;
     for (itx_y = 0; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
     {
         for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
@@ -1319,7 +1326,7 @@ void update_state()
             // but doesn't matter for now).
             if (screen_state.screen_location_x_tilepixel == 0U)
             {
-                ROM_BANK_TILE_DATA;
+                ROM_BANK_TILE_DATA_SWITCH;
                 if (move_x == 1)
                     load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite);
                 else
@@ -1333,7 +1340,7 @@ void update_state()
 
             if (screen_state.screen_location_y_tilepixel == 0U)
             {
-                ROM_BANK_TILE_DATA;
+                ROM_BANK_TILE_DATA_SWITCH;
                 if (move_y == 1)
                     load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite);
                 else
@@ -1349,7 +1356,7 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        ROM_BANK_SPRITE;
+        ROM_BANK_SPRITE_SWITCH;
         set_sprite_direction(
             PLAYER_SPRITE_INDEX,
             main_player_tileset,
@@ -1468,7 +1475,7 @@ void update_state()
                 // 'Purchase food' to increase HP by 20
                 purchase_food(0U, 20U);
 
-                ROM_BANK_TILE_DATA;
+                ROM_BANK_BUILDING_MENU_SWITCH;
                 update_window(&game_state);
                 ROM_BANK_RESET;
 
@@ -1617,7 +1624,7 @@ void update_state()
                             game_state.hour += 1U;
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
                             game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
-                            ROM_BANK_TILE_DATA;
+                            ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
                         }
@@ -1662,7 +1669,7 @@ void update_state()
                         if (HAS_MONEY(10U))
                         {
                             game_state.balance -= 10U;
-                            ROM_BANK_TILE_DATA;
+                            ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
                         }
@@ -1716,7 +1723,7 @@ void main()
     SHOW_BKG;
 
     // Initial setup of window and update with starting stats
-    ROM_BANK_TILE_DATA;
+    ROM_BANK_BUILDING_MENU_SWITCH;
     setup_window();
     update_window(&game_state);
     ROM_BANK_RESET;
@@ -1731,7 +1738,7 @@ void main()
         while(1) {
                 wait_vbl_done();
 
-                ROM_BANK_JOY_CONFIG;
+                ROM_BANK_JOY_CONFIG_SWITCH;
                 check_user_input(&joypad_state);
                 ROM_BANK_RESET;
 

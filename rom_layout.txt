@@ -1,8 +1,15 @@
 
+## 3
+ * Building menu tiles
+ * Building menu map
+ * Building menu palette
+ * Window.c
+
 ## 4
 
  * Sprite data
  * Sprite functions
+ * Sprite tiles
 
 ## 5
 
@@ -10,14 +17,10 @@
  * Main palette
  * Main tiles
  * Background
- * Building menu map
- * Building menu palette
- * Building menu tiles
- * Window.c
  * Boundaries
- * Sprite tiles
  * Background tile colours
  * Main game (functions to load main map/tiles)
+ * main_game.c
 
 ## 6
  * Menu config
