@@ -284,9 +284,13 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
            background_palette_itx_x != max_x;
            background_palette_itx_x ++)
     {
-        // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-//        if (background_palette_itx_x == 0x10U)
-//            break;
+
+#ifdef DEBUG_SET_BACKGROUND_SKIP
+        // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
+        if (background_palette_itx_x == 0x10U)
+            break;
+#endif
+
         for (background_palette_itx_y = screen_state.draw_offset_y;
                background_palette_itx_y != max_y;
                background_palette_itx_y ++)
@@ -294,9 +298,11 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
             // Temp Test
             current_tile_itx = ((background_palette_itx_y) * screen_state.background_width) + background_palette_itx_x;
 
-            // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-//            if (background_palette_itx_y == 0x10U/)
-//                break;
+#ifdef DEBUG_SET_BACKGROUND_SKIP
+            // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
+            if (background_palette_itx_y == 0x10U)
+                break;
+#endif
 
             // Tile data is split across two bytes. In the layout:
             // 0-6 - tile number
