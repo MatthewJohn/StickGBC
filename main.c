@@ -350,7 +350,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
     // Reset VKG_REG to original value
     VBK_REG = 0;
-    
+
     // Reset ROM bank to original
     SWITCH_ROM_MBC5(return_bank);
 }
