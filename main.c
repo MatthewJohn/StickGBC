@@ -1696,11 +1696,12 @@ void update_state()
 }
 
 // Switch to JOY rom and update joypad state
-void main_check_joy()
+void main_check_joy(unsigned int return_bank)
 {
     ROM_BANK_JOY_CONFIG_SWITCH;
     check_user_input(&joypad_state);
-    ROM_BANK_RESET;
+
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void main()
@@ -1733,7 +1734,7 @@ void main()
         while(1) {
                 wait_vbl_done();
 
-                main_check_joy();
+                main_check_joy(ROM_BANK_DEFAULT);
 
                 update_ai_positions();
                 update_state();

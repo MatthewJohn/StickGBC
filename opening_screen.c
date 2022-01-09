@@ -27,7 +27,10 @@ void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_st
     screen_state->draw_max_x = SCREEN_WIDTH_TILES;
     screen_state->draw_max_y = SCREEN_HEIGHT_TILES;
 
-    set_background_tiles(ROM_BANK_OPENING_SCREEN, ROM_BANK_OPENING_SCREEN);
+    set_background_tiles(
+        ROM_BANK_OPENING_SCREEN,  // Load tiles from this ROM bank
+        ROM_BANK_OPENING_SCREEN  // Return to the ROM bank for this function
+    );
 
     // Move background to top left
     scroll_bkg(0, 0);
@@ -36,5 +39,12 @@ void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_st
     set_bkg_data(8U, 19U, &(openingscreentiles[8U << 4]));
 
     DISPLAY_ON;
-//    delay(5000);
+    
+    // Wait for user to press A or START
+    while (joypad_state->a_pressed == 0U && joypad_state->start_pressed == 0U)
+    {
+        wait_vbl_done();
+
+        main_check_joy(ROM_BANK_OPENING_SCREEN);
+    }
 }
