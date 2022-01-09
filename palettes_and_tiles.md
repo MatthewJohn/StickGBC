@@ -9,7 +9,7 @@
     * 0 - House roof/road/status bar background/Pavement outer/pawn shop door frame
     * 1 - Road markings/status bar foreground/Pavement inner/pawn shop door inner
     * 2 - Black text NLI sign/pawn shop door handle
-    * 3 - 
+    * 3 - Tree leaf
  2.
     * 0 - Green - Grass/Hobo background
     * 1 - Orange - Hobo/Bar beer sign
@@ -200,6 +200,9 @@
  - 7 - scratch for building 3
  - 8 - Pavement edge
  - 9 - Vertical Pavement edge/road markings/shop roof edge
+ - 10 - Pavement corner
+ - 11 - Tree base
+ - 12 - Tree leaves
  - 13 - house - 1 window (moved into scratch 1)
  - 14 - house - 2 (unused)
  - 15 - house - 3 (unused)
