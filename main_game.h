@@ -6,6 +6,7 @@
 
 
 #include "gb.h"
+#include "screen_state.c"
 
 // Functions to aid loading main map
 void load_house();
@@ -15,3 +16,4 @@ void load_pawn();
 void load_university();
 void load_nli();
 void load_bar();
+void load_building_tile_data(screen_state_t *screen_state);

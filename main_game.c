@@ -73,3 +73,51 @@ void load_bar()
     scratch_palette_data[0U][3U] = RGB(3U, 8U, 1U);
     set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
 }
+
+void load_building_tile_data(screen_state_t *screen_state)
+{
+    // Load house data from tile 8 to tile
+    VBK_REG = 0;
+
+    if (
+        screen_state->displayed_buildings_x & SC_HOUSE &&
+        screen_state->displayed_buildings_y & SC_HOUSE
+    )
+        load_house();
+
+    if (
+        screen_state->displayed_buildings_x & SC_RESTAURANT &&
+        screen_state->displayed_buildings_y & SC_RESTAURANT
+    )
+        load_restaurant();
+
+    if (
+        screen_state->displayed_buildings_x & SC_SHOP &&
+        screen_state->displayed_buildings_y & SC_SHOP
+    )
+        load_shop();
+
+    if (
+        screen_state->displayed_buildings_x & SC_PAWN &&
+        screen_state->displayed_buildings_y & SC_PAWN
+    )
+        load_pawn();
+
+    if (
+        screen_state->displayed_buildings_x & SC_UNIVERSITY &&
+        screen_state->displayed_buildings_y & SC_UNIVERSITY
+    )
+        load_university();
+
+    if (
+        screen_state->displayed_buildings_x & SC_NLI &&
+        screen_state->displayed_buildings_y & SC_NLI
+    )
+        load_nli();
+
+    if (
+        screen_state->displayed_buildings_x & SC_BAR &&
+        screen_state->displayed_buildings_y & SC_BAR
+    )
+        load_bar();
+}
