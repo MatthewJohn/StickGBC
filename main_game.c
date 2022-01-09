@@ -121,3 +121,164 @@ void load_building_tile_data(screen_state_t *screen_state)
     )
         load_bar();
 }
+
+void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+{
+    // Enable house
+    if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_x |= SC_HOUSE;
+        load_house();
+    }
+    if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        // Disable university and re-enable restaurant
+        screen_state->displayed_buildings_x &= ~SC_UNIVERSITY;
+        screen_state->displayed_buildings_x |= SC_RESTAURANT;
+        load_restaurant();
+    }
+
+    // Check skater
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite->min_location_x >> 3))
+        screen_state->displayed_sprites_x[skater_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_x_tiles == (skater_sprite->max_location_x >> 3))
+        screen_state->displayed_sprites_x[skater_sprite->sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite->min_location_x >> 3))
+        screen_state->displayed_sprites_x[dealer_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_x_tiles == (dealer_sprite->max_location_x >> 3))
+        screen_state->displayed_sprites_x[dealer_sprite->sprite_display_bit] = 1U;
+
+    // NLI
+    if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    {
+        screen_state->displayed_buildings_x |= SC_NLI;
+        load_nli();
+    }
+    else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+        screen_state->displayed_buildings_x &= ~SC_NLI;
+
+    // Bar
+    if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+    {
+        screen_state->displayed_buildings_x |= SC_BAR;
+        load_bar();
+    }
+    else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+        screen_state->displayed_buildings_x &= ~SC_BAR;
+}
+void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+{
+    // Disable house
+    if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
+        screen_state->displayed_buildings_x &= ~SC_HOUSE;
+    if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_x |= SC_UNIVERSITY;
+        load_university();
+    }
+
+    // Check skater
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite->min_location_x >> 3))
+        screen_state->displayed_sprites_x[skater_sprite->sprite_display_bit] = 1U;
+    if ((screen_state->screen_location_x_tiles - 1U) == (skater_sprite->max_location_x >> 3))
+        screen_state->displayed_sprites_x[skater_sprite->sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite->min_location_x >> 3))
+        screen_state->displayed_sprites_x[dealer_sprite->sprite_display_bit] = 1U;
+    if ((screen_state->screen_location_x_tiles - 1U) == (dealer_sprite->max_location_x >> 3))
+        screen_state->displayed_sprites_x[dealer_sprite->sprite_display_bit] = 0U;
+
+    // NLI
+    if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    {
+        screen_state->displayed_buildings_x |= SC_NLI;
+        load_nli();
+    }
+    else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+        screen_state->displayed_buildings_x &= ~SC_NLI;
+
+    // Bar
+    if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
+    {
+        screen_state->displayed_buildings_x |= SC_BAR;
+        load_bar();
+    }
+    else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
+        screen_state->displayed_buildings_x &= ~SC_BAR;
+}
+void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+{
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
+        screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
+
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_y &= ~SC_PAWN;
+        screen_state->displayed_buildings_y |= SC_RESTAURANT;
+        load_restaurant();
+    }
+
+    if (screen_state->screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_y |= SC_NLI;
+        screen_state->displayed_buildings_y &= ~SC_SHOP;
+        load_nli();
+    }
+
+    if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+        screen_state->displayed_buildings_y &= ~SC_BAR;
+
+    // Check skater
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite->min_location_y >> 3U))
+        screen_state->displayed_sprites_y[skater_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_y_tiles == (skater_sprite->max_location_y >> 3U))
+        screen_state->displayed_sprites_y[skater_sprite->sprite_display_bit] = 1U;
+
+    // Check dealer
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite->min_location_y >> 3U))
+        screen_state->displayed_sprites_y[dealer_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_y_tiles == (dealer_sprite->max_location_y >> 3U))
+        screen_state->displayed_sprites_y[dealer_sprite->sprite_display_bit] = 1U;
+}
+void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+{
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
+    {
+        screen_state->displayed_buildings_y |= SC_RESTAURANT;
+        load_restaurant();
+    }
+
+    if (screen_state->screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_y &= ~SC_NLI;
+        screen_state->displayed_buildings_y |= SC_SHOP;
+        load_shop();
+    }
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
+        screen_state->displayed_buildings_y |= SC_PAWN;
+        load_pawn();
+    }
+    if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_y |= SC_BAR;
+        load_bar();
+    }
+
+    // Check skater
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite->min_location_y >> 3U))
+        screen_state->displayed_sprites_y[skater_sprite->sprite_display_bit] = 1U;
+    if ((screen_state->screen_location_y_tiles - 1U) == (skater_sprite->max_location_y >> 3U))
+        screen_state->displayed_sprites_y[skater_sprite->sprite_display_bit] = 0U;
+
+    // Check dealer
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite->min_location_y >> 3U))
+        screen_state->displayed_sprites_y[dealer_sprite->sprite_display_bit] = 1U;
+    if ((screen_state->screen_location_y_tiles - 1U) == (dealer_sprite->max_location_y >> 3U))
+        screen_state->displayed_sprites_y[dealer_sprite->sprite_display_bit] = 0U;
+}
+
