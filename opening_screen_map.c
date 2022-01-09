@@ -4,6 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#pragma bank=7
 /*
 
  OPENING_SCREEN_MAP.C
@@ -11,7 +12,7 @@
  Map Source File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 20 x 18
    Tile set      : opening_screen_tiles.gbr
@@ -28,7 +29,7 @@
 #define openingscreenmapHeight 18
 #define openingscreenmapBank 0
 
-unsigned char openingscreenmap[] =
+const unsigned char openingscreenmap[] =
 {
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,

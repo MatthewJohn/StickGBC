@@ -11,7 +11,7 @@
  Map Include File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 20 x 18
    Tile set      : opening_screen_tiles.gbr
@@ -28,6 +28,6 @@
 #define openingscreenmapHeight 18
 #define openingscreenmapBank 0
 
-extern unsigned char openingscreenmap[];
+extern const unsigned char openingscreenmap[];
 
 /* End of OPENING_SCREEN_MAP.H */

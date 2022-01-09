@@ -32,8 +32,8 @@
 /* Bank of tiles. */
 #define openingscreentilesBank 0
 /* CGBpalette entries. */
-extern unsigned char openingscreentilesCGB[];
+extern const unsigned char openingscreentilesCGB[];
 /* Start of tile array. */
-extern unsigned char openingscreentiles[];
+extern const unsigned char openingscreentiles[];
 
 /* End of OPENING_SCREEN_TILES.H */
