@@ -28,6 +28,6 @@
 #define buildingmenumapHeight 18
 #define buildingmenumapBank 0
 
-extern unsigned char buildingmenumap[];
+extern const unsigned char buildingmenumap[];
 
 /* End of BUILDING_MENU_MAP.H */
