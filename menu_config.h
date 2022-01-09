@@ -11,6 +11,7 @@
 #include "gb.h"
 #include "game_constants.h"
 #include "game_state.h"
+#include "menu_tile_index.h"
 
 #define MENU_MAX_ITEMS_X 2U
 #define MENU_MAX_ITEMS_Y 4U
@@ -133,96 +134,3 @@ extern menu_config_t menu_config_inventory;
 // Methods for menu
 void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette);
 
-// Constants for menu tiles
-#define MENU_TILE_EX 0x04U
-#define MENU_TILE_D 0x06U
-#define MENU_TILE_AY 0x07U
-#define MENU_TILE_RT 0x08U
-#define MENU_TILE_FI 0x09U
-#define MENU_TILE_BE 0x0AU
-#define MENU_TILE_BO 0x0BU
-#define MENU_TILE_TT 0x0CU
-#define MENU_TILE_OF 0x0DU
-#define MENU_TILE_HE 0x0EU
-#define MENU_TILE_G 0x0FU
-#define MENU_TILE_GH 0x10U
-#define MENU_TILE_SL 0x11U
-#define MENU_TILE_KA 0x14U
-#define MENU_TILE_RM 0x15U
-#define MENU_TILE_E 0x1AU
-#define MENU_TILE_S 0x1DU
-#define MENU_TILE_CH 0x1EU
-
-#define MENU_TILE_ER 0x23U
-#define MENU_TILE_PL 0x25U
-#define MENU_TILE_WO 0x26U
-#define MENU_TILE_RK 0x27U
-#define MENU_TILE_CO 0x28U
-#define MENU_TILE_US 0x29U
-#define MENU_TILE_CA 0x2AU
-#define MENU_TILE_Y 0x2CU
-#define MENU_TILE_BA 0x2DU
-#define MENU_TILE_R 0x2EU
-
-#define MENU_TILE_SM 0x31U
-#define MENU_TILE_N 0x39U
-#define MENU_TILE_AR 0x3DU
-#define MENU_TILE_M 0x3EU
-#define MENU_TILE_CL 0x3FU
-
-#define MENU_TILE_K 0x41U
-#define MENU_TILE_T 0x47U
-#define MENU_TILE_TO 0x49U
-#define MENU_TILE_GI 0x4BU
-#define MENU_TILE_VE 0x4CU
-#define MENU_TILE_AP 0x4DU
-#define MENU_TILE_A 0x4EU
-#define MENU_TILE_JO 0x4FU
-#define MENU_TILE_B 0x50U
-#define MENU_TILE_FO 0x51U
-#define MENU_TILE_JA 0x52U
-#define MENU_TILE_NI 0x53U
-#define MENU_TILE_MA 0x54U
-#define MENU_TILE_IL 0x55U
-#define MENU_TILE_SA 0x56U
-#define MENU_TILE_LE 0x57U
-#define MENU_TILE_AN 0x58U
-#define MENU_TILE_EC 0x59U
-#define MENU_TILE_UT 0x5AU
-#define MENU_TILE_IV 0x5BU
-#define MENU_TILE_VP 0x5CU
-#define MENU_TILE_O 0x5DU
-#define MENU_TILE_PR 0x5EU
-#define MENU_TILE_OM 0x5FU
-#define MENU_TILE_OT 0x60U
-#define MENU_TILE_IO 0x61U
-
-#define MENU_TILE_CLOCK 0x62U
-#define MENU_TILE_COLON 0x63U
-#define MENU_TILE_0 0x64U
-#define MENU_TILE_1 0x65U
-#define MENU_TILE_2 0x66U
-#define MENU_TILE_3 0x67U
-#define MENU_TILE_4 0x68U
-#define MENU_TILE_5 0x69U
-#define MENU_TILE_6 0x6AU
-#define MENU_TILE_7 0x6BU
-#define MENU_TILE_8 0x6CU
-#define MENU_TILE_9 0x6DU
-#define MENU_TILE_DOLLAR 0x6EU
-#define MENU_TILE_HP 0x6FU
-#define MENU_TILE_PER_HOUR 0x70U
-#define MENU_TILE_DA 0x71U
-#define MENU_TILE_YS 0x72U
-#define MENU_TILE_SLASH 0x73U
-#define MENU_TILE_IN 0x74U
-#define MENU_TILE_TE 0x75U
-#define MENU_TILE_LL 0x76U
-#define MENU_TILE_IG 0x77U
-#define MENU_TILE_EN 0x78U
-#define MENU_TILE_CE 0x79U
-#define MENU_TILE_ST 0x7AU
-#define MENU_TILE_RE 0x7BU
-#define MENU_TILE_NG 0x7CU
-#define MENU_TILE_TH 0x7DU
-#define MENU_TILE_DASH 0x7EU
