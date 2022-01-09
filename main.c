@@ -1138,7 +1138,7 @@ void show_stats_screen() NONBANKED
     // Update tiles for each of the stats to display the current values
 
     // Intelligence
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_BUILDING_MENU_SWITCH;
     // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
     show_number(3U, 6U, 3U, game_state.intelligence);
     show_number(11U, 6U, 3U, game_state.strength);
@@ -1217,7 +1217,7 @@ void show_inventory_screen() NONBANKED
     setup_building_menu();
 
     // Iterate over item quantites and print to screen
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_BUILDING_MENU_SWITCH;
     for (itx_y = 0; itx_y != MENU_MAX_ITEMS_Y; itx_y ++)
     {
         for (itx_x = 0; itx_x != MENU_MAX_ITEMS_X; itx_x ++)
