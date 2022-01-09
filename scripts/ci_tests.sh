@@ -7,8 +7,6 @@
 set -e
 set -x
 
-cd ./games/stickrpg
-
 
 # Obtain artifact
 # Attempt for 60 seconds
