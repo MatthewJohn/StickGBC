@@ -73,18 +73,6 @@ screen_state_t screen_state;
 menu_config_t *menu_config;
 menu_state_t menu_state;
 
-// Globals used when redrawing map
-unsigned char *background_tile_map;
-unsigned char *background_tiles;
-unsigned char *background_tile_palette;
-unsigned char *background_color_palette;
-unsigned int background_width;
-unsigned char *sprite_tiles;
-unsigned char *sprite_palette;
-unsigned int DRAW_OFFSET_X;
-unsigned int DRAW_OFFSET_Y;
-unsigned int DRAW_MAX_X;
-unsigned int DRAW_MAX_Y;
 // Variables to store current main map location when
 // changing to another map
 unsigned int background_palette_itx_x;
@@ -277,34 +265,34 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
 
     // If loading main map, use screen_location variables
     // to offset tiles
-    max_x = DRAW_OFFSET_X + DRAW_MAX_X;
-    max_y = DRAW_OFFSET_Y + DRAW_MAX_Y;
+    max_x = screen_state.draw_offset_x + screen_state.draw_max_x;
+    max_y = screen_state.draw_offset_y + screen_state.draw_max_y;
 
     // Load color palette
     SWITCH_ROM_MBC5(tile_data_bank);
-    set_bkg_palette(0, 8, background_color_palette);
+    set_bkg_palette(0, 8, screen_state.background_color_palette);
 
     VBK_REG = 0;
-    set_bkg_data(0, 8, background_tiles);
+    set_bkg_data(0, 8, screen_state.background_tiles);
 
     ROM_BANK_BUILDING_MENU_SWITCH;
     // Load in digits/symbols from building menu tiles, including clock tiles before it
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
-    for (background_palette_itx_x = DRAW_OFFSET_X;
+    for (background_palette_itx_x = screen_state.draw_offset_x;
            background_palette_itx_x != max_x;
            background_palette_itx_x ++)
     {
         // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //        if (background_palette_itx_x == 0x10U)
 //            break;
-        for (background_palette_itx_y = DRAW_OFFSET_Y;
+        for (background_palette_itx_y = screen_state.draw_offset_y;
                background_palette_itx_y != max_y;
                background_palette_itx_y ++)
         {
             // Temp Test
-            current_tile_itx = ((background_palette_itx_y) * background_width) + background_palette_itx_x;
+            current_tile_itx = ((background_palette_itx_y) * screen_state.background_width) + background_palette_itx_x;
 
             // UNCOMMENT TO ADD TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
 //            if (background_palette_itx_y == 0x10U/)
@@ -320,7 +308,7 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             SWITCH_ROM_MBC5(tile_data_bank);
-            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0;
@@ -337,13 +325,13 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
 
             SWITCH_ROM_MBC5(tile_data_bank);
             // Lookup tile from background tile map
-            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
-            if (background_tile_map[current_tile_palette_itx] & 0x08)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x08)
                 tile_data[0] |= S_FLIPY;
 
-            if (background_tile_map[current_tile_palette_itx] & 0x10)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
@@ -437,7 +425,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             ROM_BANK_TILE_DATA_SWITCH;
-            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0;
@@ -452,13 +440,13 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
             // Lookup tile from background tile map
             ROM_BANK_TILE_DATA_SWITCH;
-            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
-            if (background_tile_map[current_tile_palette_itx] & 0x08)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x08)
                 tile_data[0] |= S_FLIPY;
 
-            if (background_tile_map[current_tile_palette_itx] & 0x10)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data[0] |= S_FLIPX;
             ROM_BANK_RESET;
 
@@ -494,7 +482,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             current_tile_palette_itx = current_tile_data_itx + 1;
 
             ROM_BANK_TILE_DATA_SWITCH;
-            tile_data[0] = background_tile_map[current_tile_data_itx] & 0x7F;
+            tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
            VBK_REG = 0;
@@ -509,13 +497,13 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
             ROM_BANK_TILE_DATA_SWITCH;
             // Lookup tile from background tile map
-            tile_data[0] = background_tile_map[current_tile_palette_itx] & 0x07;
+            tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
 
             // Check if current tile is flipped
-            if (background_tile_map[current_tile_palette_itx] & 0x08)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x08)
                 tile_data[0] |= S_FLIPY;
 
-            if (background_tile_map[current_tile_palette_itx] & 0x10)
+            if (screen_state.background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
@@ -573,19 +561,19 @@ void setup_main_map()
     DISPLAY_OFF;
     game_state.current_building = S_B_NO_BUILDING;
 
-    background_color_palette = main_map_palette;
-    background_tile_map = mainmap;
-    background_tiles = mainmaptiles;
-    background_tile_palette = mainmaptilesCGB;
-    background_width = mainmapWidth;
+    screen_state.background_color_palette = main_map_palette;
+    screen_state.background_tile_map = mainmap;
+    screen_state.background_tiles = mainmaptiles;
+    screen_state.background_tile_palette = mainmaptilesCGB;
+    screen_state.background_width = mainmapWidth;
 
-    DRAW_OFFSET_X = screen_state.screen_location_x >> 3;
-    DRAW_OFFSET_Y = screen_state.screen_location_y >> 3;
-    DRAW_MAX_X = BACKGROUND_BUFFER_SIZE_X;
-    DRAW_MAX_Y = BACKGROUND_BUFFER_SIZE_Y;
+    screen_state.draw_offset_x = screen_state.screen_location_x >> 3;
+    screen_state.draw_offset_y = screen_state.screen_location_y >> 3;
+    screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
+    screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
-    sprite_tiles = mainmapspritetiles;
-    sprite_palette = main_map_sprite_palette;
+    screen_state.sprite_tiles = mainmapspritetiles;
+    screen_state.sprite_palette = main_map_sprite_palette;
     set_background_tiles(ROM_BANK_TILE_DATA);
     ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&skater_sprite, &dealer_sprite);
@@ -718,17 +706,17 @@ void setup_building_menu()
 {
     DISPLAY_OFF;
     // Update globals for references to map/tile information
-    background_tile_map = buildingmenumap;
-    background_tiles = buildingmenutiles;
-    background_tile_palette = buildingmenutilesCGB;
-    background_width = buildingmenumapWidth;
-    background_color_palette = building_menu_palette;
+    screen_state.background_tile_map = buildingmenumap;
+    screen_state.background_tiles = buildingmenutiles;
+    screen_state.background_tile_palette = buildingmenutilesCGB;
+    screen_state.background_width = buildingmenumapWidth;
+    screen_state.background_color_palette = building_menu_palette;
 
     // Draw top left of screen
-    DRAW_OFFSET_X = 0U;
-    DRAW_OFFSET_Y = 0U;
-    DRAW_MAX_X = SCREEN_WIDTH_TILES;
-    DRAW_MAX_Y = SCREEN_HEIGHT_TILES;
+    screen_state.draw_offset_x = 0U;
+    screen_state.draw_offset_y = 0U;
+    screen_state.draw_max_x = SCREEN_WIDTH_TILES;
+    screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     if (game_state.current_building == S_B_HOUSE)
     {
@@ -1712,6 +1700,14 @@ void update_state()
     }
 }
 
+// Switch to JOY rom and update joypad state
+void main_check_joy()
+{
+    ROM_BANK_JOY_CONFIG_SWITCH;
+    check_user_input(&joypad_state);
+    ROM_BANK_RESET;
+}
+
 void main()
 {
     debug_address = 0xFFFA;
@@ -1720,7 +1716,6 @@ void main()
     setup_globals();
 
     wait_vbl_done();
-    SHOW_BKG;
 
     // Initial setup of window and update with starting stats
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -1738,9 +1733,7 @@ void main()
         while(1) {
                 wait_vbl_done();
 
-                ROM_BANK_JOY_CONFIG_SWITCH;
-                check_user_input(&joypad_state);
-                ROM_BANK_RESET;
+                main_check_joy();
 
                 update_ai_positions();
                 update_state();
