@@ -49,6 +49,16 @@ typedef struct {
     // This is the current pixel location of user within current tile.
     unsigned int screen_location_x_tilepixel;
     unsigned int screen_location_y_tilepixel;
+
+    // Globals used when redrawing map
+    unsigned char *background_tile_map;
+    unsigned char *background_tiles;
+    unsigned char *background_color_palette;
+    unsigned int background_width;
+    unsigned short draw_offset_x;
+    unsigned short draw_offset_y;
+    unsigned short draw_max_x;
+    unsigned short draw_max_y;
 } screen_state_t;
 
 #endif
