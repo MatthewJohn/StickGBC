@@ -5,7 +5,7 @@
  */
 
 
-#pragma bank=5
+#pragma bank=3
 
 #include <gb/gb.h>
 #include <gb/drawing.h>
