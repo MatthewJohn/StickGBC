@@ -252,6 +252,4 @@
 #define MENU_TILE_TH 0x7d
 // 126 -
 #define MENU_TILE_DASH 0x7e
-// 127 D
-#define MENU_TILE_D 0x7f
 
