@@ -55,10 +55,10 @@ typedef struct {
     unsigned char *background_tiles;
     unsigned char *background_color_palette;
     unsigned int background_width;
-    unsigned int draw_offset_x;
-    unsigned int draw_offset_y;
-    unsigned int draw_max_x;
-    unsigned int draw_max_y;
+    unsigned short draw_offset_x;
+    unsigned short draw_offset_y;
+    unsigned short draw_max_x;
+    unsigned short draw_max_y;
 } screen_state_t;
 
 #endif
