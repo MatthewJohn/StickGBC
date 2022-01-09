@@ -24,6 +24,8 @@
 #include "main_map_sprite_tileset.h"
 #include "main_map_sprite_palette.h"
 
+#include "opening_screen.h"
+
 #include "background_time_colors.h"
 
 #include "game_constants.h"
@@ -34,19 +36,7 @@
 #include "sprite.h"
 #include "joy.h"
 
-#define ROM_BANK_RESET SWITCH_ROM_MBC5(1)
-#define ROM_BANK_TILE_DATA 5
-#define ROM_BANK_TILE_DATA_SWITCH SWITCH_ROM_MBC5(ROM_BANK_TILE_DATA)
-#define ROM_BANK_BUILDING_MENU 3
-#define ROM_BANK_BUILDING_MENU_SWITCH SWITCH_ROM_MBC5(ROM_BANK_BUILDING_MENU)
-#define ROM_BANK_SPRITE 4
-#define ROM_BANK_SPRITE_SWITCH SWITCH_ROM_MBC5(ROM_BANK_SPRITE)
-#define ROM_BANK_MENU_CONFIG 6
-#define ROM_BANK_MENU_CONFIG_SWITCH SWITCH_ROM_MBC5(ROM_BANK_MENU_CONFIG)
-#define ROM_BANK_JOY_CONFIG 6
-#define ROM_BANK_JOY_CONFIG_SWITCH SWITCH_ROM_MBC5(ROM_BANK_JOY_CONFIG)
-#define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
-#define HAS_MONEY(cost) (game_state.balance + 1U) > cost
+#include "main.h"
 
 UBYTE * debug_address;
 
@@ -253,7 +243,7 @@ void update_ai_positions()
     ROM_BANK_RESET;
 }
 
-void set_background_tiles(unsigned int tile_data_bank) NONBANKED
+void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank) NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -360,6 +350,9 @@ void set_background_tiles(unsigned int tile_data_bank) NONBANKED
 
     // Reset VKG_REG to original value
     VBK_REG = 0;
+    
+    // Reset ROM bank to original
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void move_background(signed int move_x, signed int move_y) NONBANKED
@@ -577,7 +570,7 @@ void setup_main_map()
     screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
     screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
-    set_background_tiles(ROM_BANK_TILE_DATA);
+    set_background_tiles(ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&skater_sprite, &dealer_sprite);
     ROM_BANK_RESET;
@@ -809,7 +802,7 @@ void setup_building_menu()
 
     HIDE_SPRITES;
     // Reload background tiles
-    set_background_tiles(ROM_BANK_BUILDING_MENU);
+    set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
 
     load_menu_tiles();
 
@@ -1718,6 +1711,11 @@ void main()
     setup_globals();
 
     wait_vbl_done();
+
+    // Enter opening screen loop
+    ROM_BANK_OPENING_SCREEN_SWITCH;
+    opening_screen_loop(&screen_state, &joypad_state);
+    SHOW_BKG;
 
     // Initial setup of window and update with starting stats
     ROM_BANK_BUILDING_MENU_SWITCH;
