@@ -6,7 +6,7 @@
 
 /*
 
- BUILDING_MENU_MAP.H
+ OPENING_SCREEN_MAP.H
 
  Map Include File.
 
@@ -14,7 +14,7 @@
    Section       :
    Bank          : 0
    Map size      : 20 x 18
-   Tile set      : building_menu_tiles.gbr
+   Tile set      : opening_screen_tiles.gbr
    Plane count   : 2 planes (16 bits)
    Plane order   : Tiles are continues
    Tile offset   : 0
@@ -24,10 +24,10 @@
 
 */
 
-#define buildingmenumapWidth 20
-#define buildingmenumapHeight 18
-#define buildingmenumapBank 0
+#define openingscreenmapWidth 20
+#define openingscreenmapHeight 18
+#define openingscreenmapBank 0
 
-extern const unsigned char buildingmenumap[];
+extern const unsigned char openingscreenmap[];
 
-/* End of BUILDING_MENU_MAP.H */
+/* End of OPENING_SCREEN_MAP.H */
