@@ -25,3 +25,9 @@
 ## 6
  * Menu config
  * Joy config
+ 
+ ## 7
+ * Opening screen tiles
+ * Opening screen map
+ * Opening screen palette
+ * Control/stat selection screen map

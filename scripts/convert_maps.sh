@@ -22,6 +22,8 @@ f_setup_bank main_map_boundaries 5
 f_setup_bank building_menu_tiles 3
 f_setup_bank main_map_tileset 5
 f_setup_bank main_map_sprite_tileset 4
+f_setup_bank opening_screen_tiles 7
+f_setup_bank opening_screen_map 7
 
 # Remove end of line whitespace from map files
 sed -E -i 's/[ \t]+$//g' main_map.c main_map_tileset.c building_menu_tiles.c main_map_sprite_tileset.c main_map.h main_map_tileset.h building_menu_tiles.h main_map_sprite_tileset.h
