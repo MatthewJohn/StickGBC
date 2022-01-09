@@ -174,56 +174,6 @@ void add_debug(UBYTE val)
     debug_address ++;
 }
 
-void load_building_tile_data() NONBANKED
-{
-    // Load house data from tile 8 to tile
-    VBK_REG = 0;
-    ROM_BANK_TILE_DATA;
-    if (
-        screen_state.displayed_buildings_x & SC_HOUSE &&
-        screen_state.displayed_buildings_y & SC_HOUSE
-    )
-        load_house();
-
-    if (
-        screen_state.displayed_buildings_x & SC_RESTAURANT &&
-        screen_state.displayed_buildings_y & SC_RESTAURANT
-    )
-        load_restaurant();
-
-    if (
-        screen_state.displayed_buildings_x & SC_SHOP &&
-        screen_state.displayed_buildings_y & SC_SHOP
-    )
-        load_shop();
-
-    if (
-        screen_state.displayed_buildings_x & SC_PAWN &&
-        screen_state.displayed_buildings_y & SC_PAWN
-    )
-        load_pawn();
-
-    if (
-        screen_state.displayed_buildings_x & SC_UNIVERSITY &&
-        screen_state.displayed_buildings_y & SC_UNIVERSITY
-    )
-        load_university();
-
-    if (
-        screen_state.displayed_buildings_x & SC_NLI &&
-        screen_state.displayed_buildings_y & SC_NLI
-    )
-        load_nli();
-
-    if (
-        screen_state.displayed_buildings_x & SC_BAR &&
-        screen_state.displayed_buildings_y & SC_BAR
-    )
-        load_bar();
-
-    ROM_BANK_RESET;
-}
-
 // Update background color based on time of day
 void update_background_color()
 {
@@ -643,10 +593,11 @@ void setup_main_map()
     // Load additional tiles required for main map
     ROM_BANK_TILE_DATA;
     set_bkg_data(8U, 3U, &(mainmaptiles[8U << 4]));
-    ROM_BANK_RESET;
 
     // Load currently displayed buildings
-    load_building_tile_data();
+    load_building_tile_data(&screen_state);
+
+    ROM_BANK_RESET;
 
     update_background_color();
 
