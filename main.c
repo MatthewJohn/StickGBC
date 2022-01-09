@@ -899,193 +899,6 @@ void check_end_game()
 
 }
 
-
-void load_buildings_x_left()
-{
-    // Enable house
-    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
-    {
-        screen_state.displayed_buildings_x |= SC_HOUSE;
-        ROM_BANK_TILE_DATA;
-        load_house();
-        ROM_BANK_RESET;
-    }
-    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
-    {
-        // Disable university and re-enable restaurant
-        screen_state.displayed_buildings_x &= ~SC_UNIVERSITY;
-        screen_state.displayed_buildings_x |= SC_RESTAURANT;
-        ROM_BANK_TILE_DATA;
-        load_restaurant();
-        ROM_BANK_RESET;
-    }
-
-    // Check skater
-    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_state.screen_location_x_tiles == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-
-    // Check dealer
-    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_state.screen_location_x_tiles == (dealer_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
-
-    // NLI
-    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
-    {
-        screen_state.displayed_buildings_x |= SC_NLI;
-        ROM_BANK_TILE_DATA;
-        load_nli();
-        ROM_BANK_RESET;
-    }
-    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
-        screen_state.displayed_buildings_x &= ~SC_NLI;
-
-    // Bar
-    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
-    {
-        screen_state.displayed_buildings_x |= SC_BAR;
-        ROM_BANK_TILE_DATA;
-        load_bar();
-        ROM_BANK_RESET;
-    }
-    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
-        screen_state.displayed_buildings_x &= ~SC_BAR;
-}
-void load_buildings_x_right()
-{
-    // Disable house
-    if (screen_state.screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
-        screen_state.displayed_buildings_x &= ~SC_HOUSE;
-    if (screen_state.screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
-    {
-        screen_state.displayed_buildings_x |= SC_UNIVERSITY;
-        ROM_BANK_TILE_DATA;
-        load_university();
-        ROM_BANK_RESET;
-    }
-
-    // Check skater
-    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (skater_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_state.screen_location_x_tiles - 1U) == (skater_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
-
-    // Check dealer
-    if ((screen_state.screen_location_x_tiles + SCREEN_WIDTH_TILES) == (dealer_sprite.min_location_x >> 3))
-        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_state.screen_location_x_tiles - 1U) == (dealer_sprite.max_location_x >> 3))
-        screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
-
-    // NLI
-    if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
-    {
-        screen_state.displayed_buildings_x |= SC_NLI;
-        ROM_BANK_TILE_DATA;
-        load_nli();
-        ROM_BANK_RESET;
-    }
-    else if (screen_state.screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
-        screen_state.displayed_buildings_x &= ~SC_NLI;
-
-    // Bar
-    if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
-    {
-        screen_state.displayed_buildings_x |= SC_BAR;
-        ROM_BANK_TILE_DATA;
-        load_bar();
-        ROM_BANK_RESET;
-    }
-    else if (screen_state.screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
-        screen_state.displayed_buildings_x &= ~SC_BAR;
-}
-void load_buildings_y_up()
-{
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
-        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
-    {
-        screen_state.displayed_buildings_y &= ~SC_PAWN;
-        screen_state.displayed_buildings_y |= SC_RESTAURANT;
-        ROM_BANK_TILE_DATA;
-        load_restaurant();
-        ROM_BANK_RESET;
-    }
-
-    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
-    {
-        screen_state.displayed_buildings_y |= SC_NLI;
-        screen_state.displayed_buildings_y &= ~SC_SHOP;
-        ROM_BANK_TILE_DATA;
-        load_nli();
-        ROM_BANK_RESET;
-    }
-
-    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
-        screen_state.displayed_buildings_y &= ~SC_BAR;
-
-    // Check skater
-    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
-        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
-    if (screen_state.screen_location_y_tiles == (skater_sprite.max_location_y >> 3U))
-        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
-
-    // Check dealer
-    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
-        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
-    if (screen_state.screen_location_y_tiles == (dealer_sprite.max_location_y >> 3U))
-        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
-}
-void load_buildings_y_down()
-{
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
-    {
-        screen_state.displayed_buildings_y |= SC_RESTAURANT;
-        ROM_BANK_TILE_DATA;
-        load_restaurant();
-        ROM_BANK_RESET;
-    }
-
-    if (screen_state.screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
-    {
-        screen_state.displayed_buildings_y &= ~SC_NLI;
-        screen_state.displayed_buildings_y |= SC_SHOP;
-        ROM_BANK_TILE_DATA;
-        load_shop();
-        ROM_BANK_RESET;
-    }
-    if (screen_state.screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
-    {
-        screen_state.displayed_buildings_y &= ~SC_RESTAURANT;
-        screen_state.displayed_buildings_y |= SC_PAWN;
-        ROM_BANK_TILE_DATA;
-        load_pawn();
-        ROM_BANK_RESET;
-    }
-    if (screen_state.screen_location_y_tiles == SC_BAR_TRANSITION_Y)
-    {
-        screen_state.displayed_buildings_y |= SC_BAR;
-        ROM_BANK_TILE_DATA;
-        load_bar();
-        ROM_BANK_RESET;
-    }
-
-    // Check skater
-    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite.min_location_y >> 3U))
-        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
-    if ((screen_state.screen_location_y_tiles - 1U) == (skater_sprite.max_location_y >> 3U))
-        screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 0U;
-
-    // Check dealer
-    if ((screen_state.screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (dealer_sprite.min_location_y >> 3U))
-        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 1U;
-    if ((screen_state.screen_location_y_tiles - 1U) == (dealer_sprite.max_location_y >> 3U))
-        screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
-}
-
 void purchase_food(UINT8 cost, UINT8 gained_hp)
 {
     // Breaking the rules using >=, but
@@ -1505,20 +1318,28 @@ void update_state()
             // Check when on tile boundary (NOTE this only works for movement in positive directions,
             // but doesn't matter for now).
             if (screen_state.screen_location_x_tilepixel == 0U)
+            {
+                ROM_BANK_TILE_DATA;
                 if (move_x == 1)
-                    load_buildings_x_right();
+                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite);
                 else
-                    load_buildings_x_left();
+                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite);
+                ROM_BANK_RESET;
+            }
         }
         if (move_y != 0)
         {
             move_background(0, move_y);
 
             if (screen_state.screen_location_y_tilepixel == 0U)
+            {
+                ROM_BANK_TILE_DATA;
                 if (move_y == 1)
-                    load_buildings_y_down();
+                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite);
                 else
-                    load_buildings_y_up();
+                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite);
+                ROM_BANK_RESET;
+            }
         }
 
         // Move sprite to new location
