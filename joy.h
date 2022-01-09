@@ -7,6 +7,9 @@
 
 #include "gb.h"
 
+#ifndef JOY_DEF
+#define JOY_DEF
+
 typedef struct {
     // Determine which way user needs to travel
     INT8 travel_x;
@@ -19,3 +22,5 @@ typedef struct {
 } joypad_state_t;
 
 void check_user_input(joypad_state_t* joypad_state);
+
+#endif
