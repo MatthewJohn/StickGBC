@@ -39,7 +39,7 @@ void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_st
     set_bkg_data(8U, 19U, &(openingscreentiles[8U << 4]));
 
     DISPLAY_ON;
-    
+
     // Wait for user to press A or START
     while (joypad_state->a_pressed == 0U && joypad_state->start_pressed == 0U)
     {
