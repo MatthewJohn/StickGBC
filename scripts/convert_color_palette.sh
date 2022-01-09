@@ -23,5 +23,5 @@ EOF
 }
 
 f_setup_palette main_map_palette 5
-f_setup_palette building_menu_palette 5
+f_setup_palette building_menu_palette 3
 f_setup_palette main_map_sprite_palette 4

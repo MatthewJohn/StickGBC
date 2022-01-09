@@ -5,6 +5,9 @@
  */
 
 
+#ifndef SCREEN_STATE_DEF
+#define SCREEN_STATE_DEF
+
 #define SC_HOUSE 0x01U
 #define SC_RESTAURANT 0x02U
 #define SC_SHOP 0x04U
@@ -47,3 +50,5 @@ typedef struct {
     unsigned int screen_location_x_tilepixel;
     unsigned int screen_location_y_tilepixel;
 } screen_state_t;
+
+#endif

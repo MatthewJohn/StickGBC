@@ -17,9 +17,9 @@ f_setup_bank() {
 }
 
 f_setup_bank main_map 5
-f_setup_bank building_menu_map 5
+f_setup_bank building_menu_map 3
 f_setup_bank main_map_boundaries 5
-f_setup_bank building_menu_tiles 5
+f_setup_bank building_menu_tiles 3
 f_setup_bank main_map_tileset 5
 f_setup_bank main_map_sprite_tileset 4
 
