@@ -20,7 +20,7 @@ const UWORD main_map_palette[] = {
   RGB(14, 31, 0),
   RGB(25, 22, 0),
   RGB(1, 0, 0),
-  RGB(31, 30, 13),
+  RGB(1, 11, 1),
   RGB(20, 0, 31),
   RGB(20, 0, 31),
   RGB(20, 0, 31),
