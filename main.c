@@ -1443,12 +1443,20 @@ void update_state()
             // If selected sleep in house
             else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
-                // Check if user has caffeine
+                // Set intiial wakeup time
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
+
+                // Check if user has caffeine
                 if (game_state.inventory[S_INVENTORY_CAFFEINE_PILLS])
                 {
                     game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
-                    game_state.hour -= S_HOUR_CAFFEINE_BONUS;
+                    game_state.hour -= S_HOUR_CAFFEINE_TIME_GAIN;
+                }
+
+                // Check if alarm clock is owned
+                if (game_state.inventory[S_INVENTORY_ALARM_CLOCK])
+                {
+                    game_state.hour -= S_HOUR_ALARM_CLOCK_TIME_GAIN;
                 }
                 game_state.days_passed ++;
                 check_end_game();
