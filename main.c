@@ -570,7 +570,6 @@ void setup_main_map()
     screen_state.background_color_palette = main_map_palette;
     screen_state.background_tile_map = mainmap;
     screen_state.background_tiles = mainmaptiles;
-    screen_state.background_tile_palette = mainmaptilesCGB;
     screen_state.background_width = mainmapWidth;
 
     screen_state.draw_offset_x = screen_state.screen_location_x >> 3;
@@ -578,8 +577,6 @@ void setup_main_map()
     screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
     screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
-    screen_state.sprite_tiles = mainmapspritetiles;
-    screen_state.sprite_palette = main_map_sprite_palette;
     set_background_tiles(ROM_BANK_TILE_DATA);
     ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&skater_sprite, &dealer_sprite);
@@ -714,7 +711,6 @@ void setup_building_menu()
     // Update globals for references to map/tile information
     screen_state.background_tile_map = buildingmenumap;
     screen_state.background_tiles = buildingmenutiles;
-    screen_state.background_tile_palette = buildingmenutilesCGB;
     screen_state.background_width = buildingmenumapWidth;
     screen_state.background_color_palette = building_menu_palette;
 

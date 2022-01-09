@@ -53,11 +53,8 @@ typedef struct {
     // Globals used when redrawing map
     unsigned char *background_tile_map;
     unsigned char *background_tiles;
-    unsigned char *background_tile_palette;
     unsigned char *background_color_palette;
     unsigned int background_width;
-    unsigned char *sprite_tiles;
-    unsigned char *sprite_palette;
     unsigned int draw_offset_x;
     unsigned int draw_offset_y;
     unsigned int draw_max_x;
