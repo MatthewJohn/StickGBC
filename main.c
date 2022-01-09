@@ -583,7 +583,7 @@ void setup_main_map()
 
     // Load additional tiles required for main map
     ROM_BANK_TILE_DATA_SWITCH;
-    set_bkg_data(8U, 3U, &(mainmaptiles[8U << 4]));
+    set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
     load_building_tile_data(&screen_state);
