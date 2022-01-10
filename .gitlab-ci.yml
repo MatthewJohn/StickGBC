@@ -1,0 +1,7 @@
+
+
+stages:
+  - Code Check
+  - Build
+  - Smoke Tests
+
