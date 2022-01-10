@@ -87,6 +87,9 @@ typedef struct {
     // Inventory items
     UINT8 inventory[S_INVENTORY_ITEM_COUNT];
 
+    // This is used to hold the systime of the last movement.
+    // In building menu, this is used to hold the systime of the
+    // last item purchcase, which stops accidental double purchsing
     UINT16 last_movement_time;
 
     BOOLEAN hobo_given_money;
