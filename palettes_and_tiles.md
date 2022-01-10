@@ -6,10 +6,10 @@
     * 2 - Status window background
     * 3 - House bricks/Static window text/university door rim
  1. Road/markings
-    * 0 - House roof/road/status bar background/Pavement outer/pawn shop door frame
-    * 1 - Road markings/status bar foreground/Pavement inner/pawn shop door inner
+    * 0 - House roof/road/status bar background/pawn shop door frame
+    * 1 - Road markings/status bar foreground/Pavement outer/pawn shop door inner
     * 2 - Black text NLI sign/pawn shop door handle
-    * 3 - Tree leaf
+    * 3 - Pavement Inner
  2.
     * 0 - Green - Grass/Hobo background
     * 1 - Orange - Hobo/Bar beer sign
