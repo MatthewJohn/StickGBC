@@ -5,17 +5,20 @@ stages:
 
 Code Check:
   stage: Code Check
-  only: external
+  only:
+    - external
   script: echo 1
 
 Build:
   stage: Build
-  only: external
+  only:
+    - external
   script: echo 1
 
 Smoke Tests:
   stage: Smoke Tests
-  only: external
+  only:
+    - external
   script: echo 1
   
 
