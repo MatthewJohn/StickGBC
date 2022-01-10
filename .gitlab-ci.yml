@@ -1,7 +1,18 @@
 
-
 stages:
   - Code Check
   - Build
   - Smoke Tests
+
+Code Check:
+  stage: Code Check
+  only: external
+
+Build:
+  stage: Build
+  only: external
+
+Smoke Tests:
+  stage: Smoke Tests
+  only: external
 
