@@ -14,7 +14,7 @@
     * 0 - Green - Grass/Hobo background
     * 1 - Orange - Hobo/Bar beer sign
     * 2 - Black - Hobo/Bar beer sign
-    * 3 - Pale - Bar beer sign
+    * 3 - Pale (slight green) - Bar beer sign/tree leaves
  3.
     * 0 - 
     * 1 - 
