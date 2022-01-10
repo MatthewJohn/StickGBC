@@ -29,7 +29,7 @@ do
   mkdir $test_name
 
   set +e
-  docker run --rm -e INPUT_DIR=/app/${test_name} -e OUTPUT_DIR=/output/${test_name} -e ROM_DIR=/output -e ROM_FILE=main.gb -e DELAY=20 -e BGB_TIMEOUT=30 -v `pwd`:/output stickrpg-automated-test-tool:latest
+  docker run --rm -e INPUT_DIR=/app/${test_name} -e OUTPUT_DIR=/output/${test_name} -e ROM_DIR=/output -e ROM_FILE=main.gb -e DELAY=40 -e BGB_TIMEOUT=60 -v `pwd`:/output stickrpg-automated-test-tool:latest
   if [ "$?" != "0" ]
   then
     tests_failed=1
