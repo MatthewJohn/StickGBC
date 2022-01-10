@@ -1370,6 +1370,11 @@ void update_state()
 
         if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
         {
+            // Update last movement (used for purchase delay) to 0,
+            // allowing them to purchase immediately after movement
+            // to new tile
+            game_state.last_movement_time = 0;
+
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
             attempting_x_move = 0U;
@@ -1440,8 +1445,21 @@ void update_state()
                 return;
             }
 
+            // Check if in wait-period since last time purchase
+            if ((game_state.last_movement_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT)  ==
+                (sys_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT))
+            {
+                // If in wait period, exit early
+                return;
+            }
+            else
+            {
+                // Otherwise, update last movement time
+                game_state.last_movement_time = sys_time;
+            }
+
             // If selected sleep in house
-            else if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
+            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
             {
                 // Set intiial wakeup time
                 game_state.hour = S_HOUR_WAKEUP_NORMAL;
@@ -1503,8 +1521,6 @@ void update_state()
                         do_work(6U, 6U);
                     }
                 }
-                // Delay after purchasing, to avoid double purchase
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_SHOP)
             {
@@ -1534,8 +1550,6 @@ void update_state()
                         purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
                     }
                 }
-                // Delay after purchasing, to avoid double purchase
-                delay(DELAY_PURCHASE_ITEM);
             }
 
             else if (game_state.current_building == S_B_PAWN)
@@ -1584,8 +1598,6 @@ void update_state()
                         }
                     }
                 }
-                // Delay after purchasing, to avoid double purchase
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_UNIVERSITY)
             {
@@ -1601,7 +1613,6 @@ void update_state()
                     if (menu_state.current_item_y == 1U)
                         increase_strength(0U, 2U, 1U);
                 }
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_SKATER)
             {
@@ -1620,7 +1631,6 @@ void update_state()
                             ROM_BANK_RESET;
                         }
                     }
-                    delay(DELAY_PURCHASE_ITEM);
                 }
             }
             else if (game_state.current_building == S_B_NLI)
@@ -1637,13 +1647,11 @@ void update_state()
                         do_nli_work();
                     }
                 }
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_DEALER)
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                     purchase_item(400U, S_INVENTORY_COCAINE);
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_HOBO)
             {
@@ -1683,7 +1691,6 @@ void update_state()
                         game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] -= 1U;
                     }
                 }
-                delay(DELAY_PURCHASE_ITEM);
             }
             else if (game_state.current_building == S_B_BAR)
             {
@@ -1697,7 +1704,6 @@ void update_state()
                     // Enable give bottle of beer in hobo menu
                     menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
-                delay(DELAY_PURCHASE_ITEM);
             }
         }
     }
