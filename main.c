@@ -931,7 +931,7 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
     }
 }
 
-void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
+UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
 {
     if (
         HAS_MONEY(cost) &&
@@ -946,7 +946,9 @@ void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
         ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
+        return 1U;
     }
+    return 0U;
 }
 
 void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
@@ -1659,9 +1661,11 @@ void update_state()
                 {
                     if (game_state.hobo_given_money == 0U)
                     {
-                        increase_charm(10U, 1U, 6U);
-                        // Mark as having visited hobo, so he doesn't give us charm again.
-                        game_state.hobo_given_money = 1U;
+                        if (increase_charm(10U, 1U, 6U))
+                        {
+                            // Mark as having visited hobo, so he doesn't give us charm again.
+                            game_state.hobo_given_money = 1U;
+                        }
                     }
                     else  // Paying money and not getting charm
                     {
