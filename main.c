@@ -913,6 +913,11 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
+void modify_karma(INT8 karma_change)
+{
+    game_state.karma += karma_change;
+}
+
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
 {
     if (
@@ -951,11 +956,6 @@ UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
         return 1U;
     }
     return 0U;
-}
-
-void modify_karma(INT8 karma_change)
-{
-    game_state.karma += karma_change;
 }
 
 void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
@@ -1010,7 +1010,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         // Increase balance and increase time of day
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
-
+        
         modify_karma(1);
     }
 
@@ -1652,7 +1652,7 @@ void update_state()
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
-
+                            
                             // Decrease karma
                             modify_karma(-2);
                         }
