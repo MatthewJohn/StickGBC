@@ -1010,7 +1010,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         // Increase balance and increase time of day
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
-        
+
         modify_karma(1);
     }
 
@@ -1652,7 +1652,7 @@ void update_state()
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
-                            
+
                             // Decrease karma
                             modify_karma(-2);
                         }
