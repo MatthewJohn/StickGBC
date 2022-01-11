@@ -913,6 +913,11 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
+void modify_karma(INT8 karma_change)
+{
+    game_state.karma += karma_change;
+}
+
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
 {
     if (
@@ -925,13 +930,15 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
         game_state.hour += number_of_hours;
         game_state.intelligence += intelligence;
 
+        modify_karma(1);
+
         ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
     }
 }
 
-void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
+UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
 {
     if (
         HAS_MONEY(cost) &&
@@ -946,7 +953,9 @@ void increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
         ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
         ROM_BANK_RESET;
+        return 1U;
     }
+    return 0U;
 }
 
 void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
@@ -961,6 +970,8 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         game_state.hour += number_of_hours;
         game_state.strength += strength;
         game_state.max_hp += strength;
+
+        modify_karma(1);
 
         ROM_BANK_BUILDING_MENU_SWITCH;
         update_window(&game_state);
@@ -999,6 +1010,8 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
         // Increase balance and increase time of day
         game_state.balance += (pay_per_hour * number_of_hours);
         game_state.hour += number_of_hours;
+
+        modify_karma(1);
     }
 
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -1034,31 +1047,40 @@ void apply_for_job_promotion()
         menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
         menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+        modify_karma(1);
     }
     else if (
         menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR &&
         game_state.intelligence >= 40U
     )
+    {
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
-
+        modify_karma(3);
+    }
     else if (
         menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK &&
         game_state.intelligence >= 75U
     )
+    {
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
-
+        modify_karma(3);
+    }
     else if (
         menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN &&
         game_state.intelligence >= 120U
     )
+    {
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
-
+        modify_karma(3);
+    }
     else if (
         menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
         game_state.intelligence >= 180U
     )
+    {
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
-
+        modify_karma(3);
+    }
     else if (
         menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP &&
         game_state.intelligence >= 250U
@@ -1066,6 +1088,7 @@ void apply_for_job_promotion()
     {
         menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
         menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+        modify_karma(3);
     }
     else
     {
@@ -1629,6 +1652,9 @@ void update_state()
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
+
+                            // Decrease karma
+                            modify_karma(-2);
                         }
                     }
                 }
@@ -1659,9 +1685,14 @@ void update_state()
                 {
                     if (game_state.hobo_given_money == 0U)
                     {
-                        increase_charm(10U, 1U, 6U);
-                        // Mark as having visited hobo, so he doesn't give us charm again.
-                        game_state.hobo_given_money = 1U;
+                        if (increase_charm(10U, 1U, 6U))
+                        {
+                            // Mark as having visited hobo, so he doesn't give us charm again.
+                            game_state.hobo_given_money = 1U;
+
+                            // Give 2 karma
+                            modify_karma(2);
+                        }
                     }
                     else  // Paying money and not getting charm
                     {
@@ -1671,6 +1702,9 @@ void update_state()
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window(&game_state);
                             ROM_BANK_RESET;
+
+                            // Give 2 karma
+                            modify_karma(2);
                         }
                     }
                 }
