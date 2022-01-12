@@ -593,6 +593,11 @@ void setup_main_map()
     update_background_color();
 
     DISPLAY_ON;
+
+    // Set last_movement_time to current systime, allowing user to
+    // immediately move, in case it has been set to the future by
+    // another method
+    game_state.last_movement_time = sys_time;
 }
 
 void load_menu_tiles() NONBANKED
@@ -812,6 +817,11 @@ void setup_building_menu()
     ROM_BANK_RESET;
 
     DISPLAY_ON;
+    
+    // Set last_movement_time to current systime, allowing user to
+    // immediately select an item, in case it has been set to the future by
+    // another method
+    game_state.last_movement_time = sys_time;
 }
 
 // Attempt to 'enter' a building if user is in
@@ -1469,8 +1479,7 @@ void update_state()
             }
 
             // Check if in wait-period since last time purchase
-            if ((game_state.last_movement_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT)  ==
-                (sys_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT))
+            if ((unsigned int)sys_time < game_state.last_movement_time)
             {
                 // If in wait period, exit early
                 return;
@@ -1478,7 +1487,7 @@ void update_state()
             else
             {
                 // Otherwise, update last movement time
-                game_state.last_movement_time = sys_time;
+                game_state.last_movement_time = (unsigned int)sys_time + PURCHASE_ITEM_WAIT;
             }
 
             // If selected sleep in house
