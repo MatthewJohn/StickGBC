@@ -77,7 +77,6 @@ UINT8 tile_itx_y_start;
 UINT8 tile_itx_x;
 UINT8 tile_itx_y;
 UINT8 second_tile_row;
-unsigned int tile_data_offset;
 
 // Setup skater sprite
 ai_sprite skater_sprite = {
@@ -630,8 +629,6 @@ void load_menu_tiles() NONBANKED
                 // Only load data if tile contains data
                 if (tile_data_index != 0U)
                 {
-                    tile_data_index += tile_data_offset;
-
                     ROM_BANK_BUILDING_MENU_SWITCH;
 
                     // Load tile data for menu item based on tile data offset
