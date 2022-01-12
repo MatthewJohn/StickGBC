@@ -13,19 +13,19 @@
 #include "game_constants.h"
 #include "main.h"
 
-void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_state)
+void opening_screen_loop()
 {
     DISPLAY_OFF;
 
-    screen_state->background_color_palette = opening_screen_palette;
-    screen_state->background_tile_map = openingscreenmap;
-    screen_state->background_tiles = openingscreentiles;
-    screen_state->background_width = openingscreenmapWidth;
+    screen_state.background_color_palette = opening_screen_palette;
+    screen_state.background_tile_map = openingscreenmap;
+    screen_state.background_tiles = openingscreentiles;
+    screen_state.background_width = openingscreenmapWidth;
 
-    screen_state->draw_offset_x = 0U;
-    screen_state->draw_offset_y = 0U;
-    screen_state->draw_max_x = SCREEN_WIDTH_TILES;
-    screen_state->draw_max_y = SCREEN_HEIGHT_TILES;
+    screen_state.draw_offset_x = 0U;
+    screen_state.draw_offset_y = 0U;
+    screen_state.draw_max_x = SCREEN_WIDTH_TILES;
+    screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     set_background_tiles(
         ROM_BANK_OPENING_SCREEN,  // Load tiles from this ROM bank
@@ -41,7 +41,7 @@ void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_st
     DISPLAY_ON;
 
     // Wait for user to press A or START
-    while (joypad_state->a_pressed == 0U && joypad_state->start_pressed == 0U)
+    while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {
         wait_vbl_done();
 
