@@ -554,7 +554,7 @@ void setup_main_map()
 
     screen_state.draw_offset_x = screen_state.screen_location_x >> 3;
     screen_state.draw_offset_y = screen_state.screen_location_y >> 3;
-    
+
     // If not starting from the left/top edge of the screen,
     // move offset to top/left by 1, which will begin redraw one tile to the left.
     // This means that the tile to the left and above will be drawn as the left/top
