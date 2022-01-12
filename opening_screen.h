@@ -11,6 +11,6 @@
 #ifndef OPENING_SCREEN_DEF
 #define OPENING_SCREEN_DEF
 
-void opening_screen_loop(screen_state_t *screen_state, joypad_state_t *joypad_state);
+void opening_screen_loop();
 
 #endif

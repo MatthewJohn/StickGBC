@@ -810,7 +810,7 @@ void setup_building_menu()
 
     // Highlight currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
-    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
     ROM_BANK_RESET;
 
     DISPLAY_ON;
@@ -910,7 +910,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
             game_state.hp += gained_hp;
 
         ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window(&game_state);
+        update_window();
         ROM_BANK_RESET;
     }
 }
@@ -935,7 +935,7 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
         modify_karma(1);
 
         ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window(&game_state);
+        update_window();
         ROM_BANK_RESET;
     }
 }
@@ -953,7 +953,7 @@ UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
         game_state.charm += charm;
 
         ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window(&game_state);
+        update_window();
         ROM_BANK_RESET;
         return 1U;
     }
@@ -976,7 +976,7 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         modify_karma(1);
 
         ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window(&game_state);
+        update_window();
         ROM_BANK_RESET;
     }
 }
@@ -995,7 +995,7 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
         game_state.inventory[inventory_item] += 1U;
 
         ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window(&game_state);
+        update_window();
         ROM_BANK_RESET;
 
         return 0x1U;
@@ -1017,7 +1017,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     }
 
     ROM_BANK_BUILDING_MENU_SWITCH;
-    update_window(&game_state);
+    update_window();
     ROM_BANK_RESET;
 }
 
@@ -1026,7 +1026,7 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 {
     // Deselect currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
-    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_DEFAULT_PALETTE);
+    set_menu_item_color(MENU_ITEM_DEFAULT_PALETTE);
     ROM_BANK_RESET;
 
     menu_state.current_item_x = new_x;
@@ -1034,7 +1034,7 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 
     // Highlight new menu item
     ROM_BANK_MENU_CONFIG_SWITCH;
-    set_menu_item_color(&menu_state, menu_config, MENU_ITEM_SELECTED_PALETTE);
+    set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
     ROM_BANK_RESET;
 }
 
@@ -1510,7 +1510,7 @@ void update_state()
                 purchase_food(0U, 20U);
 
                 ROM_BANK_BUILDING_MENU_SWITCH;
-                update_window(&game_state);
+                update_window();
                 ROM_BANK_RESET;
 
                 // Wait for 1 second 1 second
@@ -1652,7 +1652,7 @@ void update_state()
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
                             game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
                             ROM_BANK_BUILDING_MENU_SWITCH;
-                            update_window(&game_state);
+                            update_window();
                             ROM_BANK_RESET;
 
                             // Decrease karma
@@ -1702,7 +1702,7 @@ void update_state()
                         {
                             game_state.balance -= 10U;
                             ROM_BANK_BUILDING_MENU_SWITCH;
-                            update_window(&game_state);
+                            update_window();
                             ROM_BANK_RESET;
 
                             // Give 2 karma
@@ -1765,13 +1765,13 @@ void main()
 
     // Enter opening screen loop
     ROM_BANK_OPENING_SCREEN_SWITCH;
-    opening_screen_loop(&screen_state, &joypad_state);
+    opening_screen_loop();
     SHOW_BKG;
 
     // Initial setup of window and update with starting stats
     ROM_BANK_BUILDING_MENU_SWITCH;
     setup_window();
-    update_window(&game_state);
+    update_window();
     ROM_BANK_RESET;
     SHOW_WIN;
 
