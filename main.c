@@ -40,11 +40,6 @@
 
 UBYTE * debug_address;
 
-// Location of user in world.
-// This is not the sprites position on the screen
-unsigned int user_pos_x;
-unsigned int user_pos_y;
-
 // Temporary storege for transfer of tile data and tile data vram1 data
 UBYTE tile_data[1];
 UWORD word_data[4];
@@ -53,7 +48,6 @@ UWORD word_data[4];
 UWORD scratch_palette_data[3][4];
 
 joypad_state_t joypad_state;
-UINT8 sprite_traveling_x;
 
 // Game state
 game_state_t game_state;
@@ -62,11 +56,6 @@ screen_state_t screen_state;
 // Define global instance of menu config
 menu_config_t *menu_config;
 menu_state_t menu_state;
-
-// Variables to store current main map location when
-// changing to another map
-unsigned int background_palette_itx_x;
-unsigned int background_palette_itx_y;
 
 // General iterators
 unsigned int itx_start;
@@ -87,7 +76,6 @@ UINT8 tile_itx_y_start;
 UINT8 tile_itx_x;
 UINT8 tile_itx_y;
 UINT8 second_tile_row;
-unsigned int tile_data_offset;
 
 // Setup skater sprite
 ai_sprite skater_sprite = {
@@ -221,9 +209,8 @@ void setup_globals()
     screen_state.screen_location_x_tiles = 0x00U;
     screen_state.screen_location_y = 0x00U;
     screen_state.screen_location_y_tiles = 0x00U;
-    sprite_traveling_x = 0;
-    user_pos_x = 0x70U;
-    user_pos_y = 0x70U;
+    game_state.user_pos_x = 0x70U;
+    game_state.user_pos_y = 0x70U;
 
 #ifdef IN_TESTING
     // Add hacks for testing
@@ -270,27 +257,27 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
-    for (background_palette_itx_x = screen_state.draw_offset_x;
-           background_palette_itx_x != max_x;
-           background_palette_itx_x ++)
+    for (itx_x = screen_state.draw_offset_x;
+           itx_x != max_x;
+           itx_x ++)
     {
 
 #ifdef DEBUG_SET_BACKGROUND_SKIP
         // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-        if (background_palette_itx_x == 0x10U)
+        if (itx_x == 0x10U)
             break;
 #endif
 
-        for (background_palette_itx_y = screen_state.draw_offset_y;
-               background_palette_itx_y != max_y;
-               background_palette_itx_y ++)
+        for (itx_y = screen_state.draw_offset_y;
+               itx_y != max_y;
+               itx_y ++)
         {
             // Temp Test
-            current_tile_itx = ((background_palette_itx_y) * screen_state.background_width) + background_palette_itx_x;
+            current_tile_itx = ((itx_y) * screen_state.background_width) + itx_x;
 
 #ifdef DEBUG_SET_BACKGROUND_SKIP
             // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-            if (background_palette_itx_y == 0x10U)
+            if (itx_y == 0x10U)
                 break;
 #endif
 
@@ -310,8 +297,8 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &(tile_data[0])
@@ -334,8 +321,8 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &(tile_data[0])
             );
@@ -528,8 +515,8 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
 
-    new_x = user_pos_x + (signed int)joypad_state.travel_x;
-    new_y = user_pos_y + (signed int)joypad_state.travel_y;
+    new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
+    new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
 
     // Check if traveling to new tile
     if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
@@ -640,8 +627,6 @@ void load_menu_tiles() NONBANKED
                 // Only load data if tile contains data
                 if (tile_data_index != 0U)
                 {
-                    tile_data_index += tile_data_offset;
-
                     ROM_BANK_BUILDING_MENU_SWITCH;
 
                     // Load tile data for menu item based on tile data offset
@@ -819,8 +804,8 @@ void setup_building_menu()
 void check_building_enter()
 {
     unsigned int tile_itx = X_Y_TO_TILE_INDEX(
-        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_x),
-        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_y)
+        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x),
+        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y)
     );
 
     // Check for entering house
@@ -1279,11 +1264,11 @@ void update_state()
 
 
         // Set user screen position based on current location
-        user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
-        user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
+        user_screen_pos_x = game_state.user_pos_x - screen_state.screen_location_x;
+        user_screen_pos_y = game_state.user_pos_y - screen_state.screen_location_y;
 
-        user_pos_x += (signed int)joypad_state.travel_x;
-        user_pos_y += (signed int)joypad_state.travel_y;
+        game_state.user_pos_x += (signed int)joypad_state.travel_x;
+        game_state.user_pos_y += (signed int)joypad_state.travel_y;
 
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
@@ -1301,7 +1286,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
+            user_screen_pos_x = game_state.user_pos_x - screen_state.screen_location_x;
             move_x = 0;
         }
 
@@ -1318,7 +1303,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
+            user_screen_pos_y = game_state.user_pos_y - screen_state.screen_location_y;
             move_y = 0;
         }
 
