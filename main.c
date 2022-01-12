@@ -554,6 +554,23 @@ void setup_main_map()
 
     screen_state.draw_offset_x = screen_state.screen_location_x >> 3;
     screen_state.draw_offset_y = screen_state.screen_location_y >> 3;
+
+    // If not starting from the left/top edge of the screen,
+    // move offset to top/left by 1, which will begin redraw one tile to the left.
+    // This means that the tile to the left and above will be drawn as the left/top
+    // (as opposed to being the tiles wrapped around from drawing to the right/down).
+    // This means that as the player moves to the left or up, the tiles are already drawn
+    // and don't cause incorrect tiles as the movement of the screne expects a buffer of
+    // 1 tile to have already been drawn for this direction of travel.
+    if (screen_state.draw_offset_x != 0)
+    {
+        screen_state.draw_offset_x -= 1;
+    }
+    if (screen_state.draw_offset_y != 0)
+    {
+        screen_state.draw_offset_y -= 1;
+    }
+
     screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
     screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
