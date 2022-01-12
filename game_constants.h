@@ -26,9 +26,9 @@
 
 #define MENU_ROW_2_TILE_DATA_OFFSET 0x60U
 
-// Screen size 160x168
-#define SCREEN_WIDTH 0xA8U
-#define SCREEN_HEIGHT 0xA0U
+// Screen size 160x144
+#define SCREEN_WIDTH 0xA0U
+#define SCREEN_HEIGHT 0x90U
 
 #define SCREEN_TILE_MAX_X 0x13U
 #define SCREEN_TILE_MAX_Y 0x11U
