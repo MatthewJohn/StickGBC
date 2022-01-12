@@ -48,7 +48,6 @@ UWORD word_data[4];
 UWORD scratch_palette_data[3][4];
 
 joypad_state_t joypad_state;
-UINT8 sprite_traveling_x;
 
 // Game state
 game_state_t game_state;
@@ -210,7 +209,6 @@ void setup_globals()
     screen_state.screen_location_x_tiles = 0x00U;
     screen_state.screen_location_y = 0x00U;
     screen_state.screen_location_y_tiles = 0x00U;
-    sprite_traveling_x = 0;
     game_state.user_pos_x = 0x70U;
     game_state.user_pos_y = 0x70U;
 
