@@ -9,7 +9,7 @@
 #include "main_game.h"
 #include "game_constants.h"
 #include "main_map_tileset.h"
-#include "external_bank_globals.h"
+#include "main.h"
 
 void load_house()
 {
