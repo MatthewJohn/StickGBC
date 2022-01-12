@@ -128,14 +128,16 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
     {
         screen_state->displayed_buildings_x |= SC_HOUSE;
-        load_house();
+        if (screen_state->displayed_buildings_y & SC_HOUSE)
+            load_house();
     }
     if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
         screen_state->displayed_buildings_x &= ~SC_UNIVERSITY;
         screen_state->displayed_buildings_x |= SC_RESTAURANT;
-        load_restaurant();
+        if (screen_state->displayed_buildings_y & SC_RESTAURANT)
+            load_restaurant();
     }
 
     // Check skater
@@ -154,7 +156,8 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
         screen_state->displayed_buildings_x |= SC_NLI;
-        load_nli();
+        if (screen_state->displayed_buildings_y & SC_NLI)
+            load_nli();
     }
     else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
         screen_state->displayed_buildings_x &= ~SC_NLI;
@@ -163,7 +166,8 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
     {
         screen_state->displayed_buildings_x |= SC_BAR;
-        load_bar();
+        if (screen_state->displayed_buildings_y & SC_BAR)
+            load_bar();
     }
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state->displayed_buildings_x &= ~SC_BAR;
@@ -176,7 +180,8 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
     {
         screen_state->displayed_buildings_x |= SC_UNIVERSITY;
-        load_university();
+        if (screen_state->displayed_buildings_y & SC_UNIVERSITY)
+            load_university();
     }
 
     // Check skater
@@ -195,7 +200,8 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
     {
         screen_state->displayed_buildings_x |= SC_NLI;
-        load_nli();
+        if (screen_state->displayed_buildings_y & SC_NLI)
+            load_nli();
     }
     else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
         screen_state->displayed_buildings_x &= ~SC_NLI;
@@ -204,7 +210,8 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
     {
         screen_state->displayed_buildings_x |= SC_BAR;
-        load_bar();
+        if (screen_state->displayed_buildings_y & SC_BAR)
+            load_bar();
     }
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
         screen_state->displayed_buildings_x &= ~SC_BAR;
@@ -218,14 +225,16 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
     {
         screen_state->displayed_buildings_y &= ~SC_PAWN;
         screen_state->displayed_buildings_y |= SC_RESTAURANT;
-        load_restaurant();
+        if (screen_state->displayed_buildings_x & SC_RESTAURANT)
+            load_restaurant();
     }
 
     if (screen_state->screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y |= SC_NLI;
         screen_state->displayed_buildings_y &= ~SC_SHOP;
-        load_nli();
+        if (screen_state->displayed_buildings_x & SC_NLI)
+            load_nli();
     }
 
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
@@ -248,25 +257,29 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
         screen_state->displayed_buildings_y |= SC_RESTAURANT;
-        load_restaurant();
+        if (screen_state->displayed_buildings_x & SC_RESTAURANT)
+            load_restaurant();
     }
 
     if (screen_state->screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y &= ~SC_NLI;
         screen_state->displayed_buildings_y |= SC_SHOP;
-        load_shop();
+        if (screen_state->displayed_buildings_x & SC_SHOP)
+            load_shop();
     }
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
         screen_state->displayed_buildings_y |= SC_PAWN;
-        load_pawn();
+        if (screen_state->displayed_buildings_x & SC_PAWN)
+            load_pawn();
     }
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y |= SC_BAR;
-        load_bar();
+        if (screen_state->displayed_buildings_x & SC_BAR)
+            load_bar();
     }
 
     // Check skater
