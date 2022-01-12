@@ -40,11 +40,6 @@
 
 UBYTE * debug_address;
 
-// Location of user in world.
-// This is not the sprites position on the screen
-unsigned int user_pos_x;
-unsigned int user_pos_y;
-
 // Temporary storege for transfer of tile data and tile data vram1 data
 UBYTE tile_data[1];
 UWORD word_data[4];
@@ -222,8 +217,8 @@ void setup_globals()
     screen_state.screen_location_y = 0x00U;
     screen_state.screen_location_y_tiles = 0x00U;
     sprite_traveling_x = 0;
-    user_pos_x = 0x70U;
-    user_pos_y = 0x70U;
+    game_state.user_pos_x = 0x70U;
+    game_state.user_pos_y = 0x70U;
 
 #ifdef IN_TESTING
     // Add hacks for testing
@@ -528,8 +523,8 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
 
-    new_x = user_pos_x + (signed int)joypad_state.travel_x;
-    new_y = user_pos_y + (signed int)joypad_state.travel_y;
+    new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
+    new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
 
     // Check if traveling to new tile
     if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
@@ -819,8 +814,8 @@ void setup_building_menu()
 void check_building_enter()
 {
     unsigned int tile_itx = X_Y_TO_TILE_INDEX(
-        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_x),
-        PIXEL_LOCATION_TO_TILE_COUNT(user_pos_y)
+        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x),
+        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y)
     );
 
     // Check for entering house
@@ -1279,11 +1274,11 @@ void update_state()
 
 
         // Set user screen position based on current location
-        user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
-        user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
+        user_screen_pos_x = game_state.user_pos_x - screen_state.screen_location_x;
+        user_screen_pos_y = game_state.user_pos_y - screen_state.screen_location_y;
 
-        user_pos_x += (signed int)joypad_state.travel_x;
-        user_pos_y += (signed int)joypad_state.travel_y;
+        game_state.user_pos_x += (signed int)joypad_state.travel_x;
+        game_state.user_pos_y += (signed int)joypad_state.travel_y;
 
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
@@ -1301,7 +1296,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_x = user_pos_x - screen_state.screen_location_x;
+            user_screen_pos_x = game_state.user_pos_x - screen_state.screen_location_x;
             move_x = 0;
         }
 
@@ -1318,7 +1313,7 @@ void update_state()
         else
         {
             // If moving sprite, update user screen position X using new user_pos_x
-            user_screen_pos_y = user_pos_y - screen_state.screen_location_y;
+            user_screen_pos_y = game_state.user_pos_y - screen_state.screen_location_y;
             move_y = 0;
         }
 
