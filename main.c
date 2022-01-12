@@ -58,11 +58,6 @@ screen_state_t screen_state;
 menu_config_t *menu_config;
 menu_state_t menu_state;
 
-// Variables to store current main map location when
-// changing to another map
-unsigned int background_palette_itx_x;
-unsigned int background_palette_itx_y;
-
 // General iterators
 unsigned int itx_start;
 unsigned int itx_end;
@@ -265,27 +260,27 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
     set_bkg_data(MENU_ROW_2_TILE_DATA_OFFSET, 31U, &(buildingmenutiles[(MENU_ROW_2_TILE_DATA_OFFSET) << 4U]));
     ROM_BANK_RESET;
 
-    for (background_palette_itx_x = screen_state.draw_offset_x;
-           background_palette_itx_x != max_x;
-           background_palette_itx_x ++)
+    for (itx_x = screen_state.draw_offset_x;
+           itx_x != max_x;
+           itx_x ++)
     {
 
 #ifdef DEBUG_SET_BACKGROUND_SKIP
         // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-        if (background_palette_itx_x == 0x10U)
+        if (itx_x == 0x10U)
             break;
 #endif
 
-        for (background_palette_itx_y = screen_state.draw_offset_y;
-               background_palette_itx_y != max_y;
-               background_palette_itx_y ++)
+        for (itx_y = screen_state.draw_offset_y;
+               itx_y != max_y;
+               itx_y ++)
         {
             // Temp Test
-            current_tile_itx = ((background_palette_itx_y) * screen_state.background_width) + background_palette_itx_x;
+            current_tile_itx = ((itx_y) * screen_state.background_width) + itx_x;
 
 #ifdef DEBUG_SET_BACKGROUND_SKIP
             // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
-            if (background_palette_itx_y == 0x10U)
+            if (itx_y == 0x10U)
                 break;
 #endif
 
@@ -305,8 +300,8 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                  // Lookup tile from background tile map
                  &(tile_data[0])
@@ -329,8 +324,8 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
-                background_palette_itx_x & BACKGROUND_BUFFER_MAX_X,
-                background_palette_itx_y & BACKGROUND_BUFFER_MAX_Y,
+                itx_x & BACKGROUND_BUFFER_MAX_X,
+                itx_y & BACKGROUND_BUFFER_MAX_Y,
                 1, 1,  // Only setting 1 tile
                 &(tile_data[0])
             );
