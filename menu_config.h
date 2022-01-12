@@ -133,6 +133,3 @@ extern menu_config_t menu_config_inventory;
 
 // Methods for menu
 void set_menu_item_color(unsigned char palette);
-
-extern menu_config_t *menu_config;
-extern menu_state_t menu_state;
