@@ -8,6 +8,7 @@
 #pragma bank=6
 
 #include "menu_config.h"
+#include "main.h"
 
 // MENU ITEMS
 

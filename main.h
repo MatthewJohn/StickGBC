@@ -11,6 +11,7 @@
 #include "screen_state.c"
 #include "game_state.h"
 #include "joy.h"
+#include "menu_config.h"
 
 #define ROM_BANK_DEFAULT 1
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(ROM_BANK_DEFAULT)
@@ -35,6 +36,8 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 extern screen_state_t screen_state;
 extern joypad_state_t joypad_state;
 extern game_state_t game_state;
+extern menu_config_t *menu_config;
+extern menu_state_t menu_state;
 
 extern UBYTE tile_data[];
 extern UWORD word_data[4];
