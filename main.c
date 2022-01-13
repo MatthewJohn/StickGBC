@@ -38,6 +38,9 @@
 
 #include "main.h"
 
+// Debug definitions
+#define JUMP_BUILDING
+
 UBYTE * debug_address;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
@@ -597,6 +600,11 @@ void setup_main_map()
     update_background_color();
 
     DISPLAY_ON;
+
+    // Set last_movement_time to current systime, allowing user to
+    // immediately move, in case it has been set to the future by
+    // another method
+    game_state.last_movement_time = sys_time;
 }
 
 void load_menu_tiles() NONBANKED
@@ -814,6 +822,11 @@ void setup_building_menu()
     ROM_BANK_RESET;
 
     DISPLAY_ON;
+
+    // Set last_movement_time to current systime, allowing user to
+    // immediately select an item, in case it has been set to the future by
+    // another method
+    game_state.last_movement_time = sys_time;
 }
 
 // Attempt to 'enter' a building if user is in
@@ -879,10 +892,14 @@ void check_building_enter()
         game_state.current_building = S_B_BAR;
         setup_building_menu();
     }
-//
-//    // Temporary jump to building
-//    game_state.current_building = S_B_HOBO;
-//    setup_building_menu();
+
+#ifdef IN_TESTING
+#ifdef JUMP_BUILDING
+    game_state.current_building = S_B_RESTAURANT;
+    setup_building_menu();
+    return;
+#endif
+#endif
 }
 
 // Check if win/lose conditions have been met
@@ -1397,8 +1414,10 @@ void update_state()
         {
             // Update last movement (used for purchase delay) to 0,
             // allowing them to purchase immediately after movement
-            // to new tile
-            game_state.last_movement_time = 0;
+            // to new tile. If sys_time happens to be overflowing,
+            // then this won't help the user and will have to wait for the
+            // purchase wait period.
+            game_state.last_movement_time = 0U;
 
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
@@ -1471,8 +1490,13 @@ void update_state()
             }
 
             // Check if in wait-period since last time purchase
-            if ((game_state.last_movement_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT)  ==
-                (sys_time >> PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT))
+            // Since sys_time wraps around every 18 mins, if it does,
+            // sys_time will be a low number and removing last_movement time will cause
+            // an underflow of the difference, which will be very big and immediately allow
+            // for another purchase - this isn't _great_, but better than logic that
+            // will cause the user to be able to not purchase anything for 18 mins whilst
+            // sys_time makes it's way back up...
+            if ((sys_time - game_state.last_movement_time) < PURCHASE_ITEM_WAIT)
             {
                 // If in wait period, exit early
                 return;
@@ -1741,6 +1765,17 @@ void update_state()
                     menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
             }
+        }
+        else
+        // If not pressing 'a', reset last_movement_time, so that
+        // item can be purchased without delay
+        {
+            // Update last movement (used for purchase delay) to 0,
+            // allowing them to purchase immediately after movement
+            // to new tile. If sys_time happens to be overflowing,
+            // then this won't help the user and will have to wait for the
+            // purchase wait period.
+            game_state.last_movement_time = 0U;
         }
     }
 }
