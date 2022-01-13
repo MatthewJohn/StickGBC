@@ -20,3 +20,7 @@ stickrpg.vcxproj
 stickrpg.vcxproj.filters
 stickrpg.vcxproj.user
 stickrpg.workspace
+*.log
+stickrpg.Build.CppClean.log
+stickrpg.lastbuildstate
+stickrpg.log
