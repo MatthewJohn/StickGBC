@@ -205,10 +205,10 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0x0U;
 
-    screen_state.screen_location_x = 0x00U;
-    screen_state.screen_location_x_tiles = 0x00U;
-    screen_state.screen_location_y = 0x00U;
-    screen_state.screen_location_y_tiles = 0x00U;
+    screen_state.screen_location_x = 0x10U;
+    screen_state.screen_location_x_tiles = screen_state.screen_location_x >> 3;
+    screen_state.screen_location_y = 0x10U;
+    screen_state.screen_location_y_tiles = screen_state.screen_location_y >> 3;
     game_state.user_pos_x = 0x70U;
     game_state.user_pos_y = 0x70U;
 
