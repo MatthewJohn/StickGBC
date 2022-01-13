@@ -1414,8 +1414,10 @@ void update_state()
         {
             // Update last movement (used for purchase delay) to 0,
             // allowing them to purchase immediately after movement
-            // to new tile
-            game_state.last_movement_time = 0;
+            // to new tile. If sys_time happens to be overflowing,
+            // then this won't help the user and will have to wait for the
+            // purchase wait period.
+            game_state.last_movement_time = 0U;
 
             // Setup new Y search to use current X
             new_menu_x = menu_state.current_item_x;
@@ -1763,6 +1765,17 @@ void update_state()
                     menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
             }
+        }
+        else
+        // If not pressing 'a', reset last_movement_time, so that
+        // item can be purchased without delay
+        {
+            // Update last movement (used for purchase delay) to 0,
+            // allowing them to purchase immediately after movement
+            // to new tile. If sys_time happens to be overflowing,
+            // then this won't help the user and will have to wait for the
+            // purchase wait period.
+            game_state.last_movement_time = 0U;
         }
     }
 }
