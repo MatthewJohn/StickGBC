@@ -38,6 +38,9 @@
 
 #include "main.h"
 
+// Debug definitions
+#define JUMP_BUILDING
+
 UBYTE * debug_address;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
@@ -889,10 +892,14 @@ void check_building_enter()
         game_state.current_building = S_B_BAR;
         setup_building_menu();
     }
-//
-//    // Temporary jump to building
-//    game_state.current_building = S_B_HOBO;
-//    setup_building_menu();
+
+#ifdef IN_TESTING
+#ifdef JUMP_BUILDING
+    game_state.current_building = S_B_RESTAURANT;
+    setup_building_menu();
+    return;
+#endif
+#endif
 }
 
 // Check if win/lose conditions have been met
