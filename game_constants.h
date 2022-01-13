@@ -9,7 +9,7 @@
 #define GAME_CONSTANTS_DEF 1
 
 // Delays and timings
-#define PURCHASE_ITEM_WAIT_PERIOD_BIT_SHIFT 5U
+#define PURCHASE_ITEM_WAIT 0x28  // Wait 30 frames
 #define DELAY_SLEEP 1000U
 #define DELAY_MENU_ITEM_MOVE 100U
 
