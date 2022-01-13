@@ -8,6 +8,7 @@
 #pragma bank=6
 
 #include "menu_config.h"
+#include "main.h"
 
 // MENU ITEMS
 
@@ -1296,15 +1297,15 @@ menu_config_t menu_config_inventory = {
 
 
 // Update palette for currently selected menu item
-void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, unsigned char palette)
+void set_menu_item_color(unsigned char palette)
 {
     unsigned int itx_y, itx_x, tile_index, menu_item_index;
     unsigned char palette_colors[MENU_ITEM_WIDTH];
-    unsigned int menu_item_itx = menu_state->current_item_x + (MENU_MAX_ITEMS_X * menu_state->current_item_y);
+    unsigned int menu_item_itx = menu_state.current_item_x + (MENU_MAX_ITEMS_X * menu_state.current_item_y);
 
     // Check if current menu item is disabled
-    if (menu_state->current_item_x == MENU_SELECTED_ITEM_DISABLED ||
-        menu_state->current_item_y == MENU_SELECTED_ITEM_DISABLED)
+    if (menu_state.current_item_x == MENU_SELECTED_ITEM_DISABLED ||
+        menu_state.current_item_y == MENU_SELECTED_ITEM_DISABLED)
         return;
 
     VBK_REG = 1;
@@ -1319,8 +1320,8 @@ void set_menu_item_color(menu_state_t *menu_state, menu_config_t *menu_config, u
                 palette_colors[itx_x] = menu_config_items[menu_item_index].palette[tile_index];
          }
         set_bkg_tiles(
-            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state->current_item_x),
-            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state->current_item_y),
+            MENU_ITEM_SCREEN_OFFSET_LEFT + (8U * menu_state.current_item_x),
+            itx_y + MENU_ITEM_SCREEN_OFFSET_TOP + (3U * menu_state.current_item_y),
             MENU_ITEM_WIDTH, 1,
             &palette_colors
         );

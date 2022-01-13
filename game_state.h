@@ -92,6 +92,11 @@ typedef struct {
     // last item purchase, which stops accidental double purchsing
     unsigned int last_movement_time;
 
+    // Location of user in world.
+    // This is not the sprites position on the screen
+    unsigned int user_pos_x;
+    unsigned int user_pos_y;
+
     BOOLEAN hobo_given_money;
     BOOLEAN hobo_given_beer;
 } game_state_t;
