@@ -6,3 +6,17 @@ main.map
 *.i
 gc.log
 .codelite
+
+# VS
+Demo
+stickrpg.ncb
+stickrpg.opensdf
+stickrpg.sdf
+stickrpg.sln
+stickrpg.suo
+stickrpg.vcproj
+stickrpg.vcproj.MATT-433105D297.Matt.user
+stickrpg.vcxproj
+stickrpg.vcxproj.filters
+stickrpg.vcxproj.user
+stickrpg.workspace
