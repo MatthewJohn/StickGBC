@@ -1488,7 +1488,7 @@ void update_state()
             }
 
             // Check if in wait-period since last time purchase
-            if ((unsigned int)sys_time < game_state.last_movement_time)
+            if ((sys_time - game_state.last_movement_time) < PURCHASE_ITEM_WAIT)
             {
                 // If in wait period, exit early
                 return;
@@ -1496,7 +1496,7 @@ void update_state()
             else
             {
                 // Otherwise, update last movement time
-                game_state.last_movement_time = (unsigned int)sys_time + PURCHASE_ITEM_WAIT;
+                game_state.last_movement_time = sys_time;
             }
 
             // If selected sleep in house
