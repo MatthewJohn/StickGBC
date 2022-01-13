@@ -1488,6 +1488,12 @@ void update_state()
             }
 
             // Check if in wait-period since last time purchase
+            // Since sys_time wraps around every 18 mins, if it does,
+            // sys_time will be a low number and removing last_movement time will cause
+            // an underflow of the difference, which will be very big and immediately allow
+            // for another purchase - this isn't _great_, but better than logic that
+            // will cause the user to be able to not purchase anything for 18 mins whilst
+            // sys_time makes it's way back up...
             if ((sys_time - game_state.last_movement_time) < PURCHASE_ITEM_WAIT)
             {
                 // If in wait period, exit early
