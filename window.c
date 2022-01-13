@@ -12,7 +12,7 @@
 
 #include "game_constants.h"
 #include "game_state.h"
-#include "external_bank_globals.h"
+#include "main.h"
 #include "menu_config.h"
 
 UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
@@ -88,7 +88,7 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
     set_bkg_tiles(start_x, start_y, 1, 1, &tile_data);
 }
 
-void update_window(game_state_t* game_state)
+void update_window()
 {
     unsigned int current_digit, remainder, itx, itx_x;
     unsigned short shown_symbol;
@@ -126,8 +126,8 @@ void update_window(game_state_t* game_state)
     VBK_REG = 0;
 
     // Set 24 hour time e.g. 17:00
-    clock_tile_data[0] = MENU_TILE_0 + game_state->hour / 10U;
-    clock_tile_data[1] = MENU_TILE_0 + game_state->hour % 10U;
+    clock_tile_data[0] = MENU_TILE_0 + game_state.hour / 10U;
+    clock_tile_data[1] = MENU_TILE_0 + game_state.hour % 10U;
     clock_tile_data[2] = MENU_TILE_COLON;
     clock_tile_data[3] = MENU_TILE_0;
     clock_tile_data[4] = MENU_TILE_0;
@@ -135,7 +135,7 @@ void update_window(game_state_t* game_state)
     set_win_tiles(2U, 1U, 5, 1, &clock_tile_data);
 
     // DAYS PASSED
-    remainder = game_state->days_passed;
+    remainder = game_state.days_passed;
 
     // Start at WINDOW_MAX_DIGITS_DAYS + margin from left
     itx_x = WINDOW_MAX_DIGITS_DAYS + 1U;
@@ -167,7 +167,7 @@ void update_window(game_state_t* game_state)
 
     // BALANCE
     // Iterate over days passed
-    remainder = game_state->balance;
+    remainder = game_state.balance;
 
     shown_symbol = 0U;
 
@@ -227,7 +227,7 @@ void update_window(game_state_t* game_state)
     set_win_tiles(itx_x, 1U, 1, 1, &(tile_data[0]));
     itx_x -= 1U;
     shown_symbol = 0U;
-    remainder = game_state->max_hp;
+    remainder = game_state.max_hp;
     for (itx = 0; itx != WINDOW_MAX_DIGITS_HP; itx ++)
     {
         // If on last iteration, update digit with remainder
@@ -253,7 +253,7 @@ void update_window(game_state_t* game_state)
                 shown_symbol = 1U;
 
                 // Once complete with max_hp, continue to actual HP value
-                remainder = game_state->hp;
+                remainder = game_state.hp;
                 // Set itx back to start. When using high number values (5 digits for each), then this may cause an issue
                 // with failing to remove the remaining digits.
                 itx = 0;

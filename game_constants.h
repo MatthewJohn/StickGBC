@@ -26,9 +26,9 @@
 
 #define MENU_ROW_2_TILE_DATA_OFFSET 0x60U
 
-// Screen size 160x168
-#define SCREEN_WIDTH 0xA8U
-#define SCREEN_HEIGHT 0xA0U
+// Screen size 160x144
+#define SCREEN_WIDTH 0xA0U
+#define SCREEN_HEIGHT 0x90U
 
 #define SCREEN_TILE_MAX_X 0x13U
 #define SCREEN_TILE_MAX_Y 0x11U
@@ -51,7 +51,7 @@
 #define WALK_SPEED_DELAY 0x01U
 #define SKATEBOARD_SPEED_DELAY 0x00U
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x18U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
