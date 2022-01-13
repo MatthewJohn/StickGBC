@@ -822,7 +822,7 @@ void setup_building_menu()
     ROM_BANK_RESET;
 
     DISPLAY_ON;
-    
+
     // Set last_movement_time to current systime, allowing user to
     // immediately select an item, in case it has been set to the future by
     // another method
