@@ -51,7 +51,7 @@
 #define WALK_SPEED_DELAY 0x01U
 #define SKATEBOARD_SPEED_DELAY 0x00U
 
-#define CHARACTER_SCREEN_LOCATION_MARGIN 0x28U
+#define CHARACTER_SCREEN_LOCATION_MARGIN 0x20U
 
 // Max address if 0x1F, set to 0x20 for loops that loop whilst
 // less than the value (or rather !=)
