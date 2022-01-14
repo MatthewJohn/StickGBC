@@ -74,7 +74,12 @@
 6.
 7.
 8. Car up front
-9. Car up back
+9. Car right front
+10. Car diagonal front
+11. Car up back
+12. Car right back
+13. Car diagonal back
+
 
 ## Building map tiles
 
