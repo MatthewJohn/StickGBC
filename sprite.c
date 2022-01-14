@@ -14,7 +14,7 @@
 
 UINT8 sprite_prop_data;
 
-void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
     // Load single sprite tile
     HIDE_SPRITES;
@@ -31,7 +31,7 @@ void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite
 
     // Configure sprite to sprite tile
     //  Main player
-    set_sprite_tile(0U, 0U);
+    set_sprite_tile(player_sprite->sprite_index, player_sprite->sprite_tile);
     //  Skater
     set_sprite_tile(skater_sprite->sprite_index, 0U);
 
