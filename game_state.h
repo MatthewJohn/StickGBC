@@ -113,6 +113,17 @@ typedef struct {
     UINT8 sprite_display_bit;
     // Sprite color palette
     UINT8 color_palette;
+
+    // Number of sprites to use in X/Y
+    UINT8 sprite_count_x;
+    UINT8 sprite_count_y;
+
+    // Initial index for the sprite tile.
+    // For two-by-two, the back tiles use
+    // sprite_tile + 1
+    UINT8 sprite_tile;
+
+    // Sprite tile count - number of r
     // These are initially setup to determine initial movement.
     // The direction is inverted when max/min location is reached.
     INT8 travel_direction_x;

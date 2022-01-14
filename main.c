@@ -90,6 +90,13 @@ ai_sprite skater_sprite = {
     0x00U,
     // Color palette,
     0x01U,
+
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    0x00U,
+
     // Travel X (right)
     0x01,
     // Travel Y
@@ -121,6 +128,11 @@ ai_sprite dealer_sprite = {
     0x01U,
     // Color palette,
     0x02U,
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    0x00U,
     // Travel X
     0x00,
     // Travel Y (down)
@@ -139,6 +151,42 @@ ai_sprite dealer_sprite = {
     0x17BU,
     // Pause period and current pause.
     0x0FU,
+    0x00U,
+};
+
+// Setup dealer sprite
+ai_sprite house_car_sprite = {
+    // Speed
+    0x00U,
+    // Base sprite index (uses 4 (3 through 6) for 2x2 tiles)
+    0x03U,
+    // Sprite bit index
+    0x02U,
+    // Color palette,
+    0x03U,
+    // Sprite count (2 x 2)
+    0x02U,
+    0x02U,
+    // Sprite base tile
+    0x08U,
+    // Travel X
+    0x00,
+    // Travel Y (down)
+    0x00,
+    // Rest direction X/Y (face right)
+    0x00,
+    1,
+    // Start location x, y
+    0x3FU,
+    0x58U,
+    // Min/max X location
+    0x3FU,
+    0x3FU,
+    // Min/max Y location
+    0x58U,
+    0x58U,
+    // Pause period and current pause.
+    0x00U,
     0x00U,
 };
 
@@ -191,6 +239,8 @@ void setup_globals()
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
     screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_x[house_car_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_y[house_car_sprite.sprite_display_bit] = 1U;
 
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
@@ -230,6 +280,7 @@ void update_ai_positions()
     ROM_BANK_SPRITE_SWITCH;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
+    move_ai_sprite(&screen_state, &house_car_sprite);
     ROM_BANK_RESET;
 }
 
@@ -579,7 +630,7 @@ void setup_main_map()
 
     set_background_tiles(ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
-    setup_sprites(&skater_sprite, &dealer_sprite);
+    setup_sprites(&skater_sprite, &dealer_sprite, &house_car_sprite);
     ROM_BANK_RESET;
 
     // Move background to screen location
