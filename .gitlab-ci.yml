@@ -20,7 +20,7 @@ sonarqube:
     paths:
       - .sonar/cache
   script:
-    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=StickGBC -Dsonar.sources=. -Dsonar.host.url=http://sonarqube.dock.studios -Dsonar.login=$SONAR_KEY
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=StickGBC -Dsonar.sources=games/stickrpg -Dsonar.c.includeDirectories=./include -Dsonar.host.url=http://sonarqube.dock.studios -Dsonar.login=$SONAR_KEY
   only:
     - merge_requests
     - master
