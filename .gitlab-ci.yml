@@ -12,4 +12,4 @@ semgrep:
   allow_failure: true
   image: fare-docker-reg.dock.studios:5000/returntocorp/semgrep:latest
   script:
-    - semgrep --error --strict --json games/stickrpg
+    - semgrep games/stickrpg
