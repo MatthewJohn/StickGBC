@@ -22,7 +22,7 @@ void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite
     VBK_REG = 0;
 
     // Load spirte tile data into VRAM
-    set_sprite_data(0U, 10U, mainmapspritetiles);
+    set_sprite_data(0U, 12U, mainmapspritetiles);
 
     // Load sprite palette into VRAM
     set_sprite_palette(0U, 4U, main_map_sprite_palette);
