@@ -95,7 +95,7 @@ ai_sprite player_sprite = {
     0x01U,
     0x01U,
     // Sprite base tile
-    0x00U,
+    SPRITE_TILESET_WALK,
 
     // Fake values, since the
     // main player has different state for these
@@ -118,7 +118,7 @@ ai_sprite skater_sprite = {
     0x01U,
     0x01U,
     // Sprite base tile
-    0x00U,
+    SPRITE_TILESET_WALK,
 
     // Travel X (right)
     0x01,
@@ -155,7 +155,7 @@ ai_sprite dealer_sprite = {
     0x01U,
     0x01U,
     // Sprite base tile
-    0x00U,
+    SPRITE_TILESET_WALK,
     // Travel X
     0x00,
     // Travel Y (down)
@@ -177,7 +177,7 @@ ai_sprite dealer_sprite = {
     0x00U,
 };
 
-// Setup dealer sprite
+// Setup house car sprite
 ai_sprite house_car_sprite = {
     // Speed
     0x00U,
@@ -1458,13 +1458,7 @@ void update_state()
         player_sprite.travel_direction_y = joypad_state.travel_y;
 
         ROM_BANK_SPRITE_SWITCH;
-        set_sprite_direction(
-            player_sprite.sprite_index,
-            player_sprite.sprite_tile,
-            player_sprite.color_palette,
-            player_sprite.travel_direction_x,
-            player_sprite.travel_direction_y
-        );
+        set_sprite_direction(&player_sprite);
         ROM_BANK_RESET;
 
         if (joypad_state.a_pressed)
