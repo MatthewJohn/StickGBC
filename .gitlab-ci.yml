@@ -40,7 +40,6 @@ code_quality:
         -e SOURCE_CODE=/code/games/stickrpg \
         -e CODECLIMATE_DEBUG=1 \
         --volume "$PWD":/code \
-        --volume /var/run/docker.sock:/var/run/docker.sock \
         "$CODE_QUALITY_IMAGE" /code
   artifacts:
     reports:
