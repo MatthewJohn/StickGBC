@@ -4,4 +4,4 @@ cppcheck:
   allow_failure: true
   image: registry.gitlab.dockstudios.co.uk/pub/docker-images/cpp-static-code-analysis:latest
   script:
-    - cppcheck --enable=all --error-exitcode=1 ./games/stickrpg
+    - cppcheck --enable=all --error-exitcode=1 --std=c98 -I ./include ./games/stickrpg
