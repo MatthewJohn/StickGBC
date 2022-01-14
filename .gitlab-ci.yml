@@ -1,0 +1,27 @@
+
+cppcheck:
+  stage: test
+  allow_failure: true
+  image: registry.gitlab.dockstudios.co.uk/pub/docker-images/cpp-static-code-analysis:latest
+  script:
+    - cppcheck --suppress=unusedFunction --suppress=unusedStructMember --enable=all --error-exitcode=1 --std=c99 -I ./include ./games/stickrpg
+
+
+sonarqube:
+  stage: test
+  image:
+    name: registry.gitlab.dockstudios.co.uk/pub/docker-images/sonarcanner-cli:ubuntu-20.04
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+    GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=StickGBC -Dsonar.sources=games/stickrpg -Dsonar.c.includeDirectories=./include -Dsonar.host.url=http://sonarqube.dock.studios -Dsonar.login=$SONAR_KEY
+  only:
+    - merge_requests
+    - master
+
