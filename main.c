@@ -39,7 +39,7 @@
 #include "main.h"
 
 // Debug definitions
-#define JUMP_BUILDING
+#define JUMP_BUILDING 0
 
 UBYTE * debug_address;
 
@@ -945,7 +945,7 @@ void check_building_enter()
     }
 
 #ifdef IN_TESTING
-#ifdef JUMP_BUILDING
+#if JUMP_BUILDING
     game_state.current_building = S_B_RESTAURANT;
     setup_building_menu();
     return;
