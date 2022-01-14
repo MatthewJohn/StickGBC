@@ -40,7 +40,7 @@ code_quality:
         ) \
         --volume "$PWD":/code \
         --volume /var/run/docker.sock:/var/run/docker.sock \
-        "$CODE_QUALITY_IMAGE" /code
+        "$CODE_QUALITY_IMAGE" /code/games/stickrpg
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
