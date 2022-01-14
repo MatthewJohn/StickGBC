@@ -49,13 +49,32 @@
    0. Background
    1. Outline
    2. Sprite center
- 2.
- 3.
+ 2. Dealer
+   0. Background
+   1. Outline
+   2. Sprite center
+ 3. Road Car
+   0. Background
+   1. Window
+   2. Paint 1
+   3. Paint 2
  4.
  5.
  6.
  7.
- 
+
+## Sprite tiles
+
+0. Player up
+1. Player right
+2. Player diagonal top-right
+3. Player skateboard up
+4. Player skateboard right
+5. Player skateboard diagonal top-right
+6.
+7.
+8. Car up front
+9. Car up back
 
 ## Building map tiles
 
