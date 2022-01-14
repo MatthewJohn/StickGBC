@@ -35,24 +35,12 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     //  Skater
     set_sprite_tile(skater_sprite->sprite_index, 0U);
 
-    set_sprite_direction(
-        skater_sprite->sprite_index,
-        SPRITE_TILESET_WALK,
-        skater_sprite->color_palette,
-        skater_sprite->travel_direction_x,
-        skater_sprite->travel_direction_y
-    );
+    set_sprite_direction(skater_sprite);
 
     // Dealer
     set_sprite_tile(dealer_sprite->sprite_index, 0U);
 
-    set_sprite_direction(
-        dealer_sprite->sprite_index,
-        SPRITE_TILESET_WALK,
-        dealer_sprite->color_palette,
-        dealer_sprite->travel_direction_x,
-        dealer_sprite->travel_direction_y
-    );
+    set_sprite_direction(dealer_sprite);
 
     itx = house_car_sprite->sprite_index;
     for (itx_x = 0; itx_x != house_car_sprite->sprite_count_x; itx_x ++)
@@ -61,13 +49,7 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
         {
             set_sprite_tile(itx, house_car_sprite->sprite_tile + itx_y);
 
-            //set_sprite_direction(
-            //    house_car_sprite,
-            //    house_car_sprite->sprite_tile + itx_y,
-            //    house_car_sprite->color_palette,
-            //    skater_sprite->travel_direction_x,
-            //    skater_sprite->travel_direction_y
-            //);
+            set_sprite_direction(house_car_sprite);
 
             itx += 1U;
         }
@@ -76,38 +58,38 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     SHOW_SPRITES;
 }
 
-void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
+void set_sprite_direction(ai_sprite *sprite)
+    //UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y)
 {
-    UINT8 sprite_tile_offset = sprite_tileset_index * SPRITE_TILESET_COUNT;
     // Update flip of sprite tile
-    sprite_prop_data = color_palette & 0x07U;
+    sprite_prop_data = sprite->color_palette & 0x07U;
     // Check for just vertical movement/
-    if (direction_y != 0)
+    if (sprite->travel_direction_y != 0)
     {
-        if (direction_x == 0)
+        if (sprite->travel_direction_x == 0)
         {
             // If travelling up, flip Y
-            if (direction_y == 1)
+            if (sprite->travel_direction_y == 1)
                 sprite_prop_data |= S_FLIPY;
-            set_sprite_tile(sprite_index, 0U + sprite_tile_offset);
+            set_sprite_tile(sprite->sprite_index, 0U + sprite->sprite_tile);
         } else {
             // Handle diagonal movement
-            if (direction_y == 1)
+            if (sprite->travel_direction_y == 1)
                 sprite_prop_data |= S_FLIPY;
-            if (direction_x == -1)
+            if (sprite->travel_direction_x == -1)
                 sprite_prop_data |= S_FLIPX;
-            set_sprite_tile(sprite_index, 2U + sprite_tile_offset);
+            set_sprite_tile(sprite->sprite_index, 2U + sprite->sprite_tile);
         }
     }
-    else if (direction_x != 0)
+    else if (sprite->travel_direction_x != 0)
     {
-        set_sprite_tile(sprite_index, 1U + sprite_tile_offset);
-        if (direction_x == -1)
+        set_sprite_tile(sprite->sprite_index, 1U + sprite->sprite_tile);
+        if (sprite->travel_direction_x == -1)
             sprite_prop_data |= S_FLIPX;
     }
     // Only update flipping if actually moving
-    if (direction_x != 0 || direction_y != 0)
-        set_sprite_prop(sprite_index, sprite_prop_data);
+    if (sprite->travel_direction_x != 0 || sprite->travel_direction_y != 0)
+        set_sprite_prop(sprite->sprite_index, sprite_prop_data);
 }
 
 void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
@@ -139,13 +121,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 
             if (sprite_to_move->current_pause == 0U)
                 // Check if now at 0 current pause and change direction ready for travel
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->travel_direction_x,
-                    sprite_to_move->travel_direction_y
-                );
+                set_sprite_direction(sprite_to_move);
         }
         // Check if moving right
         else if (sprite_to_move->travel_direction_x == 1)
@@ -157,13 +133,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->travel_direction_x = -1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
+                set_sprite_direction(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x += 1;
@@ -176,13 +146,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->travel_direction_x = 1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
+                set_sprite_direction(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x -= 1;
@@ -196,13 +160,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->travel_direction_y = -1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
+                set_sprite_direction(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y += 1;
@@ -215,13 +173,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->travel_direction_y = 1;
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
-                set_sprite_direction(
-                    sprite_to_move->sprite_index,
-                    SPRITE_TILESET_WALK,
-                    sprite_to_move->color_palette,
-                    sprite_to_move->rest_direction_x,
-                    sprite_to_move->rest_direction_y
-                );
+                set_sprite_direction(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y -= 1;
