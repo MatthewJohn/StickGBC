@@ -10,15 +10,12 @@
 #include "sprite.h"
 #include "main_map_sprite_tileset.h"
 #include "main_map_sprite_palette.h"
+#include "main.h"
 
 UINT8 sprite_prop_data;
 
 void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
-    UINT8 itx_x;
-    UINT8 itx_y;
-    UINT8 itx;
-
     // Load single sprite tile
     HIDE_SPRITES;
 
@@ -122,7 +119,15 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
     ))
     {
         // Move sprite off-screen
-        move_sprite(sprite_to_move->sprite_index, 0, 0);
+        itx = sprite_to_move->sprite_index;
+        for (itx_x = 0; itx_x != sprite_to_move->sprite_count_x; itx_x ++)
+        {
+            for (itx_y = 0; itx_y != sprite_to_move->sprite_count_y; itx_y ++)
+            {
+                move_sprite(itx, 0, 0);
+                itx += 1U;
+            }
+        }
         return;
     }
 
@@ -225,9 +230,17 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 
     // Move AI sprites
     // This must always be done, as it is required when the screen moves
-    move_sprite(
-        sprite_to_move->sprite_index,
-        (sprite_to_move->current_location_x - screen_state->screen_location_x) + SPRITE_OFFSET_X,
-        (sprite_to_move->current_location_y - screen_state->screen_location_y) + SPRITE_OFFSET_Y
-    );
+    itx = sprite_to_move->sprite_index;
+    for (itx_x = 0; itx_x != sprite_to_move->sprite_count_x; itx_x ++)
+    {
+        for (itx_y = 0; itx_y != sprite_to_move->sprite_count_y; itx_y ++)
+        {
+            move_sprite(
+                itx,
+                (sprite_to_move->current_location_x - screen_state->screen_location_x) + SPRITE_OFFSET_X + (itx_x * 8),
+                (sprite_to_move->current_location_y - screen_state->screen_location_y) + SPRITE_OFFSET_Y + (itx_y * 8)
+            );
+            itx += 1U;
+        }
+    }
 }
