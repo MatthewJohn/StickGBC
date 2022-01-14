@@ -168,7 +168,7 @@ ai_sprite house_car_sprite = {
     0x02U,
     0x02U,
     // Sprite base tile
-    0x08U,
+    0x0AU,
     // Travel X
     0x00,
     // Travel Y (down)
