@@ -80,6 +80,29 @@ UINT8 tile_itx_x;
 UINT8 tile_itx_y;
 UINT8 second_tile_row;
 
+// Main player sprite
+ai_sprite player_sprite = {
+    // Speed
+    0x00U,
+    // Sprite index
+    0x00U,
+    // Sprite bit index
+    0x00U,
+    // Color palette,
+    0x00U,
+
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    0x00U,
+
+    // Fake values, since the
+    // main player has different state for these
+    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period
+    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U,
+};
+
 // Setup skater sprite
 ai_sprite skater_sprite = {
     // Speed
@@ -630,7 +653,7 @@ void setup_main_map()
 
     set_background_tiles(ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
-    setup_sprites(&skater_sprite, &dealer_sprite, &house_car_sprite);
+    setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite);
     ROM_BANK_RESET;
 
     // Move background to screen location
@@ -1321,7 +1344,6 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
-    UINT8 main_player_tileset;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1330,12 +1352,12 @@ void update_state()
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
-            main_player_tileset = SPRITE_TILESET_SKATEBOARD;
+            player_sprite.sprite_tile = SPRITE_TILESET_SKATEBOARD;
         }
         else
         {
             movement_bit_push = WALK_SPEED_DELAY;
-            main_player_tileset = SPRITE_TILESET_WALK;
+            player_sprite.sprite_tile = SPRITE_TILESET_WALK;
         }
         // If movement happened too recently, disable movement
         if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
@@ -1432,13 +1454,16 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
+        player_sprite.travel_direction_x = joypad_state.travel_x;
+        player_sprite.travel_direction_y = joypad_state.travel_y;
+
         ROM_BANK_SPRITE_SWITCH;
         set_sprite_direction(
-            PLAYER_SPRITE_INDEX,
-            main_player_tileset,
-            PLAYER_SPRITE_PALETTE,
-            joypad_state.travel_x,
-            joypad_state.travel_y
+            player_sprite.sprite_index,
+            player_sprite.sprite_tile,
+            player_sprite.color_palette,
+            player_sprite.travel_direction_x,
+            player_sprite.travel_direction_y
         );
         ROM_BANK_RESET;
 
