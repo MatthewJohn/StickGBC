@@ -29,7 +29,6 @@ code_quality:
     - |
       docker run --rm \
         $(propagate_env_vars \
-          SOURCE_CODE \
           TIMEOUT_SECONDS \
           CODECLIMATE_DEBUG \
           CODECLIMATE_DEV \
@@ -38,9 +37,11 @@ code_quality:
           ENGINE_MEMORY_LIMIT_BYTES \
           CODECLIMATE_PREFIX \
         ) \
+        -e SOURCE_CODE=/code/games/stickrpg \
+        -e CODECLIMATE_DEBUG=1 \
         --volume "$PWD":/code \
         --volume /var/run/docker.sock:/var/run/docker.sock \
-        "$CODE_QUALITY_IMAGE" /code/games/stickrpg
+        "$CODE_QUALITY_IMAGE" /code
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
