@@ -13,18 +13,22 @@
 
 UINT8 sprite_prop_data;
 
-void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
+void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
+    UINT8 itx_x;
+    UINT8 itx_y;
+    UINT8 itx;
+
     // Load single sprite tile
     HIDE_SPRITES;
 
     VBK_REG = 0;
 
     // Load spirte tile data into VRAM
-    set_sprite_data(0U, 6U, mainmapspritetiles);
+    set_sprite_data(0U, 10U, mainmapspritetiles);
 
     // Load sprite palette into VRAM
-    set_sprite_palette(0U, 3U, main_map_sprite_palette);
+    set_sprite_palette(0U, 4U, main_map_sprite_palette);
 
     VBK_REG = 0;
 
@@ -52,6 +56,25 @@ void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite)
         dealer_sprite->travel_direction_x,
         dealer_sprite->travel_direction_y
     );
+
+    itx = house_car_sprite->sprite_index;
+    for (itx_x = 0; itx_x != house_car_sprite->sprite_count_x; itx_x ++)
+    {
+        for (itx_y = 0; itx_y != house_car_sprite->sprite_count_y; itx_y ++)
+        {
+            set_sprite_tile(itx, house_car_sprite->sprite_tile + itx_y);
+
+            //set_sprite_direction(
+            //    house_car_sprite,
+            //    house_car_sprite->sprite_tile + itx_y,
+            //    house_car_sprite->color_palette,
+            //    skater_sprite->travel_direction_x,
+            //    skater_sprite->travel_direction_y
+            //);
+
+            itx += 1U;
+        }
+    }
 
     SHOW_SPRITES;
 }
