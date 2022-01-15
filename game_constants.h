@@ -46,6 +46,9 @@
 // Second tileset is for skateboarding
 #define SPRITE_TILESET_SKATEBOARD 0x03U
 
+// Sprite palette index for car
+#define CAR_SPRITE_PALETTE_INDEX 0x3U
+
 #define WALK_SPEED_DELAY 0x01U
 #define SKATEBOARD_SPEED_DELAY 0x00U
 

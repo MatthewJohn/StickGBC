@@ -6,11 +6,19 @@
 
 #pragma bank=5
 
+#include "gb.h"
 #include "main_game.h"
 #include "game_constants.h"
 #include "main_map_tileset.h"
 #include "game_state.h"
 #include "main.h"
+
+const UWORD house_car_palette[4] = {
+    RGB(31, 31, 31),
+    RGB(0, 2, 1),
+    RGB(14, 31, 0),
+    RGB(15, 22, 0),
+};
 
 void load_house()
 {
@@ -75,7 +83,12 @@ void load_bar()
     set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
 }
 
-void load_building_tile_data(screen_state_t *screen_state)
+void load_house_car_sprite()
+{
+    set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
+}
+
+void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite)
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
@@ -121,6 +134,14 @@ void load_building_tile_data(screen_state_t *screen_state)
         screen_state->displayed_buildings_y & SC_BAR
     )
         load_bar();
+
+    if (
+        screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] == 1U &&
+        screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] == 1U
+        )
+    {
+        load_house_car_sprite();
+    }
 }
 
 void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
@@ -157,7 +178,11 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (house_car_sprite->min_location_x >> 3))
         screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] = 0U;
     if (screen_state->screen_location_x_tiles == (house_car_sprite->max_location_x >> 3))
+    {
         screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] == 1U)
+            load_house_car_sprite();
+    }
 
     // NLI
     if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
@@ -205,7 +230,11 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
 
     // Check house car
     if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (house_car_sprite->min_location_x >> 3))
+    {
         screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] == 1U)
+            load_house_car_sprite();
+    }
     if ((screen_state->screen_location_x_tiles - 1U) == (house_car_sprite->max_location_x >> 3))
         screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] = 0U;
 
@@ -268,7 +297,11 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
     if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (house_car_sprite->min_location_y >> 3U))
         screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] = 0U;
     if (screen_state->screen_location_y_tiles == (house_car_sprite->max_location_y >> 3U))
+    {
         screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] == 1U)
+            load_house_car_sprite();
+    }
 }
 void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
@@ -313,7 +346,11 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
         screen_state->displayed_sprites_y[dealer_sprite->sprite_display_bit] = 0U;
 
     if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (house_car_sprite->min_location_y >> 3U))
+    {
         screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] == 1U)
+            load_house_car_sprite();
+    }
     if ((screen_state->screen_location_y_tiles - 1U) == (house_car_sprite->max_location_y >> 3U))
         screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] = 0U;
 }
