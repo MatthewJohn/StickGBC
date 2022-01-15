@@ -26,7 +26,7 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     VBK_REG = 0;
 
     // Load spirte tile data into VRAM
-    set_sprite_data(0U, 12U, mainmapspritetiles);
+    set_sprite_data(0U, 13U, mainmapspritetiles);
 
     // Load sprite palette into VRAM
     set_sprite_palette(0U, 4U, main_map_sprite_palette);
@@ -46,27 +46,17 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
 
     set_sprite_direction(dealer_sprite);
 
-    itx = house_car_sprite->sprite_index;
-    for (itx_x = 0; itx_x != house_car_sprite->sprite_count_x; itx_x ++)
-    {
-        for (itx_y = 0; itx_y != house_car_sprite->sprite_count_y; itx_y ++)
-        {
-            set_sprite_tile(itx, house_car_sprite->sprite_tile + itx_y);
-
-            set_sprite_direction(house_car_sprite);
-
-            itx += 1U;
-        }
-    }
+    set_sprite_direction(house_car_sprite);
 
     SHOW_SPRITES;
 }
 
 void set_sprite_direction(ai_sprite *sprite)
 {
-    UINT8 itx;
+    UINT8 tile_index_offset;
     UINT8 itx_x;
     UINT8 itx_y;
+    UINT8 itx;
 
     itx = sprite->sprite_index;
     for (itx_x = 0; itx_x != sprite->sprite_count_x; itx_x ++)
@@ -75,6 +65,7 @@ void set_sprite_direction(ai_sprite *sprite)
         {
             // Update flip of sprite tile
             sprite_prop_data = sprite->color_palette & 0x07U;
+            tile_index_offset = sprite->sprite_tile;
 
             // Check for just vertical movement
             if (sprite->travel_direction_y != 0)
@@ -84,25 +75,56 @@ void set_sprite_direction(ai_sprite *sprite)
                     // If travelling up, flip Y
                     if (sprite->travel_direction_y == 1)
                         sprite_prop_data |= S_FLIPY;
-                    set_sprite_tile(itx, 0U + sprite->sprite_tile);
+
+
+                    if (sprite->sprite_count_y == 2U)
+                    {
+                        // If there are multiple tiles in Y,
+                        // for the first row to use 'back' tiles (second set of 3)
+                        if (sprite->travel_direction_y == 1)
+                            tile_index_offset += ((1 - itx_y) * 3);
+                        else
+                            tile_index_offset += (itx_y * 3);
+                        // If on second row of tiles, flip in X to
+                        // make up second half of sprite
+                        if (itx_x == 1U)
+                            sprite_prop_data |= S_FLIPX;
+                    }
+
                 } else {
                     // Handle diagonal movement
                     if (sprite->travel_direction_y == 1)
                         sprite_prop_data |= S_FLIPY;
                     if (sprite->travel_direction_x == -1)
                         sprite_prop_data |= S_FLIPX;
-                    set_sprite_tile(itx, 2U + sprite->sprite_tile);
+                    tile_index_offset += 2U;
                 }
             }
             else if (sprite->travel_direction_x != 0)
             {
-                set_sprite_tile(itx, 1U + sprite->sprite_tile);
+                tile_index_offset += 1U;
                 if (sprite->travel_direction_x == -1)
                     sprite_prop_data |= S_FLIPX;
+
+                // If there are multiple tiles in X,
+                // for the first column to use 'back' tiles (second set of 3)
+                if (sprite->sprite_count_x == 2U)
+                {
+                    if (sprite->travel_direction_x == 1)
+                        tile_index_offset += ((1 - itx_x) * 3);
+                    else
+                        tile_index_offset += (itx_x * 3);
+                    // If on second row of tiles, flip in Y to
+                    // make up second half of sprite
+                    if (itx_y == 1U)
+                        sprite_prop_data |= S_FLIPY;
+                }
             }
             // Only update flipping if actually moving
             if (sprite->travel_direction_x != 0 || sprite->travel_direction_y != 0)
                 set_sprite_prop(sprite->sprite_index, sprite_prop_data);
+
+            set_sprite_tile(itx, tile_index_offset);
 
             itx += 1U;
         }
@@ -130,7 +152,7 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
         return;
     }
 
-    if ((sys_time % sprite_to_move->move_speed) == 0U)
+    if (sprite_to_move->move_speed != 0U && (sys_time % sprite_to_move->move_speed) == 0U)
     {
         if (sprite_to_move->current_pause)
         {

@@ -191,10 +191,10 @@ ai_sprite house_car_sprite = {
     0x02U,
     0x02U,
     // Sprite base tile
-    0x0AU,
-    // Travel X
-    0x00,
-    // Travel Y (down)
+    0x08U,
+    // Travel X (right)
+    0x01,
+    // Travel Y
     0x00,
     // Rest direction X/Y (face right)
     0x00,

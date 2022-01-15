@@ -120,7 +120,7 @@ typedef struct {
 
     // Initial index for the sprite tile.
     // For two-by-two, the back tiles use
-    // sprite_tile + 1
+    // sprite_tile + 3
     UINT8 sprite_tile;
 
     // Sprite tile count - number of r
