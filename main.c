@@ -265,6 +265,9 @@ void setup_globals()
     screen_state.displayed_sprites_x[house_car_sprite.sprite_display_bit] = 1U;
     screen_state.displayed_sprites_y[house_car_sprite.sprite_display_bit] = 1U;
 
+    // Mark screen as having moved, so that sprites are initially placed on-screen
+    screen_state.screen_has_moved = 1U;
+
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
@@ -437,6 +440,10 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         delay(20);
         return;
     }
+
+    // Mark screen as having moved, which indicates to AI sprite to move,
+    // even if they are not themselves moving
+    screen_state.screen_has_moved = 1U;
 
     scroll_bkg(move_x, move_y);
 
@@ -1416,6 +1423,7 @@ void update_state()
 
         // Temporary fix to help with diagonal movement
         // move_background(0, move_y);
+        screen_state.screen_has_moved = 0U;
         if (move_x != 0)
         {
             move_background(move_x, 0);

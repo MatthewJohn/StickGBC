@@ -16,10 +16,6 @@ UINT8 sprite_prop_data;
 
 void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
-    UINT8 itx;
-    UINT8 itx_x;
-    UINT8 itx_y;
-
     // Load single sprite tile
     HIDE_SPRITES;
 
@@ -133,6 +129,10 @@ void set_sprite_direction(ai_sprite *sprite)
 
 void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
+
     // Check if sprite should be disabled
     if (! (
         screen_state->displayed_sprites_y[sprite_to_move->sprite_display_bit] &&
@@ -217,7 +217,20 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
             else
                 sprite_to_move->current_location_y -= 1;
         }
+
+        set_ai_sprt_scrn_loc(screen_state, sprite_to_move);
     }
+    else if (screen_state->screen_has_moved == 1U)
+    {
+        set_ai_sprt_scrn_loc(screen_state, sprite_to_move);
+    }
+}
+
+void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_move)
+{
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
 
     // Move AI sprites
     // This must always be done, as it is required when the screen moves
