@@ -1434,9 +1434,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_x == 1)
-                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 else
-                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 ROM_BANK_RESET;
             }
         }
@@ -1448,9 +1448,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_y == 1)
-                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 else
-                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 ROM_BANK_RESET;
             }
         }
