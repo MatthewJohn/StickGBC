@@ -674,7 +674,7 @@ void setup_main_map()
     set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
-    load_building_tile_data(&screen_state);
+    load_building_tile_data(&screen_state, &house_car_sprite);
 
     ROM_BANK_RESET;
 
