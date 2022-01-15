@@ -39,7 +39,7 @@
 #include "main.h"
 
 // Debug definitions
-#define JUMP_BUILDING
+#define JUMP_BUILDING 0
 
 UBYTE * debug_address;
 
@@ -80,6 +80,29 @@ UINT8 tile_itx_x;
 UINT8 tile_itx_y;
 UINT8 second_tile_row;
 
+// Main player sprite
+ai_sprite player_sprite = {
+    // Speed
+    0x00U,
+    // Sprite index
+    0x00U,
+    // Sprite bit index
+    0x00U,
+    // Color palette,
+    0x00U,
+
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    SPRITE_TILESET_WALK,
+
+    // Fake values, since the
+    // main player has different state for these
+    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period
+    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U,
+};
+
 // Setup skater sprite
 ai_sprite skater_sprite = {
     // Speed
@@ -90,6 +113,13 @@ ai_sprite skater_sprite = {
     0x00U,
     // Color palette,
     0x01U,
+
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    SPRITE_TILESET_WALK,
+
     // Travel X (right)
     0x01,
     // Travel Y
@@ -121,6 +151,11 @@ ai_sprite dealer_sprite = {
     0x01U,
     // Color palette,
     0x02U,
+    // Sprite count
+    0x01U,
+    0x01U,
+    // Sprite base tile
+    SPRITE_TILESET_WALK,
     // Travel X
     0x00,
     // Travel Y (down)
@@ -139,6 +174,42 @@ ai_sprite dealer_sprite = {
     0x17BU,
     // Pause period and current pause.
     0x0FU,
+    0x00U,
+};
+
+// Setup house car sprite
+ai_sprite house_car_sprite = {
+    // Speed
+    0x00U,
+    // Base sprite index (uses 4 (3 through 6) for 2x2 tiles)
+    0x03U,
+    // Sprite bit index
+    0x02U,
+    // Color palette,
+    0x03U,
+    // Sprite count (2 x 2)
+    0x02U,
+    0x02U,
+    // Sprite base tile
+    0x08U,
+    // Travel X (right)
+    0x01,
+    // Travel Y
+    0x00,
+    // Rest direction X/Y (face right)
+    0x00,
+    1,
+    // Start location x, y
+    0x3BU,
+    0x58U,
+    // Min/max X location
+    0x3BU,
+    0x44U,
+    // Min/max Y location
+    0x58U,
+    0x58U,
+    // Pause period and current pause.
+    0x00U,
     0x00U,
 };
 
@@ -191,6 +262,11 @@ void setup_globals()
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
     screen_state.displayed_sprites_x[dealer_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_x[house_car_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_y[house_car_sprite.sprite_display_bit] = 1U;
+
+    // Mark screen as having moved, so that sprites are initially placed on-screen
+    screen_state.screen_has_moved = 1U;
 
     // Setup buildings that do not transition in some axis
     // and those that are displayed on start of game.
@@ -230,6 +306,7 @@ void update_ai_positions()
     ROM_BANK_SPRITE_SWITCH;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
+    move_ai_sprite(&screen_state, &house_car_sprite);
     ROM_BANK_RESET;
 }
 
@@ -363,6 +440,10 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
         delay(20);
         return;
     }
+
+    // Mark screen as having moved, which indicates to AI sprite to move,
+    // even if they are not themselves moving
+    screen_state.screen_has_moved = 1U;
 
     scroll_bkg(move_x, move_y);
 
@@ -579,7 +660,7 @@ void setup_main_map()
 
     set_background_tiles(ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
-    setup_sprites(&skater_sprite, &dealer_sprite);
+    setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite);
     ROM_BANK_RESET;
 
     // Move background to screen location
@@ -593,7 +674,7 @@ void setup_main_map()
     set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
-    load_building_tile_data(&screen_state);
+    load_building_tile_data(&screen_state, &house_car_sprite);
 
     ROM_BANK_RESET;
 
@@ -894,7 +975,7 @@ void check_building_enter()
     }
 
 #ifdef IN_TESTING
-#ifdef JUMP_BUILDING
+#if JUMP_BUILDING
     game_state.current_building = S_B_RESTAURANT;
     setup_building_menu();
     return;
@@ -1270,7 +1351,6 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
-    UINT8 main_player_tileset;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1279,12 +1359,12 @@ void update_state()
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
-            main_player_tileset = SPRITE_TILESET_SKATEBOARD;
+            player_sprite.sprite_tile = SPRITE_TILESET_SKATEBOARD;
         }
         else
         {
             movement_bit_push = WALK_SPEED_DELAY;
-            main_player_tileset = SPRITE_TILESET_WALK;
+            player_sprite.sprite_tile = SPRITE_TILESET_WALK;
         }
         // If movement happened too recently, disable movement
         if ((game_state.last_movement_time >> movement_bit_push)  == (sys_time >> movement_bit_push))
@@ -1343,6 +1423,7 @@ void update_state()
 
         // Temporary fix to help with diagonal movement
         // move_background(0, move_y);
+        screen_state.screen_has_moved = 0U;
         if (move_x != 0)
         {
             move_background(move_x, 0);
@@ -1353,9 +1434,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_x == 1)
-                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 else
-                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 ROM_BANK_RESET;
             }
         }
@@ -1367,9 +1448,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_y == 1)
-                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 else
-                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite);
+                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
                 ROM_BANK_RESET;
             }
         }
@@ -1381,15 +1462,15 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        ROM_BANK_SPRITE_SWITCH;
-        set_sprite_direction(
-            PLAYER_SPRITE_INDEX,
-            main_player_tileset,
-            PLAYER_SPRITE_PALETTE,
-            joypad_state.travel_x,
-            joypad_state.travel_y
-        );
-        ROM_BANK_RESET;
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+        {
+            player_sprite.travel_direction_x = joypad_state.travel_x;
+            player_sprite.travel_direction_y = joypad_state.travel_y;
+
+            ROM_BANK_SPRITE_SWITCH;
+            set_sprite_direction(&player_sprite);
+            ROM_BANK_RESET;
+        }
 
         if (joypad_state.a_pressed)
             check_building_enter();

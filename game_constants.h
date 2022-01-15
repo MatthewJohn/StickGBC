@@ -41,12 +41,13 @@
 #define SPRITE_OFFSET_Y 0x0dU
 #define PLAYER_SPRITE_INDEX 0x00U
 #define PLAYER_SPRITE_PALETTE 0x00U
-// Three tiles per sprite tileset (up, sideways, diagonal)
-#define SPRITE_TILESET_COUNT 0x3U
 // First tileset is for walking
 #define SPRITE_TILESET_WALK 0x00U
 // Second tileset is for skateboarding
-#define SPRITE_TILESET_SKATEBOARD 0x01U
+#define SPRITE_TILESET_SKATEBOARD 0x03U
+
+// Sprite palette index for car
+#define CAR_SPRITE_PALETTE_INDEX 0x3U
 
 #define WALK_SPEED_DELAY 0x01U
 #define SKATEBOARD_SPEED_DELAY 0x00U

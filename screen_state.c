@@ -28,7 +28,7 @@
 #define SC_BAR_TRANSITION_X_MIN 0xEU
 #define SC_BAR_TRANSITION_X_MAX 0x1EU
 
-#define SC_AI_SPRITE_COUNT 0x02U
+#define SC_AI_SPRITE_COUNT 0x03U
 
 typedef struct {
     UINT8 displayed_buildings_x;
@@ -59,6 +59,8 @@ typedef struct {
     unsigned short draw_offset_y;
     unsigned short draw_max_x;
     unsigned short draw_max_y;
+    // Whether screen has been moved this iteration
+    BOOLEAN screen_has_moved;
 } screen_state_t;
 
 #endif
