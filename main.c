@@ -200,11 +200,11 @@ ai_sprite house_car_sprite = {
     0x00,
     1,
     // Start location x, y
-    0x3FU,
+    0x3BU,
     0x58U,
     // Min/max X location
-    0x3FU,
-    0x48U,
+    0x3BU,
+    0x44U,
     // Min/max Y location
     0x58U,
     0x58U,
