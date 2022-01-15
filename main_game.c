@@ -16,8 +16,8 @@
 const UWORD house_car_palette[4] = {
     RGB(31, 31, 31),
     RGB(0, 2, 1),
-    RGB(14, 31, 0),
-    RGB(15, 22, 0),
+    RGB(31, 28, 2),
+    RGB(20, 20, 0),
 };
 
 void load_house()
