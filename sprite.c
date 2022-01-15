@@ -16,6 +16,10 @@ UINT8 sprite_prop_data;
 
 void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
 {
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
+
     // Load single sprite tile
     HIDE_SPRITES;
 
@@ -60,6 +64,10 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
 
 void set_sprite_direction(ai_sprite *sprite)
 {
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
+
     itx = sprite->sprite_index;
     for (itx_x = 0; itx_x != sprite->sprite_count_x; itx_x ++)
     {
