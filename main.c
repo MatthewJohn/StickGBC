@@ -1462,12 +1462,15 @@ void update_state()
             user_screen_pos_y + SPRITE_OFFSET_Y
         );
 
-        player_sprite.travel_direction_x = joypad_state.travel_x;
-        player_sprite.travel_direction_y = joypad_state.travel_y;
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+        {
+            player_sprite.travel_direction_x = joypad_state.travel_x;
+            player_sprite.travel_direction_y = joypad_state.travel_y;
 
-        ROM_BANK_SPRITE_SWITCH;
-        set_sprite_direction(&player_sprite);
-        ROM_BANK_RESET;
+            ROM_BANK_SPRITE_SWITCH;
+            set_sprite_direction(&player_sprite);
+            ROM_BANK_RESET;
+        }
 
         if (joypad_state.a_pressed)
             check_building_enter();
