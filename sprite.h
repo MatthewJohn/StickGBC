@@ -8,6 +8,7 @@
 #include "game_state.h"
 #include "screen_state.c"
 
-void set_sprite_direction(UINT8 sprite_index, UINT8 sprite_tileset_index, UINT8 color_palette, INT8 direction_x, INT8 direction_y);
+void set_sprite_direction(ai_sprite *sprite);
 void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move);
-void setup_sprites(ai_sprite *skater_sprite, ai_sprite *dealer_sprite);
+void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite);
+void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_move);
