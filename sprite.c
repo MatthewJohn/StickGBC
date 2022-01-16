@@ -277,15 +277,32 @@ void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_mov
     }
 }
 
+/*
+ * check_road_car_onscreen
+ *
+ * Check that road car should be displayed on screen.
+ * If not, move off-screen.
+ * This is better than disabling it in display_sprites_y, as
+ * this would then stop the AI from being moved.
+ */
 void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_sprite)
 {
-    if (screen_state->screen_location_y > road_car_sprite->current_location_y &&
-        (screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y)
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
+
+    if ((screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y ||
+        screen_state->screen_location_y > road_car_sprite->current_location_y)
     {
-        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 1U;
-    }
-    else
-    {
-        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 0U;
+        // Move sprite off-screen
+        itx = road_car_sprite->sprite_index;
+        for (itx_x = 0; itx_x != road_car_sprite->sprite_count_x; itx_x ++)
+        {
+            for (itx_y = 0; itx_y != road_car_sprite->sprite_count_y; itx_y ++)
+            {
+                move_sprite(itx, 0, 0);
+                itx += 1U;
+            }
+        }
     }
 }
