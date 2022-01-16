@@ -4,7 +4,7 @@ cppcheck:
   allow_failure: true
   image: registry.gitlab.dockstudios.co.uk/pub/docker-images/cpp-static-code-analysis:latest
   script:
-    - cppcheck --suppress=unusedFunction --suppress=unusedStructMember --enable=all --error-exitcode=1 --std=c89 -I ./include ./games/stickrpg
+    - cppcheck --suppress=variableScope --suppress=unusedFunction --suppress=unusedStructMember --enable=all --error-exitcode=1 --std=c89 -I ./include ./games/stickrpg
 
 
 sonarqube:
