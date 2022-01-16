@@ -14,7 +14,18 @@
 
 UINT8 sprite_prop_data;
 
-void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
+/*
+ * setup_sprites
+ *
+ * Setup palettes and tiles requires for sprites.
+ * Setup initial direction for sprites
+ */
+void setup_sprites(
+    ai_sprite *player_sprite,
+    ai_sprite *skater_sprite,
+    ai_sprite *dealer_sprite,
+    ai_sprite *house_car_sprite,
+    ai_sprite *road_car_sprite)
 {
     // Load single sprite tile
     HIDE_SPRITES;
@@ -48,6 +59,11 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     SHOW_SPRITES;
 }
 
+/*
+ * set_sprite_direction
+ *
+ * Set sprite tiles based on current direction of travel.
+ */
 void set_sprite_direction(ai_sprite *sprite)
 {
     UINT8 tile_index_offset;
@@ -128,6 +144,12 @@ void set_sprite_direction(ai_sprite *sprite)
     }
 }
 
+/*
+ * move_ai_sprites
+ *
+ * Move AI sprites along path of travel
+ * Wait at end of travel and switches direction of travel.
+ */
 void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
     UINT8 itx;
@@ -227,6 +249,11 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
     }
 }
 
+/*
+ * set_ai_sprt_scrn_loc
+ *
+ * Sets AI sprite on-screen location and moves off-screen if not visible.
+ */
 void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
     UINT8 itx;
