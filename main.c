@@ -300,8 +300,8 @@ void setup_globals()
     screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_x[house_car_sprite.sprite_display_bit] = 1U;
     screen_state.displayed_sprites_y[house_car_sprite.sprite_display_bit] = 1U;
-    screen_state.displayed_sprites_x[road_car_sprite.sprite_display_bit] = 1U;
-    screen_state.displayed_sprites_y[road_car_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_x[road_car_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[road_car_sprite.sprite_display_bit] = 1U;
 
     // Mark screen as having moved, so that sprites are initially placed on-screen
     screen_state.screen_has_moved = 1U;
