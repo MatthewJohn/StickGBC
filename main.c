@@ -346,6 +346,8 @@ void update_ai_positions()
     move_ai_sprite(&screen_state, &dealer_sprite);
     move_ai_sprite(&screen_state, &house_car_sprite);
     move_ai_sprite(&screen_state, &road_car_sprite);
+    // Perform special checks for 
+    check_road_car_onscreen(&screen_state, &road_car_sprite);
     ROM_BANK_RESET;
 }
 

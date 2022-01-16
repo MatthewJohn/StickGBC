@@ -276,3 +276,16 @@ void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_mov
         }
     }
 }
+
+void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_sprite)
+{
+    if (screen_state->screen_location_y > road_car_sprite->current_location_y &&
+        (screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y)
+    {
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 1U;
+    }
+    else
+    {
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 0U;
+    }
+}
