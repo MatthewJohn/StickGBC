@@ -14,7 +14,7 @@
 
 UINT8 sprite_prop_data;
 
-void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     // Load single sprite tile
     HIDE_SPRITES;
@@ -40,9 +40,10 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     // Dealer
     set_sprite_tile(dealer_sprite->sprite_index, 0U);
 
+    // Set sprite directions
     set_sprite_direction(dealer_sprite);
-
     set_sprite_direction(house_car_sprite);
+    set_sprite_direction(road_car_sprite);
 
     SHOW_SPRITES;
 }

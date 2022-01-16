@@ -88,7 +88,17 @@ void load_house_car_sprite()
     set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
 }
 
-void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite)
+/*
+  Load palette tiles for road car sprite.
+
+  Randomises the color and applies to palette used by car.
+*/
+void load_road_car_sprite()
+{
+    set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
+}
+
+void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     // Load house data from tile 8 to tile
     VBK_REG = 0;
@@ -142,9 +152,17 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     {
         load_house_car_sprite();
     }
+
+    if (
+        screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] == 1U &&
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] == 1U
+        )
+    {
+        load_road_car_sprite();
+    }
 }
 
-void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     // Enable house
     if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
@@ -184,6 +202,16 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
             load_house_car_sprite();
     }
 
+    // Check road car
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (road_car_sprite->min_location_x >> 3))
+        screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_x_tiles == (road_car_sprite->max_location_x >> 3))
+    {
+        screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] == 1U)
+            load_road_car_sprite();
+    }
+
     // NLI
     if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
     {
@@ -204,7 +232,7 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state->displayed_buildings_x &= ~SC_BAR;
 }
-void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     // Disable house
     if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
@@ -238,6 +266,16 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     if ((screen_state->screen_location_x_tiles - 1U) == (house_car_sprite->max_location_x >> 3))
         screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] = 0U;
 
+    // Check road car
+    if ((screen_state->screen_location_x_tiles + SCREEN_WIDTH_TILES) == (road_car_sprite->min_location_x >> 3))
+    {
+        screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] == 1U)
+            load_road_car_sprite();
+    }
+    if ((screen_state->screen_location_x_tiles - 1U) == (road_car_sprite->max_location_x >> 3))
+        screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] = 0U;
+
     // NLI
     if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
     {
@@ -258,7 +296,7 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
         screen_state->displayed_buildings_x &= ~SC_BAR;
 }
-void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
         screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
@@ -302,8 +340,18 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
         if (screen_state->displayed_sprites_x[house_car_sprite->sprite_display_bit] == 1U)
             load_house_car_sprite();
     }
+
+    // Check road car
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (road_car_sprite->min_location_y >> 3U))
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 0U;
+    if (screen_state->screen_location_y_tiles == (road_car_sprite->max_location_y >> 3U))
+    {
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] == 1U)
+            load_road_car_sprite();
+    }
 }
-void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
     {
@@ -353,5 +401,14 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
     }
     if ((screen_state->screen_location_y_tiles - 1U) == (house_car_sprite->max_location_y >> 3U))
         screen_state->displayed_sprites_y[house_car_sprite->sprite_display_bit] = 0U;
+
+    if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (road_car_sprite->min_location_y >> 3U))
+    {
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 1U;
+        if (screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] == 1U)
+            load_road_car_sprite();
+    }
+    if ((screen_state->screen_location_y_tiles - 1U) == (road_car_sprite->max_location_y >> 3U))
+        screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 0U;
 }
 
