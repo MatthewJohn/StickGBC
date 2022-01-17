@@ -99,8 +99,8 @@ ai_sprite player_sprite = {
 
     // Fake values, since the
     // main player has different state for these
-    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period
-    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U,
+    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period, function pointers
+    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U, NULL, NULL
 };
 
 // Setup skater sprite
@@ -139,6 +139,9 @@ ai_sprite skater_sprite = {
     // Pause period and current pause.
     0x0FU,
     0x00U,
+    // Change direction function pointers
+    NULL,
+    NULL,
 };
 
 // Setup dealer sprite
@@ -175,6 +178,10 @@ ai_sprite dealer_sprite = {
     // Pause period and current pause.
     0x0FU,
     0x00U,
+
+    // Change direction function pointers
+    NULL,
+    NULL,
 };
 
 // Setup house car sprite
@@ -211,6 +218,10 @@ ai_sprite house_car_sprite = {
     // Pause period and current pause.
     0x00U,
     0x00U,
+
+    // Change direction function pointers
+    NULL,
+    NULL,
 };
 
 // Setup AI road car
@@ -247,6 +258,10 @@ ai_sprite road_car_sprite = {
     // Pause period and current pause.
     0x0FU,
     0x00U,
+
+    // Change direction function pointers
+    NULL,
+    NULL,
 };
 
 

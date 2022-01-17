@@ -6,6 +6,7 @@
 
 #pragma bank=4
 
+#include <types.h>
 #include "game_constants.h"
 #include "sprite.h"
 #include "main_map_sprite_tileset.h"
@@ -182,7 +183,11 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
             sprite_to_move->current_pause -= 1U;
 
             if (sprite_to_move->current_pause == 0U)
-                // Check if now at 0 current pause and change direction ready for travel
+                // Check if now at 0 current pause and call on_pause_end function
+                // and change direction ready for travel
+                if (sprite_to_move->on_pause_end != NULL)
+                    sprite_to_move->on_pause_end(sprite_to_move);
+
                 set_sprite_direction(sprite_to_move);
         }
         // Check if moving right
@@ -196,6 +201,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
                 set_sprite_direction(sprite_to_move);
+                // Call pause start callback
+                if (sprite_to_move->on_pause_start != NULL)
+                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x += 1;
@@ -209,6 +217,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
                 set_sprite_direction(sprite_to_move);
+                // Call pause start callback
+                if (sprite_to_move->on_pause_start != NULL)
+                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x -= 1;
@@ -223,6 +234,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
                 set_sprite_direction(sprite_to_move);
+                // Call pause start callback
+                if (sprite_to_move->on_pause_start != NULL)
+                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y += 1;
@@ -236,6 +250,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
                 set_sprite_direction(sprite_to_move);
+                // Call pause start callback
+                if (sprite_to_move->on_pause_start != NULL)
+                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y -= 1;
