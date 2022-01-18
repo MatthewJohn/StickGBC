@@ -24,7 +24,7 @@ UINT8 sprite_prop_data;
 typedef struct {
     UINT16 x;
     UINT16 current_y;
-    INT8 direction_y;
+    BOOLEAN direction_y;
 } road_car_location_t;
 
 /*
@@ -35,13 +35,13 @@ typedef struct {
  */
 const road_car_location_t road_car_locations[4] = {
     // Start at top on left side
-    {0x110U, 0x0U, 1},
+    {0x110U, 0x0U, 1U},
     // Start at bottom on left side
-    {0x110U, 0x1C0U, -1},
+    {0x110U, 0x1C0U, 0U},
     // Start at top on right side
-    {0x128U, 0x0U, 1},
+    {0x128U, 0x0U, 1U},
     // Start at bottom on right side
-    {0x128U, 0x1C0U, -1},
+    {0x128U, 0x1C0U, 0U},
 };
 
 /*
@@ -332,7 +332,10 @@ void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_s
         road_car_sprite->max_location_x = road_car_locations[random_number].x;
         road_car_sprite->current_location_x = road_car_locations[random_number].x;
         road_car_sprite->current_location_y = road_car_locations[random_number].current_y;
-        road_car_sprite->travel_direction_y = road_car_locations[random_number].direction_y;
+        if (road_car_locations[random_number].direction_y != 0U)
+            road_car_sprite->travel_direction_y = 1;
+        else
+            road_car_sprite->travel_direction_y = -1;
     }
 
     if ((screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y ||
