@@ -24,7 +24,7 @@ UINT8 sprite_prop_data;
 typedef struct {
     UINT16 x;
     UINT16 current_y;
-    BOOLEAN direction_y;
+    BOOLEAN dir_y;
 } road_car_location_t;
 
 /*
@@ -309,6 +309,32 @@ void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_mov
 }
 
 /*
+ * rndise_rd_car_loc
+ *
+ * Randomise road car start location to top/bottom of road
+ * on left or right side
+ */
+void rndise_rd_car_loc(ai_sprite *road_car_sprite)
+{
+    UINT8 random_number;
+    // Get random number between 0 and 3
+    random_number = (UINT8)(sys_time) & 0x3U;
+    road_car_sprite->min_location_x = road_car_locations[random_number].x;
+    road_car_sprite->max_location_x = road_car_locations[random_number].x;
+    road_car_sprite->current_location_x = road_car_locations[random_number].x;
+    road_car_sprite->current_location_y = road_car_locations[random_number].current_y;
+    if (road_car_locations[random_number].dir_y)
+    {
+        road_car_sprite->travel_direction_y = 1;
+    }
+    else
+    {
+        road_car_sprite->travel_direction_y = -1;
+    }
+}
+
+
+/*
  * check_road_car_onscreen
  *
  * Check that road car should be displayed on screen.
@@ -321,21 +347,11 @@ void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_s
     UINT8 itx;
     UINT8 itx_x;
     UINT8 itx_y;
-    UINT8 random_number;
 
     // Check if road_car_sprite current pause has just started and randomise location
     if (road_car_sprite->current_pause == road_car_sprite->pause_period)
     {
-        // Get random number between 0 and 3
-        random_number = (UINT8)(sys_time) & 0x3U;
-        road_car_sprite->min_location_x = road_car_locations[random_number].x;
-        road_car_sprite->max_location_x = road_car_locations[random_number].x;
-        road_car_sprite->current_location_x = road_car_locations[random_number].x;
-        road_car_sprite->current_location_y = road_car_locations[random_number].current_y;
-        if (road_car_locations[random_number].direction_y != 0U)
-            road_car_sprite->travel_direction_y = 1;
-        else
-            road_car_sprite->travel_direction_y = -1;
+        rndise_rd_car_loc(road_car_sprite);
     }
 
     if ((screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y ||
@@ -355,12 +371,3 @@ void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_s
     }
 }
 
-/*
- * rndise_rd_car_loc
- *
- * Randomise road car start location to top/bottom of road
- * on left or right side
- */
-void rndise_rd_car_loc()
-{
-}
