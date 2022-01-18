@@ -16,6 +16,35 @@
 UINT8 sprite_prop_data;
 
 /*
+ * location data for road car to randomise
+ * start location.
+ * 4 outer array elements for each of the starting
+ * locations.
+ */
+typedef struct {
+    UINT16 x;
+    UINT16 current_y;
+    INT8 direction_y;
+} road_car_location_t;
+
+/*
+ * location data for road car to randomise
+ * start location.
+ * Holds current Y location and direction
+ * and min/max/current X location
+ */
+const road_car_location_t road_car_locations[4] = {
+    // Start at top on left side
+    {0x110U, 0x0U, 1},
+    // Start at bottom on left side
+    {0x110U, 0x1C0U, -1},
+    // Start at top on right side
+    {0x128U, 0x0U, 1},
+    // Start at bottom on right side
+    {0x128U, 0x1C0U, -1},
+};
+
+/*
  * setup_sprites
  *
  * Setup palettes and tiles requires for sprites.
@@ -183,11 +212,8 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
             sprite_to_move->current_pause -= 1U;
 
             if (sprite_to_move->current_pause == 0U)
-                // Check if now at 0 current pause and call on_pause_end function
+                // Check if now at 0 current pause
                 // and change direction ready for travel
-                if (sprite_to_move->on_pause_end != NULL)
-                    sprite_to_move->on_pause_end(sprite_to_move);
-
                 set_sprite_direction(sprite_to_move);
         }
         // Check if moving right
@@ -201,9 +227,6 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
                 set_sprite_direction(sprite_to_move);
-                // Call pause start callback
-                if (sprite_to_move->on_pause_start != NULL)
-                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x += 1;
@@ -217,9 +240,6 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
                 set_sprite_direction(sprite_to_move);
-                // Call pause start callback
-                if (sprite_to_move->on_pause_start != NULL)
-                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_x -= 1;
@@ -234,9 +254,6 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite movement
                 set_sprite_direction(sprite_to_move);
-                // Call pause start callback
-                if (sprite_to_move->on_pause_start != NULL)
-                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y += 1;
@@ -250,9 +267,6 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 sprite_to_move->current_pause = sprite_to_move->pause_period;
                 // Update direction of sprite
                 set_sprite_direction(sprite_to_move);
-                // Call pause start callback
-                if (sprite_to_move->on_pause_start != NULL)
-                    sprite_to_move->on_pause_start(sprite_to_move);
             }
             else
                 sprite_to_move->current_location_y -= 1;
@@ -307,9 +321,23 @@ void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_s
     UINT8 itx;
     UINT8 itx_x;
     UINT8 itx_y;
+    UINT8 random_number;
+
+    // Check if road_car_sprite current pause has just started and randomise location
+    if (road_car_sprite->current_pause == road_car_sprite->pause_period)
+    {
+        // Get random number between 0 and 3
+        random_number = (UINT8)(sys_time) & 0x3U;
+        road_car_sprite->min_location_x = road_car_locations[random_number].x;
+        road_car_sprite->max_location_x = road_car_locations[random_number].x;
+        road_car_sprite->current_location_x = road_car_locations[random_number].x;
+        road_car_sprite->current_location_y = road_car_locations[random_number].current_y;
+        road_car_sprite->travel_direction_y = road_car_locations[random_number].direction_y;
+    }
 
     if ((screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y ||
-        screen_state->screen_location_y > road_car_sprite->current_location_y)
+        screen_state->screen_location_y > road_car_sprite->current_location_y ||
+        road_car_sprite->current_pause != 0)
     {
         // Move sprite off-screen
         itx = road_car_sprite->sprite_index;
@@ -322,4 +350,14 @@ void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_s
             }
         }
     }
+}
+
+/*
+ * rndise_rd_car_loc
+ *
+ * Randomise road car start location to top/bottom of road
+ * on left or right side
+ */
+void rndise_rd_car_loc()
+{
 }
