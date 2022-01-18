@@ -1025,7 +1025,20 @@ void check_building_enter()
 #endif
 }
 
-// Check if win/lose conditions have been met
+/*
+ * end_game
+ *
+ * Show end game screen
+ */
+void end_game()
+{
+}
+
+/*
+ * check_end_game
+ *
+ * Check if win/lose conditions have been met
+ */
 void check_end_game()
 {
 
@@ -1058,6 +1071,27 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
 void modify_karma(INT8 karma_change)
 {
     game_state.karma += karma_change;
+}
+
+/*
+ * decrease_hp
+ *
+ * Decrease HP and check if player has died
+ */
+void decrease_hp(UINT8 decrease_amount)
+{
+    if (game_state.hp > decrease_amount)
+    {
+        // If not out of HP, decrease and update window.
+        game_state.hp -= decrease_amount;
+        ROM_BANK_BUILDING_MENU_SWITCH;
+        update_window();
+        ROM_BANK_RESET;
+        return;
+    }
+    // If run out of HP, set to zero and end game
+    game_state.hp = 0;
+    end_game();
 }
 
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
@@ -1903,6 +1937,26 @@ void update_state()
     }
 }
 
+/*
+ * check_car_collision
+ *
+ * Check if player has collided with car
+ */
+void check_car_collision()
+{
+    if (
+        game_state.user_pos_x >> 3 == road_car_sprite.current_location_x >> 3 &&
+        (
+            (game_state.user_pos_y >> 3 == road_car_sprite.current_location_y >> 3) ||
+            (game_state.user_pos_y >> 3 == (road_car_sprite.current_location_y >> 3) - 1)
+        )
+    )
+    {
+        // Decrease HP
+        decrease_hp(10);
+    }
+}
+
 // Switch to JOY rom and update joypad state
 void main_check_joy(unsigned int return_bank)
 {
@@ -1946,6 +2000,9 @@ void main()
 
                 update_ai_positions();
                 update_state();
+
+                // Check for collision with car AI
+                check_car_collision();
 
                 // Temporarily remove delay to speed debugging
                 //delay(50);
