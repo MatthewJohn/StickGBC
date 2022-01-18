@@ -24,7 +24,7 @@ UINT8 sprite_prop_data;
 typedef struct {
     UINT16 x;
     UINT16 current_y;
-    BOOLEAN dir_y;
+    UINT8 dir_y;
 } road_car_location_t;
 
 /*
