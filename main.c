@@ -8,6 +8,7 @@
 /*#include <gb/drawing.h>*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <types.h>
 #include <gb/gb.h>
 #include <gb/drawing.h>
 
@@ -99,8 +100,8 @@ ai_sprite player_sprite = {
 
     // Fake values, since the
     // main player has different state for these
-    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period, function pointers
-    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U, NULL, NULL
+    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period
+    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U,
 };
 
 // Setup skater sprite
@@ -139,9 +140,6 @@ ai_sprite skater_sprite = {
     // Pause period and current pause.
     0x0FU,
     0x00U,
-    // Change direction function pointers
-    NULL,
-    NULL,
 };
 
 // Setup dealer sprite
@@ -178,10 +176,6 @@ ai_sprite dealer_sprite = {
     // Pause period and current pause.
     0x0FU,
     0x00U,
-
-    // Change direction function pointers
-    NULL,
-    NULL,
 };
 
 // Setup house car sprite
@@ -218,10 +212,6 @@ ai_sprite house_car_sprite = {
     // Pause period and current pause.
     0x00U,
     0x00U,
-
-    // Change direction function pointers
-    NULL,
-    NULL,
 };
 
 // Setup AI road car
@@ -256,12 +246,8 @@ ai_sprite road_car_sprite = {
     0x0U,
     0x1C0U,
     // Pause period and current pause.
-    0x0FU,
+    0x80U,
     0x00U,
-
-    // Change direction function pointers
-    NULL,
-    NULL,
 };
 
 
@@ -361,7 +347,7 @@ void update_ai_positions()
     move_ai_sprite(&screen_state, &dealer_sprite);
     move_ai_sprite(&screen_state, &house_car_sprite);
     move_ai_sprite(&screen_state, &road_car_sprite);
-    // Perform special checks for 
+    // Perform special checks for
     check_road_car_onscreen(&screen_state, &road_car_sprite);
     ROM_BANK_RESET;
 }
