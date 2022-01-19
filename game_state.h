@@ -101,7 +101,6 @@ typedef struct {
     BOOLEAN hobo_given_beer;
 } game_state_t;
 
-
 // The sprite is placed into place and moved from min_location to max_location.
 // Travel direction that is set to 0 is ignored, meaning that the initla
 typedef struct {
@@ -138,6 +137,7 @@ typedef struct {
     UINT16 max_location_y;
     UINT8 pause_period;
     UINT8 current_pause;
+    BOOLEAN already_offscreen;
 } ai_sprite;
 
 // Items hidden from inventory menu

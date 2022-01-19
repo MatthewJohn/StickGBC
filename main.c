@@ -8,6 +8,7 @@
 /*#include <gb/drawing.h>*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <types.h>
 #include <gb/gb.h>
 #include <gb/drawing.h>
 
@@ -197,8 +198,8 @@ ai_sprite house_car_sprite = {
     // Travel Y
     0x00,
     // Rest direction X/Y (face right)
+    0x01,
     0x00,
-    1,
     // Start location x, y
     0x3BU,
     0x58U,
@@ -210,6 +211,42 @@ ai_sprite house_car_sprite = {
     0x58U,
     // Pause period and current pause.
     0x00U,
+    0x00U,
+};
+
+// Setup AI road car
+ai_sprite road_car_sprite = {
+    // Speed
+    0x01U,
+    // Base sprite index (uses 4 (7 through A) for 2x2 tiles)
+    0x07U,
+    // Sprite bit index
+    0x03U,
+    // Color palette,
+    0x03U,
+    // Sprite count (2 x 2)
+    0x02U,
+    0x02U,
+    // Sprite base tile
+    0x08U,
+    // Travel X
+    0x00,
+    // Travel Y (down - though this is randomised)
+    0x01,
+    // Rest direction X/Y (face down)
+    0x00,
+    0x01,
+    // Start location x, y
+    0x110U,
+    0x58U,
+    // Min/max X location
+    0x110U,
+    0x110U,
+    // Min/max Y location
+    0x0U,
+    0x1C0U,
+    // Pause period and current pause.
+    0x80U,
     0x00U,
 };
 
@@ -264,6 +301,8 @@ void setup_globals()
     screen_state.displayed_sprites_y[dealer_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_x[house_car_sprite.sprite_display_bit] = 1U;
     screen_state.displayed_sprites_y[house_car_sprite.sprite_display_bit] = 1U;
+    screen_state.displayed_sprites_x[road_car_sprite.sprite_display_bit] = 0U;
+    screen_state.displayed_sprites_y[road_car_sprite.sprite_display_bit] = 1U;
 
     // Mark screen as having moved, so that sprites are initially placed on-screen
     screen_state.screen_has_moved = 1U;
@@ -307,6 +346,9 @@ void update_ai_positions()
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
     move_ai_sprite(&screen_state, &house_car_sprite);
+    move_ai_sprite(&screen_state, &road_car_sprite);
+    // Perform special checks for
+    check_road_car_onscreen(&screen_state, &road_car_sprite);
     ROM_BANK_RESET;
 }
 
@@ -660,7 +702,7 @@ void setup_main_map()
 
     set_background_tiles(ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
-    setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite);
+    setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
     ROM_BANK_RESET;
 
     // Move background to screen location
@@ -674,7 +716,7 @@ void setup_main_map()
     set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
-    load_building_tile_data(&screen_state, &house_car_sprite);
+    load_building_tile_data(&screen_state, &house_car_sprite, &road_car_sprite);
 
     ROM_BANK_RESET;
 
@@ -983,7 +1025,20 @@ void check_building_enter()
 #endif
 }
 
-// Check if win/lose conditions have been met
+/*
+ * end_game
+ *
+ * Show end game screen
+ */
+void end_game()
+{
+}
+
+/*
+ * check_end_game
+ *
+ * Check if win/lose conditions have been met
+ */
 void check_end_game()
 {
 
@@ -1016,6 +1071,27 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
 void modify_karma(INT8 karma_change)
 {
     game_state.karma += karma_change;
+}
+
+/*
+ * decrease_hp
+ *
+ * Decrease HP and check if player has died
+ */
+void decrease_hp(UINT8 decrease_amount)
+{
+    if (game_state.hp > decrease_amount)
+    {
+        // If not out of HP, decrease and update window.
+        game_state.hp -= decrease_amount;
+        ROM_BANK_BUILDING_MENU_SWITCH;
+        update_window();
+        ROM_BANK_RESET;
+        return;
+    }
+    // If run out of HP, set to zero and end game
+    game_state.hp = 0;
+    end_game();
 }
 
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
@@ -1434,9 +1510,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_x == 1)
-                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
+                    load_buildings_x_right(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
                 else
-                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
+                    load_buildings_x_left(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
                 ROM_BANK_RESET;
             }
         }
@@ -1448,9 +1524,9 @@ void update_state()
             {
                 ROM_BANK_TILE_DATA_SWITCH;
                 if (move_y == 1)
-                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
+                    load_buildings_y_down(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
                 else
-                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite);
+                    load_buildings_y_up(&screen_state, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
                 ROM_BANK_RESET;
             }
         }
@@ -1861,6 +1937,26 @@ void update_state()
     }
 }
 
+/*
+ * check_car_collision
+ *
+ * Check if player has collided with car
+ */
+void check_car_collision()
+{
+    if (
+        game_state.user_pos_x >> 3 == road_car_sprite.current_location_x >> 3 &&
+        (
+            (game_state.user_pos_y >> 3 == road_car_sprite.current_location_y >> 3) ||
+            (game_state.user_pos_y >> 3 == (road_car_sprite.current_location_y >> 3) - 1)
+        )
+    )
+    {
+        // Decrease HP
+        decrease_hp(10);
+    }
+}
+
 // Switch to JOY rom and update joypad state
 void main_check_joy(unsigned int return_bank)
 {
@@ -1904,6 +2000,9 @@ void main()
 
                 update_ai_positions();
                 update_state();
+
+                // Check for collision with car AI
+                check_car_collision();
 
                 // Temporarily remove delay to speed debugging
                 //delay(50);
