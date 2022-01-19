@@ -6,6 +6,7 @@
 
 #pragma bank=4
 
+#include <types.h>
 #include "game_constants.h"
 #include "sprite.h"
 #include "main_map_sprite_tileset.h"
@@ -14,7 +15,47 @@
 
 UINT8 sprite_prop_data;
 
-void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite)
+/*
+ * location data for road car to randomise
+ * start location.
+ * 4 outer array elements for each of the starting
+ * locations.
+ */
+typedef struct {
+    UINT16 x;
+    UINT16 current_y;
+    UINT8 dir_y;
+} road_car_location_t;
+
+/*
+ * location data for road car to randomise
+ * start location.
+ * Holds current Y location and direction
+ * and min/max/current X location
+ */
+const road_car_location_t road_car_locations[4] = {
+    // Start at top on left side
+    {0x110U, 0x0U, 1U},
+    // Start at bottom on left side
+    {0x110U, 0x1C0U, 0U},
+    // Start at top on right side
+    {0x128U, 0x0U, 1U},
+    // Start at bottom on right side
+    {0x128U, 0x1C0U, 0U},
+};
+
+/*
+ * setup_sprites
+ *
+ * Setup palettes and tiles requires for sprites.
+ * Setup initial direction for sprites
+ */
+void setup_sprites(
+    ai_sprite *player_sprite,
+    ai_sprite *skater_sprite,
+    ai_sprite *dealer_sprite,
+    ai_sprite *house_car_sprite,
+    ai_sprite *road_car_sprite)
 {
     // Load single sprite tile
     HIDE_SPRITES;
@@ -40,13 +81,19 @@ void setup_sprites(ai_sprite *player_sprite, ai_sprite *skater_sprite, ai_sprite
     // Dealer
     set_sprite_tile(dealer_sprite->sprite_index, 0U);
 
+    // Set sprite directions
     set_sprite_direction(dealer_sprite);
-
     set_sprite_direction(house_car_sprite);
+    set_sprite_direction(road_car_sprite);
 
     SHOW_SPRITES;
 }
 
+/*
+ * set_sprite_direction
+ *
+ * Set sprite tiles based on current direction of travel.
+ */
 void set_sprite_direction(ai_sprite *sprite)
 {
     UINT8 tile_index_offset;
@@ -127,6 +174,12 @@ void set_sprite_direction(ai_sprite *sprite)
     }
 }
 
+/*
+ * move_ai_sprites
+ *
+ * Move AI sprites along path of travel
+ * Wait at end of travel and switches direction of travel.
+ */
 void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
     UINT8 itx;
@@ -139,6 +192,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
         screen_state->displayed_sprites_x[sprite_to_move->sprite_display_bit]
     ))
     {
+        if (sprite_to_move->already_offscreen)
+            return;
+
         // Move sprite off-screen
         itx = sprite_to_move->sprite_index;
         for (itx_x = 0; itx_x != sprite_to_move->sprite_count_x; itx_x ++)
@@ -149,8 +205,11 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 itx += 1U;
             }
         }
+        sprite_to_move->already_offscreen = 1U;
         return;
     }
+
+    sprite_to_move->already_offscreen = 0U;
 
     if (sprite_to_move->move_speed != 0U && (sys_time % sprite_to_move->move_speed) == 0U)
     {
@@ -159,7 +218,8 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
             sprite_to_move->current_pause -= 1U;
 
             if (sprite_to_move->current_pause == 0U)
-                // Check if now at 0 current pause and change direction ready for travel
+                // Check if now at 0 current pause
+                // and change direction ready for travel
                 set_sprite_direction(sprite_to_move);
         }
         // Check if moving right
@@ -226,6 +286,11 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
     }
 }
 
+/*
+ * set_ai_sprt_scrn_loc
+ *
+ * Sets AI sprite on-screen location and moves off-screen if not visible.
+ */
 void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_move)
 {
     UINT8 itx;
@@ -248,3 +313,67 @@ void set_ai_sprt_scrn_loc(screen_state_t* screen_state, ai_sprite* sprite_to_mov
         }
     }
 }
+
+/*
+ * rndise_rd_car_loc
+ *
+ * Randomise road car start location to top/bottom of road
+ * on left or right side
+ */
+void rndise_rd_car_loc(ai_sprite *road_car_sprite)
+{
+    UINT8 random_number;
+    // Get random number between 0 and 3
+    random_number = (UINT8)(sys_time) & 0x3U;
+    road_car_sprite->min_location_x = road_car_locations[random_number].x;
+    road_car_sprite->max_location_x = road_car_locations[random_number].x;
+    road_car_sprite->current_location_x = road_car_locations[random_number].x;
+    road_car_sprite->current_location_y = road_car_locations[random_number].current_y;
+    if (road_car_locations[random_number].dir_y)
+    {
+        road_car_sprite->travel_direction_y = 1;
+    }
+    else
+    {
+        road_car_sprite->travel_direction_y = -1;
+    }
+}
+
+
+/*
+ * check_road_car_onscreen
+ *
+ * Check that road car should be displayed on screen.
+ * If not, move off-screen.
+ * This is better than disabling it in display_sprites_y, as
+ * this would then stop the AI from being moved.
+ */
+void check_road_car_onscreen(screen_state_t *screen_state, ai_sprite *road_car_sprite)
+{
+    UINT8 itx;
+    UINT8 itx_x;
+    UINT8 itx_y;
+
+    // Check if road_car_sprite current pause has just started and randomise location
+    if (road_car_sprite->current_pause == road_car_sprite->pause_period)
+    {
+        rndise_rd_car_loc(road_car_sprite);
+    }
+
+    if ((screen_state->screen_location_y + SCREEN_HEIGHT) < road_car_sprite->current_location_y ||
+        screen_state->screen_location_y > road_car_sprite->current_location_y ||
+        road_car_sprite->current_pause != 0)
+    {
+        // Move sprite off-screen
+        itx = road_car_sprite->sprite_index;
+        for (itx_x = 0; itx_x != road_car_sprite->sprite_count_x; itx_x ++)
+        {
+            for (itx_y = 0; itx_y != road_car_sprite->sprite_count_y; itx_y ++)
+            {
+                move_sprite(itx, 0, 0);
+                itx += 1U;
+            }
+        }
+    }
+}
+

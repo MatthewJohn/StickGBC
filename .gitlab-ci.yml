@@ -4,7 +4,7 @@ cppcheck:
   allow_failure: true
   image: registry.gitlab.dockstudios.co.uk/pub/docker-images/cpp-static-code-analysis:latest
   script:
-    - cppcheck --suppress=unusedFunction --suppress=unusedStructMember --enable=all --error-exitcode=1 --std=c99 -I ./include ./games/stickrpg
+    - cppcheck --suppress=variableScope --suppress=unusedFunction --suppress=unusedStructMember --enable=all --error-exitcode=1 --std=c89 -I ./include ./games/stickrpg
 
 
 sonarqube:
@@ -21,7 +21,4 @@ sonarqube:
       - .sonar/cache
   script:
     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=StickGBC -Dsonar.sources=games/stickrpg -Dsonar.c.includeDirectories=./include -Dsonar.host.url=http://sonarqube.dock.studios -Dsonar.login=$SONAR_KEY
-  only:
-    - merge_requests
-    - master
 
