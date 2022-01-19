@@ -137,6 +137,7 @@ typedef struct {
     UINT16 max_location_y;
     UINT8 pause_period;
     UINT8 current_pause;
+    BOOLEAN already_offscreen;
 } ai_sprite;
 
 // Items hidden from inventory menu
