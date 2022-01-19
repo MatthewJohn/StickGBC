@@ -192,6 +192,9 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
         screen_state->displayed_sprites_x[sprite_to_move->sprite_display_bit]
     ))
     {
+        if (sprite_to_move->already_offscreen)
+            return;
+
         // Move sprite off-screen
         itx = sprite_to_move->sprite_index;
         for (itx_x = 0; itx_x != sprite_to_move->sprite_count_x; itx_x ++)
@@ -202,8 +205,11 @@ void move_ai_sprite(screen_state_t* screen_state, ai_sprite* sprite_to_move)
                 itx += 1U;
             }
         }
+        sprite_to_move->already_offscreen = 1U;
         return;
     }
+
+    sprite_to_move->already_offscreen = 0U;
 
     if (sprite_to_move->move_speed != 0U && (sys_time % sprite_to_move->move_speed) == 0U)
     {
