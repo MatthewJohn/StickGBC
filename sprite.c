@@ -45,6 +45,35 @@ const road_car_location_t road_car_locations[4] = {
 };
 
 /*
+ * Selection of colours palette colors to be used
+ * for road car
+ */
+#define ROAD_CAR_MAX_COLORS 4
+#define ROAD_CAR_COLOR_MASK 3U
+const UWORD road_car_colors[PALETTE_COLOURS_PER_PALETTE * ROAD_CAR_MAX_COLORS] = {
+    // Green palette
+    RGB(31, 31, 31),
+    RGB(0, 2, 1),
+    RGB(14, 31, 0),
+    RGB(15, 22, 0),
+    // Orange palette
+    RGB(31, 31, 31),
+    RGB(0, 2, 1),
+    RGB(31, 19, 8),
+    RGB(25, 15, 0),
+    // Yellow palette
+    RGB(31, 31, 31),
+    RGB(0, 2, 1),
+    RGB(31, 24, 5),
+    RGB(22, 19, 0),
+    // Blue palette
+    RGB(31, 31, 31),
+    RGB(0, 2, 1),
+    RGB(6, 10, 31),
+    RGB(0, 5, 25),
+};
+
+/*
  * setup_sprites
  *
  * Setup palettes and tiles requires for sprites.
@@ -337,6 +366,15 @@ void rndise_rd_car_loc(ai_sprite *road_car_sprite)
     {
         road_car_sprite->travel_direction_y = -1;
     }
+
+    // Randomise car color palette
+    set_sprite_palette(
+        CAR_SPRITE_PALETTE_INDEX,
+        PALETTE_COLOURS_PER_PALETTE,
+        &(road_car_colors[
+            (sys_time & ROAD_CAR_COLOR_MASK) * PALETTE_COLOURS_PER_PALETTE
+        ])
+    );
 }
 
 
