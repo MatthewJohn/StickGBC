@@ -100,8 +100,10 @@ ai_sprite player_sprite = {
 
     // Fake values, since the
     // main player has different state for these
-    // Travel X/Y, rest direction, start location, min/max x, min/max Y, pause period
-    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x00U, 0x00U,
+    // Travel X/Y, rest direction, start location, min/max x, min/max Y
+    0x00, 0x00, 0x00, 0x00, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U, 0x0U,
+    // Pause period
+    0x20U, 0x00U,
 };
 
 // Setup skater sprite
