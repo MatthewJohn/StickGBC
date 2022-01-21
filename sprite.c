@@ -90,7 +90,7 @@ void set_main_player_normal(ai_sprite *player)
  */
 #define ROAD_CAR_MAX_COLORS 4
 #define ROAD_CAR_COLOR_MASK 3U
-const UWORD road_car_colors[PALETTE_COLOURS_PER_PALETTE * ROAD_CAR_MAX_COLORS] = {
+const UINT16 road_car_colors[PALETTE_COLOURS_PER_PALETTE * ROAD_CAR_MAX_COLORS] = {
     // Green palette
     RGB(31, 31, 31),
     RGB(0, 2, 1),
