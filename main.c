@@ -1440,7 +1440,7 @@ void update_state()
             player_sprite.current_pause -= 1U;
 
             // Check if back to normal movement and reset color palette/sprite
-            if (player_sprite.current_pause != 0)
+            if (player_sprite.current_pause == 0)
             {
                 ROM_BANK_SPRITE_SWITCH;
                 set_main_player_normal(&player_sprite);
