@@ -45,6 +45,8 @@
 #define SPRITE_TILESET_WALK 0x00U
 // Second tileset is for skateboarding
 #define SPRITE_TILESET_SKATEBOARD 0x03U
+// Tileset for hurt player
+#define SPRITE_TILESET_HURT 0x06U
 
 // Sprite palette index for car
 #define CAR_SPRITE_PALETTE_INDEX 0x3U

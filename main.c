@@ -1432,6 +1432,22 @@ void update_state()
     {
         check_boundary_hit();
 
+        // Check if player is hurt and just decrease wait time
+        if (player_sprite.current_pause != 0)
+        {
+            player_sprite.current_pause -= 1U;
+
+            // Check if back to normal movement and reset color palette/sprite
+            if (player_sprite.current_pause != 0)
+            {
+                ROM_BANK_SPRITE_SWITCH;
+                set_main_player_normal(&player_sprite);
+                ROM_BANK_RESET;
+            }
+
+            return;
+        }
+
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
         {
             movement_bit_push = SKATEBOARD_SPEED_DELAY;
@@ -1954,6 +1970,9 @@ void check_car_collision()
     {
         // Decrease HP
         decrease_hp(10);
+        ROM_BANK_SPRITE_SWITCH;
+        set_main_player_hurt(&player_sprite);
+        ROM_BANK_RESET;
     }
 }
 

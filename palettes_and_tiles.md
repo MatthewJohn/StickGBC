@@ -44,7 +44,7 @@
    0. Background
    1. Outline
    2. Sprite center
-   3.
+   3. Skateboard/Blood
  1. Skater
    0. Background
    1. Outline
@@ -53,12 +53,11 @@
    0. Background
    1. Outline
    2. Sprite center
- 3. Road Car
+ 3. House/Road Car
    0. Background
    1. Window
    2. Paint 1
    3. Paint 2
- 4.
  5.
  6.
  7.
@@ -71,7 +70,7 @@
 3. Player skateboard up
 4. Player skateboard right
 5. Player skateboard diagonal top-right
-6.
+6. Hurt player
 7.
 8. Car up front
 9. Car right front
