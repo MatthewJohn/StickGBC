@@ -1962,6 +1962,10 @@ void update_state()
  */
 void check_car_collision()
 {
+    // Do not check if user is in building or player currently hurt/paused
+    if (player_sprite.current_pause != 0 || game_state.current_building != S_B_NO_BUILDING)
+        return;
+
     if (
         game_state.user_pos_x >> 3 == road_car_sprite.current_location_x >> 3 &&
         (
