@@ -68,7 +68,7 @@ void set_main_player_hurt(ai_sprite *player)
     player->current_pause = player->pause_period;
     set_sprite_palette(
         player->color_palette * PALETTE_COLOURS_PER_PALETTE,
-        PALETTE_COLOURS_PER_PALETTE,
+        1U,
         &(main_player_sprite_palettes[SPRITE_PLAYER_PALETTE_HURT * PALETTE_COLOURS_PER_PALETTE])
     );
     set_sprite_tile(player->sprite_index, SPRITE_TILESET_HURT);
@@ -78,7 +78,7 @@ void set_main_player_normal(ai_sprite *player)
 {
     set_sprite_palette(
         player->color_palette * PALETTE_COLOURS_PER_PALETTE,
-        PALETTE_COLOURS_PER_PALETTE,
+        1U,
         &(main_player_sprite_palettes[SPRITE_PLAYER_PALETTE_NORMAL * PALETTE_COLOURS_PER_PALETTE])
     );
     set_sprite_direction(player);
@@ -410,7 +410,7 @@ void rndise_rd_car_loc(ai_sprite *road_car_sprite)
     // Randomise car color palette
     set_sprite_palette(
         CAR_SPRITE_PALETTE_INDEX,
-        PALETTE_COLOURS_PER_PALETTE,
+        1U,
         &(road_car_colors[
             (sys_time & ROAD_CAR_COLOR_MASK) * PALETTE_COLOURS_PER_PALETTE
         ])
