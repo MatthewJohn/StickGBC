@@ -50,7 +50,7 @@ const road_car_location_t road_car_locations[4] = {
  */
 #define ROAD_CAR_MAX_COLORS 4
 #define ROAD_CAR_COLOR_MASK 3U
-const UWORD road_car_colors[PALETTE_COLOURS_PER_PALETTE * ROAD_CAR_MAX_COLORS] = {
+const UINT16 road_car_colors[PALETTE_COLOURS_PER_PALETTE * ROAD_CAR_MAX_COLORS] = {
     // Green palette
     RGB(31, 31, 31),
     RGB(0, 2, 1),
