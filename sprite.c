@@ -44,6 +44,46 @@ const road_car_location_t road_car_locations[4] = {
     {0x128U, 0x1C0U, 0U},
 };
 
+
+#define SPRITE_PLAYER_PALETTE_NORMAL 0U
+#define SPRITE_PLAYER_PALETTE_HURT 1U
+/*
+ * Main player palettes
+ */
+const UINT16 main_player_sprite_palettes[2U * PALETTE_COLOURS_PER_PALETTE] = {
+    // Normal
+    RGB(31, 31, 31),
+    RGB(0, 0, 0),
+    RGB(8, 11, 31),
+    RGB(14, 31, 0),
+    // Hurt
+    RGB(31, 31, 31),
+    RGB(0, 0, 0),
+    RGB(8, 11, 31),
+    RGB(26, 2, 0),
+};
+
+void set_main_player_hurt(ai_sprite *player)
+{
+    player->current_pause = player->pause_period;
+    set_sprite_palette(
+        player->color_palette * PALETTE_COLOURS_PER_PALETTE,
+        PALETTE_COLOURS_PER_PALETTE,
+        &(main_player_sprite_palettes[SPRITE_PLAYER_PALETTE_HURT * PALETTE_COLOURS_PER_PALETTE])
+    );
+    set_sprite_tile(player->sprite_index, SPRITE_TILESET_HURT);
+}
+
+void set_main_player_normal(ai_sprite *player)
+{
+    set_sprite_palette(
+        player->color_palette * PALETTE_COLOURS_PER_PALETTE,
+        PALETTE_COLOURS_PER_PALETTE,
+        &(main_player_sprite_palettes[SPRITE_PLAYER_PALETTE_NORMAL * PALETTE_COLOURS_PER_PALETTE])
+    );
+    set_sprite_direction(player);
+}
+
 /*
  * Selection of colours palette colors to be used
  * for road car
