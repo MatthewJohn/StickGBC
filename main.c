@@ -42,6 +42,7 @@
 // Debug definitions
 #define JUMP_BUILDING 0
 #define DEBUG_BOUNDARIES 1
+#define DEBUG_DISABLE_AI_MOVEMENT 1
 
 UBYTE * debug_address;
 
@@ -347,6 +348,9 @@ void setup_globals()
 
 void update_ai_positions()
 {
+#if IN_TESTING && DEBUG_DISABLE_AI_MOVEMENT
+    return;
+#endif
     ROM_BANK_SPRITE_SWITCH;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
