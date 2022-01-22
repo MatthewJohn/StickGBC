@@ -331,6 +331,8 @@ void setup_globals()
     screen_state.screen_location_y_tiles = screen_state.screen_location_y >> 3;
     game_state.user_pos_x = 0x70U;
     game_state.user_pos_y = 0x70U;
+    game_state.user_pos_tiles_x = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x);
+    game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
 #ifdef IN_TESTING
     // Add hacks for testing
@@ -959,8 +961,8 @@ void setup_building_menu()
 void check_building_enter()
 {
     unsigned int tile_itx = X_Y_TO_TILE_INDEX(
-        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x),
-        PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y)
+        game_state.user_pos_tiles_x,
+        game_state.user_pos_tiles_y
     );
 
     // Check for entering house
@@ -1445,9 +1447,30 @@ void update_state()
                 ROM_BANK_SPRITE_SWITCH;
                 set_main_player_normal(&player_sprite);
                 ROM_BANK_RESET;
+
+                // Reset player movement, so they don't move based on the input
+                joypad_state.travel_x = 0;
+                joypad_state.travel_y = 0;
+
+                if (game_state.user_pos_tiles_x == MAP_EDGE_LEFT)
+                    // Move player right
+                    joypad_state.travel_x = 1;
+                if (game_state.user_pos_tiles_x == MAP_EDGE_RIGHT)
+                    // Move player left
+                    joypad_state.travel_x = -1;
+                if (game_state.user_pos_tiles_y == MAP_EDGE_TOP)
+                    // Move player down
+                    joypad_state.travel_y = 1;
+                if (game_state.user_pos_tiles_y == MAP_EDGE_BOTTOM)
+                    // Move player up
+                    joypad_state.travel_y = -1;
+            }
+            else
+            {
+                // Otherwise still in wait period
+                return;
             }
 
-            return;
         }
 
         if (game_state.inventory[S_INVENTORY_SKATEBOARD] && joypad_state.b_pressed)
@@ -1477,6 +1500,8 @@ void update_state()
 
         game_state.user_pos_x += (signed int)joypad_state.travel_x;
         game_state.user_pos_y += (signed int)joypad_state.travel_y;
+        game_state.user_pos_tiles_x = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x);
+        game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
         // Check if sprite too close to edge of screen
         // If character at left of screen, begin to scroll, unless at top of map (allowing character
@@ -1564,6 +1589,20 @@ void update_state()
             ROM_BANK_SPRITE_SWITCH;
             set_sprite_direction(&player_sprite);
             ROM_BANK_RESET;
+        }
+
+        // Check for falling off edge of map
+        if (game_state.user_pos_tiles_x == MAP_EDGE_LEFT ||
+            game_state.user_pos_tiles_x == MAP_EDGE_RIGHT ||
+            game_state.user_pos_tiles_y == MAP_EDGE_TOP ||
+            game_state.user_pos_tiles_y == MAP_EDGE_BOTTOM)
+        {
+            // Decrease HP
+            decrease_hp(10);
+            ROM_BANK_SPRITE_SWITCH;
+            set_main_player_hurt(&player_sprite);
+            ROM_BANK_RESET;
+            return;
         }
 
         if (joypad_state.a_pressed)
@@ -1967,10 +2006,10 @@ void check_car_collision()
         return;
 
     if (
-        game_state.user_pos_x >> 3 == road_car_sprite.current_location_x >> 3 &&
+        game_state.user_pos_tiles_x == road_car_sprite.current_location_x >> 3 &&
         (
-            (game_state.user_pos_y >> 3 == road_car_sprite.current_location_y >> 3) ||
-            (game_state.user_pos_y >> 3 == (road_car_sprite.current_location_y >> 3) - 1)
+            (game_state.user_pos_tiles_y == road_car_sprite.current_location_y >> 3) ||
+            (game_state.user_pos_tiles_y == (road_car_sprite.current_location_y >> 3) - 1)
         )
     )
     {

@@ -96,6 +96,9 @@ typedef struct {
     // This is not the sprites position on the screen
     unsigned int user_pos_x;
     unsigned int user_pos_y;
+    // Location of user in world in tiles
+    unsigned int user_pos_tiles_x;
+    unsigned int user_pos_tiles_y;
 
     BOOLEAN hobo_given_money;
     BOOLEAN hobo_given_beer;
