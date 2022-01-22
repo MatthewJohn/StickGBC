@@ -49,38 +49,38 @@ void load_shop()
 void load_pawn()
 {
     set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
-    scratch_palette_data[2U][0U] = RGB(10U, 1U, 16U);
-    scratch_palette_data[2U][1U] = RGB(31U, 31U, 31U);
-    scratch_palette_data[2U][3U] = RGB(15U, 6U, 31U);
-    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+    scratch_palette_data[3U][0U] = RGB(10U, 1U, 16U);
+    scratch_palette_data[3U][1U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[3U][3U] = RGB(15U, 6U, 31U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[3U]));
 }
 
 void load_university()
 {
     set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
-    scratch_palette_data[2U][0U] = RGB(15U, 19U, 0U);
-    scratch_palette_data[2U][1U] = RGB(31U, 22U, 8U);
-    scratch_palette_data[2U][2U] = RGB(31U, 13U, 2U);
-    scratch_palette_data[2U][3U] = RGB(30U, 31U, 9U);
-    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[2U]));
+    scratch_palette_data[3U][0U] = RGB(15U, 19U, 0U);
+    scratch_palette_data[3U][1U] = RGB(31U, 22U, 8U);
+    scratch_palette_data[3U][2U] = RGB(31U, 13U, 2U);
+    scratch_palette_data[3U][3U] = RGB(30U, 31U, 9U);
+    set_bkg_palette(PALETTE_SCRATCH_3, 1, &(scratch_palette_data[3U]));
 }
 
 void load_nli()
 {
     set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
-    scratch_palette_data[1U][0U] = RGB(6U, 6U, 6U);
-    scratch_palette_data[1U][1U] = RGB(7U, 3U, 1U);
-    set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[1U]));
+    scratch_palette_data[2U][0U] = RGB(6U, 6U, 6U);
+    scratch_palette_data[2U][1U] = RGB(7U, 3U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[2U]));
 }
 
 void load_bar()
 {
     set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
-    scratch_palette_data[0U][0U] = RGB(1U, 14U, 1U);
-    scratch_palette_data[0U][1U] = RGB(10U, 8U, 1U);
-    scratch_palette_data[0U][2U] = RGB(31U, 1U, 1U);
-    scratch_palette_data[0U][3U] = RGB(3U, 8U, 1U);
-    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[0U]));
+    scratch_palette_data[1U][0U] = RGB(1U, 14U, 1U);
+    scratch_palette_data[1U][1U] = RGB(10U, 8U, 1U);
+    scratch_palette_data[1U][2U] = RGB(31U, 1U, 1U);
+    scratch_palette_data[1U][3U] = RGB(3U, 8U, 1U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[1U]));
 }
 
 void load_house_car_sprite()
@@ -96,6 +96,26 @@ void load_house_car_sprite()
 void load_road_car_sprite()
 {
     set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
+}
+
+/*
+ * Load palette data and tiles for bus and bus station
+ */
+void load_bus_station()
+{
+    set_bkg_data(52U, 9U, &(mainmaptiles[52U << 4]));
+    // Bus palette
+    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
+    scratch_palette_data[0U][2U] = RGB(0U, 0U, 19U);
+    scratch_palette_data[0U][3U] = RGB(8U, 31U, 27U);
+    // Bus station
+    scratch_palette_data[1U][0U] = RGB(3U, 13U, 31U);
+    scratch_palette_data[1U][1U] = RGB(0U, 0U, 0U);
+    scratch_palette_data[1U][2U] = RGB(1U, 2U, 8U);
+    scratch_palette_data[1U][3U] = RGB(2U, 9U, 31U);
+    // Load both palettes into PALETTE_SCRATCH_0 and PALETTE_SCRATCH_1
+    set_bkg_palette(PALETTE_SCRATCH_0, 2, &(scratch_palette_data[0U]));
 }
 
 void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
@@ -160,6 +180,10 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     {
         load_road_car_sprite();
     }
+
+    // Y is ignored for BUS transition, so only check X
+    if (screen_state->displayed_buildings_x & SC_BUS)
+        load_bus_station();
 }
 
 void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
@@ -231,6 +255,9 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     }
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state->displayed_buildings_x &= ~SC_BAR;
+
+    if (screen_state->screen_location_x_tiles == SC_BUS_TRANSITION_X)
+        screen_state->displayed_buildings_x &= ~SC_BUS;
 }
 void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
@@ -295,6 +322,12 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     }
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
         screen_state->displayed_buildings_x &= ~SC_BAR;
+
+    if (screen_state->screen_location_x_tiles == SC_BUS_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_x |= SC_BUS;
+        load_bus_station();
+    }
 }
 void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
