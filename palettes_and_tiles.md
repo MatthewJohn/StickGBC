@@ -76,7 +76,7 @@
 13. Car diagonal back
 
 
-## Building map tiles
+## Building map tiles (1)
 
  0. Background
  1. Border corner
@@ -207,6 +207,46 @@
  126. -
  127. D
  
+ ## Building map tiles (2)
+
+ 0. Background
+ 1. Border corner
+ 2. Border top
+ 3. Border side
+ 4. Ex
+ 5. it
+
+ 98. Clock face
+ 99. Colon
+ 100. 0
+ 101. 1
+ 102. 2
+ 103. 3
+ 104. 4
+ 105. 5
+ 106. 6
+ 107. 7
+ 108. 8
+ 109. 9
+ 110. $
+ 111. HP
+ 112. /HR
+ 113. DA
+ 114. YS
+ 115. /
+ 116. IN
+ 117. TE
+ 118. LL
+ 119. IG
+ 120. EN
+ 121. CE
+ 122. ST
+ 123. RE
+ 124. NG
+ 125. TH
+ 126. -
+ 127. D
+
 
 ## Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
