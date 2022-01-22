@@ -20,11 +20,7 @@
     * 1 - 
     * 2 - 
     * 3 -
- 4.
-    * 0 - 
-    * 1 - 
-    * 2 - 
-    * 3 - 
+ 4. scratch for building 0 - bus
  5. scratch for building 1 - bus station/Bar
  6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
@@ -266,3 +262,8 @@
  - 49 - Bar Neon sign base
  - 50 - Bar Side sign 1
  - 51 - Bar Side sign 2
+ - 52 - Bus wheel
+ - 53 - Bus side
+ - 54 - Bus  back
+ - 55 - Bus back left
+ - 56 - Top/left line border (used by bus)
