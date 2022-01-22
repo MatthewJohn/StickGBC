@@ -24,6 +24,7 @@ f_setup_bank main_map 5
 f_setup_bank building_menu_map 3
 f_setup_bank main_map_boundaries 5
 f_setup_bank building_menu_tiles 3
+f_setup_bank building_menu_tiles_2 3
 f_setup_bank main_map_tileset 5
 f_setup_bank main_map_sprite_tileset 4
 f_setup_bank opening_screen_tiles 7
