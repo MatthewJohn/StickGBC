@@ -41,7 +41,7 @@
 
 // Debug definitions
 #define JUMP_BUILDING 0
-#define DEBUG_BOUNDARIES 0
+#define DEBUG_BOUNDARIES 1
 
 UBYTE * debug_address;
 
@@ -389,7 +389,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
            itx_x ++)
     {
 
-#ifdef DEBUG_SET_BACKGROUND_SKIP
+#if IN_TESTING && DEBUG_SET_BACKGROUND_SKIP
         // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
         if (itx_x == 0x10U)
             break;
@@ -402,7 +402,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             // Temp Test
             current_tile_itx = ((itx_y) * screen_state.background_width) + itx_x;
 
-#ifdef DEBUG_SET_BACKGROUND_SKIP
+#if IN_TESTING && DEBUG_SET_BACKGROUND_SKIP
             // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
             if (itx_y == 0x10U)
                 break;
@@ -421,7 +421,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -455,7 +455,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -563,7 +563,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -595,7 +595,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 tile_data[0] |= S_FLIPX;
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -639,7 +639,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -671,7 +671,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
 
             ROM_BANK_RESET;
 
-#if DEBUG_BOUNDARIES
+#if IN_TESTING && DEBUG_BOUNDARIES
             ROM_BANK_TILE_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
@@ -1076,12 +1076,10 @@ void check_building_enter()
         setup_building_menu();
     }
 
-#ifdef IN_TESTING
-#if JUMP_BUILDING
-    game_state.current_building = S_B_RESTAURANT;
+#if IN_TESTING && JUMP_BUILDING
+    game_state.current_building = JUMP_BUILDING;
     setup_building_menu();
     return;
-#endif
 #endif
 }
 
