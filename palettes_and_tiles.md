@@ -267,3 +267,7 @@
  - 54 - Bus  back
  - 55 - Bus back left
  - 56 - Top/left line border (used by bus)
+ - 57 - Bus depot sign 1
+ - 58 - Bus depot sign 2
+ - 59 - Bus depot sign 3
+ - 60 - Bus depot sign 4
