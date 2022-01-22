@@ -49,7 +49,7 @@ UBYTE tile_data[1];
 UWORD word_data[4];
 
 // Storage for scratch palette data
-UWORD scratch_palette_data[3][4];
+UWORD scratch_palette_data[4][4];
 
 joypad_state_t joypad_state;
 
