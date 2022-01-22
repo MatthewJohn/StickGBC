@@ -41,6 +41,7 @@
 
 // Debug definitions
 #define JUMP_BUILDING 0
+#define DEBUG_BOUNDARIES 0
 
 UBYTE * debug_address;
 
@@ -420,7 +421,16 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -444,6 +454,15 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
+
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -544,7 +563,17 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
+
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -565,6 +594,15 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             if (screen_state.background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data[0] |= S_FLIPX;
             ROM_BANK_RESET;
+
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             VBK_REG = 1;
 
@@ -601,7 +639,16 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -623,6 +670,15 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
+
+#if DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             VBK_REG = 1;
 
