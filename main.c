@@ -41,7 +41,7 @@
 
 // Debug definitions
 #define JUMP_BUILDING 0
-#define DEBUG_BOUNDARIES 1
+#define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
 
 UBYTE * debug_address;
