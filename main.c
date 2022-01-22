@@ -40,7 +40,7 @@
 #include "main.h"
 
 // Debug definitions
-#define JUMP_BUILDING 0
+#define DEBUG_JUMP_BUILDING 0
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
 
@@ -1080,7 +1080,7 @@ void check_building_enter()
         setup_building_menu();
     }
 
-#if IN_TESTING && JUMP_BUILDING
+#if IN_TESTING && DEBUG_JUMP_BUILDING
     game_state.current_building = JUMP_BUILDING;
     setup_building_menu();
     return;
