@@ -2146,7 +2146,7 @@ void main_update_window(unsigned int return_bank)
 {
     ROM_BANK_BUILDING_MENU_SWITCH;
     update_window();
-    ROM_BANK_RESET;
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 /*
