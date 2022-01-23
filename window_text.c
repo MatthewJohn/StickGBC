@@ -25,7 +25,7 @@ void show_window_text(UINT8 *text)
         
         // Load tile into high tile set
         VBK_REG = 1;
-        set_bkg_data(text_index, 1, windowtexttiles[text[text_index] << 4]);
+        set_bkg_data(text[text_index], 1, windowtexttiles[text[text_index] << 4]);
         VBK_REG = 0;
 
         // Set screen tile to loaded tile
