@@ -14,6 +14,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     UINT8 cost;
     UINT16 offer;
     UINT8 rnd_3 = sys_time % 3;
+    BOOLEAN no_deal;
 
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
@@ -73,7 +74,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         if (game_state->inventory[S_INVENTORY_HAND_GUN] == 0U)
         {
             if (rnd_3 == 0)
@@ -98,7 +99,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         if (rnd_3 == 0)
             main_show_window_text(&win_txt_bus_statn_rob_1, ROM_BANK_LOGIC_FUNCTIONS);
         else if (rnd_3 == 1)
@@ -124,11 +125,11 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         game_state->inventory[S_INVENTORY_HAND_GUN] = 0;
         game_state->inventory[S_INVENTORY_AMMO] = 0;
-        
+
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
         main_show_window_text(&win_txt_bus_statn_bust, ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         return;
     }
 
@@ -168,8 +169,14 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         if (offer < 5U)
             offer = 5U;
 
-        game_state->balance += (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] * offer);
-        game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
+        if (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] == 0U)
+            no_deal = 1U;
+        else
+        {
+            no_deal = 0U;
+            game_state->balance += (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] * offer);
+            game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
+        }
     }
     else
     {
@@ -193,11 +200,22 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         if (offer < 50U)
             offer = 50U;
 
-        game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
-        game_state->inventory[S_INVENTORY_COCAINE] = 0U;
+        if (game_state->inventory[S_INVENTORY_COCAINE] == 0)
+        {
+            no_deal = 1U;
+        }
+        else
+        {
+            game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
+            game_state->inventory[S_INVENTORY_COCAINE] = 0U;
+            no_deal = 0U;
+        }
     }
 
     // Update main window before returning
     main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+
+    if (no_deal)
+        main_show_window_text(&win_txt_bus_statn_no_deal, ROM_BANK_LOGIC_FUNCTIONS);
 }
 

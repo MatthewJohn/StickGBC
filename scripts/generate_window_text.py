@@ -14,6 +14,7 @@ messages = {
         'no_phone': 'After arriving, you spend the entire day looking for people who will buy from you, but no one wants to deal with a punk without a cell phone. How are they supposed to call you for supply when \'the craving\' sets in??',
         'bust': 'Rolling into town with piles of product attacted plenty of attention - from the cops. They confiscate your goods, your gun, and your freedom; You serve the next 5 days in state pen.',
         'bad': 'You meet some new contacts behind an abandoned building. Suddenly you get hit from behind by a blunt object. As you lie on the pavement, you realize what just happened; you\'ve been screwed! Your stash got jacked.',
+        'no_deal': 'You\'ve arrived in the city but can\'t find anyone to buy from you.  Better luck next time, chump.',
     }
 }
 
