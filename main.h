@@ -38,7 +38,7 @@
 
 void main_check_joy(unsigned int return_bank);
 void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank);
-void main_show_window_text(UINT8 *text);
+void main_show_window_text(UINT8 *text, unsigned int return_bank);
 
 extern screen_state_t screen_state;
 extern joypad_state_t joypad_state;
