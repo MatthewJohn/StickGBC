@@ -10,4 +10,4 @@
 
 #define WINDOW_TEXT_END 30U
 
-extern UINT8 bus_statn_no_inv[];
+extern const UINT8 bus_statn_no_inv[];

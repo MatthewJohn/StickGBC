@@ -10,7 +10,7 @@
 #include "window_text.h"
 
 /* Messages for bus_statn*/
-UINT8 bus_statn_no_inv[] = {
+const UINT8 bus_statn_no_inv[] = {
     25U,
     15U,
     21U,
