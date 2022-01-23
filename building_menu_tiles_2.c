@@ -5,6 +5,7 @@
  */
 
 #pragma bank=3
+#pragma bank=3
 /*
 
  BUILDING_MENU_TILES_2.C
