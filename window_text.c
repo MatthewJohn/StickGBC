@@ -13,6 +13,7 @@ void show_window_text(UINT8 *text)
     UINT8 itx_x = 3U;
     UINT8 itx_y = 3U;
     UINT8 text_index = 0;
+    UINT8 character_number;
     UBYTE tile_data;
 
     while (1)
@@ -23,14 +24,14 @@ void show_window_text(UINT8 *text)
             break;
         }
         
+        character_number = text[text_index];
         // Load tile into high tile set
         VBK_REG = 1;
-        set_bkg_data(text[text_index], 1, &(windowtexttiles[text[text_index] << 4]));
+        set_bkg_data(character_number, 1, &(windowtexttiles[character_number << 4]));
         VBK_REG = 0;
 
         // Set screen tile to loaded tile
-        tile_data = text[text_index];
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
+        set_bkg_tiles(itx_x, itx_y, 1, 1, &(character_number));
 
         VBK_REG = 1;
         // Mark as using palette 0 and high bank of tiles
