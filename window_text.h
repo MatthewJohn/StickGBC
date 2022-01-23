@@ -13,6 +13,7 @@
 #include "window_text_data.h"
 #include "window_text_tiles.h"
 
+void show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity);
 void show_window_text(UINT8 *text);
 
 #endif
