@@ -90,7 +90,4 @@ void show_window_text(UINT8 *text)
 
         main_check_joy(ROM_BANK_WINDOW_TEXT);
     }
-
-    // Wait for user to stop pressing new keypress
-    delay(300);
 }
