@@ -7,6 +7,7 @@ messages = {
         'no_gun_1': 'You are robbed of all your money and stash by a traveling pack of low-rate lawyers.  Next time, pack some protection.',
         'no_gun_2': 'You are jumped by 3 guys and a chick. They take all your money and your stash. Maybe you should be packin\' heat next time.',
         'no_gun_3': 'A pimp gives you directions back to the bus station, then robs you. You\'ve lost all your money and your stash.',
+        'no_ammo': 'You strut down the city streets looking for action. A gang of street toughs with baseball bats eye you and walk in your direction. You pull out your gun and fire...*click*  You\'ve got no bullets. They have a homerun derby contest on your ass and take your stash and money.'
     }
 }
 
