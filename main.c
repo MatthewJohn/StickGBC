@@ -794,6 +794,13 @@ void setup_main_map()
     game_state.last_movement_time = sys_time;
 }
 
+/*
+ * load_menu_tiles
+ *
+ * Load each of the menu items on to the screen
+ * from the active menu_config, using the
+ * two-letter menu tiles.
+ */
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
