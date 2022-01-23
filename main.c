@@ -2089,6 +2089,10 @@ void update_state()
                     ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                     bus_sell_goods(&menu_state, &game_state);
                     ROM_BANK_RESET;
+                    
+                    // Return to main map once complete
+                    setup_main_map();
+                    return;
                 }
             }
         }
