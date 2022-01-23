@@ -48,7 +48,6 @@
 #define DEBUG_JUMP_BUILDING_NUMBER 0
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
-#define DEBUG_SHOW_MESSAGE 1
 
 UBYTE * debug_address;
 
@@ -1111,12 +1110,6 @@ void check_building_enter()
         setup_building_menu(2U);
     }
 
-#if IN_TESTING && DEBUG_SHOW_MESSAGE
-    ROM_BANK_WINDOW_TEXT_SWITCH;
-    show_window_text(&bus_statn_no_inv);
-    ROM_BANK_RESET;
-#endif
-
 #if IN_TESTING && DEBUG_JUMP_BUILDING
     game_state.current_building = DEBUG_JUMP_BUILDING;
     setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER);
@@ -1512,6 +1505,18 @@ void show_inventory_screen() NONBANKED
             show_number(3U + (8U * itx_x), 3U + (3U * itx_y), 3U, item_quantities[itx]);
         }
     }
+    ROM_BANK_RESET;
+}
+
+/*
+ * main_show_window_text
+ *
+ * show_window_text wrapper with ROM jumping
+ */
+void main_show_window_text(UINT8 *text)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_text(text);
     ROM_BANK_RESET;
 }
 
