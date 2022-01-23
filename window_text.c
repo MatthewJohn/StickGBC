@@ -75,7 +75,7 @@ void show_window_text(UINT8 *text)
         VBK_REG = 0;
         itx_x += 1U;
     }
-    
+
     // Wait for original key press to be let go of
     delay(300);
 
