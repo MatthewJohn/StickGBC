@@ -45,7 +45,7 @@ void show_window_text(UINT8 *text)
         set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
         VBK_REG = 0;
 
-        if (itx_x == 10U)
+        if (itx_x == (SCREEN_WIDTH_TILES - 3U))
         {
             itx_y += 1U;
             itx_x = 3U;
