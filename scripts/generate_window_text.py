@@ -36,7 +36,7 @@ c_file.write("""
 for area in messages:
     c_file.write('/* Messages for {}*/\n'.format(area))
     for message_name in messages[area]:
-        h_file.write('extern UINT8 {}_{};\n'.format(area, message_name))
+        h_file.write('extern UINT8 {}_{}[];\n'.format(area, message_name))
     
         c_file.write('UINT8 {}_{}[] = {{\n'.format(area, message_name))
         for letter in messages[area][message_name]:

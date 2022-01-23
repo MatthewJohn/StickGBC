@@ -8,4 +8,4 @@
 
 #include "gb.h"
 
-extern UINT8 bus_statn_no_inv;
+extern UINT8 bus_statn_no_inv[];
