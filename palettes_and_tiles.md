@@ -215,6 +215,33 @@
  3. Border side
  4. Ex
  5. it
+ 6. SE
+ 7. LL
+ 8.  G
+ 9. OO
+ 10. DS
+ 11. BR
+ 12. KL
+ 13. YN
+ 14. CH
+ 15. IC
+ 16. AG
+ 17. O
+ 18. DE
+ 19. TR
+ 20. OI
+ 21. T
+ 22. CA
+ 23. MD
+ 24. EN
+ 25. LO
+ 26. S
+ 27. AN
+ 28. GE
+ 29. LE
+ 30. LA
+ 31. VE
+ 32. GA
 
  98. Clock face
  99. Colon

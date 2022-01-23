@@ -32,8 +32,8 @@
 /* Bank of tiles. */
 #define buildingmenutiles2Bank 0
 /* CGBpalette entries. */
-extern unsigned char buildingmenutiles2CGB[];
+extern const unsigned char buildingmenutiles2CGB[];
 /* Start of tile array. */
-extern unsigned char buildingmenutiles2[];
+extern const unsigned char buildingmenutiles2[];
 
 /* End of BUILDING_MENU_TILES_2.H */
