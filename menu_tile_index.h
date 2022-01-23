@@ -194,6 +194,7 @@
 // 97 IO
 #define MENU_TILE_IO 0x61
 
+// SHARED BETWEEN MENU TILES 1 and MENU TILES 2
 // 98 Clock face
 #define MENU_TILE_CLOCK 0x62
 // 99 Colon
@@ -253,3 +254,30 @@
 // 126 -
 #define MENU_TILE_DASH 0x7e
 
+#define MENU_TILE2_SE 0x06
+#define MENU_TILE2_LL 0x07
+#define MENU_TILE2__G 0x08
+#define MENU_TILE2_OO 0x09
+#define MENU_TILE2_DS 0x0A
+#define MENU_TILE2_BR 0x0B
+#define MENU_TILE2_KL 0x0C
+#define MENU_TILE2_YN 0x0D
+#define MENU_TILE2_CH 0x0E
+#define MENU_TILE2_IC 0x0F
+#define MENU_TILE2_AG 0x10
+#define MENU_TILE2_O 0x11
+#define MENU_TILE2_DE 0x12
+#define MENU_TILE2_TR 0x13
+#define MENU_TILE2_OI 0x14
+#define MENU_TILE2_T 0x15
+#define MENU_TILE2_CA 0x16
+#define MENU_TILE2_MD 0x17
+#define MENU_TILE2_EN 0x18
+#define MENU_TILE2_LO 0x19
+#define MENU_TILE2_S 0x1A
+#define MENU_TILE2_AN 0x1B
+#define MENU_TILE2_GE 0x1C
+#define MENU_TILE2_LE 0x1D
+#define MENU_TILE2_LA 0x1E
+#define MENU_TILE2_VE 0x1F
+#define MENU_TILE2_GA 0x20

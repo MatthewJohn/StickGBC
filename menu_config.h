@@ -5,7 +5,7 @@
  */
 
 
-# ifndef MENU_CONFIG_DEF
+#ifndef MENU_CONFIG_DEF
 #define MENU_CONFIG_DEF 1
 
 #include "gb.h"
@@ -84,6 +84,21 @@
 #define MENU_ITEM_INDEX_STRENGTH 0x25U
 #define MENU_ITEM_INDEX_CHARM 0x26U
 #define MENU_ITEM_INDEX_KARMA 0x27U
+#define MENU_ITEM_INDEX_INV_SMOKES 0x28U
+#define MENU_ITEM_INDEX_INV_CAFFEINE_PILLS 0x29U
+#define MENU_ITEM_INDEX_INV_HAND_GUN 0x30U
+#define MENU_ITEM_INDEX_INV_KNIFE 0x31U
+#define MENU_ITEM_INDEX_INV_CELLPHONE  0x32U
+#define MENU_ITEM_INDEX_INV_SKATEBOARD 0x33U
+#define MENU_ITEM_INDEX_INV_COCAINE  0x34U
+#define MENU_ITEM_INDEX_INV_BOTTLE_OF_BEER 0x35U
+#define MENU_ITEM_INDEX_SELL_GOODS 0x36U
+#define MENU_ITEM_INDEX_BROOKLYN 0x37U
+#define MENU_ITEM_INDEX_CHICAGO 0x38U
+#define MENU_ITEM_INDEX_DETROIT 0x39U
+#define MENU_ITEM_INDEX_CAMDEN 0x3AU
+#define MENU_ITEM_INDEX_LOS_ANGELES 0x3BU
+#define MENU_ITEM_INDEX_LAS_VEGAS 0x3CU
 
 // Menu item indexes for NLI
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -129,7 +144,10 @@ extern menu_config_t menu_config_hobo;
 extern menu_config_t menu_config_bar;
 extern menu_config_t menu_config_stats;
 extern menu_config_t menu_config_inventory;
+extern menu_config_t menu_config_bus_station;
 
 
 // Methods for menu
 void set_menu_item_color(unsigned char palette);
+
+#endif
