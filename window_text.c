@@ -62,18 +62,21 @@ void show_window_text(UINT8 *text)
     VBK_REG = 0;
 
     // File up remainder of row with blank tiles
-    while (itx_x != (SCREEN_WIDTH_TILES - 2U))
+    if (itx != (SCREEN_HEIGHT_TILES - 2U))
     {
-        // Set screen tile to empty tile
-        character_number = 0;
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(character_number));
+        while (itx_x != (SCREEN_WIDTH_TILES - 2U))
+        {
+            // Set screen tile to empty tile
+            character_number = 0;
+            set_bkg_tiles(itx_x, itx_y, 1, 1, &(character_number));
 
-        VBK_REG = 1;
-        // Mark as using palette 1 and high bank of tiles
-        tile_data = 0x9;
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
-        VBK_REG = 0;
-        itx_x += 1U;
+            VBK_REG = 1;
+            // Mark as using palette 1 and high bank of tiles
+            tile_data = 0x9;
+            set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
+            VBK_REG = 0;
+            itx_x += 1U;
+        }
     }
 
     // Wait for original key press to be let go of
