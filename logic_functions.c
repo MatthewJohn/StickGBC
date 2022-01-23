@@ -60,6 +60,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // If player hasn't got any booze or cocaine, leave
     if (game_state->inventory[S_INVENTORY_COCAINE] == 0 && game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] == 0)
     {
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         main_show_window_text(&win_txt_bus_statn_no_inv, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
@@ -70,6 +71,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->balance = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
@@ -80,12 +82,16 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->balance = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
     // If cell phone not owned, leave
     if (game_state->inventory[S_INVENTORY_CELL_PHONE] == 0U)
+    {
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         return;
+    }
 
     // If player has more than 50 cocaine OR 50 booze, 'go to jail' for 5 days, losing gun, ammo, cocaine, booze
     if (game_state->inventory[S_INVENTORY_COCAINE] > 50 || game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] > 50)
@@ -102,6 +108,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     {
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
@@ -158,5 +165,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
         game_state->inventory[S_INVENTORY_COCAINE] = 0U;
     }
+
+    // Update main window before returning
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 }
 

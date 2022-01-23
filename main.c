@@ -2137,7 +2137,23 @@ void check_car_collision()
     }
 }
 
-// Switch to JOY rom and update joypad state
+/*
+ * main_update_window
+ *
+ * update_window wrapper with ROM jumping
+ */
+void main_update_window(unsigned int return_bank)
+{
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    update_window();
+    ROM_BANK_RESET;
+}
+
+/*
+ * main_check_joy
+ * 
+ * Switch to JOY rom and update joypad state
+ */
 void main_check_joy(unsigned int return_bank)
 {
     ROM_BANK_JOY_CONFIG_SWITCH;
