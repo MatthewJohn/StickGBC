@@ -13,7 +13,7 @@ void show_window_text(UINT8 *text)
     UINT8 itx_x = 3U;
     UINT8 itx_y = 3U;
     UINT8 text_index = 0;
-    UINT8 character_number;
+    UINT16 character_number;
     UBYTE tile_data;
 
     while (1)
