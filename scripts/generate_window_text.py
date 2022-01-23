@@ -31,7 +31,7 @@ h_file.write("""
 
 #include "gb.h"
 
-#define WINDOW_TEXT_END 30U
+#define WINDOW_TEXT_END 40U
 
 """)
 
