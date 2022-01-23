@@ -2089,7 +2089,7 @@ void update_state()
                     ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                     bus_sell_goods(&menu_state, &game_state);
                     ROM_BANK_RESET;
-                    
+
                     // Return to main map once complete
                     setup_main_map();
                     return;
@@ -2151,7 +2151,7 @@ void main_update_window(unsigned int return_bank)
 
 /*
  * main_check_joy
- * 
+ *
  * Switch to JOY rom and update joypad state
  */
 void main_check_joy(unsigned int return_bank)
