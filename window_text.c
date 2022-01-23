@@ -44,6 +44,8 @@ void show_window_text(UINT8 *text)
             itx_y += 1U;
             itx_x = 3U;
         }
+        else
+            itx_x += 1U;
 
         text_index += 1U;
     }
