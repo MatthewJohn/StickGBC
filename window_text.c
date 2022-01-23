@@ -9,6 +9,31 @@
 #include "window_text.h"
 
 /*
+ *  show_window_character
+ *
+ * Show individual character on-screen at a given
+ * location
+ */
+void show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity)
+ {
+         UBYTE tile_data;
+
+        // Load tile into high tile set
+        VBK_REG = 1;
+        set_bkg_data(character_number, 1, &(windowtexttiles[(UINT16)character_number << 4]));
+        VBK_REG = 0;
+
+        // Set screen tile to loaded tile
+        set_bkg_tiles(itx, ity, 1, 1, &(character_number));
+
+        VBK_REG = 1;
+        // Mark as using palette 1 and high bank of tiles
+        tile_data = 0x9;
+        set_bkg_tiles(itx, ity, 1, 1, &(tile_data));
+        VBK_REG = 0;
+ }
+
+/*
  * show_window_text
  *
  * Show array of text onscreen and wait
@@ -20,7 +45,6 @@ void show_window_text(UINT8 *text)
     UINT8 itx_y = 0U;
     UINT8 text_index = 0;
     UINT16 character_number;
-    UBYTE tile_data;
 
     while (1)
     {
@@ -31,19 +55,7 @@ void show_window_text(UINT8 *text)
         }
 
         character_number = text[text_index];
-        // Load tile into high tile set
-        VBK_REG = 1;
-        set_bkg_data(character_number, 1, &(windowtexttiles[character_number << 4]));
-        VBK_REG = 0;
-
-        // Set screen tile to loaded tile
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(character_number));
-
-        VBK_REG = 1;
-        // Mark as using palette 1 and high bank of tiles
-        tile_data = 0x9;
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
-        VBK_REG = 0;
+        show_window_character(text[text_index], itx_x, itx_y);
 
         if (itx_x == (SCREEN_WIDTH_TILES - 1U))
         {
@@ -56,23 +68,11 @@ void show_window_text(UINT8 *text)
         text_index += 1U;
     }
 
-    // Load blank tile (may have not been loaded - but seems unlikely)
-    VBK_REG = 1;
-    set_bkg_data(0, 1, &(windowtexttiles[0]));
-    VBK_REG = 0;
-
     // File up remainder of row with blank tiles
     while (itx_x != (SCREEN_WIDTH_TILES - 1U))
     {
         // Set screen tile to empty tile
-        character_number = 0;
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(character_number));
-
-        VBK_REG = 1;
-        // Mark as using palette 1 and high bank of tiles
-        tile_data = 0x9;
-        set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
-        VBK_REG = 0;
+        show_window_character(0U, itx_x, itx_y);
         itx_x += 1U;
     }
 
