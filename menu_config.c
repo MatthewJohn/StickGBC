@@ -12,7 +12,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x3DU] = {
+const menu_config_item_t menu_config_items[0x37U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
