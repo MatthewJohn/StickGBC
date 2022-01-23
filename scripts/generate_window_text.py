@@ -3,7 +3,10 @@ messages = {
     'bus_statn': {
         'late': 'Bus leaves first thing in the morning.',
         'no_mon': 'You do not have enough money to travel.',
-        'no_inv': 'You arrive in the city with nothing to sell.'
+        'no_inv': 'You arrive in the city with nothing to sell.',
+        'no_gun_1': 'You are robbed of all your money and stash by a traveling pack of low-rate lawyers.  Next time, pack some protection.',
+        'no_gun_2': 'You are jumped by 3 guys and a chick. They take all your money and your stash. Maybe you should be packin\' heat next time.',
+        'no_gun_3': 'A pimp gives you directions back to the bus station, then robs you. You\'ve lost all your money and your stash.',
     }
 }
 
@@ -15,7 +18,7 @@ letter_lookup = {
 # Add numbers
 letter_lookup.update(
     {
-        i: i + 1
+        str(i): i + 1
         for i in range(0, 10)
     }
 )
@@ -56,7 +59,10 @@ for area in messages:
 
         # Add the tile value for each letter
         for letter in messages[area][message_name]:
-            c_file.write('    {}U,\n'.format(letter_lookup[letter.lower()]))
+            if letter.lower() not in letter_lookup:
+                print('WARNING: Character not found for {0}{1}: {2}'.format(area, message_name, letter.lower()))
+            else:
+                c_file.write('    {}U,\n'.format(letter_lookup[letter.lower()]))
 
         # Add terminating character
         c_file.write('    WINDOW_TEXT_END,\n')
