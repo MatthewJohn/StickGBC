@@ -146,7 +146,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // SELL!
 
     // Half chance of selling cocaine or booze
-    if (sys_time % 1 == 0U)
+    if (sys_time % 2 == 0U)
     {
         // Selling booze
         offer = game_state->charm / 6U;
