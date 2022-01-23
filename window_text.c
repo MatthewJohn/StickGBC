@@ -16,8 +16,8 @@
  */
 void show_window_text(UINT8 *text)
 {
-    UINT8 itx_x = 3U;
-    UINT8 itx_y = 3U;
+    UINT8 itx_x = 2U;
+    UINT8 itx_y = 2U;
     UINT8 text_index = 0;
     UINT16 character_number;
     UBYTE tile_data;
@@ -45,7 +45,7 @@ void show_window_text(UINT8 *text)
         set_bkg_tiles(itx_x, itx_y, 1, 1, &(tile_data));
         VBK_REG = 0;
 
-        if (itx_x == (SCREEN_WIDTH_TILES - 3U))
+        if (itx_x == (SCREEN_WIDTH_TILES - 2U))
         {
             itx_y += 1U;
             itx_x = 3U;
@@ -62,7 +62,7 @@ void show_window_text(UINT8 *text)
     VBK_REG = 0;
 
     // File up remainder of row with blank tiles
-    while (itx_x != (SCREEN_WIDTH_TILES - 3U))
+    while (itx_x != (SCREEN_WIDTH_TILES - 2U))
     {
         // Set screen tile to empty tile
         character_number = 0;
