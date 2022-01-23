@@ -173,9 +173,20 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             no_deal = 1U;
         else
         {
+            // Update window before showing offer
+            main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+
+            // Write offer to screen
+
+            // Request user input for offer
+            main_show_window_text(&win_txt_bus_statn_beer_deal, ROM_BANK_LOGIC_FUNCTIONS);
+
+            if (joypad_state.a_pressed)
+            {
+                game_state->balance += (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] * offer);
+                game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
+            }
             no_deal = 0U;
-            game_state->balance += (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] * offer);
-            game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
         }
     }
     else
@@ -206,8 +217,19 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         }
         else
         {
-            game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
-            game_state->inventory[S_INVENTORY_COCAINE] = 0U;
+            // Update window before showing offer
+            main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+
+            // Write offer to screen
+
+            // Request user input for offer
+            main_show_window_text(&win_txt_bus_statn_coke_deal, ROM_BANK_LOGIC_FUNCTIONS);
+
+            if (joypad_state.a_pressed)
+            {
+                game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
+                game_state->inventory[S_INVENTORY_COCAINE] = 0U;
+            }
             no_deal = 0U;
         }
     }
