@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Workspace Name="stickrpg" Database=""/>
+<CodeLite_Workspace Name="stickrpg" Database="">
+  <Environment>
+    <![CDATA[]]>
+  </Environment>
+</CodeLite_Workspace>

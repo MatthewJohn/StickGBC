@@ -12,7 +12,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x30U] = {
+const menu_config_item_t menu_config_items[0x3DU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1108,6 +1108,192 @@ const menu_config_item_t menu_config_items[0x30U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
+    
+    // Bus menu - Sell Good
+    {
+        {
+            MENU_TILE2_SE,
+            MENU_TILE2_LL,
+            MENU_TILE2__G,
+            MENU_TILE2_OO,
+            MENU_TILE2_DS,
+            MENU_ITEM_NO_TILE,
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        }
+    },
+    
+    // Bus menu - Brooklyn
+    {
+        {
+            MENU_TILE2_BR,
+            MENU_TILE2_OO,
+            MENU_TILE2_KL,
+            MENU_TILE2_YN,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_1,
+            MENU_TILE_5,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+    
+    // Bus menu - Chicago
+    {
+        {
+            MENU_TILE2_CH,
+            MENU_TILE2_IC,
+            MENU_TILE2_AG,
+            MENU_TILE2_O,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_1,
+            MENU_TILE_5,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+    
+    // Bus menu - Detroit
+    {
+        {
+            MENU_TILE2_DE,
+            MENU_TILE2_TR,
+            MENU_TILE2_OI,
+            MENU_TILE2_T,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+    
+
+    // Bus menu - Camden
+    {
+        {
+            MENU_TILE2_CA,
+            MENU_TILE2_MD,
+            MENU_TILE2_EN,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_3,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+
+    // Bus menu - Los Angeles
+    {
+        {
+            MENU_TILE2_LO,
+            MENU_TILE2_S,
+            MENU_TILE2_AN,
+            MENU_TILE2_GE,
+            MENU_TILE2_LE,
+            MENU_TILE2_S,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+    
+    // Bus menu - Las Vegas
+    {
+        {
+            MENU_TILE2_LA,
+            MENU_TILE2_S,
+            MENU_TILE2_VE,
+            MENU_TILE2_GA,
+            MENU_TILE2_S,
+            MENU_ITEM_NO_TILE,
+
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_3,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
 };
 
 const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
@@ -1292,6 +1478,19 @@ menu_config_t menu_config_inventory = {
         MENU_ITEM_INDEX_EMPTY,
         MENU_ITEM_INDEX_EMPTY,
         MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
+menu_config_t menu_config_bus_station = {
+    {
+        MENU_ITEM_INDEX_SELL_GOODS,
+        MENU_ITEM_INDEX_EXIT,
+        MENU_ITEM_INDEX_BROOKLYN,
+        MENU_ITEM_INDEX_CHICAGO,
+        MENU_ITEM_INDEX_DETROIT,
+        MENU_ITEM_INDEX_CAMDEN,
+        MENU_ITEM_INDEX_LOS_ANGELES,
+        MENU_ITEM_INDEX_LAS_VEGAS,
     }
 };
 
