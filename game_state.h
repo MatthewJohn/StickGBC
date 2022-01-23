@@ -35,6 +35,7 @@
 #define S_B_BAR 0x0BU
 #define S_B_STATS 0x0CU
 #define S_B_INVENTORY 0x0DU
+#define S_B_BUS_STATION 0x0E
 
 
 // Maximum of 99 of each item.
