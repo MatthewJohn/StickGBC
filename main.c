@@ -38,6 +38,8 @@
 #include "window.h"
 #include "sprite.h"
 #include "joy.h"
+#include "window_text.h"
+#include "window_text_data.h"
 
 #include "main.h"
 
@@ -46,6 +48,7 @@
 #define DEBUG_JUMP_BUILDING_NUMBER 0
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
+#define DEBUG_SHOW_MESSAGE 1
 
 UBYTE * debug_address;
 
@@ -1107,6 +1110,12 @@ void check_building_enter()
         game_state.current_building = S_B_BUS_STATION;
         setup_building_menu(2U);
     }
+
+#if IN_TESTING && DEBUG_SHOW_MESSAGE
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_text(&bus_statn_no_inv);
+    ROM_BANK_RESET;
+#endif
 
 #if IN_TESTING && DEBUG_JUMP_BUILDING
     game_state.current_building = DEBUG_JUMP_BUILDING;

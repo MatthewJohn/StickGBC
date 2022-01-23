@@ -29,4 +29,5 @@ f_setup_bank main_map_tileset 5
 f_setup_bank main_map_sprite_tileset 4
 f_setup_bank opening_screen_tiles 7
 f_setup_bank opening_screen_map 7
+f_setup_bank window_text_tiles 8
 
