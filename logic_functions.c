@@ -98,6 +98,13 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+        
+        if (rnd_3 == 0)
+            main_show_window_text(&win_txt_bus_statn_rob_1, ROM_BANK_LOGIC_FUNCTIONS);
+        else if (rnd_3 == 1)
+            main_show_window_text(&win_txt_bus_statn_rob_2, ROM_BANK_LOGIC_FUNCTIONS);
+        else
+            main_show_window_text(&win_txt_bus_statn_rob_3, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
