@@ -55,5 +55,6 @@ UINT8 bus_statn_no_inv[] = {
     12U,
     12U,
     27U,
+    WINDOW_TEXT_END,
 };
 
