@@ -17,7 +17,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
     {
-        main_show_window_text(&win_txt_bus_statn_late);
+        main_show_window_text(&win_txt_bus_statn_late, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
@@ -49,7 +49,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // Check if user has enough money
     if (! HAS_MONEY_P(cost))
     {
-        main_show_window_text(&win_txt_bus_statn_no_mon);
+        main_show_window_text(&win_txt_bus_statn_no_mon, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
     game_state->balance -= cost;
@@ -60,7 +60,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // If player hasn't got any booze or cocaine, leave
     if (game_state->inventory[S_INVENTORY_COCAINE] == 0 && game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] == 0)
     {
-        main_show_window_text(&win_txt_bus_statn_no_inv);
+        main_show_window_text(&win_txt_bus_statn_no_inv, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 

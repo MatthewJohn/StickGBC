@@ -1513,11 +1513,11 @@ void show_inventory_screen() NONBANKED
  *
  * show_window_text wrapper with ROM jumping
  */
-void main_show_window_text(UINT8 *text)
+void main_show_window_text(UINT8 *text, unsigned int return_bank)
 {
     ROM_BANK_WINDOW_TEXT_SWITCH;
     show_window_text(text);
-    ROM_BANK_RESET;
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 // Called per cycle to update background position and sprite
