@@ -43,7 +43,7 @@
 // but rely on the functionality to remove the item from the menu
 // after purchase
 #define S_MAX_INVENTORY_ITEM 99U
-#define S_INVENTORY_ITEM_COUNT 0x9U
+#define S_INVENTORY_ITEM_COUNT 0xAU
 
 // Inventory items array index
 #define S_INVENTORY_SMOKES 0x0U
@@ -55,6 +55,7 @@
 #define S_INVENTORY_SKATEBOARD 0x6U
 #define S_INVENTORY_COCAINE 0x7U
 #define S_INVENTORY_BOTTLE_OF_BEER 0x8U
+#define S_INVENTORY_AMMO 0x9U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
