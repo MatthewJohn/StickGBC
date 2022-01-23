@@ -137,6 +137,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     {
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
+
+        main_show_window_text(&win_txt_bus_statn_bad, ROM_BANK_LOGIC_FUNCTIONS);
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
