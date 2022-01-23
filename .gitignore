@@ -41,23 +41,18 @@ obj/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
- 
+
 #
 #Tooling
 #
 _ReSharper*/
 *.resharper
 [Tt]est[Rr]esult*
- 
+
 #
 #Project files
 #
 [Bb]uild/
- 
-#
-#Subversion files
-#
-.svn
  
 #
 # Microsoft Office Temp Files
@@ -66,4 +61,5 @@ _ReSharper*/
  
 # End of File
 Demo
+stickrpg.opensdf
 *.log
