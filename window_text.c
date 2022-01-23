@@ -48,7 +48,7 @@ void show_window_text(UINT8 *text)
         if (itx_x == (SCREEN_WIDTH_TILES - 2U))
         {
             itx_y += 1U;
-            itx_x = 3U;
+            itx_x = 2U;
         }
         else
             itx_x += 1U;
