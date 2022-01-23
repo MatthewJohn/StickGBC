@@ -1108,7 +1108,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Bus menu - Sell Good
     {
         {
@@ -1125,7 +1125,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         }
     },
-    
+
     // Bus menu - Brooklyn
     {
         {
@@ -1153,7 +1153,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
     // Bus menu - Chicago
     {
         {
@@ -1181,7 +1181,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
     // Bus menu - Detroit
     {
         {
@@ -1209,7 +1209,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
 
     // Bus menu - Camden
     {
@@ -1266,7 +1266,7 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
     // Bus menu - Las Vegas
     {
         {
