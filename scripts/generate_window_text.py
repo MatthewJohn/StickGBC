@@ -17,8 +17,8 @@ letter_lookup[','] = 28
 letter_lookup['!'] = 29
 
 # Create file handles
-c_file = open('window_text.c', 'w')
-h_file = open('window_text.h', 'w')
+c_file = open('window_text_data.c', 'w')
+h_file = open('window_text_data.h', 'w')
 
 h_file.write("""
 

@@ -35,3 +35,7 @@
  * Opening screen map
  * Opening screen palette
  * Control/stat selection screen map
+
+## 8
+ * window_text.c - window status text and functions
+ 
