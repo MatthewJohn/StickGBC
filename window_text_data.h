@@ -8,6 +8,6 @@
 
 #include "gb.h"
 
-#define WINDOW_TEXT_END 30U
+#define WINDOW_TEXT_END 40U
 
 extern const UINT8 bus_statn_no_inv[];
