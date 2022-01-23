@@ -345,7 +345,7 @@ void setup_globals()
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
-    game_state.inventory[S_INVENTORY_COCAINE] = 0x51U;
+    game_state.inventory[S_INVENTORY_COCAINE] = 0x10U;
     game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
     game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
