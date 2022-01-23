@@ -49,6 +49,9 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     }
     game_state->balance -= cost;
 
+    // Set time of day to 24 hours
+    game_state->hour = 24;
+
     // If player hasn't got any booze or cocaine, leave
     if (game_state->inventory[S_INVENTORY_COCAINE] == 0 && game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] == 0)
         return;
