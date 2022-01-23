@@ -76,6 +76,9 @@ void show_window_text(UINT8 *text)
         itx_x += 1U;
     }
     
+    // Wait for original key press to be let go of
+    delay(100);
+
     // Reset original key pressed
     joypad_state.a_pressed = 0;
     joypad_state.b_pressed = 0;
