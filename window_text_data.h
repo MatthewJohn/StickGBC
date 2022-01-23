@@ -11,6 +11,7 @@
 #define WINDOW_TEXT_END 40U
 
 extern const UINT8 win_txt_bus_statn_no_mon[];
+extern const UINT8 win_txt_bus_statn_no_ammo[];
 extern const UINT8 win_txt_bus_statn_late[];
 extern const UINT8 win_txt_bus_statn_no_gun_3[];
 extern const UINT8 win_txt_bus_statn_no_gun_2[];

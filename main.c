@@ -346,6 +346,7 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x5U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
