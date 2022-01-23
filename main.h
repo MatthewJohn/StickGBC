@@ -15,6 +15,8 @@
 
 #define ROM_BANK_DEFAULT 1
 #define ROM_BANK_RESET SWITCH_ROM_MBC5(ROM_BANK_DEFAULT)
+#define ROM_BANK_LOGIC_FUNCTIONS 2
+#define ROM_BANK_LOGIC_FUNCTIONS_SWITCH SWITCH_ROM_MBC5(ROM_BANK_LOGIC_FUNCTIONS)
 #define ROM_BANK_TILE_DATA 5
 #define ROM_BANK_TILE_DATA_SWITCH SWITCH_ROM_MBC5(ROM_BANK_TILE_DATA)
 #define ROM_BANK_BUILDING_MENU 3
@@ -29,6 +31,7 @@
 #define ROM_BANK_OPENING_SCREEN_SWITCH SWITCH_ROM_MBC5(ROM_BANK_OPENING_SCREEN)
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 #define HAS_MONEY(cost) (game_state.balance + 1U) > cost
+#define HAS_MONEY_P(cost) (game_state->balance + 1U) > cost
 
 void main_check_joy(unsigned int return_bank);
 void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank);
