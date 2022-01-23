@@ -19,6 +19,7 @@
 #include "main_game.h"
 
 #include "building_menu_tiles.h"
+#include "building_menu_tiles_2.h"
 #include "building_menu_map.h"
 #include "building_menu_palette.h"
 
@@ -41,6 +42,7 @@
 
 // Debug definitions
 #define DEBUG_JUMP_BUILDING 0
+#define DEBUG_JUMP_BUILDING_NUMBER 0
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
 
@@ -853,7 +855,7 @@ void load_menu_tiles() NONBANKED
                     set_bkg_data(
                         tile_data_index,
                         1,
-                        &(buildingmenutiles[tile_data_index << 4])
+                        &(screen_state.background_tiles[tile_data_index << 4])
                     );
                     ROM_BANK_RESET;
                 }
@@ -902,12 +904,17 @@ void load_menu_tiles() NONBANKED
     }
 }
 
-void setup_building_menu()
+void setup_building_menu(UINT8 menu_number)
 {
     DISPLAY_OFF;
     // Update globals for references to map/tile information
     screen_state.background_tile_map = buildingmenumap;
-    screen_state.background_tiles = buildingmenutiles;
+
+    if (menu_number == 1U)
+        screen_state.background_tiles = buildingmenutiles;
+    else if (menu_number == 2U)
+        screen_state.background_tiles = buildingmenutiles2;
+
     screen_state.background_width = buildingmenumapWidth;
     screen_state.background_color_palette = building_menu_palette;
 
@@ -1003,6 +1010,12 @@ void setup_building_menu()
         menu_state.current_item_x = MENU_SELECTED_ITEM_DISABLED;
         menu_state.current_item_y = MENU_SELECTED_ITEM_DISABLED;
     }
+    else if (game_state.current_building == S_B_BUS_STATION)
+    {
+        menu_config = &menu_config_bus_station;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1036,60 +1049,65 @@ void check_building_enter()
     if (tile_itx == 0x321U)
     {
         game_state.current_building = S_B_HOUSE;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering restaurant
     else if (tile_itx == 0x76D)
     {
         game_state.current_building = S_B_RESTAURANT;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering shop, through either door
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering pawn shop
     else if (tile_itx == 0xDF1U)
     {
         game_state.current_building = S_B_PAWN;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
     {
         game_state.current_building = S_B_UNIVERSITY;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
     {
         game_state.current_building = S_B_NLI;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
     {
         game_state.current_building = S_B_DEALER;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
     {
         game_state.current_building = S_B_BAR;
-        setup_building_menu();
+        setup_building_menu(1U);
+    }
+    else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
+    {
+        game_state.current_building = S_B_BUS_STATION;
+        setup_building_menu(2U);
     }
 
 #if IN_TESTING && DEBUG_JUMP_BUILDING
-    game_state.current_building = JUMP_BUILDING;
-    setup_building_menu();
+    game_state.current_building = DEBUG_JUMP_BUILDING;
+    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER);
     return;
 #endif
 }
@@ -1384,7 +1402,7 @@ void move_menu_to_exit()
 void show_stats_screen() NONBANKED
 {
     game_state.current_building = S_B_STATS;
-    setup_building_menu();
+    setup_building_menu(1U);
 
     // Update tiles for each of the stats to display the current values
 
@@ -1465,7 +1483,7 @@ void show_inventory_screen() NONBANKED
             break;
     }
 
-    setup_building_menu();
+    setup_building_menu(1U);
 
     // Iterate over item quantites and print to screen
     ROM_BANK_BUILDING_MENU_SWITCH;
