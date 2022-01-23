@@ -112,6 +112,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     if (game_state->inventory[S_INVENTORY_CELL_PHONE] == 0U)
     {
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+        main_show_window_text(&win_txt_bus_statn_no_phone, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
@@ -123,6 +124,12 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         game_state->inventory[S_INVENTORY_HAND_GUN] = 0;
         game_state->inventory[S_INVENTORY_AMMO] = 0;
+        
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+
+        main_show_window_text(&win_txt_bus_statn_bust, ROM_BANK_LOGIC_FUNCTIONS);
+        
+        return;
     }
 
     // 1 in 10 chance that contact takes stash

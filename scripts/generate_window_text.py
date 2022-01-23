@@ -11,6 +11,8 @@ messages = {
         'rob_1': 'You accidentally track dog crap onto a girl scout group\'s hop scotch layout. Troop 61 leaves you lying on the street with no cash and no stash, and a mouthful of stale cookies. Maybe you should buff up a bit more.',
         'rob_2': 'You come across a dark alley. Three large cats attack you from all sides, leaving you unconscious near a dumpster. A passing bum raids your wallet and your stash. You\'re weak as a kitten!',
         'rob_3': 'Not paying attention, you slip on a used condom and hit your head on a park bench. Bleeding profusely, you can only watch as squirrels make off with your wallet and stash. Toughen\' up!',
+        'no_phone': 'After arriving, you spend the entire day looking for people who will buy from you, but no one wants to deal with a punk without a cell phone. How are they supposed to call you for supply when \'the craving\' sets in??',
+        'bust': 'Rolling into town with piles of product attacted plenty of attention - from the cops. They confiscate your goods, your gun, and your freedom; You serve the next 5 days in state pen.',
     }
 }
 
