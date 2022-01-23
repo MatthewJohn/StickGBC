@@ -8,6 +8,12 @@
 
 #include "window_text.h"
 
+/*
+ * show_window_text
+ *
+ * Show array of text onscreen and wait
+ * for user to confirm
+ */
 void show_window_text(UINT8 *text)
 {
     UINT8 itx_x = 3U;
@@ -23,7 +29,7 @@ void show_window_text(UINT8 *text)
         {
             break;
         }
-        
+
         character_number = text[text_index];
         // Load tile into high tile set
         VBK_REG = 1;
@@ -61,7 +67,7 @@ void show_window_text(UINT8 *text)
 
         main_check_joy(ROM_BANK_WINDOW_TEXT);
     }
-    
+
     // Wait for user to stop pressing new keypress
     delay(100);
 }

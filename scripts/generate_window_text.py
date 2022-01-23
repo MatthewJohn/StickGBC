@@ -1,6 +1,8 @@
 
 messages = {
     'bus_statn': {
+        'late': 'Bus leaves first thing in the morning.',
+        'no_mon': 'You do not have enough money to travel.',
         'no_inv': 'You arrive in the city with nothing to sell.'
     }
 }
@@ -47,10 +49,10 @@ for area in messages:
     for message_name in messages[area]:
 
         # Add extern to header file for message
-        h_file.write('extern const UINT8 {}_{}[];\n'.format(area, message_name))
+        h_file.write('extern const UINT8 win_txt_{}_{}[];\n'.format(area, message_name))
 
         # Add start of array for message
-        c_file.write('const UINT8 {}_{}[] = {{\n'.format(area, message_name))
+        c_file.write('const UINT8 win_txt_{}_{}[] = {{\n'.format(area, message_name))
 
         # Add the tile value for each letter
         for letter in messages[area][message_name]:

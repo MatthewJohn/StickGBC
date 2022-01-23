@@ -7,6 +7,7 @@
 #pragma bank=2
 
 #include "logic_functions.h"
+#include "window_text_data.h"
 
 void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 {
@@ -15,7 +16,10 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
+    {
+        main_show_window_text(&win_txt_bus_statn_late);
         return;
+    }
 
     if (menu_state->current_item_x == 0U && menu_state->current_item_y == 1U)  // Brooklyn
     {
@@ -45,6 +49,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // Check if user has enough money
     if (! HAS_MONEY_P(cost))
     {
+        main_show_window_text(&win_txt_bus_statn_no_mon);
         return;
     }
     game_state->balance -= cost;
@@ -54,7 +59,10 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
     // If player hasn't got any booze or cocaine, leave
     if (game_state->inventory[S_INVENTORY_COCAINE] == 0 && game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] == 0)
+    {
+        main_show_window_text(&win_txt_bus_statn_no_inv);
         return;
+    }
 
     // If player hasn't got a gun or ammo, lose booze, cocaine and money
     if (game_state->inventory[S_INVENTORY_HAND_GUN] == 0U || game_state->inventory[S_INVENTORY_AMMO] == 0U)
