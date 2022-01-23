@@ -13,6 +13,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 {
     UINT8 cost;
     UINT16 offer;
+    UINT8 rnd_3 = sys_time % 3;
 
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
@@ -72,6 +73,13 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+        
+        if (rnd_3 == 0)
+            main_show_window_text(&win_txt_bus_statn_no_gun_1, ROM_BANK_LOGIC_FUNCTIONS);
+        else if (rnd_3 == 1)
+            main_show_window_text(&win_txt_bus_statn_no_gun_2, ROM_BANK_LOGIC_FUNCTIONS);
+        else
+            main_show_window_text(&win_txt_bus_statn_no_gun_3, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
 
