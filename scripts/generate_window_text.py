@@ -7,14 +7,21 @@ messages = {
 
 # Add alphabetic characters
 letter_lookup = {
-    chr(i): (itx + 1)
+    chr(i): (itx + 11)
     for itx, i in enumerate(range(ord('a'), ord('z') + 1))
 }
+# Add numbers
+letter_lookup.update(
+    {
+        i: i + 1
+        for i in range(0, 10)
+    }
+)
 # Add special characters
 letter_lookup[' '] = 0
-letter_lookup['.'] = 27
-letter_lookup[','] = 28
-letter_lookup['!'] = 29
+letter_lookup['.'] = 37
+letter_lookup[','] = 38
+letter_lookup['!'] = 39
 
 # Create file handles
 c_file = open('window_text_data.c', 'w')
