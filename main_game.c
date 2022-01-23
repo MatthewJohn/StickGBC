@@ -444,4 +444,3 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
     if ((screen_state->screen_location_y_tiles - 1U) == (road_car_sprite->max_location_y >> 3U))
         screen_state->displayed_sprites_y[road_car_sprite->sprite_display_bit] = 0U;
 }
-
