@@ -24,6 +24,8 @@ h_file.write("""
 
 #include "gb.h"
 
+#define WINDOW_TEXT_END 30U
+
 """)
 
 c_file.write("""
@@ -36,11 +38,19 @@ c_file.write("""
 for area in messages:
     c_file.write('/* Messages for {}*/\n'.format(area))
     for message_name in messages[area]:
+
+        # Add extern to header file for message
         h_file.write('extern UINT8 {}_{}[];\n'.format(area, message_name))
-    
+
+        # Add start of array for message
         c_file.write('UINT8 {}_{}[] = {{\n'.format(area, message_name))
+
+        # Add the tile value for each letter
         for letter in messages[area][message_name]:
             c_file.write('    {}U,\n'.format(letter_lookup[letter.lower()]))
+
+        # Add terminating character
+        c_file.write('    WINDOW_TEXT_END,\n')
         c_file.write('};\n\n')
 
 c_file.close()
