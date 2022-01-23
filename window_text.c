@@ -49,4 +49,19 @@ void show_window_text(UINT8 *text)
 
         text_index += 1U;
     }
+
+    // Reset original key pressed
+    joypad_state.a_pressed = 0;
+    joypad_state.b_pressed = 0;
+
+    // Wait for user to press A or B
+    while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
+    {
+        wait_vbl_done();
+
+        main_check_joy(ROM_BANK_WINDOW_TEXT);
+    }
+    
+    // Wait for user to stop pressing new keypress
+    delay(100);
 }

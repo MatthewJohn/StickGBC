@@ -5,8 +5,14 @@
  */
 
 
+#ifndef WINDOW_TEXT_DEF
+#define WINDOW_TEXT_DEF
+
 #include "gb.h"
+#include "main.h"
 #include "window_text_data.h"
 #include "window_text_tiles.h"
 
 void show_window_text(UINT8 *text);
+
+#endif
