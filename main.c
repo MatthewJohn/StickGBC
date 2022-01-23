@@ -347,9 +347,12 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x5U;
     game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
+    game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
+    game_state.strength = 250U;
+    game_state.charm = 50U;
     game_state.hour = 0;
 #endif
 }
