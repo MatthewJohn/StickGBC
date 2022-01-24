@@ -1295,7 +1295,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 
 /*
  * move_to_menu_item
- * 
+ *
  * Move selected menu item to new value and update highlighting
  */
 void move_to_menu_item(UINT8 new_x, UINT8 new_y, unsigned int return_bank) NONBANKED
