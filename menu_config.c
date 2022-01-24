@@ -1531,7 +1531,7 @@ void set_menu_item_color(unsigned char palette)
 
 /*
  * apply_for_job_promotion
- * 
+ *
  * Check for intelligence and promote job at NLI
  */
 void apply_for_job_promotion(game_state_t *game_state, menu_config_t *menu_config, menu_config_t *menu_config_restaurant)
