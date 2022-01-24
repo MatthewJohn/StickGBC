@@ -44,7 +44,7 @@
 #include "main.h"
 
 // Debug definitions
-#define DEBUG_JUMP_BUILDING S_B_BUS_STATION
+#define DEBUG_JUMP_BUILDING 0
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
@@ -347,8 +347,8 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.inventory[S_INVENTORY_COCAINE] = 49U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 49U;
-    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
-    game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
+    //game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
+    //game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
@@ -1937,13 +1937,20 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U)
                 {
-                    if (menu_state.current_item_y == 1U)  // Handgun
+                    if (menu_state.current_item_y == 0U)  // Bullets
+                    {
+                        // Attempt to purchase item
+                        purchase_item(10U, S_INVENTORY_AMMO);
+                    }
+                    else if (menu_state.current_item_y == 1U)  // Handgun
                     {
                         // Attempt to purchase item
                         if (purchase_item(400U, S_INVENTORY_HAND_GUN))
                         {
                             // Remove from menu, if successful and reload menu tiles
                             menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                            // Add bullets to menu
+                            menu_config->items[0U] = MENU_ITEM_INDEX_BULLETS;
                             load_menu_tiles();
                             move_menu_to_exit();
                         }
