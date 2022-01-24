@@ -9,6 +9,7 @@
 
 #include "menu_config.h"
 #include "main.h"
+#include "window_text.h"
 
 // MENU ITEMS
 
@@ -1527,3 +1528,121 @@ void set_menu_item_color(unsigned char palette)
     }
     VBK_REG = 0;
 }
+
+/*
+ * apply_for_job_promotion
+ * 
+ * Check for intelligence and promote job at NLI
+ */
+void apply_for_job_promotion(game_state_t *game_state, menu_config_t *menu_config, menu_config_t *menu_config_restaurant)
+{
+    // Check current if applying for job
+    if (menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB)
+    {
+        if (game_state->intelligence >= 20U)
+        {
+            menu_config_restaurant->items[3U] = MENU_ITEM_INDEX_EMPTY;
+            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+            modify_karma(1);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_jan, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR)
+    {
+        if (game_state->intelligence >= 40U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
+            modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_mail, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK)
+    {
+        if (game_state->intelligence >= 75U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
+            modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_sales, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN)
+    {
+        if (game_state->intelligence >= 120U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
+            modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_exec, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE)
+    {
+        if (game_state->intelligence >= 180U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
+            modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_vp, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP)
+    {
+        if (game_state->intelligence >= 250U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
+            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+            modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U, ROM_BANK_MENU_CONFIG);
+            main_show_window_text(&win_txt_nli_ceo, ROM_BANK_MENU_CONFIG);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_MENU_CONFIG);
+        }
+    }
+    else
+    {
+        // If no job available, return early
+        return;
+    }
+
+    // Reload menu to cover message
+    setup_building_menu(1, ROM_BANK_MENU_CONFIG);
+}
+

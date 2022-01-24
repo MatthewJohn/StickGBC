@@ -1961,7 +1961,7 @@ void update_state()
                     if (menu_state.current_item_y == 2U)
                     {
                         // Check if applying for job
-                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        ROM_BANK_MENU_CONFIG_SWITCH;
                         apply_for_job_promotion(&game_state, menu_config, &menu_config_restaurant);
                         ROM_BANK_RESET;
                     }
