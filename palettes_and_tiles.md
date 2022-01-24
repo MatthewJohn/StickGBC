@@ -20,11 +20,7 @@
     * 1 - 
     * 2 - 
     * 3 -
- 4.
-    * 0 - 
-    * 1 - 
-    * 2 - 
-    * 3 - 
+ 4. scratch for building 0 - bus
  5. scratch for building 1 - bus station/Bar
  6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
@@ -80,7 +76,7 @@
 13. Car diagonal back
 
 
-## Building map tiles
+## Building map tiles (1)
 
  0. Background
  1. Border corner
@@ -211,6 +207,73 @@
  126. -
  127. D
  
+ ## Building map tiles (2)
+
+ 0. Background
+ 1. Border corner
+ 2. Border top
+ 3. Border side
+ 4. Ex
+ 5. it
+ 6. SE
+ 7. LL
+ 8.  G
+ 9. OO
+ 10. DS
+ 11. BR
+ 12. KL
+ 13. YN
+ 14. CH
+ 15. IC
+ 16. AG
+ 17. O
+ 18. DE
+ 19. TR
+ 20. OI
+ 21. T
+ 22. CA
+ 23. MD
+ 24. EN
+ 25. LO
+ 26. S
+ 27. AN
+ 28. GE
+ 29. LE
+ 30. LA
+ 31. VE
+ 32. GA
+
+ 98. Clock face
+ 99. Colon
+ 100. 0
+ 101. 1
+ 102. 2
+ 103. 3
+ 104. 4
+ 105. 5
+ 106. 6
+ 107. 7
+ 108. 8
+ 109. 9
+ 110. $
+ 111. HP
+ 112. /HR
+ 113. DA
+ 114. YS
+ 115. /
+ 116. IN
+ 117. TE
+ 118. LL
+ 119. IG
+ 120. EN
+ 121. CE
+ 122. ST
+ 123. RE
+ 124. NG
+ 125. TH
+ 126. -
+ 127. D
+
 
 ## Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
@@ -266,3 +329,12 @@
  - 49 - Bar Neon sign base
  - 50 - Bar Side sign 1
  - 51 - Bar Side sign 2
+ - 52 - Bus wheel
+ - 53 - Bus side
+ - 54 - Bus  back
+ - 55 - Bus back left
+ - 56 - Top/left line border (used by bus)
+ - 57 - Bus depot sign 1
+ - 58 - Bus depot sign 2
+ - 59 - Bus depot sign 3
+ - 60 - Bus depot sign 4

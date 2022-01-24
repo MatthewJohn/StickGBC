@@ -6,7 +6,7 @@
 
 /*
 
- MAIN_MAP_TILESET.H
+ WINDOW_TEXT_TILES.H
 
  Include File.
 
@@ -16,7 +16,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 60
+  Tiles                : 0 to 127
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -30,10 +30,10 @@
 
 
 /* Bank of tiles. */
-#define mainmaptilesBank 0
+#define windowtexttilesBank 0
 /* CGBpalette entries. */
-extern const unsigned char mainmaptilesCGB[];
+extern const unsigned char windowtexttilesCGB[];
 /* Start of tile array. */
-extern const unsigned char mainmaptiles[];
+extern const unsigned char windowtexttiles[];
 
-/* End of MAIN_MAP_TILESET.H */
+/* End of WINDOW_TEXT_TILES.H */
