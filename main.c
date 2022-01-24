@@ -44,7 +44,7 @@
 #include "main.h"
 
 // Debug definitions
-#define DEBUG_JUMP_BUILDING S_B_BUS_STATION
+#define DEBUG_JUMP_BUILDING 0
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 1
@@ -1321,15 +1321,14 @@ void apply_for_job_promotion()
             menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
             modify_karma(1);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_jan, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR)
@@ -1338,15 +1337,14 @@ void apply_for_job_promotion()
         {
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
             modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_mail, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK)
@@ -1355,15 +1353,14 @@ void apply_for_job_promotion()
         {
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
             modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_sales, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN)
@@ -1372,15 +1369,14 @@ void apply_for_job_promotion()
         {
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
             modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_exec, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE)
@@ -1389,15 +1385,14 @@ void apply_for_job_promotion()
         {
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
             modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_vp, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP)
@@ -1407,15 +1402,14 @@ void apply_for_job_promotion()
             menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
             menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
             modify_karma(3);
+            // Select 'work' item for new job
+            move_to_menu_item(1U, 3U);
+            main_show_window_text(&win_txt_nli_ceo, ROM_BANK_DEFAULT);
         }
         else
         {
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-            // Reload menu to cover message
-            setup_building_menu(1);
-            // Return to stop moving to 'work' item
-            return;
         }
     }
     else
@@ -1424,11 +1418,8 @@ void apply_for_job_promotion()
         return;
     }
 
-    // Update menu with tiles for new job
-    load_menu_tiles();
-
-    // Select 'work' item for new job
-    move_to_menu_item(1U, 3U);
+    // Reload menu to cover message
+    setup_building_menu(1);
 }
 
 void do_nli_work()
