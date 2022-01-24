@@ -1034,15 +1034,6 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     // Scroll to top-left
     move_bkg(0, 0);
 
-    // Show pre-menu message
-    if (game_state.current_building == S_B_SKATER)
-    {
-        DISPLAY_ON;
-        main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
-        DISPLAY_OFF;
-        set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
-    }
-
     load_menu_tiles();
 
     // Highlight currently selected item
@@ -1101,6 +1092,10 @@ void check_building_enter()
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
+        // Show pre-menu message
+        main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
+        // Reload menu
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
