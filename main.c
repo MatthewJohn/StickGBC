@@ -47,7 +47,7 @@
 #define DEBUG_JUMP_BUILDING 0
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
-#define DEBUG_DISABLE_AI_MOVEMENT 1
+#define DEBUG_DISABLE_AI_MOVEMENT 0
 
 UBYTE * debug_address;
 
@@ -1037,14 +1037,22 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     // Highlight currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
-    SWITCH_RAM_MBC5(return_bank);
+    ROM_BANK_RESET;
 
     DISPLAY_ON;
+
+    // Show pre-menu message
+    if (game_state.current_building == S_B_SKATER)
+    {
+        main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
+    }
 
     // Set last_movement_time to current systime, allowing user to
     // immediately select an item, in case it has been set to the future by
     // another method
     game_state.last_movement_time = sys_time;
+
+    SWITCH_RAM_MBC5(return_bank);
 }
 
 // Attempt to 'enter' a building if user is in
