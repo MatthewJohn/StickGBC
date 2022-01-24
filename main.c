@@ -915,7 +915,7 @@ void load_menu_tiles() NONBANKED
     }
 }
 
-void setup_building_menu(UINT8 menu_number)
+void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
 {
     DISPLAY_OFF;
     // Update globals for references to map/tile information
@@ -1037,7 +1037,7 @@ void setup_building_menu(UINT8 menu_number)
     // Highlight currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
-    ROM_BANK_RESET;
+    SWITCH_RAM_MBC5(return_bank);
 
     DISPLAY_ON;
 
@@ -1060,65 +1060,65 @@ void check_building_enter()
     if (tile_itx == 0x321U)
     {
         game_state.current_building = S_B_HOUSE;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     // Check for entering restaurant
     else if (tile_itx == 0x76D)
     {
         game_state.current_building = S_B_RESTAURANT;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     // Check for entering shop, through either door
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     // Check for entering pawn shop
     else if (tile_itx == 0xDF1U)
     {
         game_state.current_building = S_B_PAWN;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
     {
         game_state.current_building = S_B_UNIVERSITY;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
     {
         game_state.current_building = S_B_NLI;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
     {
         game_state.current_building = S_B_DEALER;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
     {
         game_state.current_building = S_B_BAR;
-        setup_building_menu(1U);
+        setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
     else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
     {
         game_state.current_building = S_B_BUS_STATION;
-        setup_building_menu(2U);
+        setup_building_menu(2U, ROM_BANK_DEFAULT);
     }
 
 #if IN_TESTING && DEBUG_JUMP_BUILDING
     game_state.current_building = DEBUG_JUMP_BUILDING;
-    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER);
+    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
     return;
 #endif
 }
@@ -1166,7 +1166,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     }
 }
 
-void modify_karma(INT8 karma_change)
+void modify_karma(INT8 karma_change) NONBANKED
 {
     game_state.karma += karma_change;
 }
@@ -1293,8 +1293,12 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_RESET;
 }
 
-// Move selected menu item to new value and update highlighting
-void move_to_menu_item(UINT8 new_x, UINT8 new_y)
+/*
+ * move_to_menu_item
+ * 
+ * Move selected menu item to new value and update highlighting
+ */
+void move_to_menu_item(UINT8 new_x, UINT8 new_y, unsigned int return_bank) NONBANKED
 {
     // Deselect currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
@@ -1307,119 +1311,7 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
     // Highlight new menu item
     ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
-    ROM_BANK_RESET;
-}
-
-void apply_for_job_promotion()
-{
-    // Check current if applying for job
-    if (menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB)
-    {
-        if (game_state.intelligence >= 20U)
-        {
-            menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
-            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
-            modify_karma(1);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_jan, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR)
-    {
-        if (game_state.intelligence >= 40U)
-        {
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
-            modify_karma(3);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_mail, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK)
-    {
-        if (game_state.intelligence >= 75U)
-        {
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
-            modify_karma(3);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_sales, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN)
-    {
-        if (game_state.intelligence >= 120U)
-        {
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
-            modify_karma(3);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_exec, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE)
-    {
-        if (game_state.intelligence >= 180U)
-        {
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
-            modify_karma(3);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_vp, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP)
-    {
-        if (game_state.intelligence >= 250U)
-        {
-            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
-            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
-            modify_karma(3);
-            // Select 'work' item for new job
-            move_to_menu_item(1U, 3U);
-            main_show_window_text(&win_txt_nli_ceo, ROM_BANK_DEFAULT);
-        }
-        else
-        {
-            // Show unsuccessful message
-            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
-        }
-    }
-    else
-    {
-        // If no job available, return early
-        return;
-    }
-
-    // Reload menu to cover message
-    setup_building_menu(1);
+    SWITCH_RAM_MBC5(return_bank);
 }
 
 void do_nli_work()
@@ -1451,14 +1343,14 @@ void do_nli_work()
 // Move current menu item to exit
 void move_menu_to_exit()
 {
-    move_to_menu_item(1U, 0U);
+    move_to_menu_item(1U, 0U, ROM_BANK_DEFAULT);
 }
 
 // Show stats screen
 void show_stats_screen() NONBANKED
 {
     game_state.current_building = S_B_STATS;
-    setup_building_menu(1U);
+    setup_building_menu(1U, ROM_BANK_DEFAULT);
 
     // Update tiles for each of the stats to display the current values
 
@@ -1539,7 +1431,7 @@ void show_inventory_screen() NONBANKED
             break;
     }
 
-    setup_building_menu(1U);
+    setup_building_menu(1U, ROM_BANK_DEFAULT);
 
     // Iterate over item quantites and print to screen
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -1813,7 +1705,7 @@ void update_state()
                 // This will update item and mean that any checks against new_menu_x vs state will show
                 // them as equal
                 if (IS_MENU_ITEM_ENABLED(new_menu_x + (menu_state.current_item_y * MENU_MAX_ITEMS_X)))
-                    move_to_menu_item(new_menu_x, menu_state.current_item_y);
+                    move_to_menu_item(new_menu_x, menu_state.current_item_y, ROM_BANK_DEFAULT);
                 else
                     attempting_x_move = 1U;
             }
@@ -1827,7 +1719,7 @@ void update_state()
                 for (itx = itx_start; itx != MENU_MAX_ITEMS_Y; itx ++)
                     if (IS_MENU_ITEM_ENABLED(new_menu_x + (itx * MENU_MAX_ITEMS_X)))
                     {
-                        move_to_menu_item(new_menu_x, itx);
+                        move_to_menu_item(new_menu_x, itx, ROM_BANK_DEFAULT);
                         attempting_x_move = 0U;
                         break;
                     }
@@ -1839,7 +1731,7 @@ void update_state()
                 for (itx = menu_state.current_item_y; itx != 0U; itx --)
                     if (IS_MENU_ITEM_ENABLED(new_menu_x + ((itx - 1U) * MENU_MAX_ITEMS_X)))
                     {
-                        move_to_menu_item(new_menu_x, itx - 1U);
+                        move_to_menu_item(new_menu_x, itx - 1U, ROM_BANK_DEFAULT);
                         break;
                     }
             }
@@ -2069,7 +1961,9 @@ void update_state()
                     if (menu_state.current_item_y == 2U)
                     {
                         // Check if applying for job
-                        apply_for_job_promotion();
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        apply_for_job_promotion(&game_state, menu_config, &menu_config_restaurant);
+                        ROM_BANK_RESET;
                     }
                     else if (menu_state.current_item_y == 3U)
                     {
