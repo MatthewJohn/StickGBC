@@ -48,14 +48,16 @@ void show_window_text(UINT8 *text)
 
     while (1)
     {
+        character_number = text[text_index];
+
         // Check if reached end of text
-        if (text[text_index] == WINDOW_TEXT_END)
+        if (character_number == WINDOW_TEXT_END)
         {
             break;
         }
 
-        character_number = text[text_index];
-        show_window_character(text[text_index], itx_x, itx_y);
+        if (character_number != WINDOW_TEXT_SKIP)
+            show_window_character(character_number, itx_x, itx_y);
 
         if (itx_x == (SCREEN_WIDTH_TILES - 1U))
         {

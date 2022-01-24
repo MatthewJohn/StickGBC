@@ -8,7 +8,8 @@
 
 #include "gb.h"
 
-#define WINDOW_TEXT_END 40U
+#define WINDOW_TEXT_SKIP 40U
+#define WINDOW_TEXT_END 41U
 
 extern const UINT8 win_txt_bus_statn_no_mon[];
 extern const UINT8 win_txt_bus_statn_no_deal[];
