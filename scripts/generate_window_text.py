@@ -19,7 +19,13 @@ messages = {
         'beer_deal': 'You\'ve arrived in the city and have received an offer of    $===== for == beer... Do you accept? A to accept. B to decline',
     },
     'nli': {
-        'no_int': 'Thank you for applying. Unfortunately, you failed the aptitude test. Better luck next time!'
+        'no_int': 'Thank you for applying. Unfortunately, you failed the aptitude test. Better luck next time!',
+        'jan': 'Congratulations! You are now a: JANITOR. Your wage is now $8 per hour.',
+        'mail': 'Congratulations! You are now a: MAIL CLERK. Your wage is now $10 per hour.',
+        'sales': 'Congratulations! You are now a: SALESMAN. Your wage is now $15 per hour.',
+        'exec': 'Congratulations! You are now a: EXECUTIVE. Your wage is now $25 per hour.',
+        'vp': 'Congratulations! You are now a: VP. Your wage is now $50 per hour.',
+        'ceo': 'Congratulations! You are now a: CEO. Your wage is now $100 per hour.',
     }
 }
 
