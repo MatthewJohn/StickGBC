@@ -149,5 +149,6 @@ extern menu_config_t menu_config_bus_station;
 
 // Methods for menu
 void set_menu_item_color(unsigned char palette);
+void apply_for_job_promotion(game_state_t *game_state, menu_config_t *menu_config, menu_config_t *menu_config_restaurant);
 
 #endif
