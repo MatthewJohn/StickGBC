@@ -817,7 +817,6 @@ void setup_main_map()
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
-    move_bkg(0, 0);
 
     // Reset VBK_REG
     VBK_REG = 0;
@@ -1031,6 +1030,18 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     HIDE_SPRITES;
     // Reload background tiles
     set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
+    
+    // Scroll to top-left
+    move_bkg(0, 0);
+
+    // Show pre-menu message
+    if (game_state.current_building == S_B_SKATER)
+    {
+        DISPLAY_ON;
+        main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
+        DISPLAY_OFF;
+        set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
+    }
 
     load_menu_tiles();
 
@@ -1040,12 +1051,6 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     ROM_BANK_RESET;
 
     DISPLAY_ON;
-
-    // Show pre-menu message
-    if (game_state.current_building == S_B_SKATER)
-    {
-        main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
-    }
 
     // Set last_movement_time to current systime, allowing user to
     // immediately select an item, in case it has been set to the future by
@@ -1494,6 +1499,7 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
+    UINT8 rnd;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1951,13 +1957,31 @@ void update_state()
                         {
                             game_state.hour += 1U;
                             game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
-                            game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window();
                             ROM_BANK_RESET;
-
+                            
                             // Decrease karma
                             modify_karma(-2);
+                            
+                            if (game_state.inventory[S_INVENTORY_SKATEBOARD])
+                            {
+                                rnd = sys_time % 4;
+                                if (rnd == 0U)
+                                    main_show_window_text(&win_txt_skater_thx_1, ROM_BANK_DEFAULT);
+                                else if (rnd == 1U)
+                                    main_show_window_text(&win_txt_skater_thx_2, ROM_BANK_DEFAULT);
+                                else if (rnd == 2U)
+                                    main_show_window_text(&win_txt_skater_thx_3, ROM_BANK_DEFAULT);
+                                else
+                                    main_show_window_text(&win_txt_skater_thx_4, ROM_BANK_DEFAULT);
+                            }
+                            else
+                            {
+                                game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                                main_show_window_text(&win_txt_skater_give, ROM_BANK_DEFAULT);
+                            }
+                            setup_building_menu(1U, ROM_BANK_DEFAULT);
                         }
                     }
                 }
