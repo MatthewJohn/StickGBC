@@ -16,6 +16,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     UINT8 rnd_3 = sys_time % 3;
     BOOLEAN no_deal;
     UINT8 offer_text[13];
+    UINT8 item_selection = sys_time % 2;
+    UINT8 strength_modulus;
 
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
@@ -27,26 +29,40 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     if (menu_state->current_item_x == 0U && menu_state->current_item_y == 1U)  // Brooklyn
     {
         cost = 115U;
+        strength_modulus = 125U;
     }
     else if (menu_state->current_item_x == 1U && menu_state->current_item_y == 1U)  // Chicago
     {
         cost = 115U;
+        strength_modulus = 125U;
+        // Always sell beer
+        item_selection = 0U;
     }
     else if (menu_state->current_item_x == 0U && menu_state->current_item_y == 2U)  // Detroit
     {
         cost = 100U;
+        strength_modulus = 150U;
+        // Always sell cocaine
+        item_selection = 1U;
     }
     else if (menu_state->current_item_x == 1U && menu_state->current_item_y == 2U)  // Camden
     {
         cost = 130U;
+        strength_modulus = 110U;
+        // Always sell beer
+        item_selection = 0U;
     }
     else if (menu_state->current_item_x == 0U && menu_state->current_item_y == 3U)  // LA
     {
         cost = 100U;
+        strength_modulus = 150U;
+        // Always sell cocaine
+        item_selection = 1U;
     }
     else if (menu_state->current_item_x == 1U && menu_state->current_item_y == 3U)  // Vegas
     {
         cost = 130U;
+        strength_modulus = 110U;
     }
 
     // Check if user has enough money
@@ -93,7 +109,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     }
 
     // If strength is lower than random number between 100-225...
-    if ((100 + (sys_time % 125)) > game_state->strength)
+    if ((100 + (sys_time % strength_modulus)) > game_state->strength)
     {
         // Lose cocaine, booze and money
         game_state->balance = 0;
@@ -148,7 +164,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // SELL!
 
     // Half chance of selling cocaine or booze
-    if (sys_time % 2 == 0U)
+    if (item_selection == 0U)
     {
         // Selling booze
         offer = game_state->charm / 6U;
