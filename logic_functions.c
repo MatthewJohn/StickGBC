@@ -15,7 +15,6 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     UINT16 offer;
     UINT8 rnd_3 = sys_time % 3;
     BOOLEAN no_deal;
-    UINT8 offer_text[13];
     UINT8 item_selection = sys_time % 2;
     UINT8 strength_modulus;
     UINT8 max_product = 50U;
