@@ -198,7 +198,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             // Write offer values to screen
             main_show_number(0, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
             main_show_number(
-                10, 3, 4,
+                10, 3, 2,
                 ((unsigned int)game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] & 0xFFU),
                 ROM_BANK_LOGIC_FUNCTIONS
             );
@@ -250,7 +250,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             // Write offer values to screen
             main_show_number(0, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
             main_show_number(
-                10, 3, 4,
+                10, 3, 2,
                 ((unsigned int)game_state->inventory[S_INVENTORY_COCAINE] & 0xFFU),
                 ROM_BANK_LOGIC_FUNCTIONS
             );
