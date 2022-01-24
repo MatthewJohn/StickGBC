@@ -174,14 +174,18 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             no_deal = 1U;
         else
         {
-            offer = game_state->inventory[S_INVENTORY_COCAINE]  * offer;
+            offer = game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER]  * offer;
 
             // Update window before showing offer
             main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
             // Write offer values to screen
-            main_show_number(1, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
-            main_show_number(10, 3, 5, (unsigned int)game_state->inventory[S_INVENTORY_COCAINE], ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(0, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(
+                10, 3, 4,
+                ((unsigned int)game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] & 0xFFU),
+                ROM_BANK_LOGIC_FUNCTIONS
+            );
 
             // Request user input for offer
             main_show_window_text(&win_txt_bus_statn_beer_deal, ROM_BANK_LOGIC_FUNCTIONS);
@@ -228,8 +232,12 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
             // Write offer values to screen
-            main_show_number(1, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
-            main_show_number(10, 3, 5, game_state->inventory[S_INVENTORY_COCAINE], ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(0, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(
+                10, 3, 4,
+                ((unsigned int)game_state->inventory[S_INVENTORY_COCAINE] & 0xFFU),
+                ROM_BANK_LOGIC_FUNCTIONS
+            );
 
             // Request user input for offer
             main_show_window_text(&win_txt_bus_statn_coke_deal, ROM_BANK_LOGIC_FUNCTIONS);

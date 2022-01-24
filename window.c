@@ -57,6 +57,12 @@ UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int v
         // Display current digit
         set_bkg_tiles(itx_x, start_y, 1, 1, &tile_data);
 
+        VBK_REG = 1;
+        // Mark as using palette 1 and high bank of tiles
+        tile_data = 0x1;
+        set_bkg_tiles(itx_x, start_y, 1, 1, &(tile_data));
+        VBK_REG = 0;
+
         // Prepare for next digit
         itx_x -= 1U;
     }
