@@ -37,6 +37,12 @@ letter_lookup[' '] = '0U'
 letter_lookup['.'] = '37U'
 letter_lookup[','] = '38U'
 letter_lookup['!'] = '39U'
+letter_lookup['$'] = '40U'
+letter_lookup['\''] = '41U'
+letter_lookup['*'] = '42U'
+letter_lookup['?'] = '43U'
+letter_lookup['-'] = '44U'
+letter_lookup[';'] = '45U'
 
 # Character to leave space blank
 letter_lookup['='] = 'WINDOW_TEXT_SKIP'
@@ -49,8 +55,8 @@ h_file.write("""
 
 #include "gb.h"
 
-#define WINDOW_TEXT_SKIP 40U
-#define WINDOW_TEXT_END 41U
+#define WINDOW_TEXT_SKIP 46U
+#define WINDOW_TEXT_END 47U
 
 """)
 
