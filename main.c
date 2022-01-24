@@ -1313,56 +1313,110 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y)
 void apply_for_job_promotion()
 {
     // Check current if applying for job
-    if (
-        menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB &&
-        game_state.intelligence >= 20U
-    )
+    if (menu_config->items[MENU_NLI_PROMOTION_ITEM] == MENU_ITEM_INDEX_APPLY_FOR_JOB)
     {
-        menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
-        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
-        modify_karma(1);
+        if (game_state.intelligence >= 20U)
+        {
+            menu_config_restaurant.items[3U] = MENU_ITEM_INDEX_EMPTY;
+            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_APPLY_FOR_PROMOTION;
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_JANITOR;
+            modify_karma(1);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
-    else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR &&
-        game_state.intelligence >= 40U
-    )
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_JANITOR)
     {
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
-        modify_karma(3);
+        if (game_state.intelligence >= 40U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_MAIL_CLERK;
+            modify_karma(3);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
-    else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK &&
-        game_state.intelligence >= 75U
-    )
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_MAIL_CLERK)
     {
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
-        modify_karma(3);
+        if (game_state.intelligence >= 75U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_SALESMAN;
+            modify_karma(3);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
-    else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN &&
-        game_state.intelligence >= 120U
-    )
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_SALESMAN)
     {
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
-        modify_karma(3);
+        if (game_state.intelligence >= 120U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_EXECUTIVE;
+            modify_karma(3);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
-    else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE &&
-        game_state.intelligence >= 180U
-    )
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_EXECUTIVE)
     {
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
-        modify_karma(3);
+        if (game_state.intelligence >= 180U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_VP;
+            modify_karma(3);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
-    else if (
-        menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP &&
-        game_state.intelligence >= 250U
-    )
+    else if (menu_config->items[MENU_NLI_WORK_ITEM] == MENU_ITEM_INDEX_WORK_VP)
     {
-        menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
-        menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
-        modify_karma(3);
+        if (game_state.intelligence >= 250U)
+        {
+            menu_config->items[MENU_NLI_WORK_ITEM] = MENU_ITEM_INDEX_WORK_CEO;
+            menu_config->items[MENU_NLI_PROMOTION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+            modify_karma(3);
+        }
+        else
+        {
+            // Show unsuccessful message
+            main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
+            // Reload menu to cover message
+            load_menu_tiles();
+            // Return to stop moving to 'work' item
+            return;
+        }
     }
     else
     {

@@ -11,6 +11,7 @@
 #define WINDOW_TEXT_SKIP 46U
 #define WINDOW_TEXT_END 47U
 
+extern const UINT8 win_txt_nli_no_int[];
 extern const UINT8 win_txt_bus_statn_no_mon[];
 extern const UINT8 win_txt_bus_statn_no_deal[];
 extern const UINT8 win_txt_bus_statn_no_phone[];
