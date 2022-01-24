@@ -35,6 +35,8 @@
 #define MENU_TILE_GH 0x10
 // 17 SL
 #define MENU_TILE_SL 0x11
+// 18 ET
+#define MENU_TILE_ET 0x12
 // 19 P
 #define MENU_TILE_P 0x13
 // 20 KA
