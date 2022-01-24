@@ -1327,7 +1327,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
@@ -1344,7 +1344,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
@@ -1361,7 +1361,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
@@ -1378,7 +1378,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
@@ -1395,7 +1395,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
@@ -1413,7 +1413,7 @@ void apply_for_job_promotion()
             // Show unsuccessful message
             main_show_window_text(&win_txt_nli_no_int, ROM_BANK_DEFAULT);
             // Reload menu to cover message
-            load_menu_tiles();
+            setup_building_menu(1);
             // Return to stop moving to 'work' item
             return;
         }
