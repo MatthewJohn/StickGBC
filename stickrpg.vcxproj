@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Demo|Win32">
+      <Configuration>Demo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="main|Win32">
+      <Configuration>main</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{336D12E6-D00C-4CDE-ADFD-51C3466FE36D}</ProjectGuid>
+    <RootNamespace>stickrpg</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='main|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='main|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\include;$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\include;$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\</IntDir>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">..\..\include;$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">$(SolutionDir)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">$(SolutionDir)\</IntDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">*.o;*.map;*.lst;*.i;*.asm</ExtensionsToDeleteOnClean>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='main|Win32'">..\..\include;$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='main|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='main|Win32'">$(Configuration)\</IntDir>
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='main|Win32'">*.o%3b*.map%3b*.lst%3b*.i%3b*.asm%3b$()</ExtensionsToDeleteOnClean>
+    <ExecutablePath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">$(ExecutablePath)</ExecutablePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">..\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">..\..\include;$(LibraryPath)</LibraryPath>
+    <SourcePath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">$(SourcePath)</SourcePath>
+    <ExcludePath Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'" />
+    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">*.o;*.map;*.lst;*.i;*.asm</ExtensionsToDeleteOnClean>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\include;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|Win32'">
+    <PreBuildEvent>
+      <Command>cmd /C ""C:\Program Files\Git\bin\bash" -c %27make demo%27"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='main|Win32'">
+    <PreBuildEvent>
+      <Command>cmd /C ""C:\Program Files\Git\bin\bash" -c %27make clean all%27"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>cmd /C ""C:\Program Files\Git\bin\bash" -c %27make all%27"</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="background_time_colors.c" />
+    <ClCompile Include="building_menu_map.c" />
+    <ClCompile Include="building_menu_palette.c" />
+    <ClCompile Include="building_menu_tiles.c" />
+    <ClCompile Include="game_state.c" />
+    <ClCompile Include="joy.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="main_game.c" />
+    <ClCompile Include="main_map.c" />
+    <ClCompile Include="main_map_boundaries.c" />
+    <ClCompile Include="main_map_palette.c" />
+    <ClCompile Include="main_map_sprite_palette.c" />
+    <ClCompile Include="main_map_sprite_tileset.c" />
+    <ClCompile Include="main_map_tileset.c" />
+    <ClCompile Include="menu_config.c" />
+    <ClCompile Include="opening_screen.c" />
+    <ClCompile Include="opening_screen_map.c" />
+    <ClCompile Include="opening_screen_palette.c" />
+    <ClCompile Include="opening_screen_tiles.c" />
+    <ClCompile Include="screen_state.c" />
+    <ClCompile Include="sprite.c" />
+    <ClCompile Include="window.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="background_time_colors.h" />
+    <ClInclude Include="building_menu_map.h" />
+    <ClInclude Include="building_menu_palette.h" />
+    <ClInclude Include="building_menu_tiles.h" />
+    <ClInclude Include="game_constants.h" />
+    <ClInclude Include="game_state.h" />
+    <ClInclude Include="gb.h" />
+    <ClInclude Include="joy.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="main_game.h" />
+    <ClInclude Include="main_map.h" />
+    <ClInclude Include="main_map_boundaries.h" />
+    <ClInclude Include="main_map_palette.h" />
+    <ClInclude Include="main_map_sprite_palette.h" />
+    <ClInclude Include="main_map_sprite_tileset.h" />
+    <ClInclude Include="main_map_tileset.h" />
+    <ClInclude Include="menu_config.h" />
+    <ClInclude Include="menu_tile_index.h" />
+    <ClInclude Include="opening_screen.h" />
+    <ClInclude Include="opening_screen_map.h" />
+    <ClInclude Include="opening_screen_palette.h" />
+    <ClInclude Include="opening_screen_tiles.h" />
+    <ClInclude Include="sprite.h" />
+    <ClInclude Include="window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="palettes_and_tiles.md" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,4 +1,8 @@
 
+## 2
+
+ * logic_functions.c
+
 ## 3
  * Building menu tiles
  * Building menu map
@@ -31,3 +35,7 @@
  * Opening screen map
  * Opening screen palette
  * Control/stat selection screen map
+
+## 8
+ * window_text.c - window status text and functions
+ 

@@ -17,8 +17,10 @@
 #include "main_map_palette.h"
 #include "main_map_boundaries.h"
 #include "main_game.h"
+#include "logic_functions.h"
 
 #include "building_menu_tiles.h"
+#include "building_menu_tiles_2.h"
 #include "building_menu_map.h"
 #include "building_menu_palette.h"
 
@@ -36,11 +38,16 @@
 #include "window.h"
 #include "sprite.h"
 #include "joy.h"
+#include "window_text.h"
+#include "window_text_data.h"
 
 #include "main.h"
 
 // Debug definitions
-#define JUMP_BUILDING 0
+#define DEBUG_JUMP_BUILDING S_B_BUS_STATION
+#define DEBUG_JUMP_BUILDING_NUMBER 2
+#define DEBUG_BOUNDARIES 0
+#define DEBUG_DISABLE_AI_MOVEMENT 1
 
 UBYTE * debug_address;
 
@@ -49,7 +56,7 @@ UBYTE tile_data[1];
 UWORD word_data[4];
 
 // Storage for scratch palette data
-UWORD scratch_palette_data[3][4];
+UWORD scratch_palette_data[4][4];
 
 joypad_state_t joypad_state;
 
@@ -338,14 +345,25 @@ void setup_globals()
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
+    game_state.inventory[S_INVENTORY_COCAINE] = 49U;
+    game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 49U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
+    game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
+    game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
     game_state.balance = 1000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
+    game_state.strength = 250U;
+    game_state.charm = 99U;
+    game_state.hour = 0;
 #endif
 }
 
 void update_ai_positions()
 {
+#if IN_TESTING && DEBUG_DISABLE_AI_MOVEMENT
+    return;
+#endif
     ROM_BANK_SPRITE_SWITCH;
     move_ai_sprite(&screen_state, &skater_sprite);
     move_ai_sprite(&screen_state, &dealer_sprite);
@@ -388,7 +406,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
            itx_x ++)
     {
 
-#ifdef DEBUG_SET_BACKGROUND_SKIP
+#if IN_TESTING && DEBUG_SET_BACKGROUND_SKIP
         // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
         if (itx_x == 0x10U)
             break;
@@ -401,7 +419,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             // Temp Test
             current_tile_itx = ((itx_y) * screen_state.background_width) + itx_x;
 
-#ifdef DEBUG_SET_BACKGROUND_SKIP
+#if IN_TESTING && DEBUG_SET_BACKGROUND_SKIP
             // TEMP HACK TO NOT DRAW MOST OF BACKGROUND IN VRAM
             if (itx_y == 0x10U)
                 break;
@@ -420,7 +438,16 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -444,6 +471,15 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
+
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             // Set palette data in VBK_REG1 for tile
             set_bkg_tiles(
@@ -544,7 +580,17 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
+
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -565,6 +611,15 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             if (screen_state.background_tile_map[current_tile_palette_itx] & 0x10)
                 tile_data[0] |= S_FLIPX;
             ROM_BANK_RESET;
+
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             VBK_REG = 1;
 
@@ -601,7 +656,16 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
-           VBK_REG = 0;
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Random tile
+                tile_data[0] = 0x06;
+            ROM_BANK_RESET;
+#endif
+
+            VBK_REG = 0;
             // Set map data
             set_bkg_tiles(
                 itx_x & BACKGROUND_BUFFER_MAX_X,
@@ -623,6 +687,15 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
                 tile_data[0] |= S_FLIPX;
 
             ROM_BANK_RESET;
+
+#if IN_TESTING && DEBUG_BOUNDARIES
+            ROM_BANK_TILE_DATA_SWITCH;
+            // Check if tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
+                // Forth palette
+                tile_data[0] = 0x03;
+            ROM_BANK_RESET;
+#endif
 
             VBK_REG = 1;
 
@@ -734,6 +807,13 @@ void setup_main_map()
     game_state.last_movement_time = sys_time;
 }
 
+/*
+ * load_menu_tiles
+ *
+ * Load each of the menu items on to the screen
+ * from the active menu_config, using the
+ * two-letter menu tiles.
+ */
 void load_menu_tiles() NONBANKED
 {
     unsigned int menu_item_itx;
@@ -786,7 +866,7 @@ void load_menu_tiles() NONBANKED
                     set_bkg_data(
                         tile_data_index,
                         1,
-                        &(buildingmenutiles[tile_data_index << 4])
+                        &(screen_state.background_tiles[tile_data_index << 4])
                     );
                     ROM_BANK_RESET;
                 }
@@ -835,12 +915,17 @@ void load_menu_tiles() NONBANKED
     }
 }
 
-void setup_building_menu()
+void setup_building_menu(UINT8 menu_number)
 {
     DISPLAY_OFF;
     // Update globals for references to map/tile information
     screen_state.background_tile_map = buildingmenumap;
-    screen_state.background_tiles = buildingmenutiles;
+
+    if (menu_number == 1U)
+        screen_state.background_tiles = buildingmenutiles;
+    else if (menu_number == 2U)
+        screen_state.background_tiles = buildingmenutiles2;
+
     screen_state.background_width = buildingmenumapWidth;
     screen_state.background_color_palette = building_menu_palette;
 
@@ -936,6 +1021,12 @@ void setup_building_menu()
         menu_state.current_item_x = MENU_SELECTED_ITEM_DISABLED;
         menu_state.current_item_y = MENU_SELECTED_ITEM_DISABLED;
     }
+    else if (game_state.current_building == S_B_BUS_STATION)
+    {
+        menu_config = &menu_config_bus_station;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -969,63 +1060,66 @@ void check_building_enter()
     if (tile_itx == 0x321U)
     {
         game_state.current_building = S_B_HOUSE;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering restaurant
     else if (tile_itx == 0x76D)
     {
         game_state.current_building = S_B_RESTAURANT;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering shop, through either door
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     // Check for entering pawn shop
     else if (tile_itx == 0xDF1U)
     {
         game_state.current_building = S_B_PAWN;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
     {
         game_state.current_building = S_B_UNIVERSITY;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
     {
         game_state.current_building = S_B_NLI;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
     {
         game_state.current_building = S_B_DEALER;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
-        setup_building_menu();
+        setup_building_menu(1U);
     }
     else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
     {
         game_state.current_building = S_B_BAR;
-        setup_building_menu();
+        setup_building_menu(1U);
+    }
+    else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
+    {
+        game_state.current_building = S_B_BUS_STATION;
+        setup_building_menu(2U);
     }
 
-#ifdef IN_TESTING
-#if JUMP_BUILDING
-    game_state.current_building = S_B_RESTAURANT;
-    setup_building_menu();
+#if IN_TESTING && DEBUG_JUMP_BUILDING
+    game_state.current_building = DEBUG_JUMP_BUILDING;
+    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER);
     return;
-#endif
 #endif
 }
 
@@ -1319,7 +1413,7 @@ void move_menu_to_exit()
 void show_stats_screen() NONBANKED
 {
     game_state.current_building = S_B_STATS;
-    setup_building_menu();
+    setup_building_menu(1U);
 
     // Update tiles for each of the stats to display the current values
 
@@ -1400,7 +1494,7 @@ void show_inventory_screen() NONBANKED
             break;
     }
 
-    setup_building_menu();
+    setup_building_menu(1U);
 
     // Iterate over item quantites and print to screen
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -1418,6 +1512,30 @@ void show_inventory_screen() NONBANKED
         }
     }
     ROM_BANK_RESET;
+}
+
+/*
+ * main_show_window_character
+ *
+ * show_window_character wrapper with ROM jumping
+ */
+void main_show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity, unsigned int return_bank)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_character(character_number, itx, ity);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
+/*
+ * main_show_window_text
+ *
+ * show_window_text wrapper with ROM jumping
+ */
+void main_show_window_text(UINT8 *text, unsigned int return_bank)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_text(text);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 // Called per cycle to update background position and sprite
@@ -1979,6 +2097,22 @@ void update_state()
                     menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
                 }
             }
+
+            else if (game_state.current_building == S_B_BUS_STATION)
+            {
+                // If not selecting from top row ('sell goods' or exit),
+                // perform sell_goods_city
+                if (menu_state.current_item_y != 0U)
+                {
+                    ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                    bus_sell_goods(&menu_state, &game_state);
+                    ROM_BANK_RESET;
+
+                    // Return to main map once complete
+                    setup_main_map();
+                    return;
+                }
+            }
         }
         else
         // If not pressing 'a', reset last_movement_time, so that
@@ -2021,13 +2155,38 @@ void check_car_collision()
     }
 }
 
-// Switch to JOY rom and update joypad state
+/*
+ * main_update_window
+ *
+ * update_window wrapper with ROM jumping
+ */
+void main_update_window(unsigned int return_bank)
+{
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    update_window();
+    SWITCH_ROM_MBC5(return_bank);
+}
+
+/*
+ * main_check_joy
+ *
+ * Switch to JOY rom and update joypad state
+ */
 void main_check_joy(unsigned int return_bank)
 {
     ROM_BANK_JOY_CONFIG_SWITCH;
     check_user_input(&joypad_state);
 
     SWITCH_ROM_MBC5(return_bank);
+}
+
+UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value, unsigned int return_bank)
+{
+    UINT8 return_val;
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    return_val = show_number(start_x, start_y, max_digits, value);
+    SWITCH_ROM_MBC5(return_bank);
+    return return_val;
 }
 
 void main()
