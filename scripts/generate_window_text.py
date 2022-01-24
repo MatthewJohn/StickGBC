@@ -17,6 +17,9 @@ messages = {
         'no_deal': 'You\'ve arrived in the city but can\'t find anyone to buy from you.  Better luck next time, chump.',
         'coke_deal': 'You\'ve arrived in the city and have received an offer of    $===== for == cocaine... Do you accept? A to accept. B to decline',
         'beer_deal': 'You\'ve arrived in the city and have received an offer of    $===== for == beer... Do you accept? A to accept. B to decline',
+    },
+    'nli': {
+        'no_int': 'Thank you for applying. Unfortunately, you failed the aptitude test. Better luck next time!'
     }
 }
 
