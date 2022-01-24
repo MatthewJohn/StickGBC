@@ -174,18 +174,21 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
             no_deal = 1U;
         else
         {
+            offer = game_state->inventory[S_INVENTORY_COCAINE]  * offer;
+
             // Update window before showing offer
             main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
             // Write offer values to screen
-            //main_show_number(offer, );
+            main_show_number(1, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(10, 3, 5, (unsigned int)game_state->inventory[S_INVENTORY_COCAINE], ROM_BANK_LOGIC_FUNCTIONS);
 
             // Request user input for offer
             main_show_window_text(&win_txt_bus_statn_beer_deal, ROM_BANK_LOGIC_FUNCTIONS);
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += (game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] * offer);
+                game_state->balance += offer;
                 game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
             }
             no_deal = 0U;
@@ -219,18 +222,21 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         }
         else
         {
+            offer = game_state->inventory[S_INVENTORY_COCAINE]  * offer;
+
             // Update window before showing offer
             main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
-            // Write offer to screen
-
+            // Write offer values to screen
+            main_show_number(1, 3, 5, (unsigned int)offer, ROM_BANK_LOGIC_FUNCTIONS);
+            main_show_number(10, 3, 5, game_state->inventory[S_INVENTORY_COCAINE], ROM_BANK_LOGIC_FUNCTIONS);
 
             // Request user input for offer
             main_show_window_text(&win_txt_bus_statn_coke_deal, ROM_BANK_LOGIC_FUNCTIONS);
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += (game_state->inventory[S_INVENTORY_COCAINE] * offer);
+                game_state->balance += offer;
                 game_state->inventory[S_INVENTORY_COCAINE] = 0U;
             }
             no_deal = 0U;
