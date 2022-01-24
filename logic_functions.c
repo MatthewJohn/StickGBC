@@ -18,6 +18,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     UINT8 offer_text[13];
     UINT8 item_selection = sys_time % 2;
     UINT8 strength_modulus;
+    UINT8 max_product = 50U;
 
     // Check time of day - must be midnight (morning - 0)
     if (game_state->hour != 0)
@@ -30,6 +31,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     {
         cost = 115U;
         strength_modulus = 125U;
+        max_product = 49U;
     }
     else if (menu_state->current_item_x == 1U && menu_state->current_item_y == 1U)  // Chicago
     {
@@ -135,7 +137,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     }
 
     // If player has more than 50 cocaine OR 50 booze, 'go to jail' for 5 days, losing gun, ammo, cocaine, booze
-    if (game_state->inventory[S_INVENTORY_COCAINE] > 50 || game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] > 50)
+    if (game_state->inventory[S_INVENTORY_COCAINE] > max_product || game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] > max_product)
     {
         game_state->days_passed += 5U;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
