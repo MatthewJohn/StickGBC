@@ -15,28 +15,31 @@ messages = {
         'bust': 'Rolling into town with piles of product attacted plenty of attention - from the cops. They confiscate your goods, your gun, and your freedom; You serve the next 5 days in state pen.',
         'bad': 'You meet some new contacts behind an abandoned building. Suddenly you get hit from behind by a blunt object. As you lie on the pavement, you realize what just happened; you\'ve been screwed! Your stash got jacked.',
         'no_deal': 'You\'ve arrived in the city but can\'t find anyone to buy from you.  Better luck next time, chump.',
-        'coke_deal': 'You\'ve arrived in the city and have received the following offer for cocaine... Do you accept? A to accept. B to decline',
-        'beer_deal': 'You\'ve arrived in the city and have received the following offer for beer... Do you accept? A to accept. B to decline',
+        'coke_deal': 'You\'ve arrived in the city and have received an offer of $==== for ==== cocaine... Do you accept? A to accept. B to decline',
+        'beer_deal': 'You\'ve arrived in the city and have received an offer of $==== for ==== beer... Do you accept? A to accept. B to decline',
     }
 }
 
 # Add alphabetic characters
 letter_lookup = {
-    chr(i): (itx + 11)
+    chr(i): str(itx + 11) + 'U'
     for itx, i in enumerate(range(ord('a'), ord('z') + 1))
 }
 # Add numbers
 letter_lookup.update(
     {
-        str(i): i + 1
+        str(i): str(i + 1) + 'U'
         for i in range(0, 10)
     }
 )
 # Add special characters
-letter_lookup[' '] = 0
-letter_lookup['.'] = 37
-letter_lookup[','] = 38
-letter_lookup['!'] = 39
+letter_lookup[' '] = '0U'
+letter_lookup['.'] = '37U'
+letter_lookup[','] = '38U'
+letter_lookup['!'] = '39U'
+
+# Character to leave space blank
+letter_lookup['='] = 'WINDOW_TEXT_SKIP'
 
 # Create file handles
 c_file = open('window_text_data.c', 'w')
@@ -46,7 +49,8 @@ h_file.write("""
 
 #include "gb.h"
 
-#define WINDOW_TEXT_END 40U
+#define WINDOW_TEXT_SKIP 40U
+#define WINDOW_TEXT_END 41U
 
 """)
 
@@ -72,7 +76,7 @@ for area in messages:
             if letter.lower() not in letter_lookup:
                 print('WARNING: Character not found for {0}{1}: {2}'.format(area, message_name, letter.lower()))
             else:
-                c_file.write('    {}U,\n'.format(letter_lookup[letter.lower()]))
+                c_file.write('    {},\n'.format(letter_lookup[letter.lower()]))
 
         # Add terminating character
         c_file.write('    WINDOW_TEXT_END,\n')

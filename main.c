@@ -1514,6 +1514,18 @@ void show_inventory_screen() NONBANKED
 }
 
 /*
+ * main_show_window_character
+ *
+ * show_window_character wrapper with ROM jumping
+ */
+void main_show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity, unsigned int return_bank)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_character(character_number, itx, ity);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
+/*
  * main_show_window_text
  *
  * show_window_text wrapper with ROM jumping
@@ -2165,6 +2177,15 @@ void main_check_joy(unsigned int return_bank)
     check_user_input(&joypad_state);
 
     SWITCH_ROM_MBC5(return_bank);
+}
+
+UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value, unsigned int return_bank)
+{
+    UINT8 return_val;
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    return_val = show_number(start_x, start_y, max_digits, value);
+    SWITCH_ROM_MBC5(return_bank);
+    return return_val;
 }
 
 void main()
