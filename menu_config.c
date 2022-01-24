@@ -12,7 +12,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x37U] = {
+const menu_config_item_t menu_config_items[0x38U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1289,6 +1289,34 @@ const menu_config_item_t menu_config_items[0x37U] = {
             MENU_ITEM_NO_PALETTE,
             MENU_ITEM_NO_PALETTE,
             MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+        },
+    },
+
+    // Bullets
+    {
+        {
+            MENU_TILE_5,
+            MENU_TILE_BU,
+            MENU_TILE_LL,
+            MENU_TILE_ET,
+            MENU_TILE_S,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_TILE_DOLLAR,
+            MENU_TILE_1,
+            MENU_TILE_0,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
