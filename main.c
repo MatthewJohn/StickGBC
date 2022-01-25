@@ -305,6 +305,7 @@ void setup_globals()
     game_state.hobo_intro_shown = 0U;
     game_state.shop_intro_shown = 0U;
     game_state.pawn_intro_shown = 0U;
+    game_state.bar_intro_shown = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -1169,6 +1170,14 @@ void check_building_enter()
     {
         game_state.current_building = S_B_BAR;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
+        if (game_state.bar_intro_shown == 0U)
+        {
+            game_state.bar_intro_shown = 1U;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_bar_int, ROM_BANK_DEFAULT);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_DEFAULT);
+        }
     }
 
     else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
