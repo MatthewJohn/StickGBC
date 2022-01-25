@@ -114,17 +114,17 @@ for area in messages:
         h_file.write('extern const UINT8 win_txt_{}_{}[];\n'.format(area, message_name))
 
         # Add start of array for message
-        c_file.write('const UINT8 win_txt_{}_{}[] = {{\n'.format(area, message_name))
+        c_file.write('const UINT8 win_txt_{}_{}[] = {{\n   '.format(area, message_name))
 
         # Add the tile value for each letter
         for letter in messages[area][message_name]:
             if letter.lower() not in letter_lookup:
                 print('WARNING: Character not found for {0}{1}: {2}'.format(area, message_name, letter.lower()))
             else:
-                c_file.write('    {},\n'.format(letter_lookup[letter.lower()]))
+                c_file.write(' {},'.format(letter_lookup[letter.lower()]))
 
         # Add terminating character
-        c_file.write('    WINDOW_TEXT_END,\n')
+        c_file.write(' WINDOW_TEXT_END,\n')
         c_file.write('};\n\n')
 
 c_file.close()
