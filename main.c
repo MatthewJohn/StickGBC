@@ -817,7 +817,7 @@ void setup_main_map()
  * from the active menu_config, using the
  * two-letter menu tiles.
  */
-void load_menu_tiles() NONBANKED
+void load_menu_tiles(unsigned int return_bank) NONBANKED
 {
     unsigned int menu_item_itx;
 
@@ -915,6 +915,8 @@ void load_menu_tiles() NONBANKED
             }
         }
     }
+
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
@@ -1037,7 +1039,7 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     // Scroll to top-left
     move_bkg(0, 0);
 
-    load_menu_tiles();
+    load_menu_tiles(ROM_BANK_DEFAULT);
 
     // Highlight currently selected item
     ROM_BANK_MENU_CONFIG_SWITCH;
@@ -1183,30 +1185,6 @@ void check_end_game()
 
 }
 
-void purchase_food(UINT8 cost, UINT8 gained_hp)
-{
-    // Breaking the rules using >=, but
-    // only performed when buying an item
-    // and currency is decimal, making very difficult
-    // to do using bit shifting (and at least probably
-    // less CPU intensive)
-    if (HAS_MONEY(cost))
-    {
-        game_state.balance -= cost;
-
-        // If new HP would exeed max HP, limit new HP to difference
-        if (gained_hp >= (game_state.max_hp - game_state.hp))
-            game_state.hp = game_state.max_hp;
-        else
-            // Otherwise, add new HP to HP
-            game_state.hp += gained_hp;
-
-        ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window();
-        ROM_BANK_RESET;
-    }
-}
-
 void modify_karma(INT8 karma_change) NONBANKED
 {
     game_state.karma += karma_change;
@@ -1253,7 +1231,7 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
     }
 }
 
-UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
+UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm, unsigned int return_bank)
 {
     if (
         HAS_MONEY(cost) &&
@@ -1267,7 +1245,7 @@ UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm)
 
         ROM_BANK_BUILDING_MENU_SWITCH;
         update_window();
-        ROM_BANK_RESET;
+        SWITCH_ROM_MBC5(return_bank);
         return 1U;
     }
     return 0U;
@@ -1294,30 +1272,6 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
     }
 }
 
-UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
-{
-    // Breaking the rules using >=, but
-    // only performed when buying an item
-    // and currency is decimal, making very difficult
-    // to do using bit shifting (and at least probably
-    // less CPU intensive)
-
-    if (HAS_MONEY(cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
-    {
-        game_state.balance -= cost;
-        game_state.inventory[inventory_item] += 1U;
-
-        ROM_BANK_BUILDING_MENU_SWITCH;
-        update_window();
-        ROM_BANK_RESET;
-
-        return 0x1U;
-    }
-
-    // If item not purchased, return 0
-    return 0x0U;
-}
-
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 {
     if ((S_HOURS_PER_DAY - game_state.hour) >= number_of_hours)
@@ -1332,6 +1286,17 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     ROM_BANK_BUILDING_MENU_SWITCH;
     update_window();
     ROM_BANK_RESET;
+}
+
+/*
+ * main_do_work
+ *
+ * do_work wrapper with ROM jumping
+ */
+void main_do_work(unsigned int pay_per_hour, unsigned int number_of_hours, unsigned int return_bank)
+{
+    do_work(pay_per_hour, number_of_hours);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 /*
@@ -1379,12 +1344,6 @@ void do_nli_work()
             do_work(100U, 6U);
             break;
     }
-}
-
-// Move current menu item to exit
-void move_menu_to_exit()
-{
-    move_to_menu_item(1U, 0U, ROM_BANK_DEFAULT);
 }
 
 // Show stats screen
@@ -1789,7 +1748,7 @@ void update_state()
             return;
         }
 
-        // Check if moving menu item
+        // Check if selecting menu item
         if (joypad_state.a_pressed)
         {
             // Check if 'exit' selected
@@ -1819,145 +1778,31 @@ void update_state()
             }
 
             // If selected sleep in house
-            if (game_state.current_building == S_B_HOUSE && menu_state.current_item_y == 3U)
+            if (game_state.current_building == S_B_HOUSE)
             {
-                // Set intiial wakeup time
-                game_state.hour = S_HOUR_WAKEUP_NORMAL;
-
-                // Check if user has caffeine
-                if (game_state.inventory[S_INVENTORY_CAFFEINE_PILLS])
-                {
-                    game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
-                    game_state.hour -= S_HOUR_CAFFEINE_TIME_GAIN;
-                }
-
-                // Check if alarm clock is owned
-                if (game_state.inventory[S_INVENTORY_ALARM_CLOCK])
-                {
-                    game_state.hour -= S_HOUR_ALARM_CLOCK_TIME_GAIN;
-                }
-                game_state.days_passed ++;
-                check_end_game();
-
-                DISPLAY_OFF;
-
-                // 'Purchase food' to increase HP by 20
-                purchase_food(0U, 20U);
-
-                ROM_BANK_BUILDING_MENU_SWITCH;
-                update_window();
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_house_menu();
                 ROM_BANK_RESET;
-
-                // Wait for 1 second 1 second
-                delay(DELAY_SLEEP);
-                DISPLAY_ON;
             }
             // Handle menu selections from restaurant
             else if (game_state.current_building == S_B_RESTAURANT)
             {
-                if (menu_state.current_item_x == 0U)
-                {
-                    if (menu_state.current_item_y == 0U)  // Milkshake
-                    {
-                        purchase_food(8U, 12U);
-                    }
-                    else if (menu_state.current_item_y == 1U)  // Fries
-                    {
-                        purchase_food(12U, 20U);
-                    }
-                    else if (menu_state.current_item_y == 2U)  // Cheeseburger
-                    {
-                        purchase_food(25U, 40U);
-                    }
-                    else if (menu_state.current_item_y == 3U)  // Triple Burger
-                    {
-                        purchase_food(50U, 80U);
-                    }
-                }
-                else  // x row 1
-                {
-                    if (menu_state.current_item_y == 1U)  // Work
-                    {
-                        do_work(6U, 6U);
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_restaurant_menu();
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_SHOP)
             {
-                if (menu_state.current_item_x == 0U)
-                {
-                    if (menu_state.current_item_y == 1U)  // Slushee
-                    {
-                        purchase_food(1U, 1U);
-                    }
-                    else if (menu_state.current_item_y == 2U)  // Candy Bar
-                    {
-                        purchase_food(2U, 3U);
-                    }
-                    else if (menu_state.current_item_y == 3U)  // Nachos
-                    {
-                        purchase_food(4U, 7U);
-                    }
-                }
-                else  // x row 1
-                {
-                    if (menu_state.current_item_y == 1U)  // Smokes
-                    {
-                        purchase_item(10U, S_INVENTORY_SMOKES);
-                    }
-                    else if (menu_state.current_item_y == 2U)  // Caffeine Pills
-                    {
-                        purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_shop_menu();
+                ROM_BANK_RESET;
             }
 
             else if (game_state.current_building == S_B_PAWN)
             {
-                if (menu_state.current_item_x == 0U)
-                {
-                    if (menu_state.current_item_y == 1U)  // Handgun
-                    {
-                        // Attempt to purchase item
-                        if (purchase_item(400U, S_INVENTORY_HAND_GUN))
-                        {
-                            // Remove from menu, if successful and reload menu tiles
-                            menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
-                            load_menu_tiles();
-                            move_menu_to_exit();
-                        }
-                    }
-                    else if (menu_state.current_item_y == 2U)  // Knife
-                    {
-                        if (purchase_item(100U, S_INVENTORY_KNIFE))
-                        {
-                            menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
-                            load_menu_tiles();
-                            move_menu_to_exit();
-                        }
-                    }
-                    else if (menu_state.current_item_y == 3U)  // Alarm Clock
-                    {
-                        if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
-                        {
-                            menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
-                            load_menu_tiles();
-                            move_menu_to_exit();
-                        }
-                    }
-                }
-                else  // x row 1
-                {
-                    if (menu_state.current_item_y == 1U)  // Cellphone
-                    {
-                        if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
-                        {
-                            menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
-                            load_menu_tiles();
-                            move_menu_to_exit();
-                        }
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_pawn_menu();
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_UNIVERSITY)
             {
@@ -2033,8 +1878,9 @@ void update_state()
             }
             else if (game_state.current_building == S_B_DEALER)
             {
-                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
-                    purchase_item(400U, S_INVENTORY_COCAINE);
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_dealer_menu();
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_HOBO)
             {
@@ -2044,7 +1890,7 @@ void update_state()
                     {
                         if (game_state.hobo_given_money == 0U)
                         {
-                            if (increase_charm(10U, 1U, 6U))
+                            if (increase_charm(10U, 1U, 6U, ROM_BANK_DEFAULT))
                             {
                                 // Mark as having visited hobo, so he doesn't give us charm again.
                                 game_state.hobo_given_money = 1U;
@@ -2080,7 +1926,7 @@ void update_state()
                     {
                         if (game_state.hobo_given_beer == 0U)
                         {
-                            increase_charm(0U, 1U, 8U);
+                            increase_charm(0U, 1U, 8U, ROM_BANK_DEFAULT);
                             game_state.hobo_given_beer = 1U;
                         }
                         else
@@ -2101,16 +1947,9 @@ void update_state()
             }
             else if (game_state.current_building == S_B_BAR)
             {
-                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 1U)
-                {
-                    increase_charm(20U, 2U, 2U);
-                }
-                else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 1U)
-                {
-                    purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
-                    // Enable give bottle of beer in hobo menu
-                    menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_bar_menu();
+                ROM_BANK_RESET;
             }
 
             else if (game_state.current_building == S_B_BUS_STATION)

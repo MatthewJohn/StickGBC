@@ -11,3 +11,9 @@
 
 // Functions for game logic
 void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state);
+void process_house_menu();
+void process_restaurant_menu();
+void process_shop_menu();
+void process_pawn_menu();
+void process_dealer_menu();
+void process_bar_menu();
