@@ -17,3 +17,4 @@ void process_shop_menu();
 void process_pawn_menu();
 void process_dealer_menu();
 void process_bar_menu();
+void process_hobo_menu();
