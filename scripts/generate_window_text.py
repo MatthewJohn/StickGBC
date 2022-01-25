@@ -46,7 +46,13 @@ messages = {
         'give_1': 'Why thank you! What a charming gesture... *mumble*',
         'give_2': 'Thank you kindly sir! Which reminds me of a story... *mumble*.. so I says FRANK was CRAZY! CRAZZY! *mumble*... and THAT\'s why I never went back to vice point mall.',
         'give_3': 'Many thanks! *mumble*... back then, all we had was rocks and hats to play with. and you can\'t eat rocks, you know.'
-    }
+    },
+    'shop': {
+        'int': 'Welcome to funky town five-O convenience store where I be servin\' up some quality product for yo\' to be gettin\' yo\' drink and gettin yo snack on. How can I hook a brotha\' up?'
+    },
+    'pawn': {
+        'int': 'Buy something or get the hell out, punk.'
+    },
 }
 
 # Add alphabetic characters

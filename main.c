@@ -303,6 +303,8 @@ void setup_globals()
     game_state.skater_intro_shown = 0U;
     game_state.dealer_intro_shown = 0U;
     game_state.hobo_intro_shown = 0U;
+    game_state.shop_intro_shown = 0U;
+    game_state.pawn_intro_shown = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -1084,6 +1086,14 @@ void check_building_enter()
     {
         game_state.current_building = S_B_SHOP;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
+        if (game_state.shop_intro_shown == 0U)
+        {
+            game_state.shop_intro_shown = 1U;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_shop_int, ROM_BANK_DEFAULT);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_DEFAULT);
+        }
     }
 
     // Check for entering pawn shop
@@ -1091,6 +1101,14 @@ void check_building_enter()
     {
         game_state.current_building = S_B_PAWN;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
+        if (game_state.pawn_intro_shown == 0U)
+        {
+            game_state.pawn_intro_shown = 1U;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_pawn_int, ROM_BANK_DEFAULT);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_DEFAULT);
+        }
     }
 
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
