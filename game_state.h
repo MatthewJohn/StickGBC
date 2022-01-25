@@ -110,6 +110,7 @@ typedef struct {
     BOOLEAN hobo_intro_shown;
     BOOLEAN shop_intro_shown;
     BOOLEAN pawn_intro_shown;
+    BOOLEAN bar_intro_shown;
 } game_state_t;
 
 // The sprite is placed into place and moved from min_location to max_location.
