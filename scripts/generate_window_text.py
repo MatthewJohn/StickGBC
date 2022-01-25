@@ -37,6 +37,15 @@ messages = {
     },
     'dealer': {
         'int': 'Hey man, come over here for a minute. You wanna see some dope-fly shit? I\'m tellin\' ya\' man, you can make some FAT stacks off this product!',
+    },
+    'hobo': {
+        'int': 'Could you spare some change?',
+        'booze_1': 'Booze! Precious booze!',
+        'booze_2': '*Hic*... I..I...I\'m not as think as you drunk I am.. *burp*.. I could use some more, good sir.. *hic*',
+        'booze_3': '*sluuurp*.. I think I\'ve gone blind.. *hic*',
+        'give_1': 'Why thank you! What a charming gesture... *mumble*',
+        'give_2': 'Thank you kindly sir! Which reminds me of a story... *mumble*.. so I says FRANK was CRAZY! CRAZZY! *mumble*... and THAT\'s why I never went back to vice point mall.',
+        'give_3': 'Many thanks! *mumble*... back then, all we had was rocks and hats to play with. and you can\'t eat rocks, you know.'
     }
 }
 
