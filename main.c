@@ -1069,29 +1069,34 @@ void check_building_enter()
         game_state.current_building = S_B_HOUSE;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     // Check for entering restaurant
     else if (tile_itx == 0x76D)
     {
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     // Check for entering shop, through either door
     else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
     {
         game_state.current_building = S_B_SHOP;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     // Check for entering pawn shop
     else if (tile_itx == 0xDF1U)
     {
         game_state.current_building = S_B_PAWN;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
     {
         game_state.current_building = S_B_UNIVERSITY;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
     {
         game_state.current_building = S_B_SKATER;
@@ -1100,31 +1105,44 @@ void check_building_enter()
         {
             game_state.skater_intro_shown = 1U;
             // Show pre-menu message
-            main_show_window_text(&win_txt_skater_st, ROM_BANK_DEFAULT);
+            main_show_window_text(&win_txt_skater_int, ROM_BANK_DEFAULT);
             // Reload menu
             setup_building_menu(1U, ROM_BANK_DEFAULT);
         }
     }
+
     else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
     {
         game_state.current_building = S_B_NLI;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
     {
         game_state.current_building = S_B_DEALER;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
+        if (game_state.dealer_intro_shown == 0U)
+        {
+            game_state.dealer_intro_shown = 1U;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_dealer_int, ROM_BANK_DEFAULT);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_DEFAULT);
+        }
     }
+
     else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
     {
         game_state.current_building = S_B_HOBO;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
     {
         game_state.current_building = S_B_BAR;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
     }
+
     else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
     {
         game_state.current_building = S_B_BUS_STATION;
