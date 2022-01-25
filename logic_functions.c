@@ -454,13 +454,20 @@ void process_pawn_menu()
 {
     if (menu_state.current_item_x == 0U)
     {
-        if (menu_state.current_item_y == 1U)  // Handgun
+        if (menu_state.current_item_y == 0U)  // Bullets
+        {
+            // Attempt to purchase item
+            purchase_item(10U, S_INVENTORY_AMMO);
+        }
+        else if (menu_state.current_item_y == 1U)  // Handgun
         {
             // Attempt to purchase item
             if (purchase_item(400U, S_INVENTORY_HAND_GUN))
             {
                 // Remove from menu, if successful and reload menu tiles
                 menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                // Add bullets to menu
+                menu_config->items[0U] = MENU_ITEM_INDEX_BULLETS;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
             }
