@@ -1051,7 +1051,7 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     // another method
     game_state.last_movement_time = sys_time;
 
-    SWITCH_RAM_MBC5(return_bank);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 // Attempt to 'enter' a building if user is in
@@ -1352,7 +1352,7 @@ void move_to_menu_item(UINT8 new_x, UINT8 new_y, unsigned int return_bank) NONBA
     // Highlight new menu item
     ROM_BANK_MENU_CONFIG_SWITCH;
     set_menu_item_color(MENU_ITEM_SELECTED_PALETTE);
-    SWITCH_RAM_MBC5(return_bank);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void do_nli_work()
