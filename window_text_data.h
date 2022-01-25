@@ -27,6 +27,7 @@ extern const UINT8 win_txt_skater_thx_1[];
 extern const UINT8 win_txt_skater_thx_2[];
 extern const UINT8 win_txt_skater_thx_3[];
 extern const UINT8 win_txt_skater_thx_4[];
+extern const UINT8 win_txt_restaurant_int[];
 extern const UINT8 win_txt_nli_vp[];
 extern const UINT8 win_txt_nli_exec[];
 extern const UINT8 win_txt_nli_ceo[];

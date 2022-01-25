@@ -53,6 +53,9 @@ messages = {
     'pawn': {
         'int': 'Buy something or get the hell out, punk.'
     },
+    'restaurant': {
+        'int': 'Welcome to McSticks, may I take your order?'
+    },
     'bar': {
         # Surely it should be "'ello, I'm..."
         'int': 'Ello\', I\'m Sticky. What\'s yer\' poison, mate?'
