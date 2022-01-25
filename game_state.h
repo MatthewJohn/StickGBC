@@ -104,7 +104,7 @@ typedef struct {
 
     BOOLEAN hobo_given_money;
     BOOLEAN hobo_given_beer;
-    
+
     BOOLEAN skater_intro_shown;
     BOOLEAN dealer_intro_shown;
     BOOLEAN hobo_intro_shown;

@@ -1033,7 +1033,7 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     HIDE_SPRITES;
     // Reload background tiles
     set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
-    
+
     // Scroll to top-left
     move_bkg(0, 0);
 
@@ -1135,6 +1135,14 @@ void check_building_enter()
     {
         game_state.current_building = S_B_HOBO;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
+        if (game_state.hobo_intro_shown == 0U)
+        {
+            game_state.hobo_intro_shown = 1U;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_hobo_int, ROM_BANK_DEFAULT);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_DEFAULT);
+        }
     }
 
     else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
@@ -1980,10 +1988,10 @@ void update_state()
                             ROM_BANK_BUILDING_MENU_SWITCH;
                             update_window();
                             ROM_BANK_RESET;
-                            
+
                             // Decrease karma
                             modify_karma(-2);
-                            
+
                             if (game_state.inventory[S_INVENTORY_SKATEBOARD])
                             {
                                 rnd = sys_time % 4;
@@ -2032,20 +2040,20 @@ void update_state()
             {
                 if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
                 {
-                    if (game_state.hobo_given_money == 0U)
+                    if (HAS_MONEY(10U))
                     {
-                        if (increase_charm(10U, 1U, 6U))
+                        if (game_state.hobo_given_money == 0U)
                         {
-                            // Mark as having visited hobo, so he doesn't give us charm again.
-                            game_state.hobo_given_money = 1U;
+                            if (increase_charm(10U, 1U, 6U))
+                            {
+                                // Mark as having visited hobo, so he doesn't give us charm again.
+                                game_state.hobo_given_money = 1U;
 
-                            // Give 2 karma
-                            modify_karma(2);
+                                // Give 2 karma
+                                modify_karma(2);
+                            }
                         }
-                    }
-                    else  // Paying money and not getting charm
-                    {
-                        if (HAS_MONEY(10U))
+                        else  // Paying money and not getting charm
                         {
                             game_state.balance -= 10U;
                             ROM_BANK_BUILDING_MENU_SWITCH;
@@ -2055,6 +2063,14 @@ void update_state()
                             // Give 2 karma
                             modify_karma(2);
                         }
+
+                        rnd = sys_time % 3;
+                        if (rnd == 0U)
+                            main_show_window_text(&win_txt_hobo_give_1, ROM_BANK_DEFAULT);
+                        else if (rnd == 1U)
+                            main_show_window_text(&win_txt_hobo_give_2, ROM_BANK_DEFAULT);
+                        else
+                            main_show_window_text(&win_txt_hobo_give_3, ROM_BANK_DEFAULT);
                     }
                 }
                 else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 2U)
@@ -2072,6 +2088,14 @@ void update_state()
                             game_state.hour += 1U;
                         }
                         game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] -= 1U;
+
+                        rnd = sys_time % 3;
+                        if (rnd == 0U)
+                            main_show_window_text(&win_txt_hobo_booze_1, ROM_BANK_DEFAULT);
+                        else if (rnd == 1U)
+                            main_show_window_text(&win_txt_hobo_booze_2, ROM_BANK_DEFAULT);
+                        else
+                            main_show_window_text(&win_txt_hobo_booze_3, ROM_BANK_DEFAULT);
                     }
                 }
             }
