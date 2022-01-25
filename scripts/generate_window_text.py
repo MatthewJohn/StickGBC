@@ -28,12 +28,15 @@ messages = {
         'ceo': 'Congratulations! You are now a: CEO. Your wage is now $100 per hour.',
     },
     'skater': {
-        'st': 'Hey man! Do you have any smokes? It\'s just.. I.. uh.. er.. forgot my ID at home! Please?',
+        'int': 'Hey man! Do you have any smokes? It\'s just.. I.. uh.. er.. forgot my ID at home! Please?',
         'give': 'Sweet Man! You are sooo cool! Here, you can take this! (*Skateboard received*)',
         'thx_1': '*cough cough* Sweeet... *hack*',
         'thx_2': 'Sweet, thanks dude. Hey, you think you could get some kings next time?',
         'thx_3': '*hack* Ohh yeah.. that\'s the good stuff.',
         'thx_4': 'Thanks dude! And to think, I was thinking about quitting.. ah well! You got a light?',
+    },
+    'dealer': {
+        'int': 'Hey man, come over here for a minute. You wanna see some dope-fly shit? I\'m tellin\' ya\' man, you can make some FAT stacks off this product!',
     }
 }
 
