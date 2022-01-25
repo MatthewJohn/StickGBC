@@ -1854,6 +1854,7 @@ void update_state()
                                 game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
                                 main_show_window_text(&win_txt_skater_give, ROM_BANK_DEFAULT);
                             }
+                            // Reload building menu to clear any text
                             setup_building_menu(1U, ROM_BANK_DEFAULT);
                         }
                     }
@@ -1917,6 +1918,9 @@ void update_state()
                             main_show_window_text(&win_txt_hobo_give_2, ROM_BANK_DEFAULT);
                         else
                             main_show_window_text(&win_txt_hobo_give_3, ROM_BANK_DEFAULT);
+                            
+                        // Reload building menu to clear any text
+                        setup_building_menu(1U, ROM_BANK_DEFAULT);
                     }
                 }
                 else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 2U)
