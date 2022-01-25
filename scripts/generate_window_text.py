@@ -17,6 +17,48 @@ messages = {
         'no_deal': 'You\'ve arrived in the city but can\'t find anyone to buy from you.  Better luck next time, chump.',
         'coke_deal': 'You\'ve arrived in the city and have received an offer of    $===== for == cocaine... Do you accept? A to accept. B to decline',
         'beer_deal': 'You\'ve arrived in the city and have received an offer of    $===== for == beer... Do you accept? A to accept. B to decline',
+    },
+    'nli': {
+        'no_int': 'Thank you for applying. Unfortunately, you failed the aptitude test. Better luck next time!',
+        'jan': 'Congratulations! You are now a: JANITOR. Your wage is now $8 per hour.',
+        'mail': 'Congratulations! You are now a: MAIL CLERK. Your wage is now $10 per hour.',
+        'sales': 'Congratulations! You are now a: SALESMAN. Your wage is now $15 per hour.',
+        'exec': 'Congratulations! You are now a: EXECUTIVE. Your wage is now $25 per hour.',
+        'vp': 'Congratulations! You are now a: VP. Your wage is now $50 per hour.',
+        'ceo': 'Congratulations! You are now a: CEO. Your wage is now $100 per hour.',
+    },
+    'skater': {
+        'int': 'Hey man! Do you have any smokes? It\'s just.. I.. uh.. er.. forgot my ID at home! Please?',
+        'give': 'Sweet Man! You are sooo cool! Here, you can take this! (*Skateboard received*)',
+        'thx_1': '*cough cough* Sweeet... *hack*',
+        'thx_2': 'Sweet, thanks dude. Hey, you think you could get some kings next time?',
+        'thx_3': '*hack* Ohh yeah.. that\'s the good stuff.',
+        'thx_4': 'Thanks dude! And to think, I was thinking about quitting.. ah well! You got a light?',
+    },
+    'dealer': {
+        'int': 'Hey man, come over here for a minute. You wanna see some dope-fly shit? I\'m tellin\' ya\' man, you can make some FAT stacks off this product!',
+    },
+    'hobo': {
+        'int': 'Could you spare some change?',
+        'booze_1': 'Booze! Precious booze!',
+        'booze_2': '*Hic*... I..I...I\'m not as think as you drunk I am.. *burp*.. I could use some more, good sir.. *hic*',
+        'booze_3': '*sluuurp*.. I think I\'ve gone blind.. *hic*',
+        'give_1': 'Why thank you! What a charming gesture... *mumble*',
+        'give_2': 'Thank you kindly sir! Which reminds me of a story... *mumble*.. so I says FRANK was CRAZY! CRAZZY! *mumble*... and THAT\'s why I never went back to vice point mall.',
+        'give_3': 'Many thanks! *mumble*... back then, all we had was rocks and hats to play with. and you can\'t eat rocks, you know.'
+    },
+    'shop': {
+        'int': 'Welcome to funky town five-O convenience store where I be servin\' up some quality product for yo\' to be gettin\' yo\' drink and gettin yo snack on. How can I hook a brotha\' up?'
+    },
+    'pawn': {
+        'int': 'Buy something or get the hell out, punk.'
+    },
+    'restaurant': {
+        'int': 'Welcome to McSticks, may I take your order?'
+    },
+    'bar': {
+        # Surely it should be "'ello, I'm..."
+        'int': 'Ello\', I\'m Sticky. What\'s yer\' poison, mate?'
     }
 }
 
@@ -75,17 +117,17 @@ for area in messages:
         h_file.write('extern const UINT8 win_txt_{}_{}[];\n'.format(area, message_name))
 
         # Add start of array for message
-        c_file.write('const UINT8 win_txt_{}_{}[] = {{\n'.format(area, message_name))
+        c_file.write('const UINT8 win_txt_{}_{}[] = {{\n   '.format(area, message_name))
 
         # Add the tile value for each letter
         for letter in messages[area][message_name]:
             if letter.lower() not in letter_lookup:
                 print('WARNING: Character not found for {0}{1}: {2}'.format(area, message_name, letter.lower()))
             else:
-                c_file.write('    {},\n'.format(letter_lookup[letter.lower()]))
+                c_file.write(' {},'.format(letter_lookup[letter.lower()]))
 
         # Add terminating character
-        c_file.write('    WINDOW_TEXT_END,\n')
+        c_file.write(' WINDOW_TEXT_END,\n')
         c_file.write('};\n\n')
 
 c_file.close()

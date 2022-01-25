@@ -62,6 +62,15 @@
 #define S_MAX_STRENGTH 999U
 #define S_MAX_CHARM 999U
 
+// Bit mapping for intro shown values
+#define INTRO_BIT_RESTAURANT 0x01U
+#define INTRO_BIT_SHOP 0x02U
+#define INTRO_BIT_PAWN 0x04U
+#define INTRO_BIT_BAR 0x08U
+#define INTRO_BIT_SKATER 0x10U
+#define INTRO_BIT_DEALER 0x20U
+#define INTRO_BIT_HOBO 0x40U
+
 typedef struct {
     // Current building
     UINT8 current_building;
@@ -104,6 +113,8 @@ typedef struct {
 
     BOOLEAN hobo_given_money;
     BOOLEAN hobo_given_beer;
+
+    UINT8 intro_shown;
 } game_state_t;
 
 // The sprite is placed into place and moved from min_location to max_location.
