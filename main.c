@@ -300,13 +300,8 @@ void setup_globals()
 
     game_state.hobo_given_money = 0U;
     game_state.hobo_given_beer = 0U;
-    game_state.skater_intro_shown = 0U;
-    game_state.dealer_intro_shown = 0U;
-    game_state.hobo_intro_shown = 0U;
-    game_state.shop_intro_shown = 0U;
-    game_state.pawn_intro_shown = 0U;
-    game_state.bar_intro_shown = 0U;
-    game_state.restaurant_intro_shown = 0U;
+
+    game_state.intro_shown = 0U;
 
     game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
@@ -1081,9 +1076,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.restaurant_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_RESTAURANT)
         {
-            game_state.restaurant_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_RESTAURANT;
             // Show pre-menu message
             main_show_window_text(&win_txt_restaurant_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1096,9 +1091,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_SHOP;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.shop_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_SHOP)
         {
-            game_state.shop_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_SHOP;
             // Show pre-menu message
             main_show_window_text(&win_txt_shop_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1111,9 +1106,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_PAWN;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.pawn_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_PAWN)
         {
-            game_state.pawn_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_PAWN;
             // Show pre-menu message
             main_show_window_text(&win_txt_pawn_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1131,9 +1126,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_SKATER;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.skater_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_SKATER)
         {
-            game_state.skater_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_SKATER;
             // Show pre-menu message
             main_show_window_text(&win_txt_skater_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1151,9 +1146,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_DEALER;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.dealer_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_DEALER)
         {
-            game_state.dealer_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_DEALER;
             // Show pre-menu message
             main_show_window_text(&win_txt_dealer_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1165,9 +1160,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_HOBO;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.hobo_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_HOBO)
         {
-            game_state.hobo_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_HOBO;
             // Show pre-menu message
             main_show_window_text(&win_txt_hobo_int, ROM_BANK_DEFAULT);
             // Reload menu
@@ -1179,9 +1174,9 @@ void check_building_enter()
     {
         game_state.current_building = S_B_BAR;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (game_state.bar_intro_shown == 0U)
+        if (!game_state.intro_shown & INTRO_BIT_BAR)
         {
-            game_state.bar_intro_shown = 1U;
+            game_state.intro_shown |= INTRO_BIT_BAR;
             // Show pre-menu message
             main_show_window_text(&win_txt_bar_int, ROM_BANK_DEFAULT);
             // Reload menu
