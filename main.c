@@ -1885,69 +1885,9 @@ void update_state()
             }
             else if (game_state.current_building == S_B_HOBO)
             {
-                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
-                {
-                    if (HAS_MONEY(10U))
-                    {
-                        if (game_state.hobo_given_money == 0U)
-                        {
-                            if (increase_charm(10U, 1U, 6U, ROM_BANK_DEFAULT))
-                            {
-                                // Mark as having visited hobo, so he doesn't give us charm again.
-                                game_state.hobo_given_money = 1U;
-
-                                // Give 2 karma
-                                modify_karma(2);
-                            }
-                        }
-                        else  // Paying money and not getting charm
-                        {
-                            game_state.balance -= 10U;
-                            ROM_BANK_BUILDING_MENU_SWITCH;
-                            update_window();
-                            ROM_BANK_RESET;
-
-                            // Give 2 karma
-                            modify_karma(2);
-                        }
-
-                        rnd = sys_time % 3;
-                        if (rnd == 0U)
-                            main_show_window_text(&win_txt_hobo_give_1, ROM_BANK_DEFAULT);
-                        else if (rnd == 1U)
-                            main_show_window_text(&win_txt_hobo_give_2, ROM_BANK_DEFAULT);
-                        else
-                            main_show_window_text(&win_txt_hobo_give_3, ROM_BANK_DEFAULT);
-                            
-                        // Reload building menu to clear any text
-                        setup_building_menu(1U, ROM_BANK_DEFAULT);
-                    }
-                }
-                else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 2U)
-                {
-                    // Give bottle of beer
-                    if (game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] && DAY_TIME_REMAINING >= 1U)
-                    {
-                        if (game_state.hobo_given_beer == 0U)
-                        {
-                            increase_charm(0U, 1U, 8U, ROM_BANK_DEFAULT);
-                            game_state.hobo_given_beer = 1U;
-                        }
-                        else
-                        {
-                            game_state.hour += 1U;
-                        }
-                        game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] -= 1U;
-
-                        rnd = sys_time % 3;
-                        if (rnd == 0U)
-                            main_show_window_text(&win_txt_hobo_booze_1, ROM_BANK_DEFAULT);
-                        else if (rnd == 1U)
-                            main_show_window_text(&win_txt_hobo_booze_2, ROM_BANK_DEFAULT);
-                        else
-                            main_show_window_text(&win_txt_hobo_booze_3, ROM_BANK_DEFAULT);
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_hobo_menu();
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_BAR)
             {
