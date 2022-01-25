@@ -1076,7 +1076,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_RESTAURANT;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_RESTAURANT)
+        if (! (game_state.intro_shown & INTRO_BIT_RESTAURANT))
         {
             game_state.intro_shown |= INTRO_BIT_RESTAURANT;
             // Show pre-menu message
@@ -1091,7 +1091,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_SHOP;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_SHOP)
+        if (! (game_state.intro_shown & INTRO_BIT_SHOP))
         {
             game_state.intro_shown |= INTRO_BIT_SHOP;
             // Show pre-menu message
@@ -1106,7 +1106,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_PAWN;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_PAWN)
+        if (! (game_state.intro_shown & INTRO_BIT_PAWN))
         {
             game_state.intro_shown |= INTRO_BIT_PAWN;
             // Show pre-menu message
@@ -1126,7 +1126,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_SKATER;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_SKATER)
+        if (! (game_state.intro_shown & INTRO_BIT_SKATER))
         {
             game_state.intro_shown |= INTRO_BIT_SKATER;
             // Show pre-menu message
@@ -1146,7 +1146,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_DEALER;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_DEALER)
+        if (! (game_state.intro_shown & INTRO_BIT_DEALER))
         {
             game_state.intro_shown |= INTRO_BIT_DEALER;
             // Show pre-menu message
@@ -1160,7 +1160,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_HOBO;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_HOBO)
+        if (! (game_state.intro_shown & INTRO_BIT_HOBO))
         {
             game_state.intro_shown |= INTRO_BIT_HOBO;
             // Show pre-menu message
@@ -1174,7 +1174,7 @@ void check_building_enter()
     {
         game_state.current_building = S_B_BAR;
         setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (!game_state.intro_shown & INTRO_BIT_BAR)
+        if (! (game_state.intro_shown & INTRO_BIT_BAR))
         {
             game_state.intro_shown |= INTRO_BIT_BAR;
             // Show pre-menu message
