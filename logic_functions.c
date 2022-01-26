@@ -498,7 +498,7 @@ void process_pawn_menu()
             purchase_item(10U, S_INVENTORY_AMMO);
 
             // Add 'rob' to shop menu
-            menu_config_shop->items[7U] = MENU_ITEM_INDEX_ROB;
+            menu_config_shop.items[7U] = MENU_ITEM_INDEX_ROB;
         }
         else if (menu_state.current_item_y == 1U)  // Handgun
         {
