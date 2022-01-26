@@ -341,6 +341,40 @@ void move_menu_to_exit()
 }
 
 /*
+ * perform_robbery
+ * 
+ * Perform robbery on shop
+ */
+void perform_robbery()
+{
+    UINT8 ammo_to_remove = (UINT8)(sys_time % 5U) + 5U;
+
+    if (game_state.hour < 22U)
+        return;
+
+    // Remove bullets from inventory
+    if (game_state.inventory[S_INVENTORY_AMMO] > ammo_to_remove)
+        game_state.inventory[S_INVENTORY_AMMO] -= ammo_to_remove;
+    else
+        game_state.inventory[S_INVENTORY_AMMO] = 0;
+
+    // Set time to midnight
+    game_state.hour = 24U;
+    
+    // Use charm to generate random number and check that it's ver 40
+    if ((sys_time % game_state.charm) > 40U)
+    {
+        // Add random amount up to 500
+        game_state.balance += sys_time % 500U;
+    }
+    else
+    {
+        // Spend 5 days in jail
+        game_state.days_passed += 5U;
+    }
+}
+
+/*
  * process_house_menu
  *
  * Handle selection of item from house menu
@@ -447,6 +481,10 @@ void process_shop_menu()
         {
             purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
         }
+        else if (menu_state.current_item_y == 3U)  // Rob
+        {
+            perform_robbery();
+        }
     }
 }
 
@@ -458,6 +496,9 @@ void process_pawn_menu()
         {
             // Attempt to purchase item
             purchase_item(10U, S_INVENTORY_AMMO);
+
+            // Add 'rob' to shop menu
+            menu_config_shop->items[7U] = MENU_ITEM_INDEX_ROB;
         }
         else if (menu_state.current_item_y == 1U)  // Handgun
         {
@@ -466,8 +507,11 @@ void process_pawn_menu()
             {
                 // Remove from menu, if successful and reload menu tiles
                 menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+
                 // Add bullets to menu
                 menu_config->items[0U] = MENU_ITEM_INDEX_BULLETS;
+                
+                // Reload menu
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
             }
