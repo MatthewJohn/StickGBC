@@ -401,6 +401,9 @@ void perform_robbery()
         // Spend 5 days in jail
         game_state.days_passed += 5U;
     }
+
+    // Update window
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 }
 
 /*
