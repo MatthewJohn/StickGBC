@@ -398,13 +398,13 @@ void perform_robbery()
         // Add random amount up to 500
         amount_robbed = sys_time % 500U;
         game_state.balance += amount_robbed;
-        
+
         // Update window
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         // Show amount robbed
         main_show_number(6, 5, 3, (unsigned int)amount_robbed, ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         // Display message
         main_show_window_text(&win_txt_rob_success, ROM_BANK_LOGIC_FUNCTIONS);
     }
@@ -415,7 +415,7 @@ void perform_robbery()
 
         // Update window
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
-        
+
         // Display message
         main_show_window_text(&win_txt_rob_caught, ROM_BANK_LOGIC_FUNCTIONS);
     }
