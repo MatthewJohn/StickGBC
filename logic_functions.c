@@ -9,6 +9,41 @@
 #include "logic_functions.h"
 #include "window_text_data.h"
 
+/*
+ * remove_ammo
+ * 
+ * Remove ammo from inventory and reset shop menus/state if required
+ */
+void remove_ammo(UINT8 amount_to_remove)
+{
+    if (game_state.inventory[S_INVENTORY_AMMO] > amount_to_remove)
+        game_state.inventory[S_INVENTORY_AMMO] -= amount_to_remove;
+    else
+    {
+        game_state.inventory[S_INVENTORY_AMMO] = 0;
+
+        // Remove 'rob' from shop
+        menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
+    }
+}
+
+/*
+ * remove_gun
+ * 
+ * Remove gun from inventory and reset shop menus/state
+ */
+void remove_gun()
+{
+    // Remove all ammo
+    remove_ammo(game_state.inventory[S_INVENTORY_AMMO]);
+    
+    // Add hand gun to pawn menu
+    menu_config_pawn.items[MENU_PAWN_HAND_GUN_ITEM] = MENU_ITEM_INDEX_HAND_GUN;
+
+    // Remove bullets from pawn menu
+    menu_config_pawn.items[MENU_PAWN_BULLETS_ITEM] = MENU_ITEM_INDEX_EMPTY;
+}
+
 void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 {
     UINT8 cost;
@@ -141,8 +176,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         game_state->days_passed += 5U;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
-        game_state->inventory[S_INVENTORY_HAND_GUN] = 0;
-        game_state->inventory[S_INVENTORY_AMMO] = 0;
+        remove_gun();
 
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
@@ -347,16 +381,11 @@ void move_menu_to_exit()
  */
 void perform_robbery()
 {
-    UINT8 ammo_to_remove = (UINT8)(sys_time % 5U) + 5U;
-
     if (game_state.hour < 22U)
         return;
 
     // Remove bullets from inventory
-    if (game_state.inventory[S_INVENTORY_AMMO] > ammo_to_remove)
-        game_state.inventory[S_INVENTORY_AMMO] -= ammo_to_remove;
-    else
-        game_state.inventory[S_INVENTORY_AMMO] = 0;
+    remove_ammo((UINT8)(sys_time % 5U) + 5U);
 
     // Set time to midnight
     game_state.hour = 24U;
@@ -498,7 +527,7 @@ void process_pawn_menu()
             purchase_item(10U, S_INVENTORY_AMMO);
 
             // Add 'rob' to shop menu
-            menu_config_shop.items[7U] = MENU_ITEM_INDEX_ROB;
+            menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
         }
         else if (menu_state.current_item_y == 1U)  // Handgun
         {
@@ -506,10 +535,10 @@ void process_pawn_menu()
             if (purchase_item(400U, S_INVENTORY_HAND_GUN))
             {
                 // Remove from menu, if successful and reload menu tiles
-                menu_config->items[2U] = MENU_ITEM_INDEX_EMPTY;
+                menu_config->items[MENU_PAWN_HAND_GUN_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 // Add bullets to menu
-                menu_config->items[0U] = MENU_ITEM_INDEX_BULLETS;
+                menu_config->items[MENU_PAWN_BULLETS_ITEM] = MENU_ITEM_INDEX_BULLETS;
                 
                 // Reload menu
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
