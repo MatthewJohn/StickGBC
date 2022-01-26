@@ -381,6 +381,8 @@ void move_menu_to_exit()
  */
 void perform_robbery()
 {
+    UINT8 amount_robbed;
+
     if (game_state.hour > 22U)
         return;
 
@@ -394,16 +396,33 @@ void perform_robbery()
     if ((sys_time % game_state.charm) > 40U)
     {
         // Add random amount up to 500
-        game_state.balance += sys_time % 500U;
+        amount_robbed = sys_time % 500U;
+        game_state.balance += amount_robbed;
+        
+        // Update window
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+        
+        // Show amount robbed
+        main_show_number(6, 5, 3, (unsigned int)amount_robbed, ROM_BANK_LOGIC_FUNCTIONS);
+        
+        // Display message
+        main_show_window_text(&win_txt_rob_success, ROM_BANK_LOGIC_FUNCTIONS);
     }
     else
     {
         // Spend 5 days in jail
         game_state.days_passed += 5U;
+
+        // Update window
+        main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+        
+        // Display message
+        main_show_window_text(&win_txt_rob_caught, ROM_BANK_LOGIC_FUNCTIONS);
     }
 
-    // Update window
-    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    // Reload menu tiles to clear message
+    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    move_menu_to_exit();
 }
 
 /*
