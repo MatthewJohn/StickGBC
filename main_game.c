@@ -334,12 +334,15 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_TRANSITION_Y_MIN)
         screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
 
-    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_UNIVERSITY_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y &= ~SC_PAWN;
         screen_state->displayed_buildings_y |= SC_RESTAURANT;
+        screen_state->displayed_buildings_y |= SC_UNIVERSITY;
         if (screen_state->displayed_buildings_x & SC_RESTAURANT)
             load_restaurant();
+        if (screen_state->displayed_buildings_x & SC_UNIVERSITY)
+            load_university();
     }
 
     if (screen_state->screen_location_y_tiles == SC_SHOP_NLI_TRANSITION_Y)
@@ -400,9 +403,10 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_x & SC_SHOP)
             load_shop();
     }
-    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_TRANSITION_Y)
+    if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_UNIVERSITY_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
+        screen_state->displayed_buildings_y &= ~SC_UNIVERSITY;
         screen_state->displayed_buildings_y |= SC_PAWN;
         if (screen_state->displayed_buildings_x & SC_PAWN)
             load_pawn();
