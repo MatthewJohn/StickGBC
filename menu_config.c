@@ -1323,7 +1323,7 @@ const menu_config_item_t menu_config_items[0x39U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
     // Rob
     {
         {
