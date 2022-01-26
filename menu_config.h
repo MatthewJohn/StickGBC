@@ -100,10 +100,14 @@
 #define MENU_ITEM_INDEX_LOS_ANGELES 0x35U
 #define MENU_ITEM_INDEX_LAS_VEGAS 0x36U
 #define MENU_ITEM_INDEX_BULLETS 0x37U
+#define MENU_ITEM_INDEX_ROB 0x38U
 
-// Menu item indexes for NLI
+// Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
 #define MENU_NLI_WORK_ITEM 0x07U
+#define MENU_SHOP_ROB_ITEM 0x7U
+#define MENU_PAWN_BULLETS_ITEM 0x0U
+#define MENU_PAWN_HAND_GUN_ITEM 0x2U
 
 // Value for current X/Y position to disable highlighting
 #define MENU_SELECTED_ITEM_DISABLED 0x8U
