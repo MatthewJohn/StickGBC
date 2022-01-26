@@ -35,6 +35,8 @@ extern const UINT8 win_txt_nli_sales[];
 extern const UINT8 win_txt_nli_jan[];
 extern const UINT8 win_txt_nli_mail[];
 extern const UINT8 win_txt_nli_no_int[];
+extern const UINT8 win_txt_rob_caught[];
+extern const UINT8 win_txt_rob_success[];
 extern const UINT8 win_txt_dealer_int[];
 extern const UINT8 win_txt_bus_statn_no_mon[];
 extern const UINT8 win_txt_bus_statn_no_deal[];

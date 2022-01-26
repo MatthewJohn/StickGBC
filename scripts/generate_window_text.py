@@ -59,7 +59,11 @@ messages = {
     'bar': {
         # Surely it should be "'ello, I'm..."
         'int': 'Ello\', I\'m Sticky. What\'s yer\' poison, mate?'
-    }
+    },
+    'rob': {
+        'success': 'You did it!!! After casing the joint, you came back at midnight to clean the place out. You made off with $===',
+        'caught': 'You got caught!!! Your charm wasn\'t enough to pull it off, or you just weren\'t lucky enough. In either case, you got thrown in jail for 5 days.',
+    },
 }
 
 # Add alphabetic characters
