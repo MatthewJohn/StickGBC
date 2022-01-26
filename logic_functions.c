@@ -381,7 +381,7 @@ void move_menu_to_exit()
  */
 void perform_robbery()
 {
-    if (game_state.hour < 22U)
+    if (game_state.hour > 22U)
         return;
 
     // Remove bullets from inventory
