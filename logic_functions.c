@@ -11,7 +11,7 @@
 
 /*
  * remove_ammo
- * 
+ *
  * Remove ammo from inventory and reset shop menus/state if required
  */
 void remove_ammo(UINT8 amount_to_remove)
@@ -29,14 +29,14 @@ void remove_ammo(UINT8 amount_to_remove)
 
 /*
  * remove_gun
- * 
+ *
  * Remove gun from inventory and reset shop menus/state
  */
 void remove_gun()
 {
     // Remove all ammo
     remove_ammo(game_state.inventory[S_INVENTORY_AMMO]);
-    
+
     // Add hand gun to pawn menu
     menu_config_pawn.items[MENU_PAWN_HAND_GUN_ITEM] = MENU_ITEM_INDEX_HAND_GUN;
 
@@ -376,7 +376,7 @@ void move_menu_to_exit()
 
 /*
  * perform_robbery
- * 
+ *
  * Perform robbery on shop
  */
 void perform_robbery()
@@ -389,7 +389,7 @@ void perform_robbery()
 
     // Set time to midnight
     game_state.hour = 24U;
-    
+
     // Use charm to generate random number and check that it's ver 40
     if ((sys_time % game_state.charm) > 40U)
     {
@@ -539,7 +539,7 @@ void process_pawn_menu()
 
                 // Add bullets to menu
                 menu_config->items[MENU_PAWN_BULLETS_ITEM] = MENU_ITEM_INDEX_BULLETS;
-                
+
                 // Reload menu
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
