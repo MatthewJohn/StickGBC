@@ -118,6 +118,21 @@ void load_bus_station()
     set_bkg_palette(PALETTE_SCRATCH_0, 2, &(scratch_palette_data[0U]));
 }
 
+/*
+ * load_bank
+ * 
+ * Load palette and tiles required for bank
+ */
+void load_bank()
+{
+    set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]));
+    scratch_palette_data[1U][0U] = RGB(11U, 2U, 1U);
+    scratch_palette_data[1U][1U] = RGB(1U, 0U, 0U);
+    scratch_palette_data[1U][2U] = RGB(26U, 26U, 0U);
+    scratch_palette_data[1U][3U] = RGB(23U, 2U, 0U);
+    set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[1U]));    
+}
+
 void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
     // Load house data from tile 8 to tile
@@ -184,6 +199,14 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     // Y is ignored for BUS transition, so only check X
     if (screen_state->displayed_buildings_x & SC_BUS)
         load_bus_station();
+    
+    if (
+        screen_state->displayed_buildings_2_x & SC_BANK &&
+        screen_state->displayed_buildings_2_y & SC_BANK
+    )
+    {
+        load_bank();
+    }
 }
 
 void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
@@ -236,15 +259,22 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
             load_road_car_sprite();
     }
 
-    // NLI
-    if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    // NLI/Bank
+    if (screen_state->screen_location_x_tiles == SC_NLI_BANK_TRANSITION_X_MAX)
     {
         screen_state->displayed_buildings_x |= SC_NLI;
+        screen_state->displayed_buildings_2_x |= SC_BANK;
+
         if (screen_state->displayed_buildings_y & SC_NLI)
             load_nli();
+        if (screen_state->displayed_buildings_2_y & SC_BANK)
+            load_bank();
     }
-    else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    else if (screen_state->screen_location_x_tiles == SC_NLI_BANK_TRANSITION_X_MIN)
+    {
         screen_state->displayed_buildings_x &= ~SC_NLI;
+        screen_state->displayed_buildings_2_x &= ~SC_BANK;
+    }
 
     // Bar
     if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MAX)
@@ -303,15 +333,22 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     if ((screen_state->screen_location_x_tiles - 1U) == (road_car_sprite->max_location_x >> 3))
         screen_state->displayed_sprites_x[road_car_sprite->sprite_display_bit] = 0U;
 
-    // NLI
-    if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MIN)
+    // NLI/Bank
+    if (screen_state->screen_location_x_tiles == SC_NLI_BANK_TRANSITION_X_MIN)
     {
         screen_state->displayed_buildings_x |= SC_NLI;
+        screen_state->displayed_buildings_2_x |= SC_BANK;
+
         if (screen_state->displayed_buildings_y & SC_NLI)
             load_nli();
+        if (screen_state->displayed_buildings_2_y & SC_BANK)
+            load_bank();
     }
-    else if (screen_state->screen_location_x_tiles == SC_NLI_TRANSITION_X_MAX)
+    else if (screen_state->screen_location_x_tiles == SC_NLI_BANK_TRANSITION_X_MAX)
+    {
         screen_state->displayed_buildings_x &= ~SC_NLI;
+        screen_state->displayed_buildings_2_x &= ~SC_BANK;
+    }
 
     // Bar
     if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
@@ -351,6 +388,13 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
         screen_state->displayed_buildings_y &= ~SC_SHOP;
         if (screen_state->displayed_buildings_x & SC_NLI)
             load_nli();
+    }
+    
+    if(screen_state->screen_location_y_tiles == SC_BANK_TRANSITION_Y_MAX)
+    {
+        screen_state->displayed_buildings_2_y |= SC_BANK;
+        if (screen_state->displayed_buildings_2_x & SC_BANK)
+            load_bank();
     }
 
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
@@ -403,6 +447,12 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_x & SC_SHOP)
             load_shop();
     }
+
+    if(screen_state->screen_location_y_tiles == SC_BANK_TRANSITION_Y_MAX)
+    {
+        screen_state->displayed_buildings_2_y &= ~SC_BANK;
+    }    
+
     if (screen_state->screen_location_y_tiles == SC_RESTAURANT_PAWN_UNIVERSITY_TRANSITION_Y)
     {
         screen_state->displayed_buildings_y &= ~SC_RESTAURANT;
