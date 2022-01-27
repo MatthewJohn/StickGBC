@@ -125,6 +125,9 @@ void load_bus_station()
  */
 void load_bank()
 {
+    // Tile for top windows
+    set_bkg_data(18U, 1U, &(mainmaptiles[18U << 4]));
+    // Main tiles for bank
     set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]));
     scratch_palette_data[1U][0U] = RGB(11U, 2U, 1U);
     scratch_palette_data[1U][1U] = RGB(1U, 0U, 0U);
