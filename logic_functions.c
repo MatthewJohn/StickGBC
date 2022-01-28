@@ -719,8 +719,8 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
 
             // Otherwise, if already holding, check if enough time has passed since
             // last number change
-//            else if ((sys_time - game_state.last_movement_time) < 0x05)
-//                continue;
+            else if ((sys_time - game_state.last_movement_time) < 0x07)
+                continue;
 
             game_state.last_movement_time = sys_time;
 
