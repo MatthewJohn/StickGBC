@@ -1032,6 +1032,12 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
     }
+    else if (game_state.current_building == S_B_BANK)
+    {
+        menu_config = &menu_config_bank;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1189,6 +1195,12 @@ void check_building_enter()
     else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
     {
         game_state.current_building = S_B_BUS_STATION;
+        setup_building_menu(2U, ROM_BANK_DEFAULT);
+    }
+
+    else if (tile_itx == 0x2F9)
+    {
+        game_state.current_building = S_B_BANK;
         setup_building_menu(2U, ROM_BANK_DEFAULT);
     }
 

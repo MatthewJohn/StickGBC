@@ -1351,7 +1351,7 @@ const menu_config_item_t menu_config_items[0x3DU] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
-    
+
     // Withdraw
     {
         {
@@ -1369,7 +1369,7 @@ const menu_config_item_t menu_config_items[0x3DU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Deposit
     {
         {
@@ -1387,7 +1387,7 @@ const menu_config_item_t menu_config_items[0x3DU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Real estate
     {
         {
@@ -1405,7 +1405,7 @@ const menu_config_item_t menu_config_items[0x3DU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Get a Loan
     {
         {
