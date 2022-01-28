@@ -285,6 +285,8 @@ void update_background_color()
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
+    game_state.sub_menu = S_M_NO_SUBMENU;
+
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
@@ -1954,6 +1956,19 @@ void update_state()
                     // Return to main map once complete
                     setup_main_map();
                     return;
+                }
+            }
+
+            else if (game_state.current_building == S_B_BANK)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_withdraw();
+                        ROM_BANK_RESET;
+                    }
                 }
             }
         }
