@@ -719,12 +719,11 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
             // Determine the amount the value will change, based on how long user
             // has been holding button
             amount_to_change = ((unsigned int)(sys_time >> 3) - (unsigned int)(start_hold_time >> 3)) + 1;
-            amount_to_change = 1;
 
             // Check if holding up key
             if (joypad_state.travel_y == -1)
             {
-                if ((current_number + amount_to_change) > max_value)
+                if ((current_number + amount_to_change) >= max_value)
                     current_number = max_value;
                 else
                     current_number += amount_to_change;
