@@ -687,3 +687,102 @@ void process_hobo_menu()
         }
     }
 }
+
+/*
+ * number_entry
+ * 
+ * Allow user to select a number using directional keys
+ */
+UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, UINT16 min_value, UINT16 max_value)
+{
+    UINT16 start_hold_time = sys_time;
+    UINT16 amount_to_change;
+    game_state.last_movement_time = 0;
+    
+    // Show number on-screen
+    main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+    
+    // Reset joypad state
+    joypad_state.a_pressed = 0U;
+    joypad_state.b_pressed = 0U;
+    
+    // Allow user to use directional keys until A or be is pressed
+    while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
+    {
+        main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
+
+        // Determine the amount the value will change, based on how long user
+        // has been holding button
+        amount_to_change = (sys_time >> 3) - (start_hold_time >> 3);
+
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+        {
+            // If starting to hold direction, set start_hold_time to now
+            if (start_hold_time == 0)
+                start_hold_time = sys_time;
+            // Otherwise, if already holding, check if enough time has passed since
+            // last number change
+            else if ((sys_time - game_state.last_movement_time) < 0x05)
+                continue;
+                
+            // Update displayed digits
+            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+
+        // Check if holding up key
+        if (joypad_state.travel_x == 1 || joypad_state.travel_y == 1)
+        {
+            if ((current_number + amount_to_change) > max_value)
+                current_number = max_value;
+            else
+                current_number += amount_to_change;
+        }
+        // Check if holding down
+        else if (joypad_state.travel_x == -1 || joypad_state.travel_x == -1)
+        {
+            // Check min value or underflow
+            if (((current_number - amount_to_change) < min_value) ||
+                ((current_number - amount_to_change) > current_number))
+                current_number = min_value;
+            else
+                current_number -= amount_to_change;
+                
+            // Update displayed digits
+            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+        // Otherwise reset
+        else
+        {
+            start_hold_time = 0;
+        }
+
+        wait_vbl_done();
+    }
+
+    // If user pressed 'a', return the number they chose
+    // otherwise, return 0
+    if (joypad_state.a_pressed)
+        return current_number;
+    else
+        return 0;
+}
+
+/*
+ * show_bank_withdraw
+ * 
+ * Load menu to allow user to withdraw money
+ */
+void show_bank_withdraw()
+{
+    UINT16 amount_to_withdraw;
+    // Load sub-menu
+    game_state.sub_menu = S_M_WITHDRAW;
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+
+    amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 0, 0, game_state.bank_balance);
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+

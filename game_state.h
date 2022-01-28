@@ -38,6 +38,10 @@
 #define S_B_BUS_STATION 0x0E
 #define S_B_BANK 0x0F
 
+#define S_M_NO_SUBMENU 0x00U;
+#define S_M_WITHDRAW 0x01U;
+#define S_M_DEPOSIT 0x01U;
+
 
 // Maximum of 99 of each item.
 // This is too high for singleton items (such as alarm clock),
@@ -75,6 +79,8 @@
 typedef struct {
     // Current building
     UINT8 current_building;
+    // Sub-menu of current building
+    UINT8 sub_menu;
     // In-game days passed. Might need to be int (not required for limited game plays).
     unsigned int days_passed;
 
@@ -95,6 +101,7 @@ typedef struct {
 
     // Money the user has.
     unsigned int balance;
+    unsigned int bank_balance;
 
     // Inventory items
     UINT8 inventory[S_INVENTORY_ITEM_COUNT];
