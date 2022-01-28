@@ -693,10 +693,10 @@ void process_hobo_menu()
  * 
  * Allow user to select a number using directional keys
  */
-UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, UINT16 min_value, UINT16 max_value)
+UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_number, unsigned int min_value, unsigned int max_value)
 {
-    UINT16 start_hold_time = 0;
-    UINT16 amount_to_change;
+    unsigned int start_hold_time = 0;
+    unsigned int amount_to_change;
     game_state.last_movement_time = sys_time;
     
     // Show number on-screen
@@ -711,46 +711,48 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
     {
         main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
 
-        // Determine the amount the value will change, based on how long user
-        // has been holding button
-        amount_to_change = ((sys_time >> 3) - (start_hold_time >> 3)) + 1;
-
         if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
         {
             // If starting to hold direction, set start_hold_time to now
             if (start_hold_time == 0)
                 start_hold_time = sys_time;
+
             // Otherwise, if already holding, check if enough time has passed since
             // last number change
-            else if ((sys_time - game_state.last_movement_time) < 0x05)
-                continue;
-            
-            game_state.last_movement_time = sys_time;
-        }
+//            else if ((sys_time - game_state.last_movement_time) < 0x05)
+//                continue;
 
-        // Check if holding up key
-        if (joypad_state.travel_x == 1 || joypad_state.travel_y == 1)
-        {
-            if ((current_number + amount_to_change) > max_value)
-                current_number = max_value;
-            else
-                current_number += amount_to_change;
-                
-            // Update displayed digits
-            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
-        }
-        // Check if holding down
-        else if (joypad_state.travel_x == -1 || joypad_state.travel_x == -1)
-        {
-            // Check min value or underflow
-            if (((current_number - amount_to_change) < min_value) ||
-                ((current_number - amount_to_change) > current_number))
-                current_number = min_value;
-            else
-                current_number -= amount_to_change;
-                
-            // Update displayed digits
-            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+            game_state.last_movement_time = sys_time;
+
+            // Determine the amount the value will change, based on how long user
+            // has been holding button
+            amount_to_change = ((unsigned int)(sys_time >> 3) - (unsigned int)(start_hold_time >> 3)) + 1;
+            amount_to_change = 1;
+
+            // Check if holding up key
+            if (joypad_state.travel_x == 1 || joypad_state.travel_y == -1)
+            {
+                if ((current_number + amount_to_change) > max_value)
+                    current_number = max_value;
+                else
+                    current_number += amount_to_change;
+                    
+                // Update displayed digits
+                main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+            }
+            // Check if holding down
+            else if (joypad_state.travel_x == -1 || joypad_state.travel_y == 1)
+            {
+                // Check min value or underflow
+                if (((current_number - amount_to_change) < min_value) ||
+                    ((current_number - amount_to_change) > current_number))
+                    current_number = min_value;
+                else
+                    current_number -= amount_to_change;
+                    
+                // Update displayed digits
+                main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+            }
         }
         // Otherwise reset
         else
