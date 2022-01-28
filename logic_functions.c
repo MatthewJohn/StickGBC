@@ -697,7 +697,6 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
 {
     unsigned int start_hold_time = 0;
     unsigned int amount_to_change;
-    game_state.last_movement_time = sys_time;
     
     // Show number on-screen
     main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
@@ -716,13 +715,6 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
             // If starting to hold direction, set start_hold_time to now
             if (start_hold_time == 0)
                 start_hold_time = sys_time;
-
-            // Otherwise, if already holding, check if enough time has passed since
-            // last number change
-//            else if ((sys_time - game_state.last_movement_time) < 0x05)
-//                continue;
-
-            game_state.last_movement_time = sys_time;
 
             // Determine the amount the value will change, based on how long user
             // has been holding button
