@@ -693,10 +693,10 @@ void process_hobo_menu()
  * 
  * Allow user to select a number using directional keys
  */
-UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_number, unsigned int min_value, unsigned int max_value)
+UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, UINT16 min_value, UINT16 max_value)
 {
-    unsigned int start_hold_time = 0;
-    unsigned int amount_to_change;
+    UINT16 start_hold_time = 0;
+    UINT16 amount_to_change;
     game_state.last_movement_time = sys_time;
     
     // Show number on-screen
@@ -726,15 +726,14 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
 
             // Determine the amount the value will change, based on how long user
             // has been holding button
-            amount_to_change = ((unsigned int)(sys_time >> 3) - (unsigned int)(start_hold_time >> 3)) + 1;
+            amount_to_change = ((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1;
 
             // Check if holding up key
             if (joypad_state.travel_y == -1)
             {
-                if ((current_number + amount_to_change) >= max_value)
+                current_number += amount_to_change;
+                if (current_number >= max_value)
                     current_number = max_value;
-                else
-                    current_number += amount_to_change;
                     
                 // Update displayed digits
                 main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
@@ -782,7 +781,8 @@ void show_bank_withdraw()
     game_state.sub_menu = S_M_WITHDRAW;
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 
-    amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 0, 0, game_state.bank_balance);
+    //amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 0, 0, game_state.bank_balance);
+    amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 50U, 20U, 200U);
 
     // Reload original menu
     game_state.sub_menu = S_M_NO_SUBMENU;
