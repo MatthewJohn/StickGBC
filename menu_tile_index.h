@@ -258,7 +258,6 @@
 
 
 #define MENU_TILE2_SE 0x06
-#define MENU_TILE2_LL 0x07
 #define MENU_TILE2__G 0x08
 #define MENU_TILE2_OO 0x09
 #define MENU_TILE2_DS 0x0A
@@ -275,7 +274,6 @@
 #define MENU_TILE2_T 0x15
 #define MENU_TILE2_CA 0x16
 #define MENU_TILE2_MD 0x17
-#define MENU_TILE2_EN 0x18
 #define MENU_TILE2_LO 0x19
 #define MENU_TILE2_S 0x1A
 #define MENU_TILE2_AN 0x1B
