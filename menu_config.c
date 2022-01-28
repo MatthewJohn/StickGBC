@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x39U] = {
+const menu_config_item_t menu_config_items[0x3DU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1351,6 +1351,78 @@ const menu_config_item_t menu_config_items[0x39U] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+    
+    // Withdraw
+    {
+        {
+            MENU_TILE2_WI,
+            MENU_TILE2_TH,
+            MENU_TILE2_DR,
+            MENU_TILE2_AW,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    
+    // Deposit
+    {
+        {
+            MENU_TILE2_DE,
+            MENU_TILE2_PO,
+            MENU_TILE2_SI,
+            MENU_TILE2_T,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    
+    // Real estate
+    {
+        {
+            MENU_TILE2_RE,
+            MENU_TILE2_AL,
+            MENU_TILE2_ES,
+            MENU_TILE2_TA,
+            MENU_TILE2_TE,
+            MENU_ITEM_NO_TILE,
+
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+    
+    // Get a Loan
+    {
+        {
+            MENU_TILE2_GE,
+            MENU_TILE2_T,
+            MENU_TILE2_A,
+            MENU_TILE2_LO,
+            MENU_TILE2_AN,
+            MENU_ITEM_NO_TILE,
+
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
@@ -1548,6 +1620,19 @@ menu_config_t menu_config_bus_station = {
         MENU_ITEM_INDEX_CAMDEN,
         MENU_ITEM_INDEX_LOS_ANGELES,
         MENU_ITEM_INDEX_LAS_VEGAS,
+    }
+};
+
+menu_config_t menu_config_bank = {
+    {
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EXIT,
+        MENU_ITEM_INDEX_WITHDRAW,
+        MENU_ITEM_INDEX_DEPOSIT,
+        MENU_ITEM_INDEX_REAL_ESTATE,
+        MENU_ITEM_INDEX_GET_LOAN,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
     }
 };
 

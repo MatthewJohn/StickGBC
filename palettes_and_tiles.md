@@ -242,6 +242,16 @@
  30. LA
  31. VE
  32. GA
+ 33. WI
+ 34. DR
+ 35. AW
+ 36. PO
+ 37. SI
+ 38. AL
+ 39. ES
+ 40. TA
+ 
+ 
 
  98. Clock face
  99. Colon
