@@ -695,9 +695,9 @@ void process_hobo_menu()
  */
 UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, UINT16 min_value, UINT16 max_value)
 {
-    UINT16 start_hold_time = sys_time;
+    UINT16 start_hold_time = 0;
     UINT16 amount_to_change;
-    game_state.last_movement_time = 0;
+    game_state.last_movement_time = sys_time;
     
     // Show number on-screen
     main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
@@ -713,7 +713,7 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
 
         // Determine the amount the value will change, based on how long user
         // has been holding button
-        amount_to_change = (sys_time >> 3) - (start_hold_time >> 3);
+        amount_to_change = ((sys_time >> 3) - (start_hold_time >> 3)) + 1;
 
         if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
         {
@@ -724,9 +724,8 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
             // last number change
             else if ((sys_time - game_state.last_movement_time) < 0x05)
                 continue;
-                
-            // Update displayed digits
-            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+            
+            game_state.last_movement_time = sys_time;
         }
 
         // Check if holding up key
@@ -736,6 +735,9 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
                 current_number = max_value;
             else
                 current_number += amount_to_change;
+                
+            // Update displayed digits
+            main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
         }
         // Check if holding down
         else if (joypad_state.travel_x == -1 || joypad_state.travel_x == -1)
