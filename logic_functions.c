@@ -711,7 +711,7 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
     {
         main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
 
-        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+        if (joypad_state.travel_y != 0)
         {
             // If starting to hold direction, set start_hold_time to now
             if (start_hold_time == 0)
@@ -730,7 +730,7 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
             amount_to_change = 1;
 
             // Check if holding up key
-            if (joypad_state.travel_x == 1 || joypad_state.travel_y == -1)
+            if (joypad_state.travel_y == -1)
             {
                 if ((current_number + amount_to_change) > max_value)
                     current_number = max_value;
@@ -741,7 +741,7 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, unsigned int current_num
                 main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
             }
             // Check if holding down
-            else if (joypad_state.travel_x == -1 || joypad_state.travel_y == 1)
+            else if (joypad_state.travel_y == 1)
             {
                 // Check min value or underflow
                 if (((current_number - amount_to_change) < min_value) ||
