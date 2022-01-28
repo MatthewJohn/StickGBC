@@ -101,6 +101,10 @@
 #define MENU_ITEM_INDEX_LAS_VEGAS 0x36U
 #define MENU_ITEM_INDEX_BULLETS 0x37U
 #define MENU_ITEM_INDEX_ROB 0x38U
+#define MENU_ITEM_INDEX_WITHDRAW 0x39U
+#define MENU_ITEM_INDEX_DEPOSIT 0x3AU
+#define MENU_ITEM_INDEX_REAL_ESTATE 0x3BU
+#define MENU_ITEM_INDEX_GET_LOAN 0x3CU
 
 // Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -150,6 +154,7 @@ extern menu_config_t menu_config_bar;
 extern menu_config_t menu_config_stats;
 extern menu_config_t menu_config_inventory;
 extern menu_config_t menu_config_bus_station;
+extern menu_config_t menu_config_bank;
 
 
 // Methods for menu
