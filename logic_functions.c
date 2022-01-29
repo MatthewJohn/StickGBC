@@ -731,8 +731,9 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
             // Check if holding up key
             if (joypad_state.travel_y == -1)
             {
-                current_number += amount_to_change;
-                if (current_number >= max_value)
+                if ((unsigned int)(current_number + amount_to_change) <= (unsigned int)max_value)
+                    current_number += amount_to_change;
+                else
                     current_number = max_value;
                     
                 // Update displayed digits
