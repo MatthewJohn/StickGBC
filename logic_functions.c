@@ -9,6 +9,15 @@
 #include "logic_functions.h"
 #include "window_text_data.h"
 
+typedef struct {
+    UINT8 x;
+    UINT8 y;
+    UINT8 max_digits;
+    UINT16 current_number;
+    UINT16 min_value;
+    UINT16 max_value;
+} number_input_t;
+
 /*
  * remove_ammo
  *
@@ -693,14 +702,19 @@ void process_hobo_menu()
  * 
  * Allow user to select a number using directional keys
  */
-UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, UINT16 min_value, UINT16 max_value)
+UINT16 number_entry(number_input_t *number_input)
 {
     UINT16 start_hold_time = 0;
     UINT16 amount_to_change;
     game_state.last_movement_time = sys_time;
     
     // Show number on-screen
-    main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+    main_show_number(
+        number_input->x, number_input->y,
+        number_input->max_digits,
+        (unsigned int)number_input->current_number,
+        ROM_BANK_LOGIC_FUNCTIONS
+    );
     
     // Reset joypad state
     joypad_state.a_pressed = 0U;
@@ -731,26 +745,36 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
             // Check if holding up key
             if (joypad_state.travel_y == -1)
             {
-                if ((unsigned int)(current_number + amount_to_change) <= (unsigned int)max_value)
-                    current_number += amount_to_change;
+                if ((unsigned int)(number_input->current_number + amount_to_change) <= (unsigned int)number_input->max_value)
+                    number_input->current_number += amount_to_change;
                 else
-                    current_number = max_value;
+                    number_input->current_number = number_input->max_value;
                     
                 // Update displayed digits
-                main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+                main_show_number(
+                    number_input->x, number_input->y,
+                    number_input->max_digits,
+                    (unsigned int)number_input->current_number,
+                    ROM_BANK_LOGIC_FUNCTIONS
+                );
             }
             // Check if holding down
             else if (joypad_state.travel_y == 1)
             {
                 // Check min value or underflow
-                if (((current_number - amount_to_change) < min_value) ||
-                    ((current_number - amount_to_change) > current_number))
-                    current_number = min_value;
+                if (((number_input->current_number - amount_to_change) < number_input->min_value) ||
+                    ((number_input->current_number - amount_to_change) > number_input->current_number))
+                    number_input->current_number = number_input->min_value;
                 else
-                    current_number -= amount_to_change;
+                    number_input->current_number -= amount_to_change;
                     
                 // Update displayed digits
-                main_show_number(x, y, max_digits, (unsigned int)current_number, ROM_BANK_LOGIC_FUNCTIONS);
+                main_show_number(
+                    number_input->x, number_input->y,
+                    number_input->max_digits,
+                    (unsigned int)number_input->current_number,
+                    ROM_BANK_LOGIC_FUNCTIONS
+                );
             }
         }
         // Otherwise reset
@@ -765,7 +789,7 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
     // If user pressed 'a', return the number they chose
     // otherwise, return 0
     if (joypad_state.a_pressed)
-        return current_number;
+        return number_input->current_number;
     else
         return 0;
 }
@@ -777,13 +801,14 @@ UINT16 number_entry(UINT8 x, UINT8 y, UINT8 max_digits, UINT16 current_number, U
  */
 void show_bank_withdraw()
 {
-    UINT16 amount_to_withdraw;
+    number_input_t number_input = {
+        0x03U, 0x0DU, 6, 50U, 20U, game_state.bank_balance
+    };
     // Load sub-menu
     game_state.sub_menu = S_M_WITHDRAW;
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 
-    //amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 0, 0, game_state.bank_balance);
-    amount_to_withdraw = number_entry(0x03U, 0x0DU, 6, 50U, 20U, 200U);
+    number_entry(&number_input);
 
     // Reload original menu
     game_state.sub_menu = S_M_NO_SUBMENU;
