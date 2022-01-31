@@ -802,7 +802,7 @@ UINT16 number_entry(number_input_t *number_input)
 void show_bank_withdraw()
 {
     number_input_t number_input = {
-        0x03U, 0x0DU, 6, 50U, 20U, game_state.bank_balance
+        0x03U, 0x0DU, 6, 0U, 0U, game_state.bank_balance
     };
     // Load sub-menu
     game_state.sub_menu = S_M_WITHDRAW;
