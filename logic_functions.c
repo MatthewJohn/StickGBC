@@ -810,6 +810,12 @@ void show_bank_withdraw()
 
     number_entry(&number_input);
 
+    if (joypad_state.a_pressed)
+    {
+        game_state.bank_balance -= number_input.current_number;
+        game_state.balance += number_input.current_number;
+    }
+
     // Reload original menu
     game_state.sub_menu = S_M_NO_SUBMENU;
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
