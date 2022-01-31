@@ -702,7 +702,7 @@ void process_hobo_menu()
  * 
  * Allow user to select a number using directional keys
  */
-UINT16 number_entry(number_input_t *number_input)
+void number_entry(number_input_t *number_input)
 {
     UINT16 start_hold_time = 0;
     UINT16 amount_to_change;
@@ -785,13 +785,6 @@ UINT16 number_entry(number_input_t *number_input)
 
         wait_vbl_done();
     }
-
-    // If user pressed 'a', return the number they chose
-    // otherwise, return 0
-    if (joypad_state.a_pressed)
-        return number_input->current_number;
-    else
-        return 0;
 }
 
 /*
