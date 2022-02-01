@@ -742,13 +742,15 @@ void number_entry(number_input_t *number_input)
             // has been holding button
             amount_to_change = ((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1;
 
-            // Check if holding up key
-            if (joypad_state.travel_y == -1)
+            // Check if holding down
+            if (joypad_state.travel_y == 1)
             {
-                if ((unsigned int)(number_input->current_number + amount_to_change) <= (unsigned int)number_input->max_value)
-                    number_input->current_number += amount_to_change;
+                // Check min value or underflow
+                if (((number_input->current_number - amount_to_change) < number_input->min_value) ||
+                    ((number_input->current_number - amount_to_change) > number_input->current_number))
+                    number_input->current_number = number_input->min_value;
                 else
-                    number_input->current_number = number_input->max_value;
+                    number_input->current_number -= amount_to_change;
                     
                 // Update displayed digits
                 main_show_number(
@@ -758,15 +760,13 @@ void number_entry(number_input_t *number_input)
                     ROM_BANK_LOGIC_FUNCTIONS
                 );
             }
-            // Check if holding down
-            else if (joypad_state.travel_y == 1)
+            // Check if holding up key
+            else if (joypad_state.travel_y == -1)
             {
-                // Check min value or underflow
-                if (((number_input->current_number - amount_to_change) < number_input->min_value) ||
-                    ((number_input->current_number - amount_to_change) > number_input->current_number))
-                    number_input->current_number = number_input->min_value;
+                if ((unsigned int)(number_input->current_number + amount_to_change) <= (unsigned int)number_input->max_value)
+                    number_input->current_number += amount_to_change;
                 else
-                    number_input->current_number -= amount_to_change;
+                    number_input->current_number = number_input->max_value;
                     
                 // Update displayed digits
                 main_show_number(
