@@ -811,6 +811,7 @@ void show_bank_withdraw()
 
     // Reload original menu
     game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 }
 
