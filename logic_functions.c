@@ -717,8 +717,12 @@ void number_entry(number_input_t *number_input)
         ROM_BANK_LOGIC_FUNCTIONS
     );
 
-    // Small delay to stop previous button press from taking affect
-    delay(100);
+    // Wait for user to release initial A/B presses
+    while (joypad_state.a_pressed == 1U || joypad_state.b_pressed == 1U)
+    {
+        main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
+        wait_vbl_done();
+    }
 
     // Reset joypad state
     joypad_state.a_pressed = 0U;
