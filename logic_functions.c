@@ -705,7 +705,9 @@ void process_hobo_menu()
 void number_entry(number_input_t *number_input)
 {
     UINT16 start_hold_time = 0;
-    UINT16 amount_to_change;
+    INT16 new_num;
+    UINT16 amount_to_change = ((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1;
+
     game_state.last_movement_time = sys_time;
     
     // Show number on-screen
@@ -740,42 +742,24 @@ void number_entry(number_input_t *number_input)
 
             // Determine the amount the value will change, based on how long user
             // has been holding button
-            amount_to_change = ((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1;
+            new_num = number_input->current_number;
+            //new_num -= ((((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1) * joypad_state.travel_y);
+            new_num -= (1 * joypad_state.travel_y);
+            
+            if (new_num < number_input->min_value)
+                new_num = number_input->min_value;
+            else if (new_num > number_input->max_value)
+                new_num = number_input->max_value;
+            
+            number_input->current_number = new_num;
 
-            // Check if holding down
-            if (joypad_state.travel_y == 1)
-            {
-                // Check min value or underflow
-                if (((number_input->current_number - amount_to_change) < number_input->min_value) ||
-                    ((number_input->current_number - amount_to_change) > number_input->current_number))
-                    number_input->current_number = number_input->min_value;
-                else
-                    number_input->current_number -= amount_to_change;
-                    
-                // Update displayed digits
-                main_show_number(
-                    number_input->x, number_input->y,
-                    number_input->max_digits,
-                    (unsigned int)number_input->current_number,
-                    ROM_BANK_LOGIC_FUNCTIONS
-                );
-            }
-            // Check if holding up key
-            else if (joypad_state.travel_y == -1)
-            {
-                if ((unsigned int)(number_input->current_number + amount_to_change) <= (unsigned int)number_input->max_value)
-                    number_input->current_number += amount_to_change;
-                else
-                    number_input->current_number = number_input->max_value;
-                    
-                // Update displayed digits
-                main_show_number(
-                    number_input->x, number_input->y,
-                    number_input->max_digits,
-                    (unsigned int)number_input->current_number,
-                    ROM_BANK_LOGIC_FUNCTIONS
-                );
-            }
+            // Update displayed digits
+            main_show_number(
+                number_input->x, number_input->y,
+                number_input->max_digits,
+                (unsigned int)number_input->current_number,
+                ROM_BANK_LOGIC_FUNCTIONS
+            );
         }
         // Otherwise reset
         else
