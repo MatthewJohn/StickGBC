@@ -699,7 +699,7 @@ void process_hobo_menu()
 
 /*
  * number_entry
- * 
+ *
  * Allow user to select a number using directional keys
  */
 void number_entry(number_input_t *number_input)
@@ -708,7 +708,7 @@ void number_entry(number_input_t *number_input)
     INT16 new_num;
 
     game_state.last_movement_time = sys_time;
-    
+
     // Show number on-screen
     main_show_number(
         number_input->x, number_input->y,
@@ -727,7 +727,7 @@ void number_entry(number_input_t *number_input)
     // Reset joypad state
     joypad_state.a_pressed = 0U;
     joypad_state.b_pressed = 0U;
-    
+
     // Allow user to use directional keys until A or be is pressed
     while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
     {
@@ -757,7 +757,7 @@ void number_entry(number_input_t *number_input)
                 new_num = number_input->min_value;
             if (new_num > number_input->max_value)
                 new_num = number_input->max_value;
-            
+
             number_input->current_number = new_num;
 
             // Update displayed digits
@@ -780,7 +780,7 @@ void number_entry(number_input_t *number_input)
 
 /*
  * show_bank_withdraw
- * 
+ *
  * Load menu to allow user to withdraw money
  */
 void show_bank_withdraw()
@@ -814,7 +814,7 @@ void show_bank_withdraw()
 
 /*
  * show_bank_deposit
- * 
+ *
  * Load menu to allow user to deposit money
  */
 void show_bank_deposit()
