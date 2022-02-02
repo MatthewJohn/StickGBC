@@ -743,10 +743,10 @@ void number_entry(number_input_t *number_input)
             // has been holding button
             new_num = number_input->current_number;
             new_num -= (((INT16)((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1) * joypad_state.travel_y);
-            //new_num -= (1 * joypad_state.travel_y);
 
+            // Rough hack to check if underflow happens. See commit history for more info.
             if (new_num < number_input->min_value ||
-                    (joypad_state.travel_y == 1 && new_num > number_input->current_number))
+                    (joypad_state.travel_y == 1 && (new_num - number_input->current_number) > 10000))
                 new_num = number_input->min_value;
             if (new_num > number_input->max_value)
                 new_num = number_input->max_value;
