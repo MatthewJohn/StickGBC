@@ -781,9 +781,6 @@ void show_bank_withdraw()
     number_input_t number_input = {
         0x03U, 0x0DU, 6, 0U, 0U, game_state.bank_balance
     };
-    // Load sub-menu
-    game_state.sub_menu = S_M_WITHDRAW;
-    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 
     number_entry(&number_input);
 
