@@ -716,7 +716,10 @@ void number_entry(number_input_t *number_input)
         (unsigned int)number_input->current_number,
         ROM_BANK_LOGIC_FUNCTIONS
     );
-    
+
+    // Small delay to stop previous button press from taking affect
+    delay(100);
+
     // Reset joypad state
     joypad_state.a_pressed = 0U;
     joypad_state.b_pressed = 0U;
