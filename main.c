@@ -382,6 +382,17 @@ void update_ai_positions()
     ROM_BANK_RESET;
 }
 
+void main_set_bkg_data(UINT8 start_index, UINT8 cnt, unsigned char *data_ptr, UINT8 data_bank, UINT8 return_bank) NONBANKED
+{
+    // Switch to data bank
+    SWITCH_ROM_MBC5(data_bank);
+
+    set_bkg_data(start_index, cnt, data_ptr);
+
+    // Reset ROM bank to original
+    SWITCH_ROM_MBC5(return_bank);
+}
+
 void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank) NONBANKED
 {
     // @TODO Fix the increment

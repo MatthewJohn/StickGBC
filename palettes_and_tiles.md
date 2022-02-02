@@ -251,7 +251,9 @@
  39. ES
  40. TA
  41. A
- 
+ 42. AM
+ 43. OU
+ 44. NT
  
 
  98. Clock face
