@@ -812,3 +812,36 @@ void show_bank_withdraw()
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 }
 
+/*
+ * show_bank_deposit
+ * 
+ * Load menu to allow user to deposit money
+ */
+void show_bank_deposit()
+{
+    UBYTE tile_data[4];
+    number_input_t number_input = {
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance
+    };
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
+
+    number_entry(&number_input);
+
+    if (joypad_state.a_pressed)
+    {
+        game_state.balance -= number_input.current_number;
+        game_state.bank_balance += number_input.current_number;
+    }
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}

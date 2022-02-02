@@ -1983,6 +1983,15 @@ void update_state()
                         ROM_BANK_RESET;
                     }
                 }
+                else if (menu_state.current_item_x == 1U)
+                {
+                    if (menu_state.current_item_y == 1U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_deposit();
+                        ROM_BANK_RESET;
+                    }
+                }
             }
         }
         else
