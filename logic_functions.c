@@ -778,9 +778,18 @@ void number_entry(number_input_t *number_input)
  */
 void show_bank_withdraw()
 {
+    UBYTE tile_data[4];
     number_input_t number_input = {
-        0x03U, 0x0DU, 6, 0U, 0U, game_state.bank_balance
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.bank_balance
     };
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
 
     number_entry(&number_input);
 
