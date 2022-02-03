@@ -254,6 +254,8 @@
  42. AM
  43. OU
  44. NT
+ 45. PA
+ 46. Y
  
 
  98. Clock face
