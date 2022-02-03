@@ -1987,6 +1987,13 @@ void update_state()
                         show_bank_withdraw();
                         ROM_BANK_RESET;
                     }
+                    else if (menu_state.current_item_y == 2U)
+                    {
+                        // Unavailable
+                        main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_DEFAULT);
+                        // Reload menu
+                        setup_building_menu(2U, ROM_BANK_DEFAULT);
+                    }
                 }
                 else if (menu_state.current_item_x == 1U)
                 {
