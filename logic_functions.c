@@ -706,6 +706,7 @@ void number_entry(number_input_t *number_input)
 {
     UINT16 start_hold_time = 0;
     INT16 new_num;
+    UINT16 amount_to_change;
 
     game_state.last_movement_time = sys_time;
 
@@ -749,13 +750,15 @@ void number_entry(number_input_t *number_input)
             // Determine the amount the value will change, based on how long user
             // has been holding button
             new_num = number_input->current_number;
-            new_num -= (((INT16)((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1) * joypad_state.travel_y);
+            amount_to_change = (((INT16)((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1) * joypad_state.travel_y);
+            new_num -= amount_to_change;
 
             // Rough hack to check if underflow happens. See commit history for more info.
-            if (new_num < number_input->min_value ||
-                    (joypad_state.travel_y == 1 && (new_num - number_input->current_number) > 10000))
+            if (new_num < number_input->min_value
+                    || (joypad_state.travel_y == 1 && (new_num > number_input->max_value))
+                )
                 new_num = number_input->min_value;
-            if (new_num > number_input->max_value)
+            if (joypad_state.travel_y == -1 && new_num > number_input->max_value)
                 new_num = number_input->max_value;
 
             number_input->current_number = new_num;
