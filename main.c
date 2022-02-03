@@ -44,7 +44,7 @@
 #include "main.h"
 
 // Debug definitions
-#define DEBUG_JUMP_BUILDING S_B_BANK
+#define DEBUG_JUMP_BUILDING 0
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 0
