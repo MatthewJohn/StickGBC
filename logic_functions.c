@@ -462,7 +462,7 @@ void process_house_menu()
         check_end_game();
 
         DISPLAY_OFF;
-        
+
         // Update bank amounts
         game_state.bank_balance += ((game_state.bank_balance * game_state.bank_rate) / 1000);
         game_state.loan += ((game_state.loan * game_state.bank_rate) / 1000);
