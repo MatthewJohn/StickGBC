@@ -18,3 +18,6 @@ void process_pawn_menu();
 void process_dealer_menu();
 void process_bar_menu();
 void process_hobo_menu();
+void show_bank_withdraw();
+void show_bank_deposit();
+void show_bank_loan();

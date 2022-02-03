@@ -9,6 +9,15 @@
 #include "logic_functions.h"
 #include "window_text_data.h"
 
+typedef struct {
+    UINT8 x;
+    UINT8 y;
+    UINT8 max_digits;
+    UINT16 current_number;
+    UINT16 min_value;
+    UINT16 max_value;
+} number_input_t;
+
 /*
  * remove_ammo
  *
@@ -454,6 +463,11 @@ void process_house_menu()
 
         DISPLAY_OFF;
 
+        // Update bank amounts
+        game_state.bank_balance += ((game_state.bank_balance * game_state.bank_rate) / 1000);
+        game_state.loan += ((game_state.loan * game_state.bank_rate) / 1000);
+        game_state.bank_rate += ((sys_time % 10) - 5);
+
         // 'Purchase food' to increase HP by 20
         purchase_food(0U, 20U);
 
@@ -687,3 +701,220 @@ void process_hobo_menu()
         }
     }
 }
+
+/*
+ * number_entry
+ *
+ * Allow user to select a number using directional keys
+ */
+void number_entry(number_input_t *number_input)
+{
+    UINT16 start_hold_time = 0;
+    INT16 new_num;
+    UINT16 amount_to_change;
+
+    game_state.last_movement_time = sys_time;
+
+    // Show number on-screen
+    main_show_number(
+        number_input->x, number_input->y,
+        number_input->max_digits,
+        (unsigned int)number_input->current_number,
+        ROM_BANK_LOGIC_FUNCTIONS
+    );
+
+    // Wait for user to release initial A/B presses
+    while (joypad_state.a_pressed == 1U || joypad_state.b_pressed == 1U)
+    {
+        main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
+        wait_vbl_done();
+    }
+
+    // Reset joypad state
+    joypad_state.a_pressed = 0U;
+    joypad_state.b_pressed = 0U;
+
+    // Allow user to use directional keys until A or be is pressed
+    while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
+    {
+        main_check_joy(ROM_BANK_LOGIC_FUNCTIONS);
+
+        if (joypad_state.travel_y != 0)
+        {
+            // If starting to hold direction, set start_hold_time to now
+            if (start_hold_time == 0)
+                start_hold_time = sys_time;
+
+            // Otherwise, if already holding, check if enough time has passed since
+            // last number change
+            else if ((sys_time - game_state.last_movement_time) < 0x07)
+                continue;
+
+            game_state.last_movement_time = sys_time;
+
+            // Determine the amount the value will change, based on how long user
+            // has been holding button
+            new_num = number_input->current_number;
+            amount_to_change = (((INT16)((UINT16)(sys_time >> 3) - (UINT16)(start_hold_time >> 3)) + 1) * joypad_state.travel_y);
+            new_num -= amount_to_change;
+
+            // Rough hack to check if underflow happens. See commit history for more info.
+            if (new_num < number_input->min_value ||
+                    (joypad_state.travel_y == 1 && new_num > number_input->max_value))
+                new_num = number_input->min_value;
+            if (joypad_state.travel_y == -1 && new_num > number_input->max_value)
+                new_num = number_input->max_value;
+
+            number_input->current_number = new_num;
+
+            // Update displayed digits
+            main_show_number(
+                number_input->x, number_input->y,
+                number_input->max_digits,
+                (unsigned int)number_input->current_number,
+                ROM_BANK_LOGIC_FUNCTIONS
+            );
+        }
+        // Otherwise reset
+        else
+        {
+            start_hold_time = 0;
+        }
+
+        wait_vbl_done();
+    }
+}
+
+/*
+ * show_bank_withdraw
+ *
+ * Load menu to allow user to withdraw money
+ */
+void show_bank_withdraw()
+{
+    UBYTE tile_data[4];
+    number_input_t number_input = {
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.bank_balance
+    };
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
+
+    number_entry(&number_input);
+
+    if (joypad_state.a_pressed)
+    {
+        game_state.bank_balance -= number_input.current_number;
+        game_state.balance += number_input.current_number;
+    }
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+
+/*
+ * show_bank_deposit
+ *
+ * Load menu to allow user to deposit money
+ */
+void show_bank_deposit()
+{
+    UBYTE tile_data[4];
+    number_input_t number_input = {
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance
+    };
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
+
+    number_entry(&number_input);
+
+    if (joypad_state.a_pressed)
+    {
+        game_state.balance -= number_input.current_number;
+        game_state.bank_balance += number_input.current_number;
+    }
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+
+/*
+ * show_bank_loan
+ *
+ * Load menu to allow user to deposit money
+ */
+void show_bank_loan()
+{
+    UBYTE tile_data[4];
+    // Setup values for getting a loan, which has a max of 1000
+    number_input_t number_input = {
+        0x07U, 0x0DU, 6, 0U, 0U, 1000U
+    };
+
+    // If currently have a loan, make the lower of either balance or loan amount
+    if (game_state.loan != 0)
+    {
+        if (game_state.balance < (UINT16)game_state.loan)
+            number_input.max_value = game_state.balance;
+        else
+            number_input.max_value = game_state.loan;
+
+        // Set current amount to highest amount to pay back
+        number_input.current_number = number_input.max_value;
+    }
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
+
+    number_entry(&number_input);
+
+    if (joypad_state.a_pressed)
+    {
+        // Repay loan
+        if (game_state.loan != 0)
+        {
+            game_state.balance -= number_input.current_number;
+            game_state.loan -= number_input.current_number;
+        }
+        else
+        {
+            // Get loan
+            game_state.balance += number_input.current_number;
+            game_state.loan += number_input.current_number;
+            game_state.loan_days = 25;
+        }
+
+        // Update menu item based on whether
+        // there is now a loan
+        if (game_state.loan == 0)
+            menu_config_bank.items[5] = MENU_ITEM_INDEX_GET_LOAN;
+        else
+            menu_config_bank.items[5] = MENU_ITEM_INDEX_REPAY_LOAN;
+    }
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+

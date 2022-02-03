@@ -256,8 +256,9 @@
 // 126 -
 #define MENU_TILE_DASH 0x7e
 
+
 #define MENU_TILE2_SE 0x06
-#define MENU_TILE2_LL 0x07
+
 #define MENU_TILE2__G 0x08
 #define MENU_TILE2_OO 0x09
 #define MENU_TILE2_DS 0x0A
@@ -274,7 +275,6 @@
 #define MENU_TILE2_T 0x15
 #define MENU_TILE2_CA 0x16
 #define MENU_TILE2_MD 0x17
-#define MENU_TILE2_EN 0x18
 #define MENU_TILE2_LO 0x19
 #define MENU_TILE2_S 0x1A
 #define MENU_TILE2_AN 0x1B
@@ -283,3 +283,45 @@
 #define MENU_TILE2_LA 0x1E
 #define MENU_TILE2_VE 0x1F
 #define MENU_TILE2_GA 0x20
+#define MENU_TILE2_WI 0x21
+#define MENU_TILE2_DR 0x22
+#define MENU_TILE2_AW 0x23
+#define MENU_TILE2_PO 0x24
+#define MENU_TILE2_SI 0x25
+#define MENU_TILE2_AL 0x26
+#define MENU_TILE2_ES 0x27
+#define MENU_TILE2_TA 0x28
+#define MENU_TILE2_A 0x29
+#define MENU_TILE2_AM 0x2A
+#define MENU_TILE2_OU 0x2B
+#define MENU_TILE2_NT 0x2C
+#define MENU_TILE2_PA 0x2D
+#define MENU_TILE2_Y 0x2E
+
+#define MENU_TILE2_0 0x64
+#define MENU_TILE2_1 0x65
+#define MENU_TILE2_2 0x66
+#define MENU_TILE2_3 0x67
+#define MENU_TILE2_4 0x68
+#define MENU_TILE2_5 0x69
+#define MENU_TILE2_6 0x6a
+#define MENU_TILE2_7 0x6b
+#define MENU_TILE2_8 0x6c
+#define MENU_TILE2_9 0x6d
+#define MENU_TILE2_DOLLAR 0x6e
+#define MENU_TILE2_HP 0x6f
+#define MENU_TILE2_PER_HOUR 0x70
+#define MENU_TILE2_DA 0x71
+#define MENU_TILE2_YS 0x72
+#define MENU_TILE2_SLASH 0x73
+#define MENU_TILE2_IN 0x74
+#define MENU_TILE2_TE 0x75
+#define MENU_TILE2_LL 0x76
+#define MENU_TILE2_IG 0x77
+#define MENU_TILE2_EN 0x78
+#define MENU_TILE2_CE 0x79
+#define MENU_TILE2_ST 0x7a
+#define MENU_TILE2_RE 0x7b
+#define MENU_TILE2_NG 0x7c
+#define MENU_TILE2_TH 0x7d
+#define MENU_TILE2_DASH 0x7e

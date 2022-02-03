@@ -285,6 +285,8 @@ void update_background_color()
 void setup_globals()
 {
     game_state.current_building = S_B_NO_BUILDING;
+    game_state.sub_menu = S_M_NO_SUBMENU;
+
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
@@ -292,6 +294,10 @@ void setup_globals()
 
     // Start with $100
     game_state.balance = 100U;
+    game_state.bank_balance = 0U;
+    game_state.loan = 0U;
+    game_state.loan_days = 0U;
+    game_state.bank_rate = (sys_time % 50) + 1;
 
     game_state.intelligence = 0U;
     game_state.strength = 0U;
@@ -322,6 +328,8 @@ void setup_globals()
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
     screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
+    screen_state.displayed_buildings_2_x = 0U;
+    screen_state.displayed_buildings_2_y = SC_BANK;
 
     // Setup inventory items
     game_state.inventory[S_INVENTORY_SMOKES] = 0x0U;
@@ -353,6 +361,7 @@ void setup_globals()
     //game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
     game_state.balance = 1000U;
+    game_state.bank_balance = 900U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
     game_state.strength = 250U;
@@ -374,6 +383,17 @@ void update_ai_positions()
     // Perform special checks for
     check_road_car_onscreen(&screen_state, &road_car_sprite);
     ROM_BANK_RESET;
+}
+
+void main_set_bkg_data(UINT8 start_index, UINT8 cnt, unsigned char *data_ptr, UINT8 data_bank, UINT8 return_bank) NONBANKED
+{
+    // Switch to data bank
+    SWITCH_ROM_MBC5(data_bank);
+
+    set_bkg_data(start_index, cnt, data_ptr);
+
+    // Reset ROM bank to original
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank) NONBANKED
@@ -1030,6 +1050,12 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
     }
+    else if (game_state.current_building == S_B_BANK)
+    {
+        menu_config = &menu_config_bank;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 1U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1190,10 +1216,18 @@ void check_building_enter()
         setup_building_menu(2U, ROM_BANK_DEFAULT);
     }
 
+    else if (tile_itx == 0x2F9)
+    {
+        game_state.current_building = S_B_BANK;
+        setup_building_menu(2U, ROM_BANK_DEFAULT);
+    }
+
 #if IN_TESTING && DEBUG_JUMP_BUILDING
-    game_state.current_building = DEBUG_JUMP_BUILDING;
-    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
-    return;
+    else
+    {
+        game_state.current_building = DEBUG_JUMP_BUILDING;
+        setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
+    }
 #endif
 }
 
@@ -1940,6 +1974,41 @@ void update_state()
                     // Return to main map once complete
                     setup_main_map();
                     return;
+                }
+            }
+
+            else if (game_state.current_building == S_B_BANK)
+            {
+                if (menu_state.current_item_x == 0U)
+                {
+                    if (menu_state.current_item_y == 1U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_withdraw();
+                        ROM_BANK_RESET;
+                    }
+                    else if (menu_state.current_item_y == 2U)
+                    {
+                        // Unavailable
+                        main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_DEFAULT);
+                        // Reload menu
+                        setup_building_menu(2U, ROM_BANK_DEFAULT);
+                    }
+                }
+                else if (menu_state.current_item_x == 1U)
+                {
+                    if (menu_state.current_item_y == 1U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_deposit();
+                        ROM_BANK_RESET;
+                    }
+                    else if (menu_state.current_item_y == 2U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_loan();
+                        ROM_BANK_RESET;
+                    }
                 }
             }
         }

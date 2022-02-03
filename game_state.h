@@ -36,6 +36,11 @@
 #define S_B_STATS 0x0CU
 #define S_B_INVENTORY 0x0DU
 #define S_B_BUS_STATION 0x0E
+#define S_B_BANK 0x0F
+
+#define S_M_NO_SUBMENU 0x00U;
+#define S_M_WITHDRAW 0x01U;
+#define S_M_DEPOSIT 0x01U;
 
 
 // Maximum of 99 of each item.
@@ -74,6 +79,8 @@
 typedef struct {
     // Current building
     UINT8 current_building;
+    // Sub-menu of current building
+    UINT8 sub_menu;
     // In-game days passed. Might need to be int (not required for limited game plays).
     unsigned int days_passed;
 
@@ -94,6 +101,10 @@ typedef struct {
 
     // Money the user has.
     unsigned int balance;
+    unsigned int bank_balance;
+    UINT16 loan;
+    UINT8 loan_days;
+    INT8 bank_rate;
 
     // Inventory items
     UINT8 inventory[S_INVENTORY_ITEM_COUNT];

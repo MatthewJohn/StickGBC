@@ -21,7 +21,7 @@
     * 2 - 
     * 3 -
  4. scratch for building 0 - bus
- 5. scratch for building 1 - bus station/Bar
+ 5. scratch for building 1 - bus station/Bar/Bank
  6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
 
@@ -242,6 +242,21 @@
  30. LA
  31. VE
  32. GA
+ 33. WI
+ 34. DR
+ 35. AW
+ 36. PO
+ 37. SI
+ 38. AL
+ 39. ES
+ 40. TA
+ 41. A
+ 42. AM
+ 43. OU
+ 44. NT
+ 45. PA
+ 46. Y
+ 
 
  98. Clock face
  99. Colon
@@ -338,3 +353,9 @@
  - 58 - Bus depot sign 2
  - 59 - Bus depot sign 3
  - 60 - Bus depot sign 4
+ - 61 - Bank sign 1
+ - 62 - Bank sign 2
+ - 63 - Bank door 1
+ - 64 - Bank door 2
+ - 65 - Bank dollar sign 1
+ - 66 - Bank dollar sign 2
