@@ -754,9 +754,8 @@ void number_entry(number_input_t *number_input)
             new_num -= amount_to_change;
 
             // Rough hack to check if underflow happens. See commit history for more info.
-            if (new_num < number_input->min_value
-                    || (joypad_state.travel_y == 1 && (new_num > number_input->max_value))
-                )
+            if (new_num < number_input->min_value ||
+                    (joypad_state.travel_y == 1 && new_num > number_input->max_value))
                 new_num = number_input->min_value;
             if (joypad_state.travel_y == -1 && new_num > number_input->max_value)
                 new_num = number_input->max_value;
