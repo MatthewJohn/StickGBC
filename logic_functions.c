@@ -860,7 +860,7 @@ void show_bank_loan()
     number_input_t number_input = {
         0x07U, 0x0DU, 6, 0U, 0U, 1000U
     };
-    
+
     // If currently have a loan, make the lower of either balance or loan amount
     if (game_state.loan != 0)
     {
@@ -868,7 +868,7 @@ void show_bank_loan()
             number_input.max_value = game_state.balance;
         else
             number_input.max_value = game_state.loan;
-            
+
         // Set current amount to highest amount to pay back
         number_input.current_number = number_input.max_value;
     }
@@ -898,7 +898,7 @@ void show_bank_loan()
             game_state.loan += number_input.current_number;
             game_state.loan_days = 25;
         }
-        
+
         // Update menu item based on whether
         // there is now a loan
         if (game_state.loan == 0)
