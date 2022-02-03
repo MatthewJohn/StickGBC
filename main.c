@@ -1223,9 +1223,11 @@ void check_building_enter()
     }
 
 #if IN_TESTING && DEBUG_JUMP_BUILDING
-    game_state.current_building = DEBUG_JUMP_BUILDING;
-    setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
-    return;
+    else
+    {
+        game_state.current_building = DEBUG_JUMP_BUILDING;
+        setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
+    }
 #endif
 }
 
