@@ -297,6 +297,7 @@ void setup_globals()
     game_state.bank_balance = 0U;
     game_state.loan = 0U;
     game_state.loan_days = 0U;
+    game_state.bank_rate = (sys_time % 50) + 1;
 
     game_state.intelligence = 0U;
     game_state.strength = 0U;
