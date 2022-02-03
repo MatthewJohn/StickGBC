@@ -64,6 +64,9 @@ messages = {
         'success': 'You did it!!! After casing the joint, you came back at midnight to clean the place out. You made off with $===',
         'caught': 'You got caught!!! Your charm wasn\'t enough to pull it off, or you just weren\'t lucky enough. In either case, you got thrown in jail for 5 days.',
     },
+    'general': {
+        'unimplemented': 'Sorry! This isn\'t available yet! Check back soon!!'
+    },
 }
 
 # Add alphabetic characters
