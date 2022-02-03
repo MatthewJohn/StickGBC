@@ -104,7 +104,7 @@ typedef struct {
     unsigned int bank_balance;
     UINT16 loan;
     UINT8 loan_days;
-    UINT8 bank_rate;
+    INT8 bank_rate;
 
     // Inventory items
     UINT8 inventory[S_INVENTORY_ITEM_COUNT];
