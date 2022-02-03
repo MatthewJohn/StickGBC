@@ -8,6 +8,7 @@
 #ifndef SCREEN_STATE_DEF
 #define SCREEN_STATE_DEF
 
+// displayed_buildings
 #define SC_HOUSE 0x01U
 #define SC_RESTAURANT 0x02U
 #define SC_SHOP 0x04U
@@ -16,6 +17,8 @@
 #define SC_NLI 0x20U
 #define SC_BAR 0x40U
 #define SC_BUS 0x80U
+// displayed_buildings_2
+#define SC_BANK 0x01U
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
@@ -23,18 +26,22 @@
 #define SC_SHOP_NLI_TRANSITION_Y 0x16U
 #define SC_RESTAURANT_PAWN_UNIVERSITY_TRANSITION_Y 0x20U
 #define SC_UNIVERSITY_TRANSITION_X 0x1DU
-#define SC_NLI_TRANSITION_X_MIN 0x16U
-#define SC_NLI_TRANSITION_X_MAX 0x46U
+#define SC_NLI_BANK_TRANSITION_X_MIN 0x16U
+#define SC_NLI_BANK_TRANSITION_X_MAX 0x46U
 #define SC_BAR_TRANSITION_Y 0xFU
 #define SC_BAR_TRANSITION_X_MIN 0xDU
 #define SC_BAR_TRANSITION_X_MAX 0x1EU
 #define SC_BUS_TRANSITION_X 0x1EU  // 0x30 - SCREEN_WIDTH_TILES (with a bit of jigging)
+#define SC_BUS_TRANSITION_Y_MIN 0x11U
+#define SC_BANK_TRANSITION_Y_MAX 0x0CU
 
 #define SC_AI_SPRITE_COUNT 0x04U
 
 typedef struct {
     UINT8 displayed_buildings_x;
     UINT8 displayed_buildings_y;
+    UINT8 displayed_buildings_2_x;
+    UINT8 displayed_buildings_2_y;
     BOOLEAN displayed_sprites_x[SC_AI_SPRITE_COUNT];
     BOOLEAN displayed_sprites_y[SC_AI_SPRITE_COUNT];
 
