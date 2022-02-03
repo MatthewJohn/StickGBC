@@ -102,6 +102,8 @@ typedef struct {
     // Money the user has.
     unsigned int balance;
     unsigned int bank_balance;
+    UINT16 loan;
+    UINT8 loan_days;
 
     // Inventory items
     UINT8 inventory[S_INVENTORY_ITEM_COUNT];

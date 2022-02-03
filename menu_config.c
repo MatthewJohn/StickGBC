@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x3DU] = {
+const menu_config_item_t menu_config_items[0x3EU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1412,6 +1412,24 @@ const menu_config_item_t menu_config_items[0x3DU] = {
             MENU_TILE2_GE,
             MENU_TILE2_T,
             MENU_TILE2_A,
+            MENU_TILE2_LO,
+            MENU_TILE2_AN,
+            MENU_ITEM_NO_TILE,
+
+            MENU_BLANK_ITEM_ROW,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Repay Loan
+    {
+        {
+            MENU_TILE2_RE,
+            MENU_TILE2_PA,
+            MENU_TILE2_Y,
             MENU_TILE2_LO,
             MENU_TILE2_AN,
             MENU_ITEM_NO_TILE,

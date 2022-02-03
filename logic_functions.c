@@ -847,3 +847,69 @@ void show_bank_deposit()
     main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 }
+
+/*
+ * show_bank_loan
+ *
+ * Load menu to allow user to deposit money
+ */
+void show_bank_loan()
+{
+    UBYTE tile_data[4];
+    // Setup values for getting a loan, which has a max of 1000
+    number_input_t number_input = {
+        0x07U, 0x0DU, 6, 0U, 0U, 1000U
+    };
+    
+    // If currently have a loan, make the lower of either balance or loan amount
+    if (game_state.loan != 0)
+    {
+        if (game_state.balance < (UINT16)game_state.loan)
+            number_input.max_value = game_state.balance;
+        else
+            number_input.max_value = game_state.loan;
+            
+        // Set current amount to highest amount to pay back
+        number_input.current_number = number_input.max_value;
+    }
+
+    // Display 'Amount: ' on screen
+    main_set_bkg_data(0x2AU, 3, &(screen_state.background_tiles[0x2A << 4]), ROM_BANK_BUILDING_MENU, ROM_BANK_LOGIC_FUNCTIONS);
+    tile_data[0] = 0x2A;
+    tile_data[1] = 0x2B;
+    tile_data[2] = 0x2C;
+    tile_data[3] = 0x63;
+    set_bkg_tiles(0x03U, 0x0DU, 4U, 1U,  &tile_data);
+
+    number_entry(&number_input);
+
+    if (joypad_state.a_pressed)
+    {
+        // Repay loan
+        if (game_state.loan != 0)
+        {
+            game_state.balance -= number_input.current_number;
+            game_state.loan -= number_input.current_number;
+        }
+        else
+        {
+            // Get loan
+            game_state.balance += number_input.current_number;
+            game_state.loan += number_input.current_number;
+            game_state.loan_days = 25;
+        }
+        
+        // Update menu item based on whether
+        // there is now a loan
+        if (game_state.loan == 0)
+            menu_config_bank.items[5] = MENU_ITEM_INDEX_GET_LOAN;
+        else
+            menu_config_bank.items[5] = MENU_ITEM_INDEX_REPAY_LOAN;
+    }
+
+    // Reload original menu
+    game_state.sub_menu = S_M_NO_SUBMENU;
+    main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+

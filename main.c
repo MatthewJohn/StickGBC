@@ -295,6 +295,8 @@ void setup_globals()
     // Start with $100
     game_state.balance = 100U;
     game_state.bank_balance = 0U;
+    game_state.loan = 0U;
+    game_state.loan_days = 0U;
 
     game_state.intelligence = 0U;
     game_state.strength = 0U;
@@ -1989,6 +1991,12 @@ void update_state()
                     {
                         ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                         show_bank_deposit();
+                        ROM_BANK_RESET;
+                    }
+                    else if (menu_state.current_item_y == 2U)
+                    {
+                        ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                        show_bank_loan();
                         ROM_BANK_RESET;
                     }
                 }
