@@ -223,7 +223,7 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_y & SC_HOUSE)
             load_house();
     }
-    if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state->screen_location_x_tiles == SC_RESTAURANT_UNIVERSITY_TRANSITION_X)
     {
         // Disable university and re-enable restaurant
         screen_state->displayed_buildings_x &= ~SC_UNIVERSITY;
@@ -299,8 +299,9 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
     // Disable house
     if (screen_state->screen_location_x_tiles == SC_HOUSE_TRANSITION_X)
         screen_state->displayed_buildings_x &= ~SC_HOUSE;
-    if (screen_state->screen_location_x_tiles == SC_UNIVERSITY_TRANSITION_X)
+    if (screen_state->screen_location_x_tiles == SC_RESTAURANT_UNIVERSITY_TRANSITION_X)
     {
+        screen_state->displayed_buildings_x &= ~SC_RESTAURANT;
         screen_state->displayed_buildings_x |= SC_UNIVERSITY;
         if (screen_state->displayed_buildings_y & SC_UNIVERSITY)
             load_university();
