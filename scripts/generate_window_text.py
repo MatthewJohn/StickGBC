@@ -65,7 +65,7 @@ messages = {
         'caught': 'You got caught!!! Your charm wasn\'t enough to pull it off, or you just weren\'t lucky enough. In either case, you got thrown in jail for 5 days.',
     },
     'general': {
-        'unimplemented': 'Sorry! This isn\'t available yet! Check back soon!!'
+        'unimplemented': 'Sorry! This isn\'t available yet, bro\'! Check back soon and keep an eye on MatthewJohn Github!!'
     },
 }
 
