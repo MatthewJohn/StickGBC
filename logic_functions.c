@@ -623,15 +623,35 @@ void process_dealer_menu()
 
 void process_bar_menu()
 {
-    if (menu_state.current_item_x == 0U && menu_state.current_item_y == 1U)
+    if (menu_state.current_item_x == 0U)
     {
-        increase_charm(20U, 2U, 2U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (menu_state.current_item_y == 1U)
+        {
+            increase_charm(20U, 2U, 2U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
     }
-    else if (menu_state.current_item_x == 1U && menu_state.current_item_y == 1U)
+    else if (menu_state.current_item_x == 1U)
     {
-        purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
-        // Enable give bottle of beer in hobo menu
-        menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
+        if (menu_state.current_item_y == 1U)
+        {
+            purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
+            // Enable give bottle of beer in hobo menu
+            menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
     }
 }
 
