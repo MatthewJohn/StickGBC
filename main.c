@@ -2091,6 +2091,9 @@ void main()
 {
     debug_address = 0xFFFA;
 
+    // Set CPU fast to help with re-draw when scrolling
+    cpu_fast();
+
     DISPLAY_OFF;
     setup_globals();
 
