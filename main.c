@@ -299,9 +299,11 @@ void setup_globals()
     game_state.loan_days = 0U;
     game_state.bank_rate = (sys_time % 50) + 1;
 
-    game_state.intelligence = 0U;
-    game_state.strength = 0U;
-    game_state.charm = 0U;
+    // Randomise initial stats.
+    // Use different modulus operands to get different results.
+    game_state.intelligence = (sys_time % 10);
+    game_state.strength = (sys_time % 11);
+    game_state.charm = (sys_time % 12);
     game_state.karma = 0;
 
     game_state.hobo_given_money = 0U;
