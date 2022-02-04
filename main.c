@@ -2092,7 +2092,6 @@ void main()
     debug_address = 0xFFFA;
 
     DISPLAY_OFF;
-    setup_globals();
 
     wait_vbl_done();
 
@@ -2100,6 +2099,12 @@ void main()
     ROM_BANK_OPENING_SCREEN_SWITCH;
     opening_screen_loop();
     SHOW_BKG;
+
+    // Setup globals once opening screen has passed.
+    // This means the randomisation that uses sys_time
+    // will be more random based on amount of time
+    // it takes player to go through opening screen
+    setup_globals();
 
     // Initial setup of window and update with starting stats
     ROM_BANK_BUILDING_MENU_SWITCH;
