@@ -4,6 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#pragma bank=7
 /*
 
  SPLASH_SCREEN_MAP.C
@@ -11,7 +12,7 @@
  Map Source File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 20 x 18
    Tile set      : splash_screen.gbr
@@ -28,7 +29,7 @@
 #define splashscreenmapHeight 18
 #define splashscreenmapBank 0
 
-unsigned char splashscreenmap[] =
+const unsigned char splashscreenmap[] =
 {
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,

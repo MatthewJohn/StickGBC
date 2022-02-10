@@ -11,7 +11,7 @@
  Map Include File.
 
  Info:
-   Section       : 
+   Section       :
    Bank          : 0
    Map size      : 20 x 18
    Tile set      : splash_screen.gbr
@@ -28,6 +28,6 @@
 #define splashscreenmapHeight 18
 #define splashscreenmapBank 0
 
-extern unsigned char splashscreenmap[];
+extern const unsigned char splashscreenmap[];
 
 /* End of SPLASH_SCREEN_MAP.H */
