@@ -41,7 +41,7 @@ void splash_screen_loop()
     // Load additional tiles required
     set_bkg_data(8U, 120U, &(splashscreentiles[8U << 4]));
     VBK_REG = 1;
-    set_bkg_data(0U, 22U, &(splashscreentiles[128U << 4]));
+    set_bkg_data(0U, 25U, &(splashscreentiles[128U << 4]));
     VBK_REG = 0;
 
     DISPLAY_ON;
