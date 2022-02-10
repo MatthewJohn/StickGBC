@@ -32,8 +32,8 @@
 /* Bank of tiles. */
 #define splashscreentilesBank 0
 /* CGBpalette entries. */
-extern unsigned char splashscreentilesCGB[];
+extern const unsigned char splashscreentilesCGB[];
 /* Start of tile array. */
-extern unsigned char splashscreentiles[];
+extern const unsigned char splashscreentiles[];
 
 /* End of SPLASH_SCREEN_TILES.H */
