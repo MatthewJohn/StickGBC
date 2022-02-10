@@ -2096,9 +2096,15 @@ void main()
 
     wait_vbl_done();
 
+    // Enter splash screen loop
+    ROM_BANK_OPENING_SCREEN_SWITCH;
+    splash_screen_loop();
+    ROM_BANK_RESET;
+
     // Enter opening screen loop
     ROM_BANK_OPENING_SCREEN_SWITCH;
     opening_screen_loop();
+    ROM_BANK_RESET;
     SHOW_BKG;
 
     // Initial setup of window and update with starting stats

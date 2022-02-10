@@ -12,5 +12,6 @@
 #define OPENING_SCREEN_DEF
 
 void opening_screen_loop();
+void splash_screen_loop();
 
 #endif
