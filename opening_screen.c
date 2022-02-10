@@ -83,6 +83,9 @@ void opening_screen_loop()
 
     DISPLAY_ON;
 
+    joypad_state.a_pressed = 0U;
+    joypad_state.start_pressed = 0U;
+
     // Wait for user to press A or START
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {
