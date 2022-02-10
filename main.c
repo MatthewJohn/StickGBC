@@ -482,8 +482,11 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             VBK_REG = 1;
 
             SWITCH_ROM_MBC5(tile_data_bank);
-            // Lookup tile from background tile map
+            // Lookup tile palette from background tile map
             tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
+
+            // Bit shift last bit of tile index to determine low or high bank (bit 3)
+            tile_data[0] |= (screen_state.background_tile_map[current_tile_data_itx] & 0x80U) >> 4;
 
             // Check if current tile is flipped
             if (screen_state.background_tile_map[current_tile_palette_itx] & 0x08)
