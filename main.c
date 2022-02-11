@@ -299,9 +299,11 @@ void setup_globals()
     game_state.loan_days = 0U;
     game_state.bank_rate = (sys_time % 50) + 1;
 
-    game_state.intelligence = 0U;
-    game_state.strength = 0U;
-    game_state.charm = 0U;
+    // Randomise initial stats.
+    // Use different modulus operands to get different results.
+    game_state.intelligence = (sys_time % 10);
+    game_state.strength = (sys_time % 11);
+    game_state.charm = (sys_time % 12);
     game_state.karma = 0;
 
     game_state.hobo_given_money = 0U;
@@ -309,8 +311,12 @@ void setup_globals()
 
     game_state.intro_shown = 0U;
 
-    game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
+    // Set HP twice - for some reason, the initial set
+    // causes a weird issue. Assigning hp to max_hp works.
+    // Then setting hp again from this value fixes the issue.
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
+    game_state.max_hp = game_state.hp;
+    game_state.hp = game_state.max_hp;
 
     screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
@@ -2092,7 +2098,6 @@ void main()
     debug_address = 0xFFFA;
 
     DISPLAY_OFF;
-    setup_globals();
 
     wait_vbl_done();
 
@@ -2100,6 +2105,12 @@ void main()
     ROM_BANK_OPENING_SCREEN_SWITCH;
     opening_screen_loop();
     SHOW_BKG;
+
+    // Setup globals once opening screen has passed.
+    // This means the randomisation that uses sys_time
+    // will be more random based on amount of time
+    // it takes player to go through opening screen
+    setup_globals();
 
     // Initial setup of window and update with starting stats
     ROM_BANK_BUILDING_MENU_SWITCH;
