@@ -311,8 +311,12 @@ void setup_globals()
 
     game_state.intro_shown = 0U;
 
-    game_state.max_hp = S_INITIAL_BASE_HP + game_state.strength;
+    // Set HP twice - for some reason, the initial set
+    // causes a weird issue. Assigning hp to max_hp works.
+    // Then setting hp again from this value fixes the issue.
     game_state.hp = S_INITIAL_BASE_HP + game_state.strength;
+    game_state.max_hp = game_state.hp;
+    game_state.hp = game_state.max_hp;
 
     screen_state.displayed_sprites_x[skater_sprite.sprite_display_bit] = 0U;
     screen_state.displayed_sprites_y[skater_sprite.sprite_display_bit] = 1U;
