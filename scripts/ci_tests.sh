@@ -24,7 +24,7 @@ fi
 
 tests_failed=0
 
-for test_name in test_{1..4}
+for test_name in test_{1..5}
 do
   mkdir $test_name
 
