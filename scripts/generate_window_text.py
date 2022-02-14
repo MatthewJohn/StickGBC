@@ -28,7 +28,7 @@ messages = {
         'ceo': 'Congratulations! You are now a: CEO. Your wage is now $100 per hour.',
     },
     'skater': {
-        'int': 'Hey man! Do you have any smokes? It\'s just.. I.. uh.. er.. forgot my ID at home! Please?',
+        'int': 'Hey man! Do you haveany smokes? It\'s    just.. I.. uh.. er..forgot my ID at     home! Please?',
         'give': 'Sweet Man! You are sooo cool! Here, you can take this! (*Skateboard received*)',
         'thx_1': '*cough cough* Sweeet... *hack*',
         'thx_2': 'Sweet, thanks dude. Hey, you think you could get some kings next time?',
