@@ -31,8 +31,8 @@ messages = {
         'int': 'Hey man! Do you haveany smokes? It\'s    just.. I.. uh.. er..forgot my ID at     home! Please?',
         'give': 'Sweet Man! You are sooo cool! Here, you can take this! (*Skateboard received*)',
         'thx_1': '*cough cough* Sweeet... *hack*',
-        'thx_2': 'Sweet, thanks dude. Hey, you think you could get some kings next time?',
-        'thx_3': '*hack* Ohh yeah.. that\'s the good stuff.',
+        'thx_2': 'Sweet, thanks dude. Hey, you think you  could get some kingsnext time?',
+        'thx_3': '*hack* Ohh yeah..   that\'s the good stuff.',
         'thx_4': 'Thanks dude! And to think, I was thinking about quitting.. ah well! You got a light?',
     },
     'dealer': {
