@@ -5,13 +5,4 @@
  */
 
 
-#include "joy.h"
-#include "screen_state.c"
-
-#ifndef OPENING_SCREEN_DEF
-#define OPENING_SCREEN_DEF
-
-void opening_screen_loop();
-void splash_screen_loop();
-
-#endif
+extern const UWORD splash_screen_palette[];
