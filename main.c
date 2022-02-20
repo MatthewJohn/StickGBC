@@ -288,6 +288,8 @@ void setup_globals()
     game_state.current_building = S_B_NO_BUILDING;
     game_state.sub_menu = S_M_NO_SUBMENU;
 
+    game_state.game_ended = 0;
+
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
@@ -2122,52 +2124,53 @@ void main()
     // Set CPU fast to help with re-draw when scrolling
     cpu_fast();
 
-    DISPLAY_OFF;
-
     wait_vbl_done();
 
-    // Enter splash screen loop
-    ROM_BANK_OPENING_SCREEN_SWITCH;
-    splash_screen_loop();
-    ROM_BANK_RESET;
+    while (1)
+    {
+        DISPLAY_OFF;
 
-    // Enter opening screen loop
-    ROM_BANK_OPENING_SCREEN_SWITCH;
-    opening_screen_loop();
-    ROM_BANK_RESET;
-    SHOW_BKG;
+        // Enter splash screen loop
+        ROM_BANK_OPENING_SCREEN_SWITCH;
+        splash_screen_loop();
+        ROM_BANK_RESET;
 
-    // Setup globals once opening screen has passed.
-    // This means the randomisation that uses sys_time
-    // will be more random based on amount of time
-    // it takes player to go through opening screen
-    setup_globals();
+        // Enter opening screen loop
+        ROM_BANK_OPENING_SCREEN_SWITCH;
+        opening_screen_loop();
+        ROM_BANK_RESET;
+        SHOW_BKG;
 
-    // Initial setup of window and update with starting stats
-    ROM_BANK_BUILDING_MENU_SWITCH;
-    setup_window();
-    update_window();
-    ROM_BANK_RESET;
-    SHOW_WIN;
+        // Setup globals once opening screen has passed.
+        // This means the randomisation that uses sys_time
+        // will be more random based on amount of time
+        // it takes player to go through opening screen
+        setup_globals();
 
-    // Load background tiles. This turns display on, so run last
-    setup_main_map();
+        // Initial setup of window and update with starting stats
+        ROM_BANK_BUILDING_MENU_SWITCH;
+        setup_window();
+        update_window();
+        ROM_BANK_RESET;
+        SHOW_WIN;
 
-    // And open the curtains!
-    DISPLAY_ON;
+        // Load background tiles. This turns display on, so run last
+        setup_main_map();
 
-        while(1) {
-                wait_vbl_done();
+        // And open the curtains!
+        DISPLAY_ON;
 
-                main_check_joy(ROM_BANK_DEFAULT);
+        while(game_state.game_ended == 0U)
+        {
+            wait_vbl_done();
 
-                update_ai_positions();
-                update_state();
+            main_check_joy(ROM_BANK_DEFAULT);
 
-                // Check for collision with car AI
-                check_car_collision();
+            update_ai_positions();
+            update_state();
 
-                // Temporarily remove delay to speed debugging
-                //delay(50);
+            // Check for collision with car AI
+            check_car_collision();
         }
+    }
 }
