@@ -81,6 +81,8 @@ typedef struct {
     UINT8 current_building;
     // Sub-menu of current building
     UINT8 sub_menu;
+    // Number of days for game
+    UINT16 max_days;
     // In-game days passed. Might need to be int (not required for limited game plays).
     unsigned int days_passed;
 
@@ -126,6 +128,7 @@ typedef struct {
     BOOLEAN hobo_given_beer;
 
     UINT8 intro_shown;
+    BOOLEAN game_ended;
 } game_state_t;
 
 // The sprite is placed into place and moved from min_location to max_location.

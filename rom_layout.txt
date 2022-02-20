@@ -38,6 +38,9 @@
  * Splash screen tiles
  * Splash screen map
  * Splash screen palette
+ * Endgame tiles
+ * Endgame map
+ * Endgame palette
 
 ## 8
  * window_text.c - window status text and functions

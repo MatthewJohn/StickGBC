@@ -28,3 +28,4 @@ f_setup_palette main_map_sprite_palette 4
 f_setup_palette main_map_sprite_palette 4
 f_setup_palette opening_screen_palette 7
 f_setup_palette splash_screen_palette 7
+f_setup_palette endgame_palette 7

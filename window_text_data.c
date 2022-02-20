@@ -28,6 +28,143 @@ const UINT8 win_txt_rob_success[] = {
     35U, 25U, 31U, 0U, 14U, 19U, 14U, 0U, 19U, 30U, 39U, 39U, 39U, 0U, 11U, 16U, 30U, 15U, 28U, 0U, 13U, 11U, 29U, 19U, 24U, 17U, 0U, 30U, 18U, 15U, 0U, 20U, 25U, 19U, 24U, 30U, 38U, 0U, 35U, 25U, 31U, 0U, 13U, 11U, 23U, 15U, 0U, 12U, 11U, 13U, 21U, 0U, 11U, 30U, 0U, 23U, 19U, 14U, 24U, 19U, 17U, 18U, 30U, 0U, 30U, 25U, 0U, 13U, 22U, 15U, 11U, 24U, 0U, 30U, 18U, 15U, 0U, 26U, 22U, 11U, 13U, 15U, 0U, 25U, 31U, 30U, 37U, 0U, 35U, 25U, 31U, 0U, 23U, 11U, 14U, 15U, 0U, 25U, 16U, 16U, 0U, 33U, 19U, 30U, 18U, 0U, 40U, WINDOW_TEXT_SKIP, WINDOW_TEXT_SKIP, WINDOW_TEXT_SKIP, WINDOW_TEXT_END,
 };
 
+/* Messages for rank*/
+const UINT8 win_txt_rank_boy_scout[] = {
+    12U, 25U, 35U, 0U, 29U, 13U, 25U, 31U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_juvenile_delinquent[] = {
+    20U, 31U, 32U, 15U, 24U, 19U, 22U, 15U, 0U, 14U, 15U, 22U, 19U, 24U, 27U, 31U, 15U, 24U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_demi_god[] = {
+    14U, 15U, 23U, 19U, 0U, 17U, 25U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_seed_of_evil[] = {
+    29U, 15U, 15U, 14U, 0U, 25U, 16U, 0U, 15U, 32U, 19U, 22U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_exceptional[] = {
+    15U, 34U, 13U, 15U, 26U, 30U, 19U, 25U, 24U, 11U, 22U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_utter_failure[] = {
+    31U, 30U, 30U, 15U, 28U, 0U, 16U, 11U, 19U, 22U, 31U, 28U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_multimillionaire[] = {
+    23U, 31U, 22U, 30U, 19U, 23U, 19U, 22U, 22U, 19U, 25U, 24U, 11U, 19U, 28U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_selfless_millionaire[] = {
+    29U, 15U, 22U, 16U, 22U, 15U, 29U, 29U, 0U, 23U, 19U, 22U, 22U, 19U, 25U, 24U, 11U, 19U, 28U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_genuine_hellraiser[] = {
+    17U, 15U, 24U, 31U, 19U, 24U, 15U, 0U, 18U, 15U, 22U, 22U, 28U, 11U, 19U, 22U, 15U, 28U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_extraordinary[] = {
+    15U, 34U, 30U, 28U, 11U, 25U, 28U, 14U, 19U, 24U, 11U, 28U, 35U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_millionaire[] = {
+    23U, 19U, 22U, 22U, 19U, 25U, 24U, 11U, 19U, 28U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_undeniably_wicked[] = {
+    31U, 24U, 14U, 15U, 24U, 19U, 11U, 12U, 22U, 35U, 0U, 33U, 19U, 13U, 21U, 15U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_mediocre[] = {
+    23U, 15U, 14U, 19U, 25U, 13U, 28U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_white_collar_criminal[] = {
+    33U, 18U, 19U, 30U, 15U, 0U, 13U, 25U, 22U, 22U, 11U, 28U, 0U, 13U, 28U, 19U, 23U, 19U, 24U, 11U, 22U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_girl_scout[] = {
+    17U, 19U, 28U, 22U, 0U, 29U, 13U, 25U, 31U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_extraordinarily_evil[] = {
+    15U, 34U, 30U, 28U, 11U, 25U, 28U, 14U, 19U, 24U, 11U, 28U, 19U, 22U, 35U, 0U, 15U, 32U, 19U, 22U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_philanthropist[] = {
+    26U, 18U, 19U, 22U, 11U, 24U, 30U, 18U, 28U, 25U, 26U, 19U, 29U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_mr_dog[] = {
+    23U, 28U, 37U, 0U, 14U, 25U, 17U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_god[] = {
+    17U, 25U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_billionaire_god[] = {
+    12U, 19U, 22U, 22U, 19U, 25U, 24U, 11U, 19U, 28U, 15U, 0U, 17U, 25U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_novice[] = {
+    24U, 25U, 32U, 19U, 13U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_drug_lord[] = {
+    14U, 28U, 31U, 17U, 0U, 22U, 25U, 28U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_loser[] = {
+    22U, 25U, 29U, 15U, 28U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_genius[] = {
+    17U, 15U, 24U, 19U, 31U, 29U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_apostle[] = {
+    11U, 26U, 25U, 29U, 30U, 22U, 15U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_hopeless[] = {
+    18U, 25U, 26U, 15U, 22U, 15U, 29U, 29U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_saint[] = {
+    29U, 11U, 19U, 24U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_extraordinarily_good[] = {
+    15U, 34U, 30U, 28U, 11U, 25U, 28U, 14U, 19U, 24U, 11U, 28U, 19U, 22U, 35U, 0U, 17U, 25U, 25U, 14U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_petty_criminal[] = {
+    26U, 15U, 30U, 30U, 35U, 0U, 13U, 28U, 19U, 23U, 19U, 24U, 11U, 22U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_car_jacker[] = {
+    13U, 11U, 28U, 0U, 20U, 11U, 13U, 21U, 15U, 28U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_mr_natas[] = {
+    23U, 28U, 37U, 0U, 24U, 11U, 30U, 11U, 29U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_incompetent[] = {
+    19U, 24U, 13U, 25U, 23U, 26U, 15U, 30U, 15U, 24U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_wuss[] = {
+    33U, 31U, 29U, 29U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_rank_good_samaritan[] = {
+    17U, 25U, 25U, 14U, 0U, 29U, 11U, 23U, 11U, 28U, 19U, 30U, 11U, 24U, WINDOW_TEXT_END,
+};
+
 /* Messages for general*/
 const UINT8 win_txt_general_unimplemented[] = {
     29U, 25U, 28U, 28U, 35U, 39U, 0U, 30U, 18U, 19U, 29U, 0U, 19U, 29U, 24U, 41U, 30U, 0U, 11U, 32U, 11U, 19U, 22U, 11U, 12U, 22U, 15U, 0U, 35U, 15U, 30U, 38U, 0U, 12U, 28U, 25U, 41U, 39U, 0U, 13U, 18U, 15U, 13U, 21U, 0U, 12U, 11U, 13U, 21U, 0U, 29U, 25U, 25U, 24U, 0U, 11U, 24U, 14U, 0U, 21U, 15U, 15U, 26U, 0U, 11U, 24U, 0U, 15U, 35U, 15U, 0U, 25U, 24U, 0U, 23U, 11U, 30U, 30U, 18U, 15U, 33U, 20U, 25U, 18U, 24U, 0U, 17U, 19U, 30U, 18U, 31U, 12U, 39U, 39U, WINDOW_TEXT_END,
