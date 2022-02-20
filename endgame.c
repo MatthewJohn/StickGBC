@@ -61,9 +61,13 @@ void endgame()
     // Write karma number
     main_show_number_signed(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
 
-    main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
-    main_show_number(0xAU, 0xFU, 8, game_state.bank_balance, ROM_BANK_ENDGAME);
-    main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
+    tile_data = MENU_TILE_DOLLAR;
+    current_x = main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
+    set_bkg_tiles(current_x, 0xEU, 1, 1, &tile_data);
+    current_x = main_show_number(0xAU, 0xFU, 8, game_state.bank_balance, ROM_BANK_ENDGAME);
+    set_bkg_tiles(current_x, 0xFU, 1, 1, &tile_data);
+    current_x = main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
+    set_bkg_tiles(current_x, 0x10U, 1, 1, &tile_data);
 
     total_balance = game_state.balance;
     total_balance += game_state.bank_balance;
@@ -82,7 +86,10 @@ void endgame()
     {
         tile_data = MENU_TILE_DASH;
         set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
+        current_x -= 1U;
     }
+    tile_data = MENU_TILE_DOLLAR;
+    set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
 
     DISPLAY_ON;
 
