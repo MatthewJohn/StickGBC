@@ -150,7 +150,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
         {
             main_show_window_text(&win_txt_bus_statn_no_ammo, ROM_BANK_LOGIC_FUNCTIONS);
         }
-    
+
         return;
     }
 

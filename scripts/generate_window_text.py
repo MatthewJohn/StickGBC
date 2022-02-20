@@ -79,7 +79,7 @@ messages = {
         'genius': 'Genius',
         'millionaire': 'Millionaire',
         'multimillionaire': 'Multimillionaire',
-        'demogod': 'Demi god',
+        'demi_god': 'Demi god',
         'god': 'God',
         'billionaire_god': 'Billionaire God',
         'wuss': 'Wuss',

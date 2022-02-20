@@ -37,6 +37,10 @@ const UINT8 win_txt_rank_juvenile_delinquent[] = {
     20U, 31U, 32U, 15U, 24U, 19U, 22U, 15U, 0U, 14U, 15U, 22U, 19U, 24U, 27U, 31U, 15U, 24U, 30U, WINDOW_TEXT_END,
 };
 
+const UINT8 win_txt_rank_demi_god[] = {
+    14U, 15U, 23U, 19U, 0U, 17U, 25U, 14U, WINDOW_TEXT_END,
+};
+
 const UINT8 win_txt_rank_seed_of_evil[] = {
     29U, 15U, 15U, 14U, 0U, 25U, 16U, 0U, 15U, 32U, 19U, 22U, WINDOW_TEXT_END,
 };
@@ -75,10 +79,6 @@ const UINT8 win_txt_rank_undeniably_wicked[] = {
 
 const UINT8 win_txt_rank_mediocre[] = {
     23U, 15U, 14U, 19U, 25U, 13U, 28U, 15U, WINDOW_TEXT_END,
-};
-
-const UINT8 win_txt_rank_demogod[] = {
-    14U, 15U, 23U, 19U, 0U, 17U, 25U, 14U, WINDOW_TEXT_END,
 };
 
 const UINT8 win_txt_rank_white_collar_criminal[] = {
