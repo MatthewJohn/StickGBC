@@ -15,7 +15,7 @@
 #include "main.h"
 #include "menu_config.h"
 
-UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
+UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, UINT32 value)
 {
     UINT8 itx_x;
     UINT8 itx;

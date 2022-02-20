@@ -16,7 +16,7 @@
 
 void endgame()
 {
-    UINT16 total_balance = 0;
+    UINT32 total_balance = 0;
     BOOLEAN negative_total = 0;
     UBYTE tile_data;
     UINT8 current_x;
