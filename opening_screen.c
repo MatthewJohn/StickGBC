@@ -36,7 +36,7 @@ void splash_screen_loop()
     );
 
     // Move background to top left
-    scroll_bkg(0, 0);
+    move_bkg(0, 0);
 
     // Load additional tiles required
     set_bkg_data(8U, 120U, &(splashscreentiles[8U << 4]));
@@ -76,7 +76,7 @@ void opening_screen_loop()
     );
 
     // Move background to top left
-    scroll_bkg(0, 0);
+    move_bkg(0, 0);
 
     // Load additional tiles required
     set_bkg_data(8U, 19U, &(openingscreentiles[8U << 4]));
