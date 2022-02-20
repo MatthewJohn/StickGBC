@@ -290,6 +290,7 @@ void setup_globals()
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
+    game_state.max_days = 30U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
     // Start with $100
@@ -1256,7 +1257,8 @@ void end_game()
  */
 void check_end_game()
 {
-
+    if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
+        end_game();
 }
 
 void modify_karma(INT8 karma_change) NONBANKED
@@ -1282,7 +1284,7 @@ void decrease_hp(UINT8 decrease_amount)
     }
     // If run out of HP, set to zero and end game
     game_state.hp = 0;
-    end_game();
+    check_end_game();
 }
 
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
@@ -1982,6 +1984,8 @@ void update_state()
 
                     // Return to main map once complete
                     setup_main_map();
+                    // Since days can pass, check end game
+                    check_end_game();
                     return;
                 }
             }

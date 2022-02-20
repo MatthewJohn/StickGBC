@@ -81,6 +81,8 @@ typedef struct {
     UINT8 current_building;
     // Sub-menu of current building
     UINT8 sub_menu;
+    // Number of days for game
+    UINT16 max_days;
     // In-game days passed. Might need to be int (not required for limited game plays).
     unsigned int days_passed;
 
