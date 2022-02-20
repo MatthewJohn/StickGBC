@@ -42,7 +42,7 @@ void endgame()
     move_bkg(0, 0);
 
     // Load additional tiles required
-    set_bkg_data(8U, 86U, &(endgametiles[8U << 4]));
+    set_bkg_data(8U, 87U, &(endgametiles[8U << 4]));
 
     DISPLAY_ON;
 
