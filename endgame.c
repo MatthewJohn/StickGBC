@@ -61,7 +61,7 @@ void endgame()
     main_show_number(0xBU, 0xCU, 3, game_state.intelligence, ROM_BANK_ENDGAME);
 
     // Write karma number
-    main_show_number_signed(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
+    main_show_signed_number(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
 
     tile_data = MENU_TILE_DOLLAR;
     current_x = main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
