@@ -5,6 +5,17 @@ Stick GBC is a gameboy colour re-implementation of XGen Studio's Stick RPG.
 
 ## Background
 
+I played this game a couple of times around 15 years ago and remeber it with fond nastolgia.
+
+I am no designer, nor game developer, so chose this as a first attempt at a Gameboy game.
+
+The second milestone is currently in development. However, Milestone 1 is complete, which implments most core mechanics, with some minigames missing (darts, drunken fight and casino games).
+
+The game is currently locked to 30 day limit, which will be selectable in the next milestone.
+
+Statistics are currently randomly generated (not selectable) in the current milestone.
+
+
 ## Building
 
 ### Using original repository
@@ -19,6 +30,8 @@ Binaries can be found of each version: https://build.dockstudios.co.uk/job/Gameb
 Each build is from the 'main' branch, so pulling the latest should be fine.
 
 To find an individual commit, each commit in the Github repository contains the original commit ID in the description, which is referenced on the build.
+
+The pre-built binary for Milestone 1 can be found here: https://github.com/MatthewJohn/StickGBC/releases/tag/stickgbc-1.0.0
 
 ## Contributing
 
