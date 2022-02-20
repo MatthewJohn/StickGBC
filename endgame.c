@@ -44,6 +44,18 @@ void endgame()
     // Load additional tiles required
     set_bkg_data(8U, 87U, &(endgametiles[8U << 4]));
 
+    // Write charm number
+    main_show_number(0x8U, 0xAU, 3, game_state.charm, ROM_BANK_ENDGAME);
+
+    // Write strength number
+    main_show_number(0xAU, 0xBU, 3, game_state.strength, ROM_BANK_ENDGAME);
+
+    // Write intelligence number
+    main_show_number(0xBU, 0xCU, 3, game_state.intelligence, ROM_BANK_ENDGAME);
+
+    // Write karma number
+    main_show_number_signed(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
+
     DISPLAY_ON;
 
     // Wait for user to press A or START
