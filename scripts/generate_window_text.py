@@ -67,6 +67,42 @@ messages = {
     'general': {
         'unimplemented': 'Sorry! This isn\'t available yet, bro\'! Check back soon and keep an eye on MatthewJohn Github!!'
     },
+    'rank': {
+        'hopeless': 'hopeless',
+        'utter_failure': 'Utter Failure',
+        'loser': 'loser',
+        'incompetent': 'Incompetent',
+        'novice': 'Novice',
+        'mediocre': 'Mediocre',
+        'exceptional': 'Exceptional',
+        'extraordinary': 'Extraordinary',
+        'genius': 'Genius',
+        'millionaire': 'Millionaire',
+        'multimillionaire': 'Multimillionaire',
+        'demogod': 'Demi god',
+        'god': 'God',
+        'billionaire_god': 'Billionaire God',
+        'wuss': 'Wuss',
+        'girl_scout': 'Girl Scout',
+        'boy_scout': 'Boy Scout',
+        'good_samaritan': 'Good Samaritan',
+        'extraordinarily_good': 'Extraordinarily Good',
+        'selfless_millionaire': 'Selfless Millionaire',
+        'philanthropist': 'Philanthropist',
+        'saint': 'Saint',
+        'apostle': 'Apostle',
+        'mr_dog': 'Mr. Dog',
+        'juvenile_delinquent': 'Juvenile Delinquent',
+        'white_collar_criminal': 'White Collar Criminal',
+        'petty_criminal': 'Petty Criminal',
+        'car_jacker': 'Car Jacker',
+        'extraordinarily_evil': 'Extraordinarily Evil',
+        'drug_lord': 'Drug Lord',
+        'undeniably_wicked': 'Undeniably Wicked',
+        'genuine_hellraiser': 'Genuine Hellrailer',
+        'seed_of_evil': 'Seed of Evil',
+        'mr_natas': 'Mr. Natas'
+    },
 }
 
 # Add alphabetic characters
