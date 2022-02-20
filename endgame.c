@@ -33,7 +33,7 @@ void endgame()
     );
 
     // Move background to top left
-    scroll_bkg(0, 0);
+    move_bkg(0, 0);
 
     // Load additional tiles required
     set_bkg_data(8U, 86U, &(endgametiles[8U << 4]));
