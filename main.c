@@ -2110,10 +2110,10 @@ UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned 
     return return_val;
 }
 
-void main_show_number_signed(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value, unsigned int return_bank)
+void main_show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value, unsigned int return_bank)
 {
     ROM_BANK_BUILDING_MENU_SWITCH;
-    show_number(start_x, start_y, max_digits, value);
+    show_signed_number(start_x, start_y, max_digits, value);
     SWITCH_ROM_MBC5(return_bank);
 }
 
