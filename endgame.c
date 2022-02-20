@@ -28,8 +28,8 @@ void endgame()
     screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     set_background_tiles(
-        ROM_BANK_OPENING_SCREEN,  // Load tiles from this ROM bank
-        ROM_BANK_OPENING_SCREEN  // Return to the ROM bank for this function
+        ROM_BANK_ENDGAME,  // Load tiles from this ROM bank
+        ROM_BANK_ENDGAME  // Return to the ROM bank for this function
     );
 
     // Move background to top left
@@ -45,6 +45,6 @@ void endgame()
     {
         wait_vbl_done();
 
-        main_check_joy(ROM_BANK_OPENING_SCREEN);
+        main_check_joy(ROM_BANK_ENDGAME);
     }
 }
