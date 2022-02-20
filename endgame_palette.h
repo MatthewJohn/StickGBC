@@ -5,4 +5,6 @@
  */
 
 
-extern const UWORD splash_screen_palette[];
+#include "gb.h"
+
+extern const UWORD endgame_palette[];
