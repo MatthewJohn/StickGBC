@@ -17,6 +17,12 @@ void endgame()
 {
     DISPLAY_OFF;
 
+    // Hide sprites
+    HIDE_SPRITES;
+    
+    // Hide Window
+    HIDE_WIN;
+
     screen_state.background_color_palette = endgame_palette;
     screen_state.background_tile_map = endgamemap;
     screen_state.background_tiles = endgametiles;
