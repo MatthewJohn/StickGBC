@@ -28,6 +28,7 @@
 #include "main_map_sprite_palette.h"
 
 #include "opening_screen.h"
+#include "endgame.h"
 
 #include "background_time_colors.h"
 
@@ -287,9 +288,12 @@ void setup_globals()
     game_state.current_building = S_B_NO_BUILDING;
     game_state.sub_menu = S_M_NO_SUBMENU;
 
+    game_state.game_ended = 0;
+
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
+    game_state.max_days = 30U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
     // Start with $100
@@ -1241,22 +1245,18 @@ void check_building_enter()
 }
 
 /*
- * end_game
- *
- * Show end game screen
- */
-void end_game()
-{
-}
-
-/*
  * check_end_game
  *
  * Check if win/lose conditions have been met
  */
 void check_end_game()
 {
-
+    if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
+    {
+        ROM_BANK_ENDGAME_SWITCH;
+        endgame();
+        ROM_BANK_RESET;
+    }
 }
 
 void modify_karma(INT8 karma_change) NONBANKED
@@ -1282,7 +1282,7 @@ void decrease_hp(UINT8 decrease_amount)
     }
     // If run out of HP, set to zero and end game
     game_state.hp = 0;
-    end_game();
+    check_end_game();
 }
 
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
@@ -1546,6 +1546,18 @@ void main_show_window_text(UINT8 *text, unsigned int return_bank)
 {
     ROM_BANK_WINDOW_TEXT_SWITCH;
     show_window_text(text);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
+/*
+ * main_show_window_text_xy
+ *
+ * show_window_text_xy wrapper with ROM jumping
+ */
+void main_show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text, unsigned int return_bank)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_text_xy(itx_x, itx_y, text);
     SWITCH_ROM_MBC5(return_bank);
 }
 
@@ -1982,6 +1994,8 @@ void update_state()
 
                     // Return to main map once complete
                     setup_main_map();
+                    // Since days can pass, check end game
+                    check_end_game();
                     return;
                 }
             }
@@ -2096,6 +2110,13 @@ UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned 
     return return_val;
 }
 
+void main_show_number_signed(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value, unsigned int return_bank)
+{
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    show_number(start_x, start_y, max_digits, value);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
 void main()
 {
     debug_address = 0xFFFA;
@@ -2103,52 +2124,53 @@ void main()
     // Set CPU fast to help with re-draw when scrolling
     cpu_fast();
 
-    DISPLAY_OFF;
-
     wait_vbl_done();
 
-    // Enter splash screen loop
-    ROM_BANK_OPENING_SCREEN_SWITCH;
-    splash_screen_loop();
-    ROM_BANK_RESET;
+    while (1)
+    {
+        DISPLAY_OFF;
 
-    // Enter opening screen loop
-    ROM_BANK_OPENING_SCREEN_SWITCH;
-    opening_screen_loop();
-    ROM_BANK_RESET;
-    SHOW_BKG;
+        // Enter splash screen loop
+        ROM_BANK_OPENING_SCREEN_SWITCH;
+        splash_screen_loop();
+        ROM_BANK_RESET;
 
-    // Setup globals once opening screen has passed.
-    // This means the randomisation that uses sys_time
-    // will be more random based on amount of time
-    // it takes player to go through opening screen
-    setup_globals();
+        // Enter opening screen loop
+        ROM_BANK_OPENING_SCREEN_SWITCH;
+        opening_screen_loop();
+        ROM_BANK_RESET;
+        SHOW_BKG;
 
-    // Initial setup of window and update with starting stats
-    ROM_BANK_BUILDING_MENU_SWITCH;
-    setup_window();
-    update_window();
-    ROM_BANK_RESET;
-    SHOW_WIN;
+        // Setup globals once opening screen has passed.
+        // This means the randomisation that uses sys_time
+        // will be more random based on amount of time
+        // it takes player to go through opening screen
+        setup_globals();
 
-    // Load background tiles. This turns display on, so run last
-    setup_main_map();
+        // Initial setup of window and update with starting stats
+        ROM_BANK_BUILDING_MENU_SWITCH;
+        setup_window();
+        update_window();
+        ROM_BANK_RESET;
+        SHOW_WIN;
 
-    // And open the curtains!
-    DISPLAY_ON;
+        // Load background tiles. This turns display on, so run last
+        setup_main_map();
 
-        while(1) {
-                wait_vbl_done();
+        // And open the curtains!
+        DISPLAY_ON;
 
-                main_check_joy(ROM_BANK_DEFAULT);
+        while(game_state.game_ended == 0U)
+        {
+            wait_vbl_done();
 
-                update_ai_positions();
-                update_state();
+            main_check_joy(ROM_BANK_DEFAULT);
 
-                // Check for collision with car AI
-                check_car_collision();
+            update_ai_positions();
+            update_state();
 
-                // Temporarily remove delay to speed debugging
-                //delay(50);
+            // Check for collision with car AI
+            check_car_collision();
         }
+    }
 }

@@ -62,5 +62,6 @@
 
 void show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity);
 void show_window_text(UINT8 *text);
+void show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text);
 
 #endif

@@ -36,7 +36,7 @@ void splash_screen_loop()
     );
 
     // Move background to top left
-    scroll_bkg(0, 0);
+    move_bkg(0, 0);
 
     // Load additional tiles required
     set_bkg_data(8U, 120U, &(splashscreentiles[8U << 4]));
@@ -45,6 +45,10 @@ void splash_screen_loop()
     VBK_REG = 0;
 
     DISPLAY_ON;
+
+    // Reset values for currently pressed buttons
+    joypad_state.a_pressed = 0U;
+    joypad_state.start_pressed = 0U;
 
     // Wait for user to press A or START
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
@@ -76,7 +80,7 @@ void opening_screen_loop()
     );
 
     // Move background to top left
-    scroll_bkg(0, 0);
+    move_bkg(0, 0);
 
     // Load additional tiles required
     set_bkg_data(8U, 19U, &(openingscreentiles[8U << 4]));
