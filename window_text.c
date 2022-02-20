@@ -41,8 +41,31 @@ void show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity)
  */
 void show_window_text(UINT8 *text)
 {
-    UINT8 itx_x = 0U;
-    UINT8 itx_y = 0U;
+    show_window_text_xy(0, 0, text);
+
+    // Wait for original key press to be let go of
+    delay(300);
+
+    // Reset original key pressed
+    joypad_state.a_pressed = 0;
+    joypad_state.b_pressed = 0;
+
+    // Wait for user to press A or B
+    while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
+    {
+        wait_vbl_done();
+
+        main_check_joy(ROM_BANK_WINDOW_TEXT);
+    }
+}
+
+/*
+ * show_window_text_xy
+ *
+ * Show array of text onscreen at given co-ordinates
+ */
+void show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text)
+{
     UINT8 text_index = 0;
     UINT16 character_number;
 
@@ -76,20 +99,5 @@ void show_window_text(UINT8 *text)
         // Set screen tile to empty tile
         show_window_character(0U, itx_x, itx_y);
         itx_x += 1U;
-    }
-
-    // Wait for original key press to be let go of
-    delay(300);
-
-    // Reset original key pressed
-    joypad_state.a_pressed = 0;
-    joypad_state.b_pressed = 0;
-
-    // Wait for user to press A or B
-    while (joypad_state.a_pressed == 0U && joypad_state.b_pressed == 0U)
-    {
-        wait_vbl_done();
-
-        main_check_joy(ROM_BANK_WINDOW_TEXT);
     }
 }

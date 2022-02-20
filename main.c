@@ -1547,6 +1547,18 @@ void main_show_window_text(UINT8 *text, unsigned int return_bank)
     SWITCH_ROM_MBC5(return_bank);
 }
 
+/*
+ * main_show_window_text_xy
+ *
+ * show_window_text_xy wrapper with ROM jumping
+ */
+void main_show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text, unsigned int return_bank)
+{
+    ROM_BANK_WINDOW_TEXT_SWITCH;
+    show_window_text_xy(itx_y, itx_y, text);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
 // Called per cycle to update background position and sprite
 void update_state()
 {

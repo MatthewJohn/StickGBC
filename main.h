@@ -41,6 +41,7 @@
 void main_check_joy(unsigned int return_bank);
 void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank);
 void main_show_window_text(UINT8 *text, unsigned int return_bank);
+void main_show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text, unsigned int return_bank);
 void main_update_window(unsigned int return_bank);
 void main_show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity, unsigned int return_bank);
 UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value, unsigned int return_bank);
