@@ -9,8 +9,8 @@ set -x
 
 
 # Obtain artifact
-# Attempt for 60 seconds
-for i in {1..60}
+# Attempt for 3 minutes
+for i in {1..180}
 do
   { curl --output main.gb --fail http://pub-jenkins.dock.studios/artifacts/GameboyDev/StickGBC/Build_PR/$gitlabMergeRequestLastCommit/main.gb && break; } || true
   sleep 1
