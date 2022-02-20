@@ -128,6 +128,7 @@ typedef struct {
     BOOLEAN hobo_given_beer;
 
     UINT8 intro_shown;
+    BOOLEAN game_ended;
 } game_state_t;
 
 // The sprite is placed into place and moved from min_location to max_location.

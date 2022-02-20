@@ -186,4 +186,6 @@ void endgame()
 
         main_check_joy(ROM_BANK_ENDGAME);
     }
+
+    game_state.game_ended = 1U;
 }
