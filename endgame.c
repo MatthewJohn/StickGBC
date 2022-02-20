@@ -112,20 +112,20 @@ void endgame()
                 rank_text = &win_txt_rank_girl_scout;
             if (total_balance > 10000)
                 rank_text = &win_txt_rank_boy_scout;
-            if (total_balance > 250000)
-                rank_text = &win_txt_rank_good_samaritan;
-            if (total_balance > 100000)
-                rank_text = &win_txt_rank_extraordinarily_good;
-            if (total_balance > 1000000)
-                rank_text = &win_txt_rank_selfless_millionaire;
-            if (total_balance > 2000000)
-                rank_text = &win_txt_rank_philanthropist;
-            if (total_balance > 10000000)
-                rank_text = &win_txt_rank_saint;
-            if (total_balance > 100000000)
-                rank_text = &win_txt_rank_apostle;
-            if (total_balance > 1000000000)
-                rank_text = &win_txt_rank_mr_dog;
+//            if (total_balance > 250000)
+//                rank_text = &win_txt_rank_good_samaritan;
+//            if (total_balance > 100000)
+//                rank_text = &win_txt_rank_extraordinarily_good;
+//            if (total_balance > 1000000)
+//                rank_text = &win_txt_rank_selfless_millionaire;
+//            if (total_balance > 2000000)
+//                rank_text = &win_txt_rank_philanthropist;
+//            if (total_balance > 10000000)
+//                rank_text = &win_txt_rank_saint;
+//            if (total_balance > 100000000)
+//                rank_text = &win_txt_rank_apostle;
+//            if (total_balance > 1000000000)
+//                rank_text = &win_txt_rank_mr_dog;
         }
         else if (game_state.karma < -20)
         {
@@ -135,20 +135,20 @@ void endgame()
                 rank_text = &win_txt_rank_white_collar_criminal;
             if (total_balance > 10000)
                 rank_text = &win_txt_rank_petty_criminal;
-            if (total_balance > 250000)
-                rank_text = &win_txt_rank_car_jacker;
-            if (total_balance > 100000)
-                rank_text = &win_txt_rank_extraordinarily_evil;
-            if (total_balance > 1000000)
-                rank_text = &win_txt_rank_drug_lord;
-            if (total_balance > 2000000)
-                rank_text = &win_txt_rank_undeniably_wicked;
-            if (total_balance > 10000000)
-                rank_text = &win_txt_rank_genuine_hellraiser;
-            if (total_balance > 100000000)
-                rank_text = &win_txt_rank_seed_of_evil;
-            if (total_balance > 1000000000)
-                rank_text = &win_txt_rank_mr_natas;
+//            if (total_balance > 250000)
+//                rank_text = &win_txt_rank_car_jacker;
+//            if (total_balance > 100000)
+//                rank_text = &win_txt_rank_extraordinarily_evil;
+//            if (total_balance > 1000000)
+//                rank_text = &win_txt_rank_drug_lord;
+//            if (total_balance > 2000000)
+//                rank_text = &win_txt_rank_undeniably_wicked;
+//            if (total_balance > 10000000)
+//                rank_text = &win_txt_rank_genuine_hellraiser;
+//            if (total_balance > 100000000)
+//                rank_text = &win_txt_rank_seed_of_evil;
+//            if (total_balance > 1000000000)
+//                rank_text = &win_txt_rank_mr_natas;
         }
         else
         {
@@ -158,20 +158,20 @@ void endgame()
                 rank_text = &win_txt_rank_mediocre;
             if (total_balance > 10000)
                 rank_text = &win_txt_rank_exceptional;
-            if (total_balance > 250000)
-                rank_text = &win_txt_rank_extraordinary;
-            if (total_balance > 100000)
-                rank_text = &win_txt_rank_genius;
-            if (total_balance > 1000000)
-                rank_text = &win_txt_rank_millionaire;
-            if (total_balance > 2000000)
-                rank_text = &win_txt_rank_multimillionaire;
-            if (total_balance > 10000000)
-                rank_text = &win_txt_rank_demi_god;
-            if (total_balance > 100000000)
-                rank_text = &win_txt_rank_god;
-            if (total_balance > 1000000000)
-                rank_text = &win_txt_rank_billionaire_god;
+//            if (total_balance > 250000)
+//                rank_text = &win_txt_rank_extraordinary;
+//            if (total_balance > 100000)
+//                rank_text = &win_txt_rank_genius;
+//            if (total_balance > 1000000)
+//                rank_text = &win_txt_rank_millionaire;
+//            if (total_balance > 2000000)
+//                rank_text = &win_txt_rank_multimillionaire;
+//            if (total_balance > 10000000)
+//                rank_text = &win_txt_rank_demi_god;
+//            if (total_balance > 100000000)
+//                rank_text = &win_txt_rank_god;
+//            if (total_balance > 1000000000)
+//                rank_text = &win_txt_rank_billionaire_god;
         }
     }
 
