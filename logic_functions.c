@@ -13,9 +13,9 @@ typedef struct {
     UINT8 x;
     UINT8 y;
     UINT8 max_digits;
-    UINT32 current_number;
-    UINT32 min_value;
-    UINT32 max_value;
+    UINT16 current_number;
+    UINT16 min_value;
+    UINT16 max_value;
 } number_input_t;
 
 /*
@@ -740,7 +740,7 @@ void number_entry(number_input_t *number_input)
     main_show_number(
         number_input->x, number_input->y,
         number_input->max_digits,
-        number_input->current_number,
+        (unsigned int)number_input->current_number,
         ROM_BANK_LOGIC_FUNCTIONS
     );
 
@@ -792,7 +792,7 @@ void number_entry(number_input_t *number_input)
             main_show_number(
                 number_input->x, number_input->y,
                 number_input->max_digits,
-                number_input->current_number,
+                (unsigned int)number_input->current_number,
                 ROM_BANK_LOGIC_FUNCTIONS
             );
         }
@@ -890,7 +890,7 @@ void show_bank_loan()
     // If currently have a loan, make the lower of either balance or loan amount
     if (game_state.loan != 0)
     {
-        if (game_state.balance < (UINT32)game_state.loan)
+        if (game_state.balance < (UINT16)game_state.loan)
             number_input.max_value = game_state.balance;
         else
             number_input.max_value = game_state.loan;
