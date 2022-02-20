@@ -15,6 +15,11 @@
 
 void endgame()
 {
+    UINT16 total_balance = 0;
+    BOOLEAN negative_total = 0;
+    UBYTE tile_data;
+    UINT8 current_x;
+
     DISPLAY_OFF;
 
     // Hide sprites
@@ -55,6 +60,29 @@ void endgame()
 
     // Write karma number
     main_show_number_signed(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
+
+    main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
+    main_show_number(0xAU, 0xFU, 8, game_state.bank_balance, ROM_BANK_ENDGAME);
+    main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
+
+    total_balance = game_state.balance;
+    total_balance += game_state.bank_balance;
+    if (total_balance > game_state.loan)
+    {
+        total_balance -= game_state.loan;
+        negative_total = 0;
+    }
+    else
+    {
+        total_balance = game_state.loan - total_balance;
+        negative_total = 1;
+    }
+    current_x = main_show_number(0xAU, 0x11U, 8, total_balance, ROM_BANK_ENDGAME);
+    if (negative_total)
+    {
+        tile_data = MENU_TILE_DASH;
+        set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
+    }
 
     DISPLAY_ON;
 
