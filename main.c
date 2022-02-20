@@ -2099,7 +2099,7 @@ void main_check_joy(unsigned int return_bank)
     SWITCH_ROM_MBC5(return_bank);
 }
 
-UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value, unsigned int return_bank)
+UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, UINT32 value, unsigned int return_bank)
 {
     UINT8 return_val;
     ROM_BANK_BUILDING_MENU_SWITCH;
