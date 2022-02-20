@@ -102,8 +102,8 @@ typedef struct {
     INT8 karma;
 
     // Money the user has.
-    UINT32 balance;
-    UINT32 bank_balance;
+    unsigned int balance;
+    unsigned int bank_balance;
     UINT16 loan;
     UINT8 loan_days;
     INT8 bank_rate;
