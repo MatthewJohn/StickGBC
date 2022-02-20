@@ -28,6 +28,7 @@
 #include "main_map_sprite_palette.h"
 
 #include "opening_screen.h"
+#include "endgame.h"
 
 #include "background_time_colors.h"
 
@@ -1242,15 +1243,6 @@ void check_building_enter()
 }
 
 /*
- * end_game
- *
- * Show end game screen
- */
-void end_game()
-{
-}
-
-/*
  * check_end_game
  *
  * Check if win/lose conditions have been met
@@ -1258,7 +1250,11 @@ void end_game()
 void check_end_game()
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
-        end_game();
+    {
+        ROM_BANK_OPENING_SCREEN_SWITCH;
+        endgame();
+        ROM_BANK_RESET;
+    }
 }
 
 void modify_karma(INT8 karma_change) NONBANKED
