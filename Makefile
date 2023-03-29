@@ -2,6 +2,7 @@
 BIN	= main.gb
 CC	= ../../bin/lcc
 ROMUSAGE	= ../../tools/romusage.exe
+BGB = "../../bgb(1)/bgb.exe"
 CFLAGS	=  -v -c -o
 
 SOURCE	:= main main_game main_map building_menu_map main_map_boundaries building_menu_tiles building_menu_tiles_2 main_map_tileset window building_menu_palette main_map_palette main_map_sprite_tileset menu_config main_map_sprite_palette sprite background_time_colors joy opening_screen_map opening_screen_tiles opening_screen_palette opening_screen logic_functions window_text window_text_data window_text_tiles splash_screen_tiles splash_screen_map splash_screen_palette endgame_tiles endgame_map endgame_palette endgame
@@ -32,6 +33,9 @@ usage:	$(BIN)
 	$(ROMUSAGE) $(BIN) -a
 
 demo:	$(BIN)
+
+run: $(BIN)
+	$(BGB) $(BIN)
 
 clean:
 	rm -f *.o $(BIN) $(I_FILE) $(ASM_FILE)

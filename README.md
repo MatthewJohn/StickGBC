@@ -27,7 +27,16 @@ Statistics are currently randomly generated (not selectable) in the current mile
 ### Using original repository
 
     cd games/stickrpg
+    
+    # Build
     make
+    # Build in demo mode
+    make demo
+    
+    # Run
+    make run
+    # or...
+    make demo run
 
 ### Building from Github
 
