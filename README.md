@@ -15,6 +15,12 @@ The game is currently locked to 30 day limit, which will be selectable in the ne
 
 Statistics are currently randomly generated (not selectable) in the current milestone.
 
+## Screenshots
+
+![Splash Screen](./images/splash.png)
+
+![Street](./images/street.png)
+
 
 ## Building
 
