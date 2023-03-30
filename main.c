@@ -994,10 +994,16 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     }
     else if (game_state.current_building == S_B_PAWN)
     {
-        // Default to hand gun
-        menu_state.current_item_x = 0U;
-        menu_state.current_item_y = 1U;
         menu_config = &menu_config_pawn;
+        // Default to hand gun, if available
+        if (menu_config->items[MENU_PAWN_HAND_GUN_ITEM] != MENU_ITEM_INDEX_EMPTY) {
+            menu_state.current_item_x = 0U;
+            menu_state.current_item_y = 1U;
+        } else {
+            // Otherwise, default to ammo
+            menu_state.current_item_x = 0U;
+            menu_state.current_item_y = 0U;
+        }
     }
     else if (game_state.current_building == S_B_UNIVERSITY)
     {
