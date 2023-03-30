@@ -32,9 +32,10 @@ void remove_ammo(UINT8 amount_to_remove)
         game_state.inventory[S_INVENTORY_AMMO] = 0U;
     }
     
-    // Remove 'rob' from shop, if ammo amount is less than 10
+    // Remove 'rob' from shop and bank, if ammo amount is less than 10
     if (game_state.inventory[S_INVENTORY_AMMO] < 10U) {
         menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
+        menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
     }
 }
 
@@ -565,9 +566,10 @@ void process_pawn_menu()
             // Attempt to purchase item
             purchase_item(10U, S_INVENTORY_AMMO, 5U);
 
-            // Add 'rob' to shop menu if user owns over 9 bullets
+            // Add 'rob' to shop/bank menu if user owns over 9 bullets
             if (game_state.inventory[S_INVENTORY_AMMO] > 9U) {
                 menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
+                menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
             }
         }
         else if (menu_state.current_item_y == 1U)  // Handgun
@@ -840,6 +842,10 @@ void process_bank_menu()
         else if (menu_state.current_item_y == 2U)
         {
             show_bank_loan();
+        }
+        else if (menu_state.current_item_y == 3U)  // Rob
+        {
+            perform_robbery();
         }
     }
 }

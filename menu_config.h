@@ -113,6 +113,7 @@
 #define MENU_SHOP_ROB_ITEM 0x7U
 #define MENU_PAWN_BULLETS_ITEM 0x0U
 #define MENU_PAWN_HAND_GUN_ITEM 0x2U
+#define MENU_BANK_ROB_ITEM 0x7U
 
 // Value for current X/Y position to disable highlighting
 #define MENU_SELECTED_ITEM_DISABLED 0x8U
