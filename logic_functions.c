@@ -31,7 +31,7 @@ void remove_ammo(UINT8 amount_to_remove)
     {
         game_state.inventory[S_INVENTORY_AMMO] = 0U;
     }
-    
+
     // Remove 'rob' from shop and bank, if ammo amount is less than 10
     if (game_state.inventory[S_INVENTORY_AMMO] < 10U) {
         menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -814,7 +814,7 @@ void number_entry(number_input_t *number_input)
 
 /*
  * process_bank_menu
- * 
+ *
  * Process menu item selection for bank
  */
 void process_bank_menu()
