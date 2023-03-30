@@ -811,6 +811,40 @@ void number_entry(number_input_t *number_input)
 }
 
 /*
+ * process_bank_menu
+ * 
+ * Process menu item selection for bank
+ */
+void process_bank_menu()
+{
+    if (menu_state.current_item_x == 0U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            show_bank_withdraw();
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+    else if (menu_state.current_item_x == 1U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            show_bank_deposit();
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            show_bank_loan();
+        }
+    }
+}
+
+/*
  * show_bank_withdraw
  *
  * Load menu to allow user to withdraw money
