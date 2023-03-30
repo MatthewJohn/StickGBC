@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x3FU] = {
+const menu_config_item_t menu_config_items[0x40U] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1469,6 +1469,24 @@ const menu_config_item_t menu_config_items[0x3FU] = {
             MENU_ITEM_COST_PALETTE,
         },
     },
+
+    // Inventory bullets
+    {
+        {
+            MENU_BLANK_ITEM_ROW,
+
+            MENU_TILE_BU,
+            MENU_TILE_LL,
+            MENU_TILE_ET,
+            MENU_TILE_S,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
@@ -1481,6 +1499,7 @@ const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
     0x2D,  // Skateboard
     0x2E,  // Cocaine
     0x2F,  // Bottle of beer
+    0x3F // Bullets
 };
 
 
