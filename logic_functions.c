@@ -29,10 +29,13 @@ void remove_ammo(UINT8 amount_to_remove)
         game_state.inventory[S_INVENTORY_AMMO] -= amount_to_remove;
     else
     {
-        game_state.inventory[S_INVENTORY_AMMO] = 0;
+        game_state.inventory[S_INVENTORY_AMMO] = 0U;
+    }
 
-        // Remove 'rob' from shop
+    // Remove 'rob' from shop and bank, if ammo amount is less than 10
+    if (game_state.inventory[S_INVENTORY_AMMO] < 10U) {
         menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
+        menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_EMPTY;
     }
 }
 
@@ -352,7 +355,7 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
  *
  * Spent money and increase inventory count for item
  */
-UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
+UINT8 purchase_item(unsigned int cost, UINT8 inventory_item, UINT8 quantity)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -363,7 +366,7 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item)
     if (HAS_MONEY(cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
     {
         game_state.balance -= cost;
-        game_state.inventory[inventory_item] += 1U;
+        game_state.inventory[inventory_item] += quantity;
 
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
@@ -429,10 +432,6 @@ void perform_robbery()
         // Display message
         main_show_window_text(&win_txt_rob_caught, ROM_BANK_LOGIC_FUNCTIONS);
     }
-
-    // Reload menu tiles to clear message
-    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-    move_menu_to_exit();
 }
 
 /*
@@ -541,15 +540,18 @@ void process_shop_menu()
     {
         if (menu_state.current_item_y == 1U)  // Smokes
         {
-            purchase_item(10U, S_INVENTORY_SMOKES);
+            purchase_item(10U, S_INVENTORY_SMOKES, 1U);
         }
         else if (menu_state.current_item_y == 2U)  // Caffeine Pills
         {
-            purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS);
+            purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS, 1U);
         }
         else if (menu_state.current_item_y == 3U)  // Rob
         {
             perform_robbery();
+            // Reload menu tiles to clear message
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+            move_menu_to_exit();
         }
     }
 }
@@ -561,15 +563,18 @@ void process_pawn_menu()
         if (menu_state.current_item_y == 0U)  // Bullets
         {
             // Attempt to purchase item
-            purchase_item(10U, S_INVENTORY_AMMO);
+            purchase_item(10U, S_INVENTORY_AMMO, 5U);
 
-            // Add 'rob' to shop menu
-            menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
+            // Add 'rob' to shop/bank menu if user owns over 9 bullets
+            if (game_state.inventory[S_INVENTORY_AMMO] > 9U) {
+                menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB_SHOP;
+                menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_ROB_BANK;
+            }
         }
         else if (menu_state.current_item_y == 1U)  // Handgun
         {
             // Attempt to purchase item
-            if (purchase_item(400U, S_INVENTORY_HAND_GUN))
+            if (purchase_item(400U, S_INVENTORY_HAND_GUN, 1U))
             {
                 // Remove from menu, if successful and reload menu tiles
                 menu_config->items[MENU_PAWN_HAND_GUN_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -584,7 +589,7 @@ void process_pawn_menu()
         }
         else if (menu_state.current_item_y == 2U)  // Knife
         {
-            if (purchase_item(100U, S_INVENTORY_KNIFE))
+            if (purchase_item(100U, S_INVENTORY_KNIFE, 1U))
             {
                 menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -593,7 +598,7 @@ void process_pawn_menu()
         }
         else if (menu_state.current_item_y == 3U)  // Alarm Clock
         {
-            if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK))
+            if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK, 1U))
             {
                 menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -605,7 +610,7 @@ void process_pawn_menu()
     {
         if (menu_state.current_item_y == 1U)  // Cellphone
         {
-            if (purchase_item(200U, S_INVENTORY_CELL_PHONE))
+            if (purchase_item(200U, S_INVENTORY_CELL_PHONE, 1U))
             {
                 menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -619,7 +624,7 @@ void process_pawn_menu()
 void process_dealer_menu()
 {
     if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
-        purchase_item(400U, S_INVENTORY_COCAINE);
+        purchase_item(400U, S_INVENTORY_COCAINE, 1U);
 }
 
 void process_bar_menu()
@@ -642,7 +647,7 @@ void process_bar_menu()
     {
         if (menu_state.current_item_y == 1U)
         {
-            purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER);
+            purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER, 1U);
             // Enable give bottle of beer in hobo menu
             menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
         }
@@ -803,6 +808,47 @@ void number_entry(number_input_t *number_input)
         }
 
         wait_vbl_done();
+    }
+}
+
+/*
+ * process_bank_menu
+ *
+ * Process menu item selection for bank
+ */
+void process_bank_menu()
+{
+    if (menu_state.current_item_x == 0U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            show_bank_withdraw();
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+    else if (menu_state.current_item_x == 1U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            show_bank_deposit();
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            show_bank_loan();
+        }
+        else if (menu_state.current_item_y == 3U)  // Rob
+        {
+            perform_robbery();
+            // Reload menu tiles to clear message (menu tiles 2)
+            setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+            move_menu_to_exit();
+        }
     }
 }
 
