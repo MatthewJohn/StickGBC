@@ -432,10 +432,6 @@ void perform_robbery()
         // Display message
         main_show_window_text(&win_txt_rob_caught, ROM_BANK_LOGIC_FUNCTIONS);
     }
-
-    // Reload menu tiles to clear message
-    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-    move_menu_to_exit();
 }
 
 /*
@@ -553,6 +549,9 @@ void process_shop_menu()
         else if (menu_state.current_item_y == 3U)  // Rob
         {
             perform_robbery();
+            // Reload menu tiles to clear message
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+            move_menu_to_exit();
         }
     }
 }
@@ -846,6 +845,9 @@ void process_bank_menu()
         else if (menu_state.current_item_y == 3U)  // Rob
         {
             perform_robbery();
+            // Reload menu tiles to clear message (menu tiles 2)
+            setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+            move_menu_to_exit();
         }
     }
 }
