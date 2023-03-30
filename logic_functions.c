@@ -568,8 +568,8 @@ void process_pawn_menu()
 
             // Add 'rob' to shop/bank menu if user owns over 9 bullets
             if (game_state.inventory[S_INVENTORY_AMMO] > 9U) {
-                menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
-                menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_ROB;
+                menu_config_shop.items[MENU_SHOP_ROB_ITEM] = MENU_ITEM_INDEX_ROB_SHOP;
+                menu_config_bank.items[MENU_BANK_ROB_ITEM] = MENU_ITEM_INDEX_ROB_BANK;
             }
         }
         else if (menu_state.current_item_y == 1U)  // Handgun

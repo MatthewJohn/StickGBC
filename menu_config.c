@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x3EU] = {
+const menu_config_item_t menu_config_items[0x3FU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1439,6 +1439,34 @@ const menu_config_item_t menu_config_items[0x3EU] = {
         {
             MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Rob2 (building menu 2)
+    {
+        {
+            MENU_TILE2_R,
+            MENU_TILE2_O,
+            MENU_TILE2_B,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE2_DOLLAR,
+            MENU_TILE2_DOLLAR,
+            MENU_TILE2_DOLLAR,
+            MENU_TILE2_DOLLAR,
+            MENU_TILE2_DOLLAR,
+            MENU_TILE2_DOLLAR,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
         },
     },
 };

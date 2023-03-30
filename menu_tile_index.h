@@ -297,6 +297,8 @@
 #define MENU_TILE2_NT 0x2C
 #define MENU_TILE2_PA 0x2D
 #define MENU_TILE2_Y 0x2E
+#define MENU_TILE2_R 0x2F
+#define MENU_TILE2_B 0x30
 
 #define MENU_TILE2_0 0x64
 #define MENU_TILE2_1 0x65
