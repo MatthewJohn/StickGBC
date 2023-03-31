@@ -314,6 +314,12 @@
 13. Enemy name 5
 14. Player name 1
 15. Player name 2
+16. Enemy
+...
+33. Enemy
+34. Player
+.. 
+40. Player
 
 
 ## Tiles
