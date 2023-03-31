@@ -320,6 +320,11 @@
 34. Player
 .. 
 40. Player
+41. action Punch tile 1
+42. action Punch tile 2
+43. action Punch tile 3
+44. action blank
+45. action pt corner
 
 
 ## Tiles
