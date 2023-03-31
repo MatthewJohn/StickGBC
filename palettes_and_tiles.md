@@ -325,7 +325,7 @@
 43. action Punch tile 3
 44. action blank
 45. action pt corner
-
+46. HP
 
 ## Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
