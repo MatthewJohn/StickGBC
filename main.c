@@ -29,6 +29,7 @@
 
 #include "opening_screen.h"
 #include "endgame.h"
+#include "bar_fight.h"
 
 #include "background_time_colors.h"
 
@@ -2124,6 +2125,10 @@ void main()
         // will be more random based on amount of time
         // it takes player to go through opening screen
         setup_globals();
+        
+        ROM_BANK_BAR_FIGHT_SWITCH;
+        enter_bar_fight();
+        ROM_BANK_RESET;
 
         // Initial setup of window and update with starting stats
         ROM_BANK_BUILDING_MENU_SWITCH;
