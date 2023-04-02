@@ -2125,7 +2125,7 @@ void main()
         // will be more random based on amount of time
         // it takes player to go through opening screen
         setup_globals();
-        
+
         ROM_BANK_BAR_FIGHT_SWITCH;
         enter_bar_fight();
         ROM_BANK_RESET;
