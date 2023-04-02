@@ -27,6 +27,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     UINT8 source_tile_offset;
     UINT8 source_tile_data_offset;
     UINT8 destination_tile_offset;
+    unsigned char map_reference_data[0x2U];
     UINT8 byte_itx;
 
     digit_count = 0;
@@ -62,7 +63,11 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         }
 
         set_bkg_data(current_map_index, 1U, &(tile_to_insert[0U]));
-        set_bkg_tiles(tile_x, tile_y, 1, 1, current_map_index);
+        
+        // Create map data for tile
+        map_reference_data[0U] = current_map_index;
+        map_reference_data[1U] = 0U;
+        set_bkg_tiles(tile_x, tile_y, 1, 1, &(map_reference_data[0]));
         
         if (overflow == 0U) {
             break;
