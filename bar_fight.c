@@ -28,14 +28,13 @@
  * @param number Number to br drawn to screen
  * @param add_underscore Whether to add bottom line to fill in action box
  */
-UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore)
+UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore)
 {
     UINT8 digit_count;
     UINT16 overflow;
     UINT16 source_tile_index;
     UINT8 remainder;
     BOOLEAN has_run;
-    UINT8 current_map_index;
     unsigned char tile_to_insert[16U];
     UINT8 source_tile_offset;
     UINT8 source_data_mask;
@@ -51,7 +50,6 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore
     destination_data_mask = 0x0FU;
 
     digit_count = 0;
-    current_map_index = BAR_FIGHT_TILE_SCRATCH;
     overflow = number;
  
    // Iterate over number to display, until number is reduced to single digit
@@ -133,6 +131,12 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore
             {
               tile_to_insert[byte_itx] = 0U;
             }
+            
+            // Increment map index for next tile
+            current_map_index += 1;
+            
+            // Move x position 1 to left to draw next tile
+            tile_x -= 1;
         }
     }
 
@@ -141,6 +145,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore
 
 void enter_bar_fight()
 {
+    UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
 
     DISPLAY_OFF;
 
@@ -173,8 +178,21 @@ void enter_bar_fight()
 
     DISPLAY_ON;
 
+    // Add points for actions
+    // punch
+    number_tile_index = add_number(number_tile_index, 4U, 12U, 1U, 1U);
+    number_tile_index ++;
+    // Fireball
+    number_tile_index = add_number(number_tile_index, 10U, 12U, 2U, 1U);
+    number_tile_index ++;
+    // Kick
+    number_tile_index = add_number(number_tile_index, 4U, 15U, 3U, 1U);
+    number_tile_index ++;
+    // Energy
+    number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 1U);
+    number_tile_index ++;
+
     // Wait for user to press A or START
-    add_number(2U, 12U, 23U, 1U);
     joypad_state.a_pressed = 0U;
     joypad_state.start_pressed = 0U;
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
