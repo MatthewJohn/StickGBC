@@ -13,7 +13,7 @@
 #include "bar_fight.h"
 #include "main.h"
 
-#define BAR_FIGHT_TILE_SCRATCH 69U
+#define BAR_FIGHT_TILE_SCRATCH 68U
 #define BAR_FIGHT_NUMERIC_TILE_START 63U
 
 UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
@@ -50,16 +50,9 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         // hand side, so each line offset is 1
         source_tile_data_offset = (remainder % 2U);
 
-        // Flip the destination file offset on each number
-        if (destination_tile_offset == 0U) {
-            destination_tile_offset = 1U;
-        } else {
-            destination_tile_offset = 0U;
-        }
-
         // Iterate through each line, copying the byte to the tile data to insert.
-        for (byte_itx = 0; byte_itx <= 8U; byte_itx ++) {
-            tile_to_insert[destination_tile_offset + byte_itx] = barfighttiles[BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset + source_tile_data_offset];
+        for (byte_itx = 0; byte_itx < 8U; byte_itx ++) {
+            tile_to_insert[(byte_itx * 2U) + destination_tile_offset] = barfighttiles[((BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset) << 4U) + (byte_itx * 2U) + source_tile_data_offset];
         }
 
         set_bkg_data(current_map_index, 1U, &(tile_to_insert[0U]));
@@ -68,9 +61,16 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         map_reference_data[0U] = current_map_index;
         map_reference_data[1U] = 0U;
         set_bkg_tiles(tile_x, tile_y, 1, 1, &(map_reference_data[0]));
-        
+
         if (overflow == 0U) {
             break;
+        }
+        
+        // Flip the destination file offset on each number
+        if (destination_tile_offset == 0U) {
+            destination_tile_offset = 1U;
+        } else {
+            destination_tile_offset = 0U;
         }
     }
 
