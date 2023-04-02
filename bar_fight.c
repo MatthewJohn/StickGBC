@@ -43,7 +43,7 @@ void enter_bar_fight()
     move_bkg(0, 0);
 
     // Load additional tiles required
-    set_bkg_data(8U, 87U, &(barfighttiles[8U << 4]));
+    set_bkg_data(8U, 55U, &(barfighttiles[8U << 4]));
 
     DISPLAY_ON;
 
