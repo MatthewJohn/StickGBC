@@ -4,7 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#pragma bank=2
+#pragma bank=3
 
 #include "gb.h"
 
