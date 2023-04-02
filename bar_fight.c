@@ -19,10 +19,10 @@
 
 /*
  * add_number
- * 
+ *
  * Draw a number to the screen, combining number tiles to provide 2 numbers per tile
  * Add optional underscoring for placement of numbers in action box
- * 
+ *
  * @param tile_x rightmost X coordinate for tile placement on map. Numbers are drawn to the left
  * @param tile_y Y coordinate for tile placement on map
  * @param number Number to br drawn to screen
@@ -42,7 +42,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
     unsigned char map_reference_data;
     UINT8 byte_itx;
     UINT8 number_data;
-    
+
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
     {
       tile_to_insert[byte_itx] = 0U;
@@ -51,7 +51,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
 
     digit_count = 0;
     overflow = number;
- 
+
    // Iterate over number to display, until number is reduced to single digit
    // Use has_run to handle showing 0
     while (1) {
@@ -105,7 +105,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         }
 
         set_bkg_data(current_map_index, 1U, tile_to_insert);
-        
+
         // Create map data for tile
         map_reference_data = current_map_index;
 
@@ -119,7 +119,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         if (overflow == 0U) {
             break;
         }
-        
+
         // Flip the destination file offset on each number
         if (destination_data_mask == 0x0FU) {
             destination_data_mask = 0xF0U;
@@ -131,10 +131,10 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
             {
               tile_to_insert[byte_itx] = 0U;
             }
-            
+
             // Increment map index for next tile
             current_map_index += 1;
-            
+
             // Move x position 1 to left to draw next tile
             tile_x -= 1;
         }
