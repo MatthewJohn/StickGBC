@@ -21,7 +21,6 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     UINT8 digit_count;
     UINT16 overflow;
     UINT8 remainder;
-    UINT16 multiple;
     BOOLEAN has_run;
     UINT8 current_map_index;
     unsigned char tile_to_insert[0xFU];
@@ -33,12 +32,11 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     digit_count = 0;
     current_map_index = BAR_FIGHT_TILE_SCRATCH;
     overflow = number;
-    has_run = 0U;
     destination_tile_offset = 0U;
  
    // Iterate over number to display, until number is reduced to single digit
    // Use has_run to handle showing 0
-    while (overflow > 0 || has_run == 0U) {
+    while (1) {
         digit_count ++;
         remainder = overflow % 10U;
         overflow = overflow / 10U;
@@ -64,7 +62,11 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         }
 
         set_bkg_data(current_map_index, 1U, &(tile_to_insert[0U]));
-        has_run = 1U;
+        set_bkg_tiles(tile_x, tile_y, 1, 1, current_map_index);
+        
+        if (overflow == 0U) {
+            break;
+        }
     }
 
     return current_map_index;
@@ -105,7 +107,7 @@ void enter_bar_fight()
     DISPLAY_ON;
 
     // Wait for user to press A or START
-    add_number(2U, 12U, 8U);
+    add_number(2U, 12U, 43U);
     joypad_state.a_pressed = 0U;
     joypad_state.start_pressed = 0U;
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
