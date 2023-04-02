@@ -30,12 +30,13 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     UINT8 destination_data_mask;
     unsigned char map_reference_data;
     UINT8 byte_itx;
+    UINT8 number_data;
     
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
     {
       tile_to_insert[byte_itx] = 0U;
     }
-    destination_data_mask == 0xF0U;
+    destination_data_mask = 0xF0U;
 
     digit_count = 0;
     current_map_index = BAR_FIGHT_TILE_SCRATCH;
@@ -65,12 +66,24 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
             source_tile_index = BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset;
             source_tile_index = source_tile_index << 4;
             source_tile_index += byte_itx;
-            // @TODO Temporary hack to show character
-            //source_tile_index = 1024 + byte_itx;
             // Remove the currently character side of destination data
-            //tile_to_insert[byte_itx] = (tile_to_insert[byte_itx] & (destination_data_mask ^ 0xFFU));
-            //tile_to_insert[byte_itx] |= (barfighttiles[source_tile_index] & source_data_mask);
-            tile_to_insert[byte_itx] = barfighttiles[source_tile_index];
+            number_data = barfighttiles[source_tile_index] & source_data_mask;
+
+            // Bit shift part of source tile data to match mask of destination tile number position,
+            // pushing number to the right or left to match the destination location
+            if (source_data_mask != destination_data_mask)
+            {
+                if (source_data_mask == 0xF0U)
+                {
+                    number_data = number_data >> 4;
+                }
+                else
+                {
+                    number_data = number_data << 4;
+                }
+            }
+            // Combine previous tile data with new tile data
+            tile_to_insert[byte_itx] = tile_to_insert[byte_itx] | number_data;
         }
 
         set_bkg_data(current_map_index, 1U, tile_to_insert);
@@ -93,6 +106,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         if (destination_data_mask == 0xF0U) {
             destination_data_mask = 0x0FU;
         } else {
+            // If going abck to first digit, blank the tile data
             destination_data_mask = 0xF0U;
             // Reset file data
             for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
@@ -140,7 +154,7 @@ void enter_bar_fight()
     DISPLAY_ON;
 
     // Wait for user to press A or START
-    add_number(2U, 12U, 43U);
+    add_number(2U, 12U, 87U);
     joypad_state.a_pressed = 0U;
     joypad_state.start_pressed = 0U;
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
