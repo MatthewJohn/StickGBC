@@ -34,7 +34,6 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
     UINT16 overflow;
     UINT16 source_tile_index;
     UINT8 remainder;
-    BOOLEAN has_run;
     unsigned char tile_to_insert[16U];
     UINT8 source_tile_offset;
     UINT8 source_data_mask;
@@ -143,9 +142,83 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
     return current_map_index;
 }
 
+// Update selected action on screen
+void update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
+{
+    UINT8 itx_action_x;
+    UINT8 itx_action_y;
+    UINT8 itx_tile_x;
+    UINT8 itx_tile_y;
+    unsigned char original_data;
+    // Reset palette on all actions
+    
+    // Iterate through actions
+    VBK_REG = 1;
+    for (itx_action_x = 0; itx_action_x != 3; itx_action_x ++)
+    {
+        for (itx_action_y = 0; itx_action_y != 2; itx_action_y ++)
+        {
+            // Iterate through tiles in x
+            for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
+            {
+                for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+                {
+                    get_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+                    // Set color palette to 0
+                    original_data &= 0xF8;
+                    set_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+                }
+            }
+        }
+    }
+    
+    // Iterate through tiles in x
+    for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
+    {
+        for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+        {
+            get_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+            // Set color palette to 1
+            original_data &= 0xF8;
+            original_data += 1U;
+            set_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+        }
+    }
+    VBK_REG = 0;
+    
+    bar_fight_state->selected_menu_item_x = new_x;
+    bar_fight_state->selected_menu_item_y = new_y;
+}
+
+void update_barfight_state(bar_fight_state_t* bar_fight_state)
+{
+    UINT8 new_menu_item_x = bar_fight_state->selected_menu_item_x;
+    UINT8 new_menu_item_y = bar_fight_state->selected_menu_item_y;
+
+    if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+    {
+        // Limit to max x/y menu items and, if not reached, update value
+        if (!(bar_fight_state->selected_menu_item_x == 0 && joypad_state.travel_x == -1) &&
+            !(bar_fight_state->selected_menu_item_x == 2 && joypad_state.travel_x == 1))
+        {
+            new_menu_item_x += joypad_state.travel_x;
+        }
+        if (!(bar_fight_state->selected_menu_item_y == 0 && joypad_state.travel_y == -1) &&
+            !(bar_fight_state->selected_menu_item_y == 1 && joypad_state.travel_y == 1))
+        {
+            new_menu_item_y += joypad_state.travel_y;
+        }
+        // Update selected item
+        update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y);
+    }
+}
+
 void enter_bar_fight()
 {
     UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
+    bar_fight_state_t bar_fight_state;
+    bar_fight_state.in_game = 1U;
+
 
     DISPLAY_OFF;
 
@@ -191,14 +264,17 @@ void enter_bar_fight()
     // Energy
     number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 1U);
     number_tile_index ++;
+    
+    update_selected_item(&bar_fight_state, 0, 0);
 
-    // Wait for user to press A or START
-    joypad_state.a_pressed = 0U;
-    joypad_state.start_pressed = 0U;
-    while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
+    main_check_joy(ROM_BANK_BAR_FIGHT);
+
+    while (bar_fight_state.in_game == 1U)
     {
-        wait_vbl_done();
-
         main_check_joy(ROM_BANK_BAR_FIGHT);
+        
+        update_barfight_state(&bar_fight_state);
+        
+        wait_vbl_done();
     }
 }

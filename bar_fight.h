@@ -13,4 +13,10 @@
 
 void enter_bar_fight();
 
+typedef struct {
+    UINT8 selected_menu_item_x;
+    UINT8 selected_menu_item_y;
+    BOOLEAN in_game;
+} bar_fight_state_t;
+
 #endif
