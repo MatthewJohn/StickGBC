@@ -210,6 +210,9 @@ void update_barfight_state(bar_fight_state_t* bar_fight_state)
         }
         // Update selected item
         update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y);
+
+        // Sleep to stop double pressed
+        delay(DELAY_MENU_ITEM_MOVE);
     }
 }
 
