@@ -36,7 +36,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     {
       tile_to_insert[byte_itx] = 0U;
     }
-    destination_data_mask = 0xF0U;
+    destination_data_mask = 0x0FU;
 
     digit_count = 0;
     current_map_index = BAR_FIGHT_TILE_SCRATCH;
@@ -103,11 +103,11 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
         }
         
         // Flip the destination file offset on each number
-        if (destination_data_mask == 0xF0U) {
-            destination_data_mask = 0x0FU;
+        if (destination_data_mask == 0x0FU) {
+            destination_data_mask = 0xF0U;
         } else {
             // If going abck to first digit, blank the tile data
-            destination_data_mask = 0xF0U;
+            destination_data_mask = 0x0FU;
             // Reset file data
             for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
             {
