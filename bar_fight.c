@@ -20,6 +20,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
 {
     UINT8 digit_count;
     UINT16 overflow;
+    UINT16 source_tile_index;
     UINT8 remainder;
     BOOLEAN has_run;
     UINT8 current_map_index;
@@ -52,7 +53,12 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
 
         // Iterate through each line, copying the byte to the tile data to insert.
         for (byte_itx = 0; byte_itx < 8U; byte_itx ++) {
-            tile_to_insert[(byte_itx * 2U) + destination_tile_offset] = barfighttiles[((BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset) << 4U) + (byte_itx * 2U) + source_tile_data_offset];
+            source_tile_index = BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset;
+            source_tile_index = source_tile_index << 4;
+            source_tile_index += (byte_itx * 2U) + source_tile_data_offset;
+            // @TODO Temporary hack to show character
+            source_tile_offset = 1024 + (byte_itx * 2);
+            tile_to_insert[(byte_itx * 2U) + destination_tile_offset] = barfighttiles[source_tile_index];
         }
 
         set_bkg_data(current_map_index, 1U, &(tile_to_insert[0U]));
