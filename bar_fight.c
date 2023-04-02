@@ -16,7 +16,19 @@
 #define BAR_FIGHT_TILE_SCRATCH 68U
 #define BAR_FIGHT_NUMERIC_TILE_START 63U
 
-UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
+
+/*
+ * add_number
+ * 
+ * Draw a number to the screen, combining number tiles to provide 2 numbers per tile
+ * Add optional underscoring for placement of numbers in action box
+ * 
+ * @param tile_x rightmost X coordinate for tile placement on map. Numbers are drawn to the left
+ * @param tile_y Y coordinate for tile placement on map
+ * @param number Number to br drawn to screen
+ * @param add_underscore Whether to add bottom line to fill in action box
+ */
+UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore)
 {
     UINT8 digit_count;
     UINT16 overflow;
@@ -82,8 +94,16 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
                     number_data = number_data << 4;
                 }
             }
-            // Combine previous tile data with new tile data
-            tile_to_insert[byte_itx] = tile_to_insert[byte_itx] | number_data;
+            if (byte_itx == 14U && add_underscore == 1U)
+            {
+                // Set entire row to black if underscoring and on final line
+                tile_to_insert[byte_itx] = 0xFFU;
+            }
+            else
+            {
+                // Combine previous tile data with new tile data
+                tile_to_insert[byte_itx] = tile_to_insert[byte_itx] | number_data;
+            }
         }
 
         set_bkg_data(current_map_index, 1U, tile_to_insert);
@@ -154,7 +174,7 @@ void enter_bar_fight()
     DISPLAY_ON;
 
     // Wait for user to press A or START
-    add_number(2U, 12U, 87U);
+    add_number(2U, 12U, 23U, 1U);
     joypad_state.a_pressed = 0U;
     joypad_state.start_pressed = 0U;
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
