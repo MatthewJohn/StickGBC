@@ -214,13 +214,32 @@ void update_barfight_state(bar_fight_state_t* bar_fight_state)
         // Sleep to stop double pressed
         delay(DELAY_MENU_ITEM_MOVE);
     }
+    else if (joypad_state.a_pressed)
+    {
+        if (bar_fight_state->selected_menu_item_y == 1)
+        {
+            // Check for run away
+            if (bar_fight_state->selected_menu_item_x == 2)
+            {
+                    bar_fight_state->in_game = 0U;
+            }
+        }
+    }
 }
 
 void enter_bar_fight()
 {
     UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
     bar_fight_state_t bar_fight_state;
+
+    if (game_state.hour > 21U)
+    {
+        return;
+    }
+    game_state.hour += 3U;
+
     bar_fight_state.in_game = 1U;
+    game_state.karma -= 2U;
 
 
     DISPLAY_OFF;
