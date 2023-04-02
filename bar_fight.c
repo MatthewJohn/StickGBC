@@ -24,11 +24,11 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
     UINT8 remainder;
     BOOLEAN has_run;
     UINT8 current_map_index;
-    unsigned char tile_to_insert[0xFU];
+    unsigned char tile_to_insert[16U];
     UINT8 source_tile_offset;
     UINT8 source_data_mask;
     UINT8 destination_data_mask;
-    unsigned char map_reference_data[0x2U];
+    unsigned char map_reference_data;
     UINT8 byte_itx;
     
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
@@ -45,7 +45,7 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
    // Use has_run to handle showing 0
     while (1) {
         digit_count ++;
-        remainder = overflow % 10U;
+        remainder = (overflow & 0xFFU) % 10U;
         overflow = overflow / 10U;
 
         // Each source tile contains 2 numbers,
@@ -66,18 +66,24 @@ UINT8 add_number(UINT8 tile_x, UINT8 tile_y, UINT16 number)
             source_tile_index = source_tile_index << 4;
             source_tile_index += byte_itx;
             // @TODO Temporary hack to show character
-            //source_tile_offset = 1024 + byte_itx;
+            //source_tile_index = 1024 + byte_itx;
             // Remove the currently character side of destination data
             //tile_to_insert[byte_itx] = (tile_to_insert[byte_itx] & (destination_data_mask ^ 0xFFU));
-            tile_to_insert[byte_itx] |= (barfighttiles[source_tile_index] & source_data_mask);
+            //tile_to_insert[byte_itx] |= (barfighttiles[source_tile_index] & source_data_mask);
+            tile_to_insert[byte_itx] = barfighttiles[source_tile_index];
         }
 
-        set_bkg_data(current_map_index, 2U, &(tile_to_insert[0U]));
+        set_bkg_data(current_map_index, 1U, tile_to_insert);
         
         // Create map data for tile
-        map_reference_data[0U] = current_map_index;
-        map_reference_data[1U] = 0U;
-        set_bkg_tiles(tile_x, tile_y, 1, 1, &(map_reference_data[0]));
+        map_reference_data = current_map_index;
+
+        set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
+        VBK_REG = 1;
+        // Bank 0, not flipped and no priority flag
+        map_reference_data = 0U;
+        set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
+        VBK_REG = 0;
 
         if (overflow == 0U) {
             break;
