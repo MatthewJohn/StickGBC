@@ -639,7 +639,7 @@ void process_bar_menu()
         {
             main_enter_bar_fight(ROM_BANK_LOGIC_FUNCTIONS);
             // Reload menu
-            load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
             move_menu_to_exit();
         }
     }
