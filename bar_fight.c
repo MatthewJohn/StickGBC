@@ -18,6 +18,63 @@
 
 
 /*
+ *  bar_fight_write_digit_to_screen
+ * 
+ */
+void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UINT8 source_data_mask, UINT8 destination_data_mask, unsigned char* tile_to_insert, UINT8 add_underscore, UINT16 current_map_index)
+{
+    UINT8 byte_itx2;
+    UINT16 source_tile_index;
+    unsigned char map_reference_data;
+    UINT8 number_data;
+
+    // Iterate through each line, copying the byte to the tile data to insert.
+    for (byte_itx2 = 0; byte_itx2 < 16U; byte_itx2 ++) {
+        source_tile_index = BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset;
+        source_tile_index = source_tile_index << 4;
+        source_tile_index += byte_itx2;
+        // Remove the currently character side of destination data
+        number_data = barfighttiles[source_tile_index] & source_data_mask;
+
+        // Bit shift part of source tile data to match mask of destination tile number position,
+        // pushing number to the right or left to match the destination location
+        if (source_data_mask != destination_data_mask)
+        {
+            if (source_data_mask == 0xF0U)
+            {
+                number_data = number_data >> 4;
+            }
+            else
+            {
+                number_data = number_data << 4;
+            }
+        }
+        if (byte_itx2 == 14U && add_underscore == 1U)
+        {
+            // Set entire row to black if underscoring and on final line
+            tile_to_insert[byte_itx2] = 0xFFU;
+        }
+        else
+        {
+            // Combine previous tile data with new tile data
+            tile_to_insert[byte_itx2] = tile_to_insert[byte_itx2] | number_data;
+        }
+    }
+
+    set_bkg_data(current_map_index, 1U, tile_to_insert);
+
+    // Create map data for tile
+    map_reference_data = current_map_index;
+
+    set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
+    VBK_REG = 1;
+    // Bank 0, not flipped and no priority flag
+    map_reference_data = 0U;
+    set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
+    VBK_REG = 0;
+}
+
+/*
  * add_number
  *
  * Draw a number to the screen, combining number tiles to provide 2 numbers per tile
@@ -32,15 +89,12 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
 {
     UINT8 digit_count;
     UINT16 overflow;
-    UINT16 source_tile_index;
     UINT8 remainder;
     unsigned char tile_to_insert[16U];
     UINT8 source_tile_offset;
     UINT8 source_data_mask;
     UINT8 destination_data_mask;
-    unsigned char map_reference_data;
     UINT8 byte_itx;
-    UINT8 number_data;
 
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
     {
@@ -69,51 +123,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         } else {
             source_data_mask = 0x0FU;
         }
-
-        // Iterate through each line, copying the byte to the tile data to insert.
-        for (byte_itx = 0; byte_itx < 16U; byte_itx ++) {
-            source_tile_index = BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset;
-            source_tile_index = source_tile_index << 4;
-            source_tile_index += byte_itx;
-            // Remove the currently character side of destination data
-            number_data = barfighttiles[source_tile_index] & source_data_mask;
-
-            // Bit shift part of source tile data to match mask of destination tile number position,
-            // pushing number to the right or left to match the destination location
-            if (source_data_mask != destination_data_mask)
-            {
-                if (source_data_mask == 0xF0U)
-                {
-                    number_data = number_data >> 4;
-                }
-                else
-                {
-                    number_data = number_data << 4;
-                }
-            }
-            if (byte_itx == 14U && add_underscore == 1U)
-            {
-                // Set entire row to black if underscoring and on final line
-                tile_to_insert[byte_itx] = 0xFFU;
-            }
-            else
-            {
-                // Combine previous tile data with new tile data
-                tile_to_insert[byte_itx] = tile_to_insert[byte_itx] | number_data;
-            }
-        }
-
-        set_bkg_data(current_map_index, 1U, tile_to_insert);
-
-        // Create map data for tile
-        map_reference_data = current_map_index;
-
-        set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
-        VBK_REG = 1;
-        // Bank 0, not flipped and no priority flag
-        map_reference_data = 0U;
-        set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
-        VBK_REG = 0;
+        bf_wrt_dgt_to_scr(tile_x, tile_y, source_tile_offset, source_data_mask, destination_data_mask, &tile_to_insert, add_underscore, current_map_index);
 
         if (overflow == 0U) {
             break;
