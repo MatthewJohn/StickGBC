@@ -516,6 +516,11 @@ void enter_bar_fight()
 {
     bar_fight_state_t bar_fight_state;
 
+    // Setup minigame state
+    bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
+    bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
+    bar_fight_state.in_game = 1U;
+
     bf_reset_attack_points(&bar_fight_state);
 
     if (game_state.hour > 21U)
@@ -524,7 +529,6 @@ void enter_bar_fight()
     }
     game_state.hour += 3U;
 
-    bar_fight_state.in_game = 1U;
     game_state.karma -= 2U;
     game_state.bar_fight_count ++;
 
@@ -556,13 +560,6 @@ void enter_bar_fight()
     set_bkg_data(8U, 60U, &(barfighttiles[8U << 4]));
 
     DISPLAY_ON;
-
-    // Setup minigame state
-    bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
-    bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
-
-    bf_update_text(&bar_fight_state);
-
 
     main_check_joy(ROM_BANK_BAR_FIGHT);
 
