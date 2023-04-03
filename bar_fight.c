@@ -314,11 +314,11 @@ void bf_load_basic_map(bar_fight_state_t* bar_fight_state)
 }
 
 /*
- * bf_attack_effect
+ * bf_damage_effect
  *
- * Show screen effect when attacking
+ * Show screen effect being attacked
  */
-void bf_attack_effect()
+void bf_damage_effect()
 {
     UINT8 itx;
     UINT8 x;
@@ -338,6 +338,43 @@ void bf_attack_effect()
             }
             scroll_bkg(direction, 0);
             wait_vbl_done();
+        }
+    }
+}
+
+/*
+ * bf_attack_effect
+ *
+ * Show screen effect when attacking
+ */
+void bf_attack_effect()
+{
+    UINT8 itx;
+    UWORD palette_data[4];
+    UWORD red;
+
+    red = 0x001FU;
+
+    for (itx = 0; itx < 8; itx ++)
+    {
+        // Copy palette 1
+        palette_data[0U] = bar_fight_palette[0U],
+        palette_data[1U] = bar_fight_palette[1U];
+        // Set 3rd color to either red or black to switch enemy color
+        palette_data[2U] = red;
+        palette_data[3U] = bar_fight_palette[3U];
+
+        set_bkg_palette(0U, 1U, &palette_data);
+        wait_vbl_done();
+        delay(200);
+
+        if (red == 0x001FU)
+        {
+            red = 0U;
+        }
+        else
+        {
+            red = 0x001FU;
         }
     }
 }
@@ -410,6 +447,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     {
         bar_fight_state->enemy_hp -= damage_amount;
         bf_update_text(bar_fight_state);
+
+        // Perform enemy attack
+        bf_damage_effect();
     }
     else
     {
