@@ -499,6 +499,7 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
                 bar_fight_state->in_game = 0U;
             }
         }
+        delay(DELAY_MENU_ITEM_MOVE);
     }
 }
 
