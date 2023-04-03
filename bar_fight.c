@@ -18,6 +18,54 @@
 #define BAR_FIGHT_NUMERIC_TILE_START 63U
 
 
+// Update selected action on screen
+void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
+{
+    UINT8 itx_action_x;
+    UINT8 itx_action_y;
+    UINT8 itx_tile_x;
+    UINT8 itx_tile_y;
+    unsigned char original_data;
+    // Reset palette on all actions
+
+    // Iterate through actions
+    VBK_REG = 1;
+    for (itx_action_x = 0; itx_action_x != 3; itx_action_x ++)
+    {
+        for (itx_action_y = 0; itx_action_y != 2; itx_action_y ++)
+        {
+            // Iterate through tiles in x
+            for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
+            {
+                for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+                {
+                    get_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+                    // Set color palette to 0
+                    original_data &= 0xF8;
+                    set_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+                }
+            }
+        }
+    }
+
+    // Iterate through tiles in x
+    for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
+    {
+        for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+        {
+            get_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+            // Set color palette to 1
+            original_data &= 0xF8;
+            original_data += 1U;
+            set_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+        }
+    }
+    VBK_REG = 0;
+
+    bar_fight_state->selected_menu_item_x = new_x;
+    bar_fight_state->selected_menu_item_y = new_y;
+}
+
 /*
  *  bar_fight_write_digit_to_screen
  */
@@ -222,11 +270,47 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
 
 void bf_update_text(bar_fight_state_t* bar_fight_state)
 {
+    UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
+
+    // Add points for actions
+    // punch
+    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U, 0U);
+    number_tile_index ++;
+    // Kick
+    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 2U, 0U, 0U, 1U, 0U);
+    number_tile_index ++;
+    // Fireball
+    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 3U, 0U, 0U, 1U, 0U);
+    number_tile_index ++;
+    // Energy
+    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
+    number_tile_index ++;
+
+    bf_update_selected_item(bar_fight_state, 0, 0);
+
+    bar_fight_state->player_hp_tile_index = number_tile_index;
+    bar_fight_state->enemy_hp_tile_index = number_tile_index + 3;
+    
     // Show player health
     bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
 
     // Show enemy health
     bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 3U);
+}
+
+/*
+ * bf_load_basic_map
+ *
+ * Update base tiles/map/text on initial load or after drawing text
+ */
+void bf_load_basic_map(bar_fight_state_t* bar_fight_state)
+{
+    set_background_tiles(
+        ROM_BANK_BAR_FIGHT,  // Load tiles from this ROM bank
+        ROM_BANK_BAR_FIGHT  // Return to the ROM bank for this function
+    );
+    
+    bf_update_text(bar_fight_state);
 }
 
 /*
@@ -258,54 +342,6 @@ void bf_attack_effect()
     }
 }
 
-// Update selected action on screen
-void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
-{
-    UINT8 itx_action_x;
-    UINT8 itx_action_y;
-    UINT8 itx_tile_x;
-    UINT8 itx_tile_y;
-    unsigned char original_data;
-    // Reset palette on all actions
-
-    // Iterate through actions
-    VBK_REG = 1;
-    for (itx_action_x = 0; itx_action_x != 3; itx_action_x ++)
-    {
-        for (itx_action_y = 0; itx_action_y != 2; itx_action_y ++)
-        {
-            // Iterate through tiles in x
-            for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
-            {
-                for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
-                {
-                    get_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
-                    // Set color palette to 0
-                    original_data &= 0xF8;
-                    set_bkg_tiles(2U + (itx_action_x * 6U) + itx_tile_x, 11U + (itx_action_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
-                }
-            }
-        }
-    }
-
-    // Iterate through tiles in x
-    for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
-    {
-        for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
-        {
-            get_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
-            // Set color palette to 1
-            original_data &= 0xF8;
-            original_data += 1U;
-            set_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
-        }
-    }
-    VBK_REG = 0;
-
-    bar_fight_state->selected_menu_item_x = new_x;
-    bar_fight_state->selected_menu_item_y = new_y;
-}
-
 void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 {
     UINT16 damage_amount;
@@ -317,6 +353,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         if (bar_fight_state->attack_points < 1U)
         {
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            bf_load_basic_map(bar_fight_state);
             return;
         }
         damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
@@ -327,6 +364,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         if (bar_fight_state->attack_points < 2U)
         {
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            bf_load_basic_map(bar_fight_state);
             return;
         }
         damage_amount = (sys_time % (game_state.strength / 4)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
@@ -337,6 +375,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         if (bar_fight_state->attack_points < 3U)
         {
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            bf_load_basic_map(bar_fight_state);
             return;
         }
         damage_amount = (sys_time % (game_state.strength / 2));
@@ -347,6 +386,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         if (bar_fight_state->attack_points < 4U)
         {
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            bf_load_basic_map(bar_fight_state);
             return;
         }
         damage_amount = (sys_time % game_state.strength);
@@ -388,6 +428,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         // Show win amount
         game_state.balance += amount_won;
         main_show_window_text(&win_txt_barfight_win2, ROM_BANK_BAR_FIGHT);
+
+        // Redraw map after any window text
+        bf_load_basic_map(bar_fight_state);
 
         // Exit mini game
         bar_fight_state->in_game = 0U;
@@ -470,7 +513,6 @@ void bf_reset_attack_points(bar_fight_state_t* bar_fight_state)
 
 void enter_bar_fight()
 {
-    UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
     bar_fight_state_t bar_fight_state;
 
     bf_reset_attack_points(&bar_fight_state);
@@ -504,10 +546,7 @@ void enter_bar_fight()
     screen_state.draw_max_x = SCREEN_WIDTH_TILES;
     screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
-    set_background_tiles(
-        ROM_BANK_BAR_FIGHT,  // Load tiles from this ROM bank
-        ROM_BANK_BAR_FIGHT  // Return to the ROM bank for this function
-    );
+    bf_load_basic_map(&bar_fight_state);
 
     // Move background to top left
     move_bkg(0, 0);
@@ -520,25 +559,6 @@ void enter_bar_fight()
     // Setup minigame state
     bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
     bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
-
-    // Add points for actions
-    // punch
-    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U, 0U);
-    number_tile_index ++;
-    // Kick
-    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 2U, 0U, 0U, 1U, 0U);
-    number_tile_index ++;
-    // Fireball
-    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 3U, 0U, 0U, 1U, 0U);
-    number_tile_index ++;
-    // Energy
-    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
-    number_tile_index ++;
-
-    bf_update_selected_item(&bar_fight_state, 0, 0);
-
-    bar_fight_state.player_hp_tile_index = number_tile_index;
-    bar_fight_state.enemy_hp_tile_index = number_tile_index + 3;
 
     bf_update_text(&bar_fight_state);
 
