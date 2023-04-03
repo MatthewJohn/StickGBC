@@ -290,7 +290,7 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
 
     bar_fight_state->player_hp_tile_index = number_tile_index;
     bar_fight_state->enemy_hp_tile_index = number_tile_index + 3;
-    
+
     // Show player health
     bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
 
@@ -309,7 +309,7 @@ void bf_load_basic_map(bar_fight_state_t* bar_fight_state)
         ROM_BANK_BAR_FIGHT,  // Load tiles from this ROM bank
         ROM_BANK_BAR_FIGHT  // Return to the ROM bank for this function
     );
-    
+
     bf_update_text(bar_fight_state);
 }
 
