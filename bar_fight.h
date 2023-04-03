@@ -19,6 +19,9 @@ typedef struct {
     BOOLEAN in_game;
     UINT16 enemy_max_hp;
     UINT16 enemy_hp;
+    UINT16 attack_points;
+    UINT8 player_hp_tile_index;
+    UINT8 enemy_hp_tile_index;
 } bar_fight_state_t;
 
 #endif

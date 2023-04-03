@@ -196,6 +196,15 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
     return current_map_index;
 }
 
+void bf_update_text(bar_fight_state_t* bar_fight_state)
+{
+    // Show player health
+    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
+
+    // Show enemy health
+    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 0U);
+}
+
 /*
  * bf_attack_effect
  *
@@ -273,6 +282,30 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
     bar_fight_state->selected_menu_item_y = new_y;
 }
 
+void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
+{
+    UINT16 damage_amount;
+
+    if (attack_type == 1U)
+    {
+        damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
+    }
+    // If enemy will still have HP remaining,
+    // update the value
+    if (bar_fight_state->enemy_hp > damage_amount)
+    {
+        bar_fight_state->enemy_hp -= damage_amount;
+        bf_update_text(bar_fight_state);
+    }
+    else
+    {
+        bar_fight_state->enemy_hp = 0U;
+        bf_update_text(bar_fight_state);
+        // Otherwise, set HP to 0 and end game
+        //bf_end_win(bar_fight_state);
+    }
+}
+
 void bf_update_state(bar_fight_state_t* bar_fight_state)
 {
     UINT8 new_menu_item_x = bar_fight_state->selected_menu_item_x;
@@ -304,6 +337,7 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
             if (bar_fight_state->selected_menu_item_x == 0)
             {
                 bf_attack_effect();
+                bf_do_damage(bar_fight_state, 1U);
             }
         }
         else if (bar_fight_state->selected_menu_item_y == 1)
@@ -317,10 +351,21 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
     }
 }
 
+void bf_reset_attack_points(bar_fight_state_t* bar_fight_state)
+{
+    bar_fight_state->attack_points = (game_state.strength / 20U) + 1U;
+    if (bar_fight_state->attack_points > 20U)
+    {
+        bar_fight_state->attack_points = 20U;
+    }
+}
+
 void enter_bar_fight()
 {
     UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
     bar_fight_state_t bar_fight_state;
+
+    bf_reset_attack_points(&bar_fight_state);
 
     if (game_state.hour > 21U)
     {
@@ -382,15 +427,13 @@ void enter_bar_fight()
     number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
     number_tile_index ++;
 
-    // Show player health
-    number_tile_index = bf_add_number(number_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
-    number_tile_index ++;
-
-    // Show enemy health
-    number_tile_index = bf_add_number(number_tile_index, 5U, 1U, bar_fight_state.enemy_max_hp, bar_fight_state.enemy_hp, 0U);
-    number_tile_index ++;
-
     bf_update_selected_item(&bar_fight_state, 0, 0);
+
+    bar_fight_state.player_hp_tile_index = number_tile_index;
+    bar_fight_state.enemy_hp_tile_index = number_tile_index + 3;
+
+    bf_update_text(&bar_fight_state);
+
 
     main_check_joy(ROM_BANK_BAR_FIGHT);
 
