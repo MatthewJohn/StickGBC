@@ -129,7 +129,7 @@ typedef struct {
 
     UINT8 intro_shown;
     BOOLEAN game_ended;
-    
+
     // Number of bar fights the user has been in
     UINT8 bar_fight_count;
 } game_state_t;

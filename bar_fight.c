@@ -86,7 +86,7 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  * @param number Number to br drawn to screen
  * @param secondary_number Number to be drawn before a forward slash
  * @param add_underscore Whether to add bottom line to fill in action box
- * 
+ *
  * @returns The highest tile index that was used to write to.
  */
 UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
@@ -108,7 +108,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
       tile_to_insert[byte_itx] = 0U;
     }
     destination_data_mask = 0x0FU;
-    
+
     process_state = 0;
 
     digit_count = 0;
@@ -161,7 +161,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
         {
             source_data_mask = 0x0FU;
         }
-        
+
         // If process state is 2 (drawing forward slash), set source data mask and offset for it
         if (process_state == 2)
         {
@@ -205,7 +205,7 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
     UINT8 itx_tile_y;
     unsigned char original_data;
     // Reset palette on all actions
-    
+
     // Iterate through actions
     VBK_REG = 1;
     for (itx_action_x = 0; itx_action_x != 3; itx_action_x ++)
@@ -225,7 +225,7 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
             }
         }
     }
-    
+
     // Iterate through tiles in x
     for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
     {
@@ -239,7 +239,7 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
         }
     }
     VBK_REG = 0;
-    
+
     bar_fight_state->selected_menu_item_x = new_x;
     bar_fight_state->selected_menu_item_y = new_y;
 }
@@ -349,11 +349,11 @@ void enter_bar_fight()
     // Show player health
     number_tile_index = bf_add_number(number_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
     number_tile_index ++;
-    
+
     // Show enemy health
     number_tile_index = bf_add_number(number_tile_index, 5U, 1U, bar_fight_state.enemy_max_hp, bar_fight_state.enemy_hp, 0U);
     number_tile_index ++;
-    
+
     bf_update_selected_item(&bar_fight_state, 0, 0);
 
     main_check_joy(ROM_BANK_BAR_FIGHT);
@@ -361,9 +361,9 @@ void enter_bar_fight()
     while (bar_fight_state.in_game == 1U)
     {
         main_check_joy(ROM_BANK_BAR_FIGHT);
-        
+
         bf_update_state(&bar_fight_state);
-        
+
         wait_vbl_done();
     }
 }
