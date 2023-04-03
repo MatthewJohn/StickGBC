@@ -2098,7 +2098,7 @@ void main_show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT
     SWITCH_ROM_MBC5(return_bank);
 }
 
-void main_enter_bar_fight(unsigned int return_bank)
+void main_enter_bar_fight(unsigned int return_bank) NONBANKED
 {
     ROM_BANK_BAR_FIGHT_SWITCH;
     enter_bar_fight();
