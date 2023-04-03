@@ -362,6 +362,8 @@ void setup_globals()
     game_state.user_pos_tiles_x = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x);
     game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
+    game_state.bar_fight_count = 0U;
+
 #ifdef IN_TESTING
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;

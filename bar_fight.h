@@ -17,6 +17,8 @@ typedef struct {
     UINT8 selected_menu_item_x;
     UINT8 selected_menu_item_y;
     BOOLEAN in_game;
+    UINT16 enemy_max_hp;
+    UINT16 enemy_hp;
 } bar_fight_state_t;
 
 #endif

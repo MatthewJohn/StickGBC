@@ -294,6 +294,7 @@ void enter_bar_fight()
 
     bar_fight_state.in_game = 1U;
     game_state.karma -= 2U;
+    game_state.bar_fight_count ++;
 
 
     DISPLAY_OFF;
@@ -327,6 +328,10 @@ void enter_bar_fight()
 
     DISPLAY_ON;
 
+    // Setup minigame state
+    bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
+    bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
+
     // Add points for actions
     // punch
     number_tile_index = add_number(number_tile_index, 4U, 12U, 1U, 0U, 1U);
@@ -342,7 +347,12 @@ void enter_bar_fight()
     number_tile_index ++;
 
     // Show player health
-    number_tile_index = add_number(number_tile_index, 5U, 1U, game_state.max_hp, game_state.hp, 0U);
+    number_tile_index = add_number(number_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
+    number_tile_index ++;
+    
+    // Show enemy health
+    number_tile_index = add_number(number_tile_index, 5U, 1U, bar_fight_state.enemy_max_hp, bar_fight_state.enemy_hp, 0U);
+    number_tile_index ++;
     
     update_selected_item(&bar_fight_state, 0, 0);
 
