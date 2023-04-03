@@ -311,19 +311,58 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     UINT16 damage_amount;
     UINT16 amount_won;
 
+    // Punch attack
     if (attack_type == 1U)
     {
-        if (bar_fight_state->attack_points < 1)
+        if (bar_fight_state->attack_points < 1U)
         {
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
             return;
         }
-        // Original algorithm +1 as the original random method appears to be from 1
-        damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2) + 1;
+        damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
+    }
+    // Kick attack
+    else if (attack_type == 2U)
+    {
+        if (bar_fight_state->attack_points < 2U)
+        {
+            main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            return;
+        }
+        damage_amount = (sys_time % (game_state.strength / 4)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
+    }
+    // Fireball attack
+    else if (attack_type == 3U)
+    {
+        if (bar_fight_state->attack_points < 3U)
+        {
+            main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            return;
+        }
+        damage_amount = (sys_time % (game_state.strength / 2));
+    }
+    // Energy attack
+    else if (attack_type == 4U)
+    {
+        if (bar_fight_state->attack_points < 4U)
+        {
+            main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            return;
+        }
+        damage_amount = (sys_time % game_state.strength);
     }
 
-    // Show attack animation
-    bf_attack_effect();
+    // Skip minimum amount check and attack style, if done (skipped)
+    if (attack_type != 0U)
+    {
+        if (damage_amount == 0U)
+        {
+            damage_amount = 1U;
+        }
+
+        // Show attack animation
+        bf_attack_effect();
+    }
 
     // If enemy will still have HP remaining,
     // update the value
@@ -381,17 +420,38 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
     }
     else if (joypad_state.a_pressed)
     {
-        if (bar_fight_state->selected_menu_item_y == 0)
+        if (bar_fight_state->selected_menu_item_y == 0U)
         {
-            if (bar_fight_state->selected_menu_item_x == 0)
+            // Punch
+            if (bar_fight_state->selected_menu_item_x == 0U)
             {
                 bf_do_damage(bar_fight_state, 1U);
             }
+            // Fireball
+            else if (bar_fight_state->selected_menu_item_x == 1U)
+            {
+                bf_do_damage(bar_fight_state, 3U);
+            }
+            // Done (Skip)
+            else if (bar_fight_state->selected_menu_item_x == 1U)
+            {
+                bf_do_damage(bar_fight_state, 0U);
+            }
         }
-        else if (bar_fight_state->selected_menu_item_y == 1)
+        else if (bar_fight_state->selected_menu_item_y == 1U)
         {
+            // Kick
+            if (bar_fight_state->selected_menu_item_x == 0U)
+            {
+                bf_do_damage(bar_fight_state, 2U);
+            }
+            // Energy
+            else if (bar_fight_state->selected_menu_item_x == 1U)
+            {
+                bf_do_damage(bar_fight_state, 4U);
+            }
             // Check for run away
-            if (bar_fight_state->selected_menu_item_x == 2)
+            else if (bar_fight_state->selected_menu_item_x == 2U)
             {
                 bar_fight_state->in_game = 0U;
             }
@@ -465,11 +525,11 @@ void enter_bar_fight()
     // punch
     number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
-    // Fireball
-    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 0U, 1U, 0U);
-    number_tile_index ++;
     // Kick
-    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 0U, 1U, 0U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 2U, 0U, 0U, 1U, 0U);
+    number_tile_index ++;
+    // Fireball
+    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 3U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
     // Energy
     number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
