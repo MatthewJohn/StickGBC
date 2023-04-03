@@ -380,6 +380,7 @@ void setup_globals()
     game_state.strength = 250U;
     game_state.charm = 99U;
     game_state.hour = 0;
+    game_state.bar_fight_count = 5U;
 #endif
 }
 
@@ -2135,9 +2136,11 @@ void main()
         // it takes player to go through opening screen
         setup_globals();
 
+#if IN_TESTING
         ROM_BANK_BAR_FIGHT_SWITCH;
         enter_bar_fight();
         ROM_BANK_RESET;
+#endif
 
         // Initial setup of window and update with starting stats
         ROM_BANK_BUILDING_MENU_SWITCH;
