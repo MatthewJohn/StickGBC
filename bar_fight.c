@@ -19,7 +19,6 @@
 
 /*
  *  bar_fight_write_digit_to_screen
- * 
  */
 void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UINT8 source_data_mask, UINT8 destination_data_mask, unsigned char* tile_to_insert, UINT8 add_underscore, UINT16 current_map_index)
 {
@@ -81,10 +80,14 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  * Draw a number to the screen, combining number tiles to provide 2 numbers per tile
  * Add optional underscoring for placement of numbers in action box
  *
+ * @param current_map_index The current tile index to create tile to
  * @param tile_x rightmost X coordinate for tile placement on map. Numbers are drawn to the left
  * @param tile_y Y coordinate for tile placement on map
  * @param number Number to br drawn to screen
+ * @param secondary_number Number to be drawn before a forward slash
  * @param add_underscore Whether to add bottom line to fill in action box
+ * 
+ * @returns The highest tile index that was used to write to.
  */
 UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
 {
@@ -99,6 +102,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
     UINT8 destination_data_mask;
     UINT8 byte_itx;
 
+    // Blank out tile_to_insert array
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
     {
       tile_to_insert[byte_itx] = 0U;
@@ -110,14 +114,19 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
     digit_count = 0;
     overflow = number;
 
-   // Iterate over number to display, until number is reduced to single digit
-   // Use has_run to handle showing 0
     while (1) {
+        // If overflow is empty, there will not be a number
+        // to process. Ignore if not yet processed any numbers
+        // so that  0 can be drawn.
         if (overflow == 0U && process_state != 0) {
+            // If there's a secondary number, move state to drawing
+            // forward slash
             if (process_state == 1 && secondary_number != 0)
             {
                 process_state = 2;
             }
+            // If forward slash has been draw, move to drawing
+            // secondary number
             else if (process_state == 2)
             {
                 overflow = secondary_number;
@@ -128,6 +137,8 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
                 break;
             }
         }
+
+        // Move from initial state to processing first number
         if (process_state == 0)
         {
             process_state = 1;
@@ -142,9 +153,12 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         // Each line in tile is made of 2 chars, meaing each line of a number is 1 byte.
         // Offset for first number (0, 2, etc.) is 0 (start of tile) and odd numbers are on the right
         // hand side, so each line offset is 1
-        if (remainder % 2U == 0U) {
+        if (remainder % 2U == 0U)
+        {
             source_data_mask = 0xF0U;
-        } else {
+        }
+        else
+        {
             source_data_mask = 0x0FU;
         }
         
@@ -157,9 +171,12 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         bf_wrt_dgt_to_scr(tile_x, tile_y, source_tile_offset, source_data_mask, destination_data_mask, &tile_to_insert, add_underscore, current_map_index);
 
         // Flip the destination file offset on each number
-        if (destination_data_mask == 0x0FU) {
+        if (destination_data_mask == 0x0FU)
+        {
             destination_data_mask = 0xF0U;
-        } else {
+        }
+        else
+        {
             // If going abck to first digit, blank the tile data
             destination_data_mask = 0x0FU;
             // Reset file data
@@ -323,7 +340,7 @@ void enter_bar_fight()
     // Energy
     number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
     number_tile_index ++;
-    
+
     // Show player health
     number_tile_index = add_number(number_tile_index, 5U, 1U, game_state.max_hp, game_state.hp, 0U);
     
