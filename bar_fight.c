@@ -206,22 +206,21 @@ void bf_attack_effect()
     UINT8 itx;
     UINT8 x;
     INT8 direction;
-    for (itx = 0; itx < 4; itx ++)
+    for (itx = 0; itx < 3; itx ++)
     {
         direction = 1;
-        for (x = 0; x != 16; x++)
+        for (x = 0; x != 12; x++)
         {
-            if (x == 4)
+            if (x == 3)
             {
                 direction = -1;
             }
-            else if (x == 12)
+            else if (x == 9)
             {
                 direction = 1;
             }
             scroll_bkg(direction, 0);
             wait_vbl_done();
-            delay(10);
         }
     }
 }
@@ -312,7 +311,7 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
             // Check for run away
             if (bar_fight_state->selected_menu_item_x == 2)
             {
-                    bar_fight_state->in_game = 0U;
+                bar_fight_state->in_game = 0U;
             }
         }
     }
