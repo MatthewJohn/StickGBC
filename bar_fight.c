@@ -89,7 +89,7 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  * 
  * @returns The highest tile index that was used to write to.
  */
-UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
+UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
 {
     // Process state - 0 not run, 1 performing first number, 2 drawing forward slash, 3 drawing secondary number
     UINT8 process_state;
@@ -197,7 +197,7 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
 }
 
 // Update selected action on screen
-void update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
+void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
 {
     UINT8 itx_action_x;
     UINT8 itx_action_y;
@@ -244,7 +244,7 @@ void update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8
     bar_fight_state->selected_menu_item_y = new_y;
 }
 
-void update_barfight_state(bar_fight_state_t* bar_fight_state)
+void bf_update_state(bar_fight_state_t* bar_fight_state)
 {
     UINT8 new_menu_item_x = bar_fight_state->selected_menu_item_x;
     UINT8 new_menu_item_y = bar_fight_state->selected_menu_item_y;
@@ -263,7 +263,7 @@ void update_barfight_state(bar_fight_state_t* bar_fight_state)
             new_menu_item_y += joypad_state.travel_y;
         }
         // Update selected item
-        update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y);
+        bf_update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y);
 
         // Sleep to stop double pressed
         delay(DELAY_MENU_ITEM_MOVE);
@@ -334,27 +334,27 @@ void enter_bar_fight()
 
     // Add points for actions
     // punch
-    number_tile_index = add_number(number_tile_index, 4U, 12U, 1U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 1U);
     number_tile_index ++;
     // Fireball
-    number_tile_index = add_number(number_tile_index, 10U, 12U, 2U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 1U);
     number_tile_index ++;
     // Kick
-    number_tile_index = add_number(number_tile_index, 4U, 15U, 3U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 1U);
     number_tile_index ++;
     // Energy
-    number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
     number_tile_index ++;
 
     // Show player health
-    number_tile_index = add_number(number_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
+    number_tile_index = bf_add_number(number_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
     number_tile_index ++;
     
     // Show enemy health
-    number_tile_index = add_number(number_tile_index, 5U, 1U, bar_fight_state.enemy_max_hp, bar_fight_state.enemy_hp, 0U);
+    number_tile_index = bf_add_number(number_tile_index, 5U, 1U, bar_fight_state.enemy_max_hp, bar_fight_state.enemy_hp, 0U);
     number_tile_index ++;
     
-    update_selected_item(&bar_fight_state, 0, 0);
+    bf_update_selected_item(&bar_fight_state, 0, 0);
 
     main_check_joy(ROM_BANK_BAR_FIGHT);
 
@@ -362,7 +362,7 @@ void enter_bar_fight()
     {
         main_check_joy(ROM_BANK_BAR_FIGHT);
         
-        update_barfight_state(&bar_fight_state);
+        bf_update_state(&bar_fight_state);
         
         wait_vbl_done();
     }
