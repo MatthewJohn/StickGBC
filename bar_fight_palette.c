@@ -11,7 +11,7 @@
 const UWORD bar_fight_palette[] = {
   RGB(31, 31, 31),
   RGB(0, 0, 0),
-  RGB(31, 31, 31),
+  RGB(0, 0, 0),
   RGB(14, 14, 14),
   RGB(8, 22, 31),
   RGB(0, 0, 0),
