@@ -89,7 +89,7 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  *
  * @returns The highest tile index that was used to write to.
  */
-UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
+UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, BOOLEAN use_secondary, UINT8 add_underscore)
 {
     // Process state - 0 not run, 1 performing first number, 2 drawing forward slash, 3 drawing secondary number
     UINT8 process_state;
@@ -121,7 +121,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
         if (overflow == 0U && process_state != 0) {
             // If there's a secondary number, move state to drawing
             // forward slash
-            if (process_state == 1 && secondary_number != 0)
+            if (process_state == 1 && use_secondary == 1U)
             {
                 process_state = 2;
             }
@@ -199,10 +199,10 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
 void bf_update_text(bar_fight_state_t* bar_fight_state)
 {
     // Show player health
-    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 0U);
+    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U);
 
     // Show enemy health
-    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 0U);
+    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U);
 }
 
 /*
@@ -415,16 +415,16 @@ void enter_bar_fight()
 
     // Add points for actions
     // punch
-    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U);
     number_tile_index ++;
     // Fireball
-    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 0U, 1U);
     number_tile_index ++;
     // Kick
-    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 0U, 1U);
     number_tile_index ++;
     // Energy
-    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U);
     number_tile_index ++;
 
     bf_update_selected_item(&bar_fight_state, 0, 0);
