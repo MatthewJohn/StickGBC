@@ -321,6 +321,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
     }
 
+    // Show attack animation
+    bf_attack_effect();
+
     // If enemy will still have HP remaining,
     // update the value
     if (bar_fight_state->enemy_hp > damage_amount)
@@ -381,7 +384,6 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
         {
             if (bar_fight_state->selected_menu_item_x == 0)
             {
-                bf_attack_effect();
                 bf_do_damage(bar_fight_state, 1U);
             }
         }
