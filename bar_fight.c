@@ -10,6 +10,7 @@
 #include "bar_fight_tiles.h"
 #include "bar_fight_palette.h"
 #include "game_constants.h"
+#include "window_text_data.h"
 #include "bar_fight.h"
 #include "main.h"
 
@@ -193,7 +194,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
             tile_x -= 1;
         }
     }
-    
+
     // Prepare for blanking tiles,
     // if on first digit, move to next x tile to blank
     // (known becuase the mask has been flipped in preparation
@@ -306,11 +307,18 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
 void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 {
     UINT16 damage_amount;
+    UINT16 amount_won;
 
     if (attack_type == 1U)
     {
+        if (bar_fight_state->attack_points < 1)
+        {
+            main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
+            return;
+        }
         damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
     }
+
     // If enemy will still have HP remaining,
     // update the value
     if (bar_fight_state->enemy_hp > damage_amount)
@@ -320,10 +328,24 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     }
     else
     {
-        bar_fight_state->enemy_hp = 0U;
-        bf_update_text(bar_fight_state);
         // Otherwise, set HP to 0 and end game
-        //bf_end_win(bar_fight_state);
+        bar_fight_state->enemy_hp = 0U;
+        // Update HP on screen
+        bf_update_text(bar_fight_state);
+
+        // Show initial win text
+        main_show_window_text(&win_txt_barfight_win, ROM_BANK_BAR_FIGHT);
+
+        // Calculate win amount and add to balance
+        amount_won = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
+        main_show_number(9, 0, 4, (unsigned int)amount_won, ROM_BANK_BAR_FIGHT);
+
+        // Show win amount
+        game_state.balance += amount_won;
+        main_show_window_text(&win_txt_barfight_win2, ROM_BANK_BAR_FIGHT);
+
+        // Exit mini game
+        bar_fight_state->in_game = 0U;
     }
 }
 

@@ -89,3 +89,6 @@ extern const UINT8 win_txt_skater_thx_1[];
 extern const UINT8 win_txt_skater_thx_2[];
 extern const UINT8 win_txt_skater_thx_3[];
 extern const UINT8 win_txt_skater_thx_4[];
+extern const UINT8 win_txt_barfight_win2[];
+extern const UINT8 win_txt_barfight_win[];
+extern const UINT8 win_txt_barfight_noattckpnts[];
