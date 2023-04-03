@@ -516,13 +516,6 @@ void enter_bar_fight()
 {
     bar_fight_state_t bar_fight_state;
 
-    // Setup minigame state
-    bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
-    bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
-    bar_fight_state.in_game = 1U;
-
-    bf_reset_attack_points(&bar_fight_state);
-
     if (game_state.hour > 21U)
     {
         return;
@@ -531,6 +524,13 @@ void enter_bar_fight()
 
     game_state.karma -= 2U;
     game_state.bar_fight_count ++;
+
+    // Setup minigame state
+    bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
+    bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
+    bar_fight_state.in_game = 1U;
+
+    bf_reset_attack_points(&bar_fight_state);
 
 
     DISPLAY_OFF;
