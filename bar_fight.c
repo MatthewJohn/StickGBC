@@ -196,6 +196,36 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
     return current_map_index;
 }
 
+/*
+ * bf_attack_effect
+ *
+ * Show screen effect when attacking
+ */
+void bf_attack_effect()
+{
+    UINT8 itx;
+    UINT8 x;
+    INT8 direction;
+    for (itx = 0; itx < 4; itx ++)
+    {
+        direction = 1;
+        for (x = 0; x != 16; x++)
+        {
+            if (x == 4)
+            {
+                direction = -1;
+            }
+            else if (x == 12)
+            {
+                direction = 1;
+            }
+            scroll_bkg(direction, 0);
+            wait_vbl_done();
+            delay(10);
+        }
+    }
+}
+
 // Update selected action on screen
 void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
 {
@@ -270,7 +300,14 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
     }
     else if (joypad_state.a_pressed)
     {
-        if (bar_fight_state->selected_menu_item_y == 1)
+        if (bar_fight_state->selected_menu_item_y == 0)
+        {
+            if (bar_fight_state->selected_menu_item_x == 0)
+            {
+                bf_attack_effect();
+            }
+        }
+        else if (bar_fight_state->selected_menu_item_y == 1)
         {
             // Check for run away
             if (bar_fight_state->selected_menu_item_x == 2)
