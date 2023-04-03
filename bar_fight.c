@@ -89,11 +89,10 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  *
  * @returns The highest tile index that was used to write to.
  */
-UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, BOOLEAN use_secondary, UINT8 add_underscore)
+UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, BOOLEAN use_secondary, UINT8 add_underscore, UINT8 rewrite_count)
 {
     // Process state - 0 not run, 1 performing first number, 2 drawing forward slash, 3 drawing secondary number
     UINT8 process_state;
-    UINT8 digit_count;
     UINT16 overflow;
     UINT8 remainder;
     unsigned char tile_to_insert[16U];
@@ -101,6 +100,8 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
     UINT8 source_data_mask;
     UINT8 destination_data_mask;
     UINT8 byte_itx;
+    UINT8 tile_count;
+    unsigned char map_reference_data;
 
     // Blank out tile_to_insert array
     for (byte_itx = 0; byte_itx < 16U; byte_itx ++)
@@ -111,7 +112,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
 
     process_state = 0;
 
-    digit_count = 0;
+    tile_count = 1;
     overflow = number;
 
     while (1) {
@@ -143,7 +144,6 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
         {
             process_state = 1;
         }
-        digit_count ++;
         remainder = (overflow & 0xFFU) % 10U;
         overflow = overflow / 10U;
 
@@ -187,10 +187,31 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
 
             // Increment map index for next tile
             current_map_index += 1;
+            tile_count ++;
 
             // Move x position 1 to left to draw next tile
             tile_x -= 1;
         }
+    }
+    
+    // Prepare for blanking tiles,
+    // if on first digit, move to next x tile to blank
+    // (known becuase the mask has been flipped in preparation
+    // for second digit)
+    if (destination_data_mask == 0xF0U)
+    {
+        tile_x -= 1;
+    }
+    // Blank out any tiles that are left over
+    while (tile_count <= rewrite_count)
+    {
+        // Create map data for tile
+        map_reference_data = 0;
+
+        set_bkg_tiles(tile_x, tile_y, 1, 1, &map_reference_data);
+
+        tile_count ++;
+        tile_x -= 1;
     }
 
     return current_map_index;
@@ -199,10 +220,10 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
 void bf_update_text(bar_fight_state_t* bar_fight_state)
 {
     // Show player health
-    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U);
+    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
 
     // Show enemy health
-    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U);
+    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 3U);
 }
 
 /*
@@ -415,16 +436,16 @@ void enter_bar_fight()
 
     // Add points for actions
     // punch
-    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 12U, 1U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
     // Fireball
-    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 12U, 2U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
     // Kick
-    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 4U, 15U, 3U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
     // Energy
-    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U);
+    number_tile_index = bf_add_number(number_tile_index, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
     number_tile_index ++;
 
     bf_update_selected_item(&bar_fight_state, 0, 0);
