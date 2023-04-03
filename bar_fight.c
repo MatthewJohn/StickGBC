@@ -318,7 +318,8 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
             main_show_window_text(&win_txt_barfight_noattckpnts, ROM_BANK_BAR_FIGHT);
             return;
         }
-        damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2);
+        // Original algorithm +1 as the original random method appears to be from 1
+        damage_amount = (sys_time % ((game_state.strength + 10) / 10)) + (game_state.inventory[S_INVENTORY_KNIFE] * 2) + 1;
     }
 
     // Show attack animation
