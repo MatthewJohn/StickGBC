@@ -487,6 +487,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         bf_update_text(bar_fight_state);
 
         // Perform enemy attack
+        delay(1000);
         bf_perform_enemy_attack(bar_fight_state);
     }
     else
