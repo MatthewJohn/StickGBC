@@ -377,7 +377,7 @@ void setup_globals()
     game_state.bank_balance = 900U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
-    game_state.strength = 250U;
+    game_state.strength = 90U;
     game_state.charm = 99U;
     game_state.hour = 0;
     game_state.bar_fight_count = 5U;

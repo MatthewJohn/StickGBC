@@ -387,15 +387,15 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     bf_damage_effect();
 
     enemy_attack_mode = (sys_time % game_state.strength) + 1U;
-    if (enemy_attack_mode > 40)
+    if (enemy_attack_mode > 40U)
     {
         enemy_attack_points = sys_time % (game_state.strength / 2);
     }
-    else if (enemy_attack_mode > 20)
+    else if (enemy_attack_mode > 20U)
     {
         enemy_attack_points = sys_time % (game_state.strength / 3);
     }
-    else if (enemy_attack_mode > 10)
+    else if (enemy_attack_mode > 10U)
     {
         enemy_attack_points = sys_time % (game_state.strength / 5);
     }
@@ -405,7 +405,7 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     }
 
     // If player is killed, set game HP and set minigame to end
-    if (game_state.hp <= enemy_attack_points)
+    if (enemy_attack_points > game_state.hp)
     {
         game_state.hp = 0U;
         bar_fight_state->in_game = 0U;
