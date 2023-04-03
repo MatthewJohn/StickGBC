@@ -90,10 +90,10 @@ typedef struct {
     UINT8 hour;
 
     // Max HP the user can have
-    UINT8 max_hp;
+    UINT16 max_hp;
 
     // Current amount of HP the user has
-    UINT8 hp;
+    UINT16 hp;
 
     // Current amount of strength, intelligence and charm
     unsigned int intelligence;
