@@ -86,7 +86,9 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  * @param tile_y Y coordinate for tile placement on map
  * @param number Number to br drawn to screen
  * @param secondary_number Number to be drawn before a forward slash
+ * @param use_secondary Whether secondary number should be shown
  * @param add_underscore Whether to add bottom line to fill in action box
+ * @param rewrite_count Number of tiles to optionally rewrite if text doesn't use all of the tiles
  *
  * @returns The highest tile index that was used to write to.
  */
