@@ -29,7 +29,8 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
     UINT8 number_data;
 
     // Iterate through each line, copying the byte to the tile data to insert.
-    for (byte_itx2 = 0; byte_itx2 < 16U; byte_itx2 ++) {
+    for (byte_itx2 = 0; byte_itx2 < 16U; byte_itx2 ++)
+    {
         source_tile_index = BAR_FIGHT_NUMERIC_TILE_START + source_tile_offset;
         source_tile_index = source_tile_index << 4;
         source_tile_index += byte_itx2;
@@ -85,8 +86,10 @@ void bf_wrt_dgt_to_scr(UINT8 tile_x, UINT8 tile_y, UINT8 source_tile_offset, UIN
  * @param number Number to br drawn to screen
  * @param add_underscore Whether to add bottom line to fill in action box
  */
-UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT8 add_underscore)
+UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 number, UINT16 secondary_number, UINT8 add_underscore)
 {
+    // Process state - 0 not run, 1 performing first number, 2 drawing forward slash, 3 drawing secondary number
+    UINT8 process_state;
     UINT8 digit_count;
     UINT16 overflow;
     UINT8 remainder;
@@ -101,6 +104,8 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
       tile_to_insert[byte_itx] = 0U;
     }
     destination_data_mask = 0x0FU;
+    
+    process_state = 0;
 
     digit_count = 0;
     overflow = number;
@@ -108,6 +113,25 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
    // Iterate over number to display, until number is reduced to single digit
    // Use has_run to handle showing 0
     while (1) {
+        if (overflow == 0U && process_state != 0) {
+            if (process_state == 1 && secondary_number != 0)
+            {
+                process_state = 2;
+            }
+            else if (process_state == 2)
+            {
+                overflow = secondary_number;
+                process_state = 3;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (process_state == 0)
+        {
+            process_state = 1;
+        }
         digit_count ++;
         remainder = (overflow & 0xFFU) % 10U;
         overflow = overflow / 10U;
@@ -123,11 +147,14 @@ UINT8 add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 num
         } else {
             source_data_mask = 0x0FU;
         }
-        bf_wrt_dgt_to_scr(tile_x, tile_y, source_tile_offset, source_data_mask, destination_data_mask, &tile_to_insert, add_underscore, current_map_index);
-
-        if (overflow == 0U) {
-            break;
+        
+        // If process state is 2 (drawing forward slash), set source data mask and offset for it
+        if (process_state == 2)
+        {
+            source_tile_offset = 5;
+            source_data_mask = 0xF0;
         }
+        bf_wrt_dgt_to_scr(tile_x, tile_y, source_tile_offset, source_data_mask, destination_data_mask, &tile_to_insert, add_underscore, current_map_index);
 
         // Flip the destination file offset on each number
         if (destination_data_mask == 0x0FU) {
@@ -285,17 +312,20 @@ void enter_bar_fight()
 
     // Add points for actions
     // punch
-    number_tile_index = add_number(number_tile_index, 4U, 12U, 1U, 1U);
+    number_tile_index = add_number(number_tile_index, 4U, 12U, 1U, 0U, 1U);
     number_tile_index ++;
     // Fireball
-    number_tile_index = add_number(number_tile_index, 10U, 12U, 2U, 1U);
+    number_tile_index = add_number(number_tile_index, 10U, 12U, 2U, 0U, 1U);
     number_tile_index ++;
     // Kick
-    number_tile_index = add_number(number_tile_index, 4U, 15U, 3U, 1U);
+    number_tile_index = add_number(number_tile_index, 4U, 15U, 3U, 0U, 1U);
     number_tile_index ++;
     // Energy
-    number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 1U);
+    number_tile_index = add_number(number_tile_index, 10U, 15U, 4U, 0U, 1U);
     number_tile_index ++;
+    
+    // Show player health
+    number_tile_index = add_number(number_tile_index, 5U, 1U, game_state.max_hp, game_state.hp, 0U);
     
     update_selected_item(&bar_fight_state, 0, 0);
 
