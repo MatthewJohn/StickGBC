@@ -379,6 +379,44 @@ void bf_attack_effect()
     }
 }
 
+void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
+{
+    UINT16 enemy_attack_mode;
+    UINT16 enemy_attack_points;
+
+    bf_damage_effect();
+
+    enemy_attack_mode = (sys_time % game_state.strength) + 1U;
+    if (enemy_attack_mode > 40)
+    {
+        enemy_attack_points = sys_time % (game_state.strength / 2);
+    }
+    else if (enemy_attack_mode > 20)
+    {
+        enemy_attack_points = sys_time % (game_state.strength / 3);
+    }
+    else if (enemy_attack_mode > 10)
+    {
+        enemy_attack_points = sys_time % (game_state.strength / 5);
+    }
+    else
+    {
+        enemy_attack_points = (sys_time % (game_state.strength / 10)) + 1;
+    }
+
+    // If player is killed, set game HP and set minigame to end
+    if (game_state.hp <= enemy_attack_points)
+    {
+        game_state.hp = 0U;
+        bar_fight_state->in_game = 0U;
+    }
+    else
+    {
+        game_state.hp -= enemy_attack_points;
+    }
+    bf_update_text(bar_fight_state);
+}
+
 void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 {
     UINT16 damage_amount;
@@ -449,7 +487,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         bf_update_text(bar_fight_state);
 
         // Perform enemy attack
-        bf_damage_effect();
+        bf_perform_enemy_attack(bar_fight_state);
     }
     else
     {
@@ -614,6 +652,10 @@ void enter_bar_fight()
 
     // Reset main window before exiting
     main_update_window(ROM_BANK_BAR_FIGHT);
+
     // Show Window
     SHOW_WIN;
+
+    // Check for end game
+    main_check_end_game(ROM_BANK_BAR_FIGHT);
 }

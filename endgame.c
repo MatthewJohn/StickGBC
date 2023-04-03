@@ -179,6 +179,9 @@ void endgame()
 
     DISPLAY_ON;
 
+    // Reset current user input
+    main_check_joy(ROM_BANK_ENDGAME);
+
     // Wait for user to press A or START
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {

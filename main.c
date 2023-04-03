@@ -1255,6 +1255,17 @@ void check_building_enter()
 }
 
 /*
+ * main_check_end_game
+ *
+ * check_end_game wrapper with ROM jumping
+ */
+ void main_check_end_game(unsigned int return_bank) NONBANKED
+ {
+     check_end_game();
+     SWITCH_ROM_MBC5(return_bank);
+ }
+
+/*
  * check_end_game
  *
  * Check if win/lose conditions have been met
