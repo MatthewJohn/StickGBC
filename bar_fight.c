@@ -553,4 +553,9 @@ void enter_bar_fight()
 
         wait_vbl_done();
     }
+
+    // Reset main window before exiting
+    main_update_window(ROM_BANK_BAR_FIGHT);
+    // Show Window
+    SHOW_WIN;
 }
