@@ -287,7 +287,7 @@ void bf_draw_player_health()
  */
 void bf_draw_enemy_health(bar_fight_state_t* bar_fight_state)
 {
-    bf_add_number(76U, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 4U);
+    bf_add_number(76U, 6U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 4U);
 }
 
 void bf_update_text(bar_fight_state_t* bar_fight_state)
