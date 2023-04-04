@@ -389,6 +389,53 @@ void bf_attack_effect()
     }
 }
 
+/*
+ * bf_hide_enemy
+ *
+ * Fade enemy for defeat sequence
+ */
+void bf_hide_enemy()
+{
+    UINT8 itx;
+    UWORD palette_data[4];
+    UWORD color;
+
+    // Set color to black
+    color = 0x0000U;
+
+    for (itx = 0; itx < 5; itx ++)
+    {
+        switch (color)
+        {
+            case 0x0000U:
+                color = 0x0421;
+                break;
+            case 0x0421:
+                color = 0x0C63;
+                break;
+            case 0x0C63:
+                color = 0x1CE7;
+                break;
+            case 0x1CE7:
+                color = 0x3DEF;
+                break;
+            case 0x3DEF:
+                color = 0x7FFFU;
+                break;
+        }
+        // Copy palette 1
+        palette_data[0U] = bar_fight_palette[0U],
+        palette_data[1U] = bar_fight_palette[1U];
+        // Set 3rd color to fading black
+        palette_data[2U] = color;
+        palette_data[3U] = bar_fight_palette[3U];
+
+        set_bkg_palette(0U, 1U, &palette_data);
+        wait_vbl_done();
+        delay(200);
+    }
+}
+
 void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
 {
     UINT16 enemy_attack_mode;
@@ -506,6 +553,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         bar_fight_state->enemy_hp = 0U;
         // Update HP on screen
         bf_draw_enemy_health(bar_fight_state);
+
+        // Hide enemy
+        bf_hide_enemy();
 
         // Show initial win text
         main_show_window_text(&win_txt_barfight_win, ROM_BANK_BAR_FIGHT);
