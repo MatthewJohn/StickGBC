@@ -190,5 +190,6 @@ void endgame()
         main_check_joy(ROM_BANK_ENDGAME);
     }
 
+    // Mark game as ended to exit main loop
     game_state.game_ended = 1U;
 }

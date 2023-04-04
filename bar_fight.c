@@ -466,6 +466,9 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     {
         game_state.hp = 0U;
         bar_fight_state->in_game = 0U;
+
+        // Show end game
+        main_check_end_game(ROM_BANK_BAR_FIGHT);
     }
     else
     {
@@ -711,12 +714,9 @@ void enter_bar_fight()
         wait_vbl_done();
     }
 
-    // Reset main window before exiting
+    // Reset window before exiting
     main_update_window(ROM_BANK_BAR_FIGHT);
 
     // Show Window
     SHOW_WIN;
-
-    // Check for end game
-    main_check_end_game(ROM_BANK_BAR_FIGHT);
 }
