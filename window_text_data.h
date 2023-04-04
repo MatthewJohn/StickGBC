@@ -57,6 +57,8 @@ extern const UINT8 win_txt_nli_sales[];
 extern const UINT8 win_txt_nli_jan[];
 extern const UINT8 win_txt_nli_mail[];
 extern const UINT8 win_txt_nli_no_int[];
+extern const UINT8 win_txt_end_died[];
+extern const UINT8 win_txt_end_time[];
 extern const UINT8 win_txt_dealer_int[];
 extern const UINT8 win_txt_hobo_int[];
 extern const UINT8 win_txt_hobo_give_1[];
