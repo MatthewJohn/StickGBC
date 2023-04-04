@@ -268,6 +268,27 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
     return current_map_index;
 }
 
+/*
+ * bf_draw_player_health
+ *
+ * Show player health
+ */
+void bf_draw_player_health(bar_fight_state_t* bar_fight_state)
+{
+    // Show player health
+    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
+}
+
+/*
+ * bf_draw_enemy_health
+ *
+ * Show enemy health
+ */
+void bf_draw_enemy_health(bar_fight_state_t* bar_fight_state)
+{
+    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 3U);
+}
+
 void bf_update_text(bar_fight_state_t* bar_fight_state)
 {
     UINT16 number_tile_index = BAR_FIGHT_TILE_SCRATCH;
@@ -291,11 +312,8 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
     bar_fight_state->player_hp_tile_index = number_tile_index;
     bar_fight_state->enemy_hp_tile_index = number_tile_index + 3;
 
-    // Show player health
-    bf_add_number(bar_fight_state->player_hp_tile_index, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
-
-    // Show enemy health
-    bf_add_number(bar_fight_state->enemy_hp_tile_index, 5U, 1U, bar_fight_state->enemy_max_hp, bar_fight_state->enemy_hp, 1U, 0U, 3U);
+    bf_draw_player_health(bar_fight_state);
+    bf_draw_enemy_health(bar_fight_state);
 }
 
 /*
@@ -414,7 +432,7 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     {
         game_state.hp -= enemy_attack_points;
     }
-    bf_update_text(bar_fight_state);
+    bf_draw_player_health(bar_fight_state);
 }
 
 void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
@@ -484,7 +502,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     if (bar_fight_state->enemy_hp > damage_amount)
     {
         bar_fight_state->enemy_hp -= damage_amount;
-        bf_update_text(bar_fight_state);
+        bf_draw_enemy_health(bar_fight_state);
 
         // Perform enemy attack
         delay(1000);
@@ -495,7 +513,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         // Otherwise, set HP to 0 and end game
         bar_fight_state->enemy_hp = 0U;
         // Update HP on screen
-        bf_update_text(bar_fight_state);
+        bf_draw_enemy_health(bar_fight_state);
 
         // Show initial win text
         main_show_window_text(&win_txt_barfight_win, ROM_BANK_BAR_FIGHT);
