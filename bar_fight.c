@@ -486,8 +486,12 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     UINT16 damage_amount;
     UINT16 amount_won;
 
+    if (attack_type == 0U)
+    {
+        damage_amount = 0U;
+    }
     // Punch attack
-    if (attack_type == 1U)
+    else if (attack_type == 1U)
     {
         if (bar_fight_state->attack_points < 1U)
         {
@@ -623,7 +627,7 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
                 bf_do_damage(bar_fight_state, 3U);
             }
             // Done (Skip)
-            else if (bar_fight_state->selected_menu_item_x == 1U)
+            else if (bar_fight_state->selected_menu_item_x == 2U)
             {
                 bf_do_damage(bar_fight_state, 0U);
             }
