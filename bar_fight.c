@@ -333,7 +333,7 @@ void bf_damage_effect()
     UINT8 itx;
     UINT8 x;
     INT8 direction;
-    for (itx = 0; itx < 3; itx ++)
+    for (itx = 0; itx < 2; itx ++)
     {
         direction = 1;
         for (x = 0; x != 12; x++)
