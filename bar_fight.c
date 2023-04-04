@@ -274,7 +274,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
  *
  * Show player health
  */
-void bf_draw_player_health(bar_fight_state_t* bar_fight_state)
+void bf_draw_player_health()
 {
     // Show player health
     bf_add_number(72U, 17U, 9U, game_state.max_hp, game_state.hp, 1U, 0U, 3U);
@@ -304,7 +304,7 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
 
     bf_update_selected_item(bar_fight_state, 0, 0);
 
-    bf_draw_player_health(bar_fight_state);
+    bf_draw_player_health();
     bf_draw_enemy_health(bar_fight_state);
 }
 
@@ -424,7 +424,7 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     {
         game_state.hp -= enemy_attack_points;
     }
-    bf_draw_player_health(bar_fight_state);
+    bf_draw_player_health();
 }
 
 void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
