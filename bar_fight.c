@@ -564,7 +564,8 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         // Hide enemy
         bf_hide_enemy();
 
-        // Show initial win text
+        // Increase strength and show initial win text
+        main_increase_strength(0U, 0U, 7U, ROM_BANK_BAR_FIGHT);
         main_show_window_text(&win_txt_barfight_win, ROM_BANK_BAR_FIGHT);
 
         // Calculate win amount and add to balance

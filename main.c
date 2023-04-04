@@ -1376,6 +1376,12 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
     }
 }
 
+void main_increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength, unsigned int return_bank)
+{
+    increase_strength(cost, number_of_hours, strength);
+    SWITCH_ROM_MBC5(return_bank);
+}
+
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
 {
     if ((S_HOURS_PER_DAY - game_state.hour) >= number_of_hours)

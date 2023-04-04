@@ -348,7 +348,7 @@ const UINT8 win_txt_barfight_win2[] = {
 };
 
 const UINT8 win_txt_barfight_win[] = {
-    35U, 25U, 31U, 0U, 33U, 19U, 24U, 39U, 0U, 29U, 30U, 15U, 24U, 17U, 30U, 18U, 0U, 19U, 24U, 13U, 28U, 15U, 11U, 29U, 15U, 14U, 39U, WINDOW_TEXT_END,
+    35U, 25U, 31U, 0U, 33U, 19U, 24U, 39U, 0U, 29U, 30U, 15U, 24U, 17U, 30U, 18U, 0U, 19U, 24U, 13U, 28U, 15U, 11U, 29U, 15U, 14U, 0U, 12U, 35U, 0U, 8U, 39U, WINDOW_TEXT_END,
 };
 
 const UINT8 win_txt_barfight_noattckpnts[] = {
