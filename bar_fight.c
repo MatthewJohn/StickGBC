@@ -400,6 +400,9 @@ void bf_hide_enemy()
     UWORD palette_data[4];
     UWORD color;
 
+    // Delay before animation
+    delay(500);
+
     // Set color to black
     color = 0x0000U;
 
@@ -432,7 +435,8 @@ void bf_hide_enemy()
 
         set_bkg_palette(0U, 1U, &palette_data);
         wait_vbl_done();
-        delay(200);
+        // Delay animation speed
+        delay(300);
     }
 }
 
