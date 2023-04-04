@@ -252,6 +252,7 @@ UINT8 bf_add_number(UINT8 current_map_index, UINT8 tile_x, UINT8 tile_y, UINT16 
     if (destination_data_mask == 0xF0U)
     {
         tile_x -= 1;
+        tile_count ++;
     }
     // Blank out any tiles that are left over
     while (tile_count <= rewrite_count)
