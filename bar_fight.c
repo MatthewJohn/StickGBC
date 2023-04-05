@@ -466,7 +466,7 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     }
 
     // If player is killed, set game HP and set minigame to end
-    if (enemy_attack_points > game_state.hp)
+    if (game_state.hp < enemy_attack_points)
     {
         game_state.hp = 0U;
         bar_fight_state->in_game = 0U;
