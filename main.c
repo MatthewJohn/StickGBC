@@ -1458,7 +1458,6 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
-    UINT8 rnd;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1798,7 +1797,7 @@ void update_state()
             else if (game_state.current_building == S_B_SKATER)
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
-                process_skater_menu(rnd);
+                process_skater_menu();
                 ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_NLI)

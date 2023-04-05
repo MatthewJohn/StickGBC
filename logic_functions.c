@@ -994,8 +994,9 @@ void show_bank_loan()
  *
  * Process menu item selection for skater
  */
-void process_skater_menu(UINT8 rnd)
+void process_skater_menu()
 {
+    UINT8 rnd;
     if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
     {
         if (game_state.inventory[S_INVENTORY_SMOKES])
