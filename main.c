@@ -1579,7 +1579,7 @@ void main_show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity, un
  *
  * show_window_text wrapper with ROM jumping
  */
-void main_show_window_text(UINT8 *text, unsigned int return_bank)
+void main_show_window_text(UINT8 *text, unsigned int return_bank) NONBANKED
 {
     ROM_BANK_WINDOW_TEXT_SWITCH;
     show_window_text(text);
