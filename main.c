@@ -1255,39 +1255,41 @@ void check_building_enter()
 }
 
 /*
- * main_check_end_game
- *
- * check_end_game wrapper with ROM jumping
- */
- void main_check_end_game(unsigned int return_bank) NONBANKED
- {
-     check_end_game();
-     SWITCH_ROM_MBC5(return_bank);
- }
-
-/*
  * check_end_game
  *
  * Check if win/lose conditions have been met
  */
-void check_end_game() NONBANKED
+void check_end_game()
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
     {
         // Show window text for end game reason
         if (game_state.hp == 0)
         {
-            main_show_window_text(&win_txt_end_died, ROM_BANK_DEFAULT);
+            show_window_text(&win_txt_end_died);
         }
         else
         {
-            main_show_window_text(&win_txt_end_time, ROM_BANK_DEFAULT);
+            show_window_text(&win_txt_end_time);
         }
         ROM_BANK_ENDGAME_SWITCH;
         endgame();
         ROM_BANK_RESET;
+        game_state.game_ended = 1U;
     }
 }
+
+/*
+ * main_check_end_game
+ *
+ * check_end_game wrapper with ROM jumping
+ */
+ void main_check_end_game(unsigned int return_bank) NONBANKED
+ {
+    SWITCH_ROM_MBC5(ROM_BANK_DEFAULT);
+    check_end_game();
+    SWITCH_ROM_MBC5(return_bank);
+ }
 
 void modify_karma(INT8 karma_change) NONBANKED
 {

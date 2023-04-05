@@ -459,7 +459,7 @@ void process_house_menu()
             game_state.hour -= S_HOUR_ALARM_CLOCK_TIME_GAIN;
         }
         game_state.days_passed ++;
-        check_end_game();
+        main_check_end_game(ROM_BANK_LOGIC_FUNCTIONS);
 
         DISPLAY_OFF;
 
