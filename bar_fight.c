@@ -19,7 +19,7 @@
 
 
 // Update selected action on screen
-void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y)
+void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UINT8 new_y, BOOLEAN hide_active)
 {
     UINT8 itx_action_x;
     UINT8 itx_action_y;
@@ -48,20 +48,24 @@ void bf_update_selected_item(bar_fight_state_t* bar_fight_state, UINT8 new_x, UI
         }
     }
 
-    // Iterate through tiles in x
-    for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
+    if (hide_active == 0U)
     {
-        for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+        // Set palette of active action
+        for (itx_tile_x = 0; itx_tile_x != 4; itx_tile_x ++)
         {
-            get_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
-            // Set color palette to 1
-            original_data &= 0xF8;
-            original_data += 1U;
-            set_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+            for (itx_tile_y = 0; itx_tile_y != 2; itx_tile_y ++)
+            {
+                get_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+                // Set color palette to 1
+                original_data &= 0xF8;
+                original_data += 1U;
+                set_bkg_tiles(2U + (new_x * 6U) + itx_tile_x, 11U + (new_y * 3U) + itx_tile_y, 1U, 1U, &original_data);
+            }
         }
     }
     VBK_REG = 0;
 
+    // Update bar fight state active tile to new tile
     bar_fight_state->selected_menu_item_x = new_x;
     bar_fight_state->selected_menu_item_y = new_y;
 }
@@ -302,7 +306,8 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
     // Energy
     bf_add_number(71U, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
 
-    bf_update_selected_item(bar_fight_state, 0, 0);
+    // Update selected tile palette without changing the selected action
+    bf_update_selected_item(bar_fight_state, 0, 0, 0U);
 
     bf_draw_player_health();
     bf_draw_enemy_health(bar_fight_state);
@@ -488,6 +493,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
     UINT16 damage_amount;
     UINT16 amount_won;
 
+    // Hide selected action
+    bf_update_selected_item(bar_fight_state, bar_fight_state->selected_menu_item_x, bar_fight_state->selected_menu_item_y, 1U);
+
     if (attack_type == 0U)
     {
         damage_amount = 0U;
@@ -559,6 +567,9 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         // Perform enemy attack
         delay(1000);
         bf_perform_enemy_attack(bar_fight_state);
+
+        // Re-activate selected action
+        bf_update_selected_item(bar_fight_state, bar_fight_state->selected_menu_item_x, bar_fight_state->selected_menu_item_y, 0U);
     }
     else
     {
@@ -609,7 +620,7 @@ void bf_update_state(bar_fight_state_t* bar_fight_state)
             new_menu_item_y += joypad_state.travel_y;
         }
         // Update selected item
-        bf_update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y);
+        bf_update_selected_item(bar_fight_state, new_menu_item_x, new_menu_item_y, 0U);
 
         // Sleep to stop double pressed
         delay(DELAY_MENU_ITEM_MOVE);
