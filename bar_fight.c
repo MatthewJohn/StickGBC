@@ -307,7 +307,7 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
     bf_add_number(71U, 10U, 15U, 4U, 0U, 0U, 1U, 0U);
 
     // Update selected tile palette without changing the selected action
-    bf_update_selected_item(bar_fight_state, 0, 0, 0U);
+    bf_update_selected_item(bar_fight_state, bar_fight_state->selected_menu_item_x, bar_fight_state->selected_menu_item_y, 0U);
 
     bf_draw_player_health();
     bf_draw_enemy_health(bar_fight_state);
@@ -693,6 +693,8 @@ void enter_bar_fight()
     bar_fight_state.enemy_max_hp = (sys_time % (game_state.bar_fight_count * 5)) + (game_state.bar_fight_count * 5);
     bar_fight_state.enemy_hp = bar_fight_state.enemy_max_hp;
     bar_fight_state.in_game = 1U;
+    bar_fight_state.selected_menu_item_x = 0;
+    bar_fight_state.selected_menu_item_y = 0;
 
     bf_reset_attack_points(&bar_fight_state);
 
