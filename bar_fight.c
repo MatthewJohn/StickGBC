@@ -466,11 +466,7 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     }
 
     // If player is killed, set game HP and set minigame to end
-    if (game_state.hp > enemy_attack_points)
-    {
-        game_state.hp -= enemy_attack_points;
-    }
-    else
+    if (game_state.hp > enemy_attack_points || game_state.hp == enemy_attack_points)
     {
         game_state.hp = 0U;
         bar_fight_state->in_game = 0U;
@@ -480,7 +476,10 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
         main_check_end_game(ROM_BANK_BAR_FIGHT);
         return;
     }
-
+    else
+    {
+        game_state.hp -= enemy_attack_points;
+    }
     bf_draw_player_health();
 }
 
