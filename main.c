@@ -1270,7 +1270,7 @@ void check_building_enter()
  *
  * Check if win/lose conditions have been met
  */
-void check_end_game()
+void check_end_game() NONBANKED
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
     {
@@ -2181,7 +2181,7 @@ void main()
         // And open the curtains!
         DISPLAY_ON;
 
-        while(game_state.game_ended == 0U)
+        while (game_state.game_ended == 0U)
         {
             wait_vbl_done();
 

@@ -470,9 +470,11 @@ void bf_perform_enemy_attack(bar_fight_state_t* bar_fight_state)
     {
         game_state.hp = 0U;
         bar_fight_state->in_game = 0U;
+        bf_draw_player_health();
 
         // Show end game
         main_check_end_game(ROM_BANK_BAR_FIGHT);
+        return;
     }
     else
     {
