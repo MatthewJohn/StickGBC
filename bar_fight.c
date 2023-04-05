@@ -559,19 +559,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 
     // If enemy will still have HP remaining,
     // update the value
-    if (bar_fight_state->enemy_hp > damage_amount)
-    {
-        bar_fight_state->enemy_hp -= damage_amount;
-        bf_draw_enemy_health(bar_fight_state);
-
-        // Perform enemy attack
-        delay(1000);
-        bf_perform_enemy_attack(bar_fight_state);
-
-        // Re-activate selected action
-        bf_update_selected_item(bar_fight_state, bar_fight_state->selected_menu_item_x, bar_fight_state->selected_menu_item_y, 0U);
-    }
-    else
+    if (bar_fight_state->enemy_hp < damage_amount || bar_fight_state->enemy_hp == damage_amount)
     {
         // Otherwise, set HP to 0 and end game
         bar_fight_state->enemy_hp = 0U;
@@ -598,7 +586,18 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 
         // Exit mini game
         bar_fight_state->in_game = 0U;
+        return;
     }
+
+    bar_fight_state->enemy_hp -= damage_amount;
+    bf_draw_enemy_health(bar_fight_state);
+
+    // Perform enemy attack
+    delay(1000);
+    bf_perform_enemy_attack(bar_fight_state);
+
+    // Re-activate selected action
+    bf_update_selected_item(bar_fight_state, bar_fight_state->selected_menu_item_x, bar_fight_state->selected_menu_item_y, 0U);
 }
 
 void bf_update_state(bar_fight_state_t* bar_fight_state)
