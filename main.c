@@ -2011,7 +2011,7 @@ void main()
 
             // Check for collision with car AI
             check_car_collision();
-            
+
             if (game_state.game_ended != 0U)
             {
                 break;
