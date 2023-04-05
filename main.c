@@ -1259,23 +1259,22 @@ void check_building_enter()
  *
  * Check if win/lose conditions have been met
  */
-void check_end_game()
+void check_end_game() NONBANKED
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
     {
         // Show window text for end game reason
         if (game_state.hp == 0)
         {
-            show_window_text(&win_txt_end_died);
+            main_show_window_text(&win_txt_end_died, ROM_BANK_DEFAULT);
         }
         else
         {
-            show_window_text(&win_txt_end_time);
+            main_show_window_text(&win_txt_end_time, ROM_BANK_DEFAULT);
         }
         ROM_BANK_ENDGAME_SWITCH;
         endgame();
         ROM_BANK_RESET;
-        game_state.game_ended = 1U;
     }
 }
 
