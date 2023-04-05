@@ -1944,44 +1944,9 @@ void update_state()
             }
             else if (game_state.current_building == S_B_SKATER)
             {
-                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
-                {
-                    if (game_state.inventory[S_INVENTORY_SMOKES])
-                    {
-                        // Remove smokes and give skateboard
-                        if (DAY_TIME_REMAINING >= 1U)
-                        {
-                            game_state.hour += 1U;
-                            game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
-                            ROM_BANK_BUILDING_MENU_SWITCH;
-                            update_window();
-                            ROM_BANK_RESET;
-
-                            // Decrease karma
-                            modify_karma(-2);
-
-                            if (game_state.inventory[S_INVENTORY_SKATEBOARD])
-                            {
-                                rnd = sys_time % 4;
-                                if (rnd == 0U)
-                                    main_show_window_text(&win_txt_skater_thx_1, ROM_BANK_DEFAULT);
-                                else if (rnd == 1U)
-                                    main_show_window_text(&win_txt_skater_thx_2, ROM_BANK_DEFAULT);
-                                else if (rnd == 2U)
-                                    main_show_window_text(&win_txt_skater_thx_3, ROM_BANK_DEFAULT);
-                                else
-                                    main_show_window_text(&win_txt_skater_thx_4, ROM_BANK_DEFAULT);
-                            }
-                            else
-                            {
-                                game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
-                                main_show_window_text(&win_txt_skater_give, ROM_BANK_DEFAULT);
-                            }
-                            // Reload building menu to clear any text
-                            setup_building_menu(1U, ROM_BANK_DEFAULT);
-                        }
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_skater_menu(rnd);
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_NLI)
             {

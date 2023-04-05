@@ -988,3 +988,47 @@ void show_bank_loan()
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
 }
 
+/*
+ * process_skater_menu
+ *
+ * Process menu item selection for skater
+ */
+void process_skater_menu(UINT8 rnd)
+{
+    if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
+    {
+        if (game_state.inventory[S_INVENTORY_SMOKES])
+        {
+            // Remove smokes and give skateboard
+            if (DAY_TIME_REMAINING >= 1U)
+            {
+                game_state.hour += 1U;
+                game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
+                main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
+
+                // Decrease karma
+                modify_karma(-2);
+
+                if (game_state.inventory[S_INVENTORY_SKATEBOARD])
+                {
+                    rnd = sys_time % 4;
+                    if (rnd == 0U)
+                        main_show_window_text(&win_txt_skater_thx_1, ROM_BANK_LOGIC_FUNCTIONS);
+                    else if (rnd == 1U)
+                        main_show_window_text(&win_txt_skater_thx_2, ROM_BANK_LOGIC_FUNCTIONS);
+                    else if (rnd == 2U)
+                        main_show_window_text(&win_txt_skater_thx_3, ROM_BANK_LOGIC_FUNCTIONS);
+                    else
+                        main_show_window_text(&win_txt_skater_thx_4, ROM_BANK_LOGIC_FUNCTIONS);
+                }
+                else
+                {
+                    game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
+                    main_show_window_text(&win_txt_skater_give, ROM_BANK_LOGIC_FUNCTIONS);
+                }
+                // Reload building menu to clear any text
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+            }
+        }
+    }
+}
