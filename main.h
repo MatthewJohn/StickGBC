@@ -33,6 +33,8 @@
 #define ROM_BANK_WINDOW_TEXT_SWITCH SWITCH_ROM_MBC5(ROM_BANK_WINDOW_TEXT)
 #define ROM_BANK_ENDGAME 7
 #define ROM_BANK_ENDGAME_SWITCH SWITCH_ROM_MBC5(ROM_BANK_ENDGAME)
+#define ROM_BANK_BAR_FIGHT 2
+#define ROM_BANK_BAR_FIGHT_SWITCH SWITCH_ROM_MBC5(ROM_BANK_BAR_FIGHT)
 
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 #define HAS_MONEY(cost) (game_state.balance + 1U) > cost
@@ -52,8 +54,11 @@ void modify_karma(INT8 karma_change);
 void main_do_work(unsigned int pay_per_hour, unsigned int number_of_hours, unsigned int return_bank);
 void load_menu_tiles(unsigned int return_bank);
 void check_end_game();
+void main_increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength, unsigned int return_bank);
+void main_check_end_game(unsigned int return_bank);
 UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm, unsigned int return_bank);
 void main_set_bkg_data(UINT8 start_index, UINT8 cnt, unsigned char *data_ptr, UINT8 data_bank, UINT8 return_bank);
+void main_enter_bar_fight(unsigned int return_bank);
 
 extern screen_state_t screen_state;
 extern joypad_state_t joypad_state;

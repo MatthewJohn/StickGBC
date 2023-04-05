@@ -20,6 +20,9 @@ void splash_screen_loop()
 {
     DISPLAY_OFF;
 
+    HIDE_SPRITES;
+    HIDE_WIN;
+
     screen_state.background_color_palette = splash_screen_palette;
     screen_state.background_tile_map = splashscreenmap;
     screen_state.background_tiles = splashscreentiles;

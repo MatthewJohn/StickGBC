@@ -4,13 +4,6 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
+#include "gb.h"
 
-#include "joy.h"
-#include "screen_state.c"
-
-#ifndef ENDGAME_DEF
-#define ENDGAME_DEF
-
-void endgame(const UINT8* win_text);
-
-#endif
+extern const UWORD bar_fight_palette[];

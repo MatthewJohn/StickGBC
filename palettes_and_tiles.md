@@ -289,6 +289,59 @@
  126. -
  127. D
 
+## drunk_fight
+
+### Pallete
+
+1. Default
+2. Active action selection
+
+### Tiles
+
+0. Background
+1. Screen border left
+2. Screen border top
+3. Screen border corner
+4. Action box corner
+5. Action/heath box top
+6. Action/heath box left
+7. health bar corner
+8. health bar end
+9. Enemy name 1
+10. Enemy name 2
+11. Enemy name 3
+12. Enemy name 4
+13. Enemy name 5
+14. Player name 1
+15. Player name 2
+16. Enemy
+...
+33. Enemy
+34. Player
+.. 
+40. Player
+41. action Punch tile 1
+42. action Punch tile 2
+43. action Punch tile 3
+44. UNUSED
+45. action pt corner
+46. HP
+47. action fireball 1
+48. action fireball 2
+49. action fireball 3
+50. action fireball 4
+51. action done 1
+52. action done 2
+53. action kick 1
+54. action kick 2
+55. action energy 1
+56. action energy 2
+57. action energy 3
+58. action run away 1
+59. action run away 2
+60. action run away 3
+61. action run away 4
+62. action run away 5
 
 ## Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)

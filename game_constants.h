@@ -11,7 +11,7 @@
 // Delays and timings
 #define PURCHASE_ITEM_WAIT 0x28  // Wait 30 frames
 #define DELAY_SLEEP 1000U
-#define DELAY_MENU_ITEM_MOVE 100U
+#define DELAY_MENU_ITEM_MOVE 300U
 
 // Get tile pixel within from map-coordinates
 #define TO_SUBTILE_PIXEL(location) (location & 0x0FU)

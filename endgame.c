@@ -14,7 +14,7 @@
 #include "endgame.h"
 #include "main.h"
 
-void endgame()
+void endgame(const UINT8* win_text)
 {
     UINT16 total_balance = 0;
     BOOLEAN negative_total = 0;
@@ -179,13 +179,9 @@ void endgame()
 
     DISPLAY_ON;
 
-    // Wait for user to press A or START
-    while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
-    {
-        wait_vbl_done();
+    // Show reason, which will wait for input
+    main_show_window_text(win_text, ROM_BANK_ENDGAME);
 
-        main_check_joy(ROM_BANK_ENDGAME);
-    }
-
+    // Mark game as ended to exit main loop
     game_state.game_ended = 1U;
 }

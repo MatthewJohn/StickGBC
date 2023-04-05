@@ -29,6 +29,7 @@
 
 #include "opening_screen.h"
 #include "endgame.h"
+#include "bar_fight.h"
 
 #include "background_time_colors.h"
 
@@ -361,6 +362,8 @@ void setup_globals()
     game_state.user_pos_tiles_x = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_x);
     game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
+    game_state.bar_fight_count = 0U;
+
 #ifdef IN_TESTING
     // Add hacks for testing
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x1U;
@@ -374,9 +377,10 @@ void setup_globals()
     game_state.bank_balance = 900U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
-    game_state.strength = 250U;
+    game_state.strength = 90U;
     game_state.charm = 99U;
     game_state.hour = 0;
+    game_state.bar_fight_count = 5U;
 #endif
 }
 
@@ -1100,170 +1104,40 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
     SWITCH_ROM_MBC5(return_bank);
 }
 
-// Attempt to 'enter' a building if user is in
-// interaction zone
-void check_building_enter()
-{
-    unsigned int tile_itx = X_Y_TO_TILE_INDEX(
-        game_state.user_pos_tiles_x,
-        game_state.user_pos_tiles_y
-    );
-
-    // Check for entering house
-    if (tile_itx == 0x321U)
-    {
-        game_state.current_building = S_B_HOUSE;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-    }
-
-    // Check for entering restaurant
-    else if (tile_itx == 0x76D)
-    {
-        game_state.current_building = S_B_RESTAURANT;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_RESTAURANT))
-        {
-            game_state.intro_shown |= INTRO_BIT_RESTAURANT;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_restaurant_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    // Check for entering shop, through either door
-    else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
-    {
-        game_state.current_building = S_B_SHOP;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_SHOP))
-        {
-            game_state.intro_shown |= INTRO_BIT_SHOP;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_shop_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    // Check for entering pawn shop
-    else if (tile_itx == 0xDF1U)
-    {
-        game_state.current_building = S_B_PAWN;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_PAWN))
-        {
-            game_state.intro_shown |= INTRO_BIT_PAWN;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_pawn_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
-    {
-        game_state.current_building = S_B_UNIVERSITY;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-    }
-
-    else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
-    {
-        game_state.current_building = S_B_SKATER;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_SKATER))
-        {
-            game_state.intro_shown |= INTRO_BIT_SKATER;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_skater_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
-    {
-        game_state.current_building = S_B_NLI;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-    }
-
-    else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
-    {
-        game_state.current_building = S_B_DEALER;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_DEALER))
-        {
-            game_state.intro_shown |= INTRO_BIT_DEALER;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_dealer_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
-    {
-        game_state.current_building = S_B_HOBO;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_HOBO))
-        {
-            game_state.intro_shown |= INTRO_BIT_HOBO;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_hobo_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
-    {
-        game_state.current_building = S_B_BAR;
-        setup_building_menu(1U, ROM_BANK_DEFAULT);
-        if (! (game_state.intro_shown & INTRO_BIT_BAR))
-        {
-            game_state.intro_shown |= INTRO_BIT_BAR;
-            // Show pre-menu message
-            main_show_window_text(&win_txt_bar_int, ROM_BANK_DEFAULT);
-            // Reload menu
-            setup_building_menu(1U, ROM_BANK_DEFAULT);
-        }
-    }
-
-    else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
-    {
-        game_state.current_building = S_B_BUS_STATION;
-        setup_building_menu(2U, ROM_BANK_DEFAULT);
-    }
-
-    else if (tile_itx == 0x2F9)
-    {
-        game_state.current_building = S_B_BANK;
-        setup_building_menu(2U, ROM_BANK_DEFAULT);
-    }
-
-#if IN_TESTING && DEBUG_JUMP_BUILDING
-    else
-    {
-        game_state.current_building = DEBUG_JUMP_BUILDING;
-        setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_DEFAULT);
-    }
-#endif
-}
-
 /*
  * check_end_game
  *
  * Check if win/lose conditions have been met
  */
-void check_end_game()
+void check_end_game() NONBANKED
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
     {
+        // Show end game, passing reason for end game reason
         ROM_BANK_ENDGAME_SWITCH;
-        endgame();
+        if (game_state.hp == 0)
+        {
+            endgame(&win_txt_end_died);
+        }
+        else
+        {
+            endgame(&win_txt_end_time);
+        }
         ROM_BANK_RESET;
     }
 }
+
+/*
+ * main_check_end_game
+ *
+ * check_end_game wrapper with ROM jumping
+ */
+ void main_check_end_game(unsigned int return_bank) NONBANKED
+ {
+    SWITCH_ROM_MBC5(ROM_BANK_DEFAULT);
+    check_end_game();
+    SWITCH_ROM_MBC5(return_bank);
+ }
 
 void modify_karma(INT8 karma_change) NONBANKED
 {
@@ -1350,6 +1224,12 @@ void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
         update_window();
         ROM_BANK_RESET;
     }
+}
+
+void main_increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength, unsigned int return_bank)
+{
+    increase_strength(cost, number_of_hours, strength);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
@@ -1548,7 +1428,7 @@ void main_show_window_character(UINT8 character_number, UINT8 itx, UINT8 ity, un
  *
  * show_window_text wrapper with ROM jumping
  */
-void main_show_window_text(UINT8 *text, unsigned int return_bank)
+void main_show_window_text(UINT8 *text, unsigned int return_bank) NONBANKED
 {
     ROM_BANK_WINDOW_TEXT_SWITCH;
     show_window_text(text);
@@ -1578,7 +1458,6 @@ void update_state()
     unsigned short new_menu_x;
     unsigned short attempting_x_move;
     UINT8 movement_bit_push;
-    UINT8 rnd;
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
@@ -1754,7 +1633,11 @@ void update_state()
         }
 
         if (joypad_state.a_pressed)
+        {
+            ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
             check_building_enter();
+            ROM_BANK_RESET;
+        }
 
         else if (joypad_state.select_pressed) {
             show_stats_screen();
@@ -1913,44 +1796,9 @@ void update_state()
             }
             else if (game_state.current_building == S_B_SKATER)
             {
-                if (menu_state.current_item_x == 0U && menu_state.current_item_y == 0U)
-                {
-                    if (game_state.inventory[S_INVENTORY_SMOKES])
-                    {
-                        // Remove smokes and give skateboard
-                        if (DAY_TIME_REMAINING >= 1U)
-                        {
-                            game_state.hour += 1U;
-                            game_state.inventory[S_INVENTORY_SMOKES] -= 1U;
-                            ROM_BANK_BUILDING_MENU_SWITCH;
-                            update_window();
-                            ROM_BANK_RESET;
-
-                            // Decrease karma
-                            modify_karma(-2);
-
-                            if (game_state.inventory[S_INVENTORY_SKATEBOARD])
-                            {
-                                rnd = sys_time % 4;
-                                if (rnd == 0U)
-                                    main_show_window_text(&win_txt_skater_thx_1, ROM_BANK_DEFAULT);
-                                else if (rnd == 1U)
-                                    main_show_window_text(&win_txt_skater_thx_2, ROM_BANK_DEFAULT);
-                                else if (rnd == 2U)
-                                    main_show_window_text(&win_txt_skater_thx_3, ROM_BANK_DEFAULT);
-                                else
-                                    main_show_window_text(&win_txt_skater_thx_4, ROM_BANK_DEFAULT);
-                            }
-                            else
-                            {
-                                game_state.inventory[S_INVENTORY_SKATEBOARD] = 1U;
-                                main_show_window_text(&win_txt_skater_give, ROM_BANK_DEFAULT);
-                            }
-                            // Reload building menu to clear any text
-                            setup_building_menu(1U, ROM_BANK_DEFAULT);
-                        }
-                    }
-                }
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_skater_menu();
+                ROM_BANK_RESET;
             }
             else if (game_state.current_building == S_B_NLI)
             {
@@ -2095,6 +1943,13 @@ void main_show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT
     SWITCH_ROM_MBC5(return_bank);
 }
 
+void main_enter_bar_fight(unsigned int return_bank) NONBANKED
+{
+    ROM_BANK_BAR_FIGHT_SWITCH;
+    enter_bar_fight();
+    SWITCH_RAM_MBC5(return_bank);
+}
+
 void main()
 {
     debug_address = 0xFFFA;
@@ -2125,6 +1980,12 @@ void main()
         // it takes player to go through opening screen
         setup_globals();
 
+#if IN_TESTING
+        ROM_BANK_BAR_FIGHT_SWITCH;
+        enter_bar_fight();
+        ROM_BANK_RESET;
+#endif
+
         // Initial setup of window and update with starting stats
         ROM_BANK_BUILDING_MENU_SWITCH;
         setup_window();
@@ -2138,7 +1999,7 @@ void main()
         // And open the curtains!
         DISPLAY_ON;
 
-        while(game_state.game_ended == 0U)
+        while (1)
         {
             wait_vbl_done();
 
@@ -2149,6 +2010,11 @@ void main()
 
             // Check for collision with car AI
             check_car_collision();
+
+            if (game_state.game_ended != 0U)
+            {
+                break;
+            }
         }
     }
 }
