@@ -1113,17 +1113,16 @@ void check_end_game() NONBANKED
 {
     if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
     {
-        // Show window text for end game reason
+        // Show end game, passing reason for end game reason
+        ROM_BANK_ENDGAME_SWITCH;
         if (game_state.hp == 0)
         {
-            main_show_window_text(&win_txt_end_died, ROM_BANK_DEFAULT);
+            endgame(&win_txt_end_died);
         }
         else
         {
-            main_show_window_text(&win_txt_end_time, ROM_BANK_DEFAULT);
+            endgame(&win_txt_end_time);
         }
-        ROM_BANK_ENDGAME_SWITCH;
-        endgame();
         ROM_BANK_RESET;
     }
 }

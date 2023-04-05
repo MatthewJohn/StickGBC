@@ -11,6 +11,6 @@
 #ifndef ENDGAME_DEF
 #define ENDGAME_DEF
 
-void endgame();
+void endgame(const UINT8* win_text);
 
 #endif
