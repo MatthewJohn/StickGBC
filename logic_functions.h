@@ -23,3 +23,4 @@ void show_bank_withdraw();
 void show_bank_deposit();
 void show_bank_loan();
 void process_skater_menu(UINT8 rnd);
+void check_building_enter();

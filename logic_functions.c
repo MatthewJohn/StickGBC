@@ -8,6 +8,7 @@
 
 #include "logic_functions.h"
 #include "window_text_data.h"
+#include "main_map.h"
 
 typedef struct {
     UINT8 x;
@@ -1031,4 +1032,154 @@ void process_skater_menu(UINT8 rnd)
             }
         }
     }
+}
+
+// Attempt to 'enter' a building if user is in
+// interaction zone
+void check_building_enter()
+{
+    unsigned int tile_itx = X_Y_TO_TILE_INDEX(
+        game_state.user_pos_tiles_x,
+        game_state.user_pos_tiles_y
+    );
+
+    // Check for entering house
+    if (tile_itx == 0x321U)
+    {
+        game_state.current_building = S_B_HOUSE;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
+    // Check for entering restaurant
+    else if (tile_itx == 0x76D)
+    {
+        game_state.current_building = S_B_RESTAURANT;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_RESTAURANT))
+        {
+            game_state.intro_shown |= INTRO_BIT_RESTAURANT;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_restaurant_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    // Check for entering shop, through either door
+    else if (tile_itx == 0xB69U || tile_itx == 0xBB1U)
+    {
+        game_state.current_building = S_B_SHOP;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_SHOP))
+        {
+            game_state.intro_shown |= INTRO_BIT_SHOP;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_shop_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    // Check for entering pawn shop
+    else if (tile_itx == 0xDF1U)
+    {
+        game_state.current_building = S_B_PAWN;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_PAWN))
+        {
+            game_state.intro_shown |= INTRO_BIT_PAWN;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_pawn_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    else if (tile_itx == 0x6B1U || tile_itx == 0x6B2U)
+    {
+        game_state.current_building = S_B_UNIVERSITY;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
+    else if (tile_itx == 0x37BU || tile_itx == 0x37CU || tile_itx == 0x37DU)
+    {
+        game_state.current_building = S_B_SKATER;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_SKATER))
+        {
+            game_state.intro_shown |= INTRO_BIT_SKATER;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_skater_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    else if (tile_itx == 0x4A9U || tile_itx == 0x4F1)
+    {
+        game_state.current_building = S_B_NLI;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
+    else if (tile_itx == 0xD19U || tile_itx == 0xD61U)
+    {
+        game_state.current_building = S_B_DEALER;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_DEALER))
+        {
+            game_state.intro_shown |= INTRO_BIT_DEALER;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_dealer_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    else if (tile_itx == 0x8D6U || tile_itx == 0x91EU)
+    {
+        game_state.current_building = S_B_HOBO;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_HOBO))
+        {
+            game_state.intro_shown |= INTRO_BIT_HOBO;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_hobo_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    else if (tile_itx == 0x964U || tile_itx == 0x9ACU)
+    {
+        game_state.current_building = S_B_BAR;
+        setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        if (! (game_state.intro_shown & INTRO_BIT_BAR))
+        {
+            game_state.intro_shown |= INTRO_BIT_BAR;
+            // Show pre-menu message
+            main_show_window_text(&win_txt_bar_int, ROM_BANK_LOGIC_FUNCTIONS);
+            // Reload menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+
+    else if (tile_itx == 0xA5DU || tile_itx == 0xA5E)
+    {
+        game_state.current_building = S_B_BUS_STATION;
+        setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
+    else if (tile_itx == 0x2F9)
+    {
+        game_state.current_building = S_B_BANK;
+        setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
+#if IN_TESTING && DEBUG_JUMP_BUILDING
+    else
+    {
+        game_state.current_building = DEBUG_JUMP_BUILDING;
+        setup_building_menu(DEBUG_JUMP_BUILDING_NUMBER, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+#endif
 }
