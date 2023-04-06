@@ -13,20 +13,26 @@
 #define MUSIC_CHANNEL 1U
 
 #define MUSIC_WAIT(n) n | 0x8000U
-#define MUSIC_NOTE_INTERVAL 16U
+#define MUSIC_NOTE_INTERVAL 8U
 
-const UINT16 music_notes[9] = {
-    MUSIC_NOTE_C4,
-    MUSIC_NOTE_D4,
-    MUSIC_NOTE_C4,
-    MUSIC_NOTE_B3,
-    MUSIC_WAIT(1),
+const UINT16 music_notes[] = {
+    MUSIC_NOTE_C2,
+    MUSIC_WAIT(2),
+    MUSIC_NOTE_C2,
+    MUSIC_NOTE_C2,
+    MUSIC_NOTE_C2,
+    MUSIC_WAIT(5),
+    MUSIC_NOTE_C2,
+    MUSIC_NOTE_E2,
+    MUSIC_NOTE_C2,
+    MUSIC_NOTE_C2,
+    MUSIC_WAIT(2),
     MUSIC_NOTE_C4,
     MUSIC_NOTE_D4,
     MUSIC_NOTE_E4,
     MUSIC_WAIT(5),
 };
-const UINT8 music_note_length = 9U;
+const UINT8 music_note_length = 12U;
 
 void initialise_music()
 {
