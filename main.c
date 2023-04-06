@@ -367,6 +367,7 @@ void setup_globals()
     
     game_state.music_tick = 0U;
     game_state.music_itx = 0U;
+    game_state.music_wait = 0U;
 
 #ifdef IN_TESTING
     // Add hacks for testing
