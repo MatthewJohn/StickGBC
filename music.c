@@ -104,7 +104,7 @@ void play_next_note()
     else
     {
         // Otherwise, play note
-        NR21_REG = 0x01;
+        NR21_REG = 0xC1;
         NR22_REG = 0xF1U;  /// Volume and Instrument
         NR23_REG = music_notes[game_state.music_itx] & 0xFF;
         NR24_REG = 0x80 | ((music_notes[game_state.music_itx] >> 8) & 0x07);
