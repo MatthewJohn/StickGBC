@@ -42,6 +42,7 @@
 #include "joy.h"
 #include "window_text.h"
 #include "window_text_data.h"
+#include "music.h"
 
 #include "main.h"
 
@@ -363,6 +364,9 @@ void setup_globals()
     game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
     game_state.bar_fight_count = 0U;
+    
+    game_state.music_tick = 0U;
+    game_state.music_itx = 0U;
 
 #ifdef IN_TESTING
     // Add hacks for testing
@@ -1958,6 +1962,8 @@ void main()
     cpu_fast();
 
     wait_vbl_done();
+    
+    initialise_music();
 
     while (1)
     {
@@ -2002,6 +2008,8 @@ void main()
         while (1)
         {
             wait_vbl_done();
+            
+            tick_music();
 
             main_check_joy(ROM_BANK_DEFAULT);
 

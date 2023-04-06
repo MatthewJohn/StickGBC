@@ -14,6 +14,7 @@
 #include "splash_screen_tiles.h"
 #include "splash_screen_palette.h"
 #include "game_constants.h"
+#include "music.h"
 #include "main.h"
 
 void splash_screen_loop()
@@ -57,6 +58,7 @@ void splash_screen_loop()
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {
         wait_vbl_done();
+        tick_music();
 
         main_check_joy(ROM_BANK_OPENING_SCREEN);
     }
