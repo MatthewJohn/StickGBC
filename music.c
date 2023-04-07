@@ -75,8 +75,13 @@ const UINT16 intro_music_chnl2_notes[] = {
 music_channel_t intro_music_chnl_2;
 
 const UINT16 main_music_chnl2_notes[] = {
+    // 1.5 beat is 21.3 (minus 1 for playing note), so 20, plus one in final to make up for the third.
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(WAIT_BEAT -1U),
+    MUSIC_WAIT(20U),
+    MUSIC_NOTE_C3,
+    MUSIC_WAIT(20U),
+    MUSIC_NOTE_C3,
+    MUSIC_WAIT(21U),
 //    MUSIC_NOTE_C3,
 //    MUSIC_WAIT(48),
 };
@@ -95,9 +100,9 @@ const UINT16 main_music_chnl_n_notes[] = {
     MUSIC_SNARE,
     MUSIC_WAIT(WAIT_BEAT - 1U),
     MUSIC_KICK,
-    MUSIC_WAIT(WAIT_BEAT - 6U),
+    MUSIC_WAIT(WAIT_BEAT - 10U),
     MUSIC_SNARE,
-    MUSIC_WAIT(4U),
+    MUSIC_WAIT(8U),
     MUSIC_SNARE,
     MUSIC_WAIT(WAIT_BEAT - 1U),
 //    MUSIC_WAIT((WAIT_BEAT/8)),
