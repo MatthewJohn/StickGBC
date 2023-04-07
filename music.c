@@ -165,7 +165,7 @@ void play_main_music()
 
     // Setup voice 2
     NR21_REG = 0xC1U;
-    NR22_REG = 0xF3U;  /// Volume and Instrument
+    NR22_REG = 0xF1U;  /// Volume and Instrument
     
     // Setup noise
 //    NR41_REG = 0x2FU;
