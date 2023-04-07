@@ -132,11 +132,7 @@ typedef struct {
 
     // Number of bar fights the user has been in
     UINT8 bar_fight_count;
-    
-    // Music
-    UINT8 music_tick;
-    UINT8 music_itx;
-    UINT8 music_wait;
+
 } game_state_t;
 
 // The sprite is placed into place and moved from min_location to max_location.

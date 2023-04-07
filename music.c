@@ -85,48 +85,58 @@ void initialise_music()
     NR52_REG = 0x80;
 	NR51_REG = 0xFF;
     NR50_REG = 0x77;
+
+    music_state.tick = 0U;
+    music_state.note_itx = 0U;
+    music_state.wait = 0U;
+}
+
+void play_intro_music()
+{
+    music_state.notes = intro_music;
+    music_state.notes_length = (sizeof(intro_music)) / (sizeof(UINT16));
 }
 
 void play_next_note()
 {
     UINT8 *channel_addr = (&NR10_REG) + 5;
 
-    if (game_state.music_wait != 0U)
+    if (music_state.wait != 0U)
     {
-        game_state.music_wait --;
+        music_state.wait --;
         return;
     }
     // Check if note is a wait note
-    if (music_notes[game_state.music_itx] & 0x8000U)
+    if (music_state.notes[music_state.note_itx] & 0x8000U)
     {
-        game_state.music_wait = music_notes[game_state.music_itx] & 0xFF;
+        music_state.wait = music_state.notes[music_state.note_itx] & 0xFF;
     }
     else
     {
         // Otherwise, play note
         NR21_REG = 0xC1;
         NR22_REG = 0xF1U;  /// Volume and Instrument
-        NR23_REG = music_notes[game_state.music_itx] & 0xFF;
-        NR24_REG = 0x80 | ((music_notes[game_state.music_itx] >> 8) & 0x07);
+        NR23_REG = music_state.notes[music_state.note_itx] & 0xFF;
+        NR24_REG = 0x80 | ((music_state.notes[music_state.note_itx] >> 8) & 0x07);
     }
 
-    game_state.music_itx ++;
-    if (game_state.music_itx == music_note_length)
+    music_state.note_itx ++;
+    if (music_state.note_itx == music_state.notes_length)
     {
-        game_state.music_itx = 0U;
+        music_state.note_itx = 0U;
     }
 }
 
 void tick_music()
 {
-    if (game_state.music_tick == 0U)
+    if (music_state.tick == 0U)
     {
         play_next_note();
     }
     
-    game_state.music_tick ++;
-    if (game_state.music_tick == MUSIC_NOTE_INTERVAL)
+    music_state.tick ++;
+    if (music_state.tick == MUSIC_NOTE_INTERVAL)
     {
-        game_state.music_tick = 0U;
+        music_state.tick = 0U;
     }
 }

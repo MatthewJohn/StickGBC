@@ -93,5 +93,16 @@
 #define MUSIC_NOTE_AS8 2030U
 #define MUSIC_NOTE_B8 2031U
 
+typedef struct {
+    UINT16 *notes;
+    UINT8 notes_length;
+    UINT8 tick;
+    UINT8 note_itx;
+    UINT8 wait;
+} music_state_t;
+
+music_state_t music_state;
+
 void initialise_music();
 void tick_music();
+void play_intro_music();

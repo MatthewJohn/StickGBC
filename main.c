@@ -364,10 +364,6 @@ void setup_globals()
     game_state.user_pos_tiles_y = PIXEL_LOCATION_TO_TILE_COUNT(game_state.user_pos_y);
 
     game_state.bar_fight_count = 0U;
-    
-    game_state.music_tick = 0U;
-    game_state.music_itx = 0U;
-    game_state.music_wait = 0U;
 
 #ifdef IN_TESTING
     // Add hacks for testing
@@ -1965,6 +1961,7 @@ void main()
     wait_vbl_done();
     
     initialise_music();
+    play_intro_music();
 
     while (1)
     {
