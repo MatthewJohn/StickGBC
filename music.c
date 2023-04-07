@@ -13,69 +13,63 @@
 #define MUSIC_CHANNEL 1U
 
 #define MUSIC_WAIT(n) n | 0x8000U
-#define MUSIC_NOTE_INTERVAL 8U
+#define MUSIC_NOTE_INTERVAL 3U
 
-const UINT16 music_notes[] = {
+
+const UINT16 intro_music[] = {
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    MUSIC_WAIT(8),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    MUSIC_WAIT(8),
+
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+
+    MUSIC_WAIT(7),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    MUSIC_WAIT(8),
+
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+
+    MUSIC_WAIT(7),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    MUSIC_WAIT(8),
+
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    
+    MUSIC_WAIT(7),
     MUSIC_NOTE_G2,
-    MUSIC_WAIT(4),
+    MUSIC_WAIT(8),
+
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_A2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_AS2,
     MUSIC_WAIT(1),
     MUSIC_NOTE_A2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_F2,
+    MUSIC_WAIT(1),
+    MUSIC_NOTE_G2,
+    MUSIC_WAIT(1),
     MUSIC_NOTE_D2,
-    MUSIC_WAIT(6)
-    
 
-//    MUSIC_WAIT(5),
-//    MUSIC_NOTE_E2,
-//    MUSIC_NOTE_C2,
-//    MUSIC_NOTE_C2,
-//    MUSIC_WAIT(4)
-//    MUSIC_NOTE_E2,
-//    MUSIC_WAIT(2),
-//    MUSIC_NOTE_F2,
-//    MUSIC_NOTE_G2,
-//    MUSIC_NOTE_A2,
-//    MUSIC_NOTE_G2,
-//    MUSIC_NOTE_D2,
-//    MUSIC_NOTE_E2,
-//    MUSIC_NOTE_E2,
-//    MUSIC_NOTE_E2,
-//    MUSIC_WAIT(5),
-//    MUSIC_NOTE_C2,
-//    MUSIC_NOTE_E2,
-//    MUSIC_NOTE_C2,
-//    MUSIC_NOTE_C2,
-//    MUSIC_WAIT(2),
-//    MUSIC_NOTE_C4,
-//    MUSIC_NOTE_D4,
-//    MUSIC_NOTE_E4,
-//    MUSIC_WAIT(5),
+    MUSIC_WAIT(10)
 };
-const UINT8 music_note_length = (sizeof (music_notes)) / (sizeof (UINT16));
 
 void initialise_music()
 {
