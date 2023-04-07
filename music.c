@@ -12,8 +12,9 @@
 
 #define MUSIC_CHANNEL 1U
 
-#define MUSIC_WAIT(n) n | 0x8000U
-#define MUSIC_NOTE_INTERVAL 3U
+#define MUSIC_WAIT(n) ((n | 0x8000U) - 1U)
+#define MUSIC_NOTE_INTERVAL 1U
+#define WAIT_BEAT 32U
 
 
 const UINT16 intro_music_chnl2_notes[] = {
@@ -75,9 +76,9 @@ music_channel_t intro_music_chnl_2;
 
 const UINT16 main_music_chnl2_notes[] = {
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(7),
-    MUSIC_NOTE_C3,
-    MUSIC_WAIT(7),
+    MUSIC_WAIT(WAIT_BEAT -1U),
+//    MUSIC_NOTE_C3,
+//    MUSIC_WAIT(48),
 };
 
 music_channel_t main_music_chnl_2;
@@ -90,9 +91,26 @@ music_channel_t main_music_chnl_2;
 const UINT16 main_music_chnl_n_notes[] = {
     // 0xXXYY - XX - envelope, YY - frequency
     MUSIC_KICK,
-    MUSIC_WAIT(7),
+    MUSIC_WAIT(WAIT_BEAT - 1U),
     MUSIC_SNARE,
-    MUSIC_WAIT(7),
+    MUSIC_WAIT(WAIT_BEAT - 1U),
+    MUSIC_KICK,
+    MUSIC_WAIT(WAIT_BEAT - 6U),
+    MUSIC_SNARE,
+    MUSIC_WAIT(4U),
+    MUSIC_SNARE,
+    MUSIC_WAIT(WAIT_BEAT - 1U),
+//    MUSIC_WAIT((WAIT_BEAT/8)),
+//    MUSIC_SNARE,
+//    MUSIC_WAIT(WAIT_BEAT),
+
+
+//    MUSIC_WAIT(9),
+//    MUSIC_KICK,
+//    MUSIC_WAIT(10),
+//    MUSIC_KICK,
+//    MUSIC_WAIT(WAIT_BEAT/5),
+
 };
 music_channel_t main_music_chnl_n;
 
