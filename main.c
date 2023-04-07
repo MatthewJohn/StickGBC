@@ -1962,6 +1962,7 @@ void main()
     
     initialise_music();
     play_intro_music();
+    play_main_music();
 
     while (1)
     {

@@ -75,17 +75,24 @@ music_channel_t intro_music_chnl_2;
 
 const UINT16 main_music_chnl2_notes[] = {
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(18),
+    MUSIC_WAIT(7),
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(18),
+    MUSIC_WAIT(7),
 };
 
 music_channel_t main_music_chnl_2;
 
+//#define MUSIC_KICK 0x1457U
+//#define MUSIC_SNARE 0x1450U
+#define MUSIC_KICK 0xC190
+#define MUSIC_SNARE 0xC140
+
 const UINT16 main_music_chnl_n_notes[] = {
-    // 0xXXYY - XX - length, YY - step devision
-    0x00C8U,
-    MUSIC_WAIT(50)
+    // 0xXXYY - XX - envelope, YY - frequency
+    MUSIC_KICK,
+    MUSIC_WAIT(7),
+    MUSIC_SNARE,
+    MUSIC_WAIT(7),
 };
 music_channel_t main_music_chnl_n;
 
@@ -130,15 +137,18 @@ void play_main_music()
     main_music_chnl_n.wait = 0U;
     
     music_state.channel_1 = NULL;
-    music_state.channel_2 = NULL; //&main_music_chnl_2;
+    music_state.channel_2 = &main_music_chnl_2;
     music_state.channel_noise = &main_music_chnl_n;
 
     // Setup voice 2
-    NR21_REG = 0xC1;
+    NR21_REG = 0xC1U;
     NR22_REG = 0xF3U;  /// Volume and Instrument
     
     // Setup noise
-    NR42_REG = 0xF2U;  /// Volume and Instrument
+//    NR41_REG = 0x2FU;
+//    NR41_REG = 0xFFU;
+    NR41_REG = 0x2F;
+    NR41_REG = 0x2F;
 }
 
 void play_next_note()
@@ -202,7 +212,7 @@ void play_next_note()
             }
         }
     }
-    
+
     // Noise channel
     if (music_state.channel_noise != NULL)
     {
@@ -213,17 +223,16 @@ void play_next_note()
         else
         {
             // Check if note is a wait note
-            if (music_state.channel_noise->notes[music_state.channel_noise->note_itx] & 0x8000U)
+            if ((music_state.channel_noise->notes[music_state.channel_noise->note_itx] & 0xFF00U) == 0x8000U)
             {
                 music_state.channel_noise->wait = music_state.channel_noise->notes[music_state.channel_noise->note_itx] & 0xFF;
             }
             else
             {
                 // Otherwise, play note
-                NR41_REG = music_state.channel_noise->notes[music_state.channel_noise->note_itx] >> 8;
-                NR42_REG = 0xF2U;  /// Volume and Instrument
+                NR42_REG = (music_state.channel_noise->notes[music_state.channel_noise->note_itx] >> 8) & 0xFF;  /// Volume and Instrument
                 NR43_REG = music_state.channel_noise->notes[music_state.channel_noise->note_itx] & 0xFFU;
-                NR44_REG = 0x80U;
+                NR44_REG = 0x80U;  // Or 0xBF
             }
 
             music_state.channel_noise->note_itx ++;
