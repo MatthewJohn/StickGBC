@@ -77,11 +77,13 @@ music_channel_t intro_music_chnl_2;
 const UINT16 main_music_chnl2_notes[] = {
     // 1.5 beat is 21.3 (minus 1 for playing note), so 20, plus one in final to make up for the third.
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(20U),
+    MUSIC_WAIT(31U),
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(20U),
+    MUSIC_WAIT(31U),
     MUSIC_NOTE_C3,
-    MUSIC_WAIT(21U),
+    MUSIC_WAIT(31U),
+    MUSIC_NOTE_C3,
+    MUSIC_WAIT(31U),
 //    MUSIC_NOTE_C3,
 //    MUSIC_WAIT(48),
 };
@@ -95,22 +97,39 @@ music_channel_t main_music_chnl_2;
 
 const UINT16 main_music_chnl_n_notes[] = {
     // 0xXXYY - XX - envelope, YY - frequency
+    // BEAT 1
     MUSIC_KICK,
-    MUSIC_WAIT(WAIT_BEAT - 1U),
+    MUSIC_WAIT(WAIT_BEAT - 11U),
     MUSIC_SNARE,
-    MUSIC_WAIT(WAIT_BEAT - 1U),
+    MUSIC_WAIT(5U),
+    // BEAT 2
+    MUSIC_SNARE,
+    MUSIC_WAIT(9U),
     MUSIC_KICK,
-    MUSIC_WAIT(WAIT_BEAT - 10U),
-    MUSIC_SNARE,
-    MUSIC_WAIT(8U),
-    MUSIC_SNARE,
-    MUSIC_WAIT(WAIT_BEAT - 1U),
+    MUSIC_WAIT(4U),
+    MUSIC_KICK,
+    MUSIC_WAIT(10U),
+    MUSIC_KICK,
+    MUSIC_WAIT(4U),
+    // BEAT 3
+//    MUSIC_WAIT(WAIT_BEAT - 1U),
+//    MUSIC_KICK,
+//    MUSIC_WAIT(WAIT_BEAT - 10U),
+//    MUSIC_SNARE,
+//    MUSIC_WAIT(8U),
+//    MUSIC_SNARE,
+//    MUSIC_WAIT(WAIT_BEAT - 1U),
+
+    MUSIC_WAIT(200U),
+
+
+
 //    MUSIC_WAIT((WAIT_BEAT/8)),
 //    MUSIC_SNARE,
 //    MUSIC_WAIT(WAIT_BEAT),
 
 
-//    MUSIC_WAIT(9),
+//    MUSIC_WAIT(9),l
 //    MUSIC_KICK,
 //    MUSIC_WAIT(10),
 //    MUSIC_KICK,
