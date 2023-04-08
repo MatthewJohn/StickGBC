@@ -99,18 +99,26 @@ const UINT16 main_music_chnl_n_notes[] = {
     // 0xXXYY - XX - envelope, YY - frequency
     // BEAT 1
     MUSIC_KICK,
-    MUSIC_WAIT(WAIT_BEAT - 11U),
-    MUSIC_SNARE,
-    MUSIC_WAIT(5U),
+    MUSIC_WAIT(WAIT_BEAT - 1U),
+
     // BEAT 2
     MUSIC_SNARE,
-    MUSIC_WAIT(9U),
+
+    MUSIC_WAIT(7U),
     MUSIC_KICK,
-    MUSIC_WAIT(4U),
+    MUSIC_WAIT(7U),
     MUSIC_KICK,
-    MUSIC_WAIT(10U),
+    MUSIC_WAIT(7U),
     MUSIC_KICK,
-    MUSIC_WAIT(4U),
+    MUSIC_WAIT(7U),
+
+    // BEAT 2
+    MUSIC_KICK,
+    MUSIC_WAIT(WAIT_BEAT - 1U),
+
+    MUSIC_SNARE,
+    MUSIC_WAIT(WAIT_BEAT - 1U),
+
     // BEAT 3
 //    MUSIC_WAIT(WAIT_BEAT - 1U),
 //    MUSIC_KICK,
@@ -120,7 +128,7 @@ const UINT16 main_music_chnl_n_notes[] = {
 //    MUSIC_SNARE,
 //    MUSIC_WAIT(WAIT_BEAT - 1U),
 
-    MUSIC_WAIT(200U),
+//    MUSIC_WAIT(200U),
 
 
 
