@@ -119,17 +119,8 @@ const UINT16 intro_music_chnl_n_notes[] = {
 music_channel_t intro_music_chnl_n;
 
 const UINT16 main_music_chnl2_notes[] = {
-    // 1.5 beat is 21.3 (minus 1 for playing note), so 20, plus one in final to make up for the third.
     MUSIC_NOTE_C3,
     MUSIC_WAIT(31U),
-//    MUSIC_NOTE_C3,
-//    MUSIC_WAIT(31U),
-//    MUSIC_NOTE_C3,
-//    MUSIC_WAIT(31U),
-//    MUSIC_NOTE_C3,
-//    MUSIC_WAIT(31U),
-//    MUSIC_NOTE_C3,
-//    MUSIC_WAIT(48),
 };
 
 music_channel_t main_music_chnl_2;
@@ -164,47 +155,11 @@ const UINT16 main_music_chnl_n_notes[] = {
     MUSIC_WAIT(5U),
     MUSIC_KICK,
     MUSIC_WAIT(15U),
-
-//    // BEAT 3
-//    MUSIC_WAIT()
-//    MUSIC_KICK,
-//    MUSIC_WAIT(WAIT_BEAT - 1U),
-//
-//    MUSIC_SNARE,
-//    MUSIC_WAIT(WAIT_BEAT - 1U),
-
-    // BEAT 3
-//    MUSIC_WAIT(WAIT_BEAT - 1U),
-//    MUSIC_KICK,
-//    MUSIC_WAIT(WAIT_BEAT - 10U),
-//    MUSIC_SNARE,
-//    MUSIC_WAIT(8U),
-//    MUSIC_SNARE,
-//    MUSIC_WAIT(WAIT_BEAT - 1U),
-
-//    MUSIC_WAIT(200U),
-
-
-
-//    MUSIC_WAIT((WAIT_BEAT/8)),
-//    MUSIC_SNARE,
-//    MUSIC_WAIT(WAIT_BEAT),
-
-
-//    MUSIC_WAIT(9),l
-//    MUSIC_KICK,
-//    MUSIC_WAIT(10),
-//    MUSIC_KICK,
-//    MUSIC_WAIT(WAIT_BEAT/5),
-
 };
 music_channel_t main_music_chnl_n;
 
 void initialise_music()
 {
-//    NR50_REG = 0x77;
-//    NR51_REG = 0x0F;
-//    NR52_REG = 0x80;
     NR52_REG = 0x80;
 	NR51_REG = 0xFF;
     NR50_REG = 0x77;
