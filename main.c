@@ -845,6 +845,9 @@ void setup_main_map()
     // immediately move, in case it has been set to the future by
     // another method
     game_state.last_movement_time = sys_time;
+
+    // Setup main music
+    play_main_music();
 }
 
 /*
@@ -1961,12 +1964,14 @@ void main()
     wait_vbl_done();
 
     initialise_music();
-    play_intro_music();
-//    play_main_music();
 
     while (1)
     {
         DISPLAY_OFF;
+
+        // Setup intro musicn for splash screen
+        play_intro_music();
+//    play_main_music();
 
         // Enter splash screen loop
         ROM_BANK_OPENING_SCREEN_SWITCH;
