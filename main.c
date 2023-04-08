@@ -1959,10 +1959,10 @@ void main()
     cpu_fast();
 
     wait_vbl_done();
-    
+
     initialise_music();
     play_intro_music();
-    play_main_music();
+//    play_main_music();
 
     while (1)
     {
@@ -2007,7 +2007,7 @@ void main()
         while (1)
         {
             wait_vbl_done();
-            
+
             tick_music();
 
             main_check_joy(ROM_BANK_DEFAULT);

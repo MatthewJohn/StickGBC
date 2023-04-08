@@ -41,7 +41,7 @@ const UINT16 intro_music_chnl2_notes[] = {
     MUSIC_WAIT(WAIT_BEAT - 9U),
     MUSIC_NOTE_G2,
     MUSIC_WAIT(7U),
-    
+
     // BAR 2
     // BEAT 1
     MUSIC_NOTE_G2,
@@ -89,21 +89,21 @@ const UINT16 intro_music_chnl2_notes[] = {
     // BEAT 2
     MUSIC_NOTE_A2,
     MUSIC_WAIT(23U),
-    
+
     MUSIC_NOTE_G2,
     MUSIC_WAIT(7U),
-    
+
     // BEAT 3
     MUSIC_NOTE_F2,
     MUSIC_WAIT(23U),
-    
+
     MUSIC_NOTE_G2,
     MUSIC_WAIT(7U),
-    
+
     // BEAT 4
     MUSIC_NOTE_A2,
     MUSIC_WAIT(23U),
-    
+
     MUSIC_NOTE_D2,
     MUSIC_WAIT(7U)
 };
@@ -144,14 +144,14 @@ const UINT16 main_music_chnl_n_notes[] = {
 
     // BEAT 2
     MUSIC_SNARE,
-    MUSIC_WAIT(9U), 
+    MUSIC_WAIT(9U),
     MUSIC_KICK,
     MUSIC_WAIT(5U),
     MUSIC_KICK,
     MUSIC_WAIT(9U),
     MUSIC_KICK,
     MUSIC_WAIT(5U),
-    
+
     // BEAT 3
     MUSIC_WAIT(WAIT_BEAT - 6U),
     MUSIC_KICK,
@@ -159,7 +159,7 @@ const UINT16 main_music_chnl_n_notes[] = {
 
     // BEAT 4
     MUSIC_SNARE,
-    MUSIC_WAIT(9U), 
+    MUSIC_WAIT(9U),
     MUSIC_KICK,
     MUSIC_WAIT(5U),
     MUSIC_KICK,
@@ -208,7 +208,7 @@ void initialise_music()
     NR52_REG = 0x80;
 	NR51_REG = 0xFF;
     NR50_REG = 0x77;
-    
+
     music_state.tick = 0U;
 }
 
@@ -241,12 +241,12 @@ void play_main_music()
     main_music_chnl_2.notes_length = (sizeof(main_music_chnl2_notes)) / (sizeof(UINT16));
     main_music_chnl_2.note_itx = 0U;
     main_music_chnl_2.wait = 0U;
-    
+
     main_music_chnl_n.notes = main_music_chnl_n_notes;
     main_music_chnl_n.notes_length = (sizeof(main_music_chnl_n_notes)) / (sizeof(UINT16));
     main_music_chnl_n.note_itx = 0U;
     main_music_chnl_n.wait = 0U;
-    
+
     music_state.channel_1 = NULL;
     music_state.channel_2 = &main_music_chnl_2;
     music_state.channel_noise = &main_music_chnl_n;
@@ -254,7 +254,7 @@ void play_main_music()
     // Setup voice 2
     NR21_REG = 0xC1U;
     NR22_REG = 0xF1U;  /// Volume and Instrument
-    
+
     // Setup noise
     NR41_REG = 0x2F;
 }
@@ -358,7 +358,7 @@ void tick_music()
     {
         play_next_note();
     }
-    
+
     music_state.tick ++;
     if (music_state.tick == MUSIC_NOTE_INTERVAL)
     {
