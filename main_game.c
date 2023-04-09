@@ -85,6 +85,7 @@ void load_bar()
 
 void load_appliance_store()
 {
+    set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]));
     scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
     scratch_palette_data[0U][2U] = RGB(16U, 16U, 16U);
