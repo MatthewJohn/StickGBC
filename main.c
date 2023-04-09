@@ -50,6 +50,7 @@
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 0
+#define DEBUG_IGNORE_BOUNDARIES 0
 
 UBYTE * debug_address;
 
@@ -756,6 +757,10 @@ void check_boundary_hit() NONBANKED
     unsigned int new_x;
     unsigned int new_y;
     unsigned int new_tile_itx;
+
+#if IN_TESTING && DEBUG_IGNORE_BOUNDARIES
+    return;
+#endif
 
     new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
     new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
