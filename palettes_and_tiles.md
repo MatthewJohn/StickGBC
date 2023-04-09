@@ -20,7 +20,7 @@
     * 1 - 
     * 2 - 
     * 3 -
- 4. scratch for building 0 - bus
+ 4. scratch for building 0 - bus/appliance_store
  5. scratch for building 1 - bus station/Bar/Bank
  6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
@@ -76,7 +76,7 @@
 13. Car diagonal back
 
 
-## Building map tiles (1)
+## Building menu tiles (1)
 
  0. Background
  1. Border corner
@@ -207,7 +207,7 @@
  126. -
  127. D
  
- ## Building map tiles (2)
+ ## Building menu tiles (2)
 
  0. Background
  1. Border corner
@@ -343,7 +343,7 @@
 61. action run away 4
 62. action run away 5
 
-## Tiles
+## Main map Tiles
  - 0 Background/pavement/road/grass/house roof/shop roof (blank palette colour 0)
  - 1 Road markings (blank palette colour 0/1)
  - 2 Road markings/shop roof edge (blank palette colour 0/1)
@@ -412,3 +412,14 @@
  - 64 - Bank door 2
  - 65 - Bank dollar sign 1
  - 66 - Bank dollar sign 2
+ - 67 - applicance store main
+ - 68 - applicance store edge
+ - 69 - applicance store sign 1
+ - 70 - applicance store sign 2
+ - 71 - applicance store sign 3
+ - 72 - applicance store sign 4
+ - 73 - applicance store sign 5
+ - 74 - applicance store sign 6
+ - 75 - applicance store sign 7
+ - 76 - applicance store sign 8
+ - 77 - applicance store sign 9

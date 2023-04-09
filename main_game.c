@@ -83,6 +83,15 @@ void load_bar()
     set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[1U]));
 }
 
+void load_appliance_store()
+{
+    scratch_palette_data[1U][0U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[1U][1U] = RGB(0U, 0U, 0U);
+    scratch_palette_data[1U][2U] = RGB(16U, 16U, 16U);
+    scratch_palette_data[1U][3U] = RGB(3U, 8U, 1U);  /// Unused
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[1U]));
+}
+
 void load_house_car_sprite()
 {
     set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
