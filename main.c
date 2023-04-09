@@ -475,7 +475,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -512,7 +512,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -620,7 +620,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -652,7 +652,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -696,7 +696,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -728,7 +728,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -771,7 +771,7 @@ void check_boundary_hit() NONBANKED
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
 
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
