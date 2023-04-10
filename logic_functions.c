@@ -1201,7 +1201,7 @@ void process_app_store_menu()
         }
     }
     // Regenerate menu
-    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
     move_menu_to_exit();
 }
 
