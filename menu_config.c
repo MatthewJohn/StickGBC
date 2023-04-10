@@ -1506,11 +1506,11 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
-            MENU_ITEM_NO_PALETTE,
             MENU_ITEM_NO_PALETTE,
             MENU_ITEM_NO_PALETTE,
         },
@@ -1534,7 +1534,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1562,7 +1562,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1590,7 +1590,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1618,7 +1618,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1645,7 +1645,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1674,7 +1674,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
@@ -1702,7 +1702,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_TILE,
         },
         {
-            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE_ROW,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
             MENU_ITEM_COST_PALETTE,
