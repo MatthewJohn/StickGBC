@@ -455,6 +455,13 @@ void process_house_menu()
             game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
             game_state.hour -= S_HOUR_CAFFEINE_TIME_GAIN;
         }
+        
+        // Increase strength if the treadmill is owned
+        if (game_state.inventory[S_INVENTORY_TREADMILL] == 1U)
+        {
+            // Increase strength without cost or time loss
+            main_increase_strength(0U, 0U, 1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
 
         // Check if alarm clock is owned
         if (game_state.inventory[S_INVENTORY_ALARM_CLOCK])
@@ -1053,18 +1060,65 @@ void process_app_store_menu()
 {
     if (menu_state.current_item_x == 0U)
     {
+        // Purchase bed
         if (menu_state.current_item_y == 0U)
         {
-            // Purchase bed
-            purchase_item(500U, S_INVENTORY_BED, 1U);
-            // Remove bed from options
-            menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
-            
-            main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
-            
-            // Regenerate menu
-            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-            move_menu_to_exit();
+            if (purchase_item(500U, S_INVENTORY_BED, 1U))
+            {
+                // Remove bed from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+        }
+        else if (menu_state.current_item_y == 1U)
+        {
+            // Purchase TV
+            if (purchase_item(2500U, S_INVENTORY_TV, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_tv, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Purchase TV
+            if (purchase_item(2500U, S_INVENTORY_TV, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_df, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+        }
+        else if (menu_state.current_item_y == 3U)
+        {
+            // Purchase TV
+            if (purchase_item(3500U, S_INVENTORY_TREADMILL, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_tm, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
         }
     }
 }

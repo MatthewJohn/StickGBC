@@ -171,6 +171,22 @@ const UINT8 win_txt_general_unimplemented[] = {
 };
 
 /* Messages for appstore*/
+const UINT8 win_txt_appstore_tv[] = {
+    24U, 19U, 13U, 15U, 0U, 12U, 31U, 35U, 0U, 44U, 0U, 30U, 18U, 25U, 31U, 17U, 18U, 38U, 0U, 24U, 25U, 30U, 0U, 29U, 31U, 28U, 15U, 0U, 33U, 18U, 11U, 30U, 0U, 35U, 25U, 31U, 41U, 22U, 22U, 0U, 14U, 25U, 0U, 33U, 19U, 30U, 18U, 0U, 19U, 30U, 39U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_appstore_pc[] = {
+    15U, 34U, 13U, 15U, 22U, 22U, 15U, 24U, 30U, 0U, 29U, 15U, 22U, 15U, 13U, 30U, 19U, 25U, 24U, 0U, 44U, 0U, 30U, 18U, 25U, 31U, 17U, 18U, 38U, 0U, 24U, 25U, 30U, 0U, 29U, 31U, 28U, 15U, 0U, 33U, 18U, 11U, 30U, 0U, 35U, 25U, 31U, 41U, 22U, 22U, 0U, 14U, 25U, 0U, 33U, 19U, 30U, 18U, 0U, 19U, 30U, 39U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_appstore_df[] = {
+    26U, 15U, 28U, 16U, 15U, 13U, 30U, 0U, 13U, 18U, 25U, 19U, 13U, 15U, 0U, 44U, 0U, 35U, 25U, 31U, 41U, 22U, 22U, 0U, 17U, 15U, 30U, 0U, 2U, 1U, 0U, 15U, 34U, 30U, 28U, 11U, 0U, 18U, 26U, 0U, 26U, 15U, 28U, 0U, 24U, 19U, 17U, 18U, 30U, WINDOW_TEXT_END,
+};
+
+const UINT8 win_txt_appstore_tm[] = {
+    30U, 19U, 23U, 15U, 0U, 30U, 25U, 0U, 33U, 25U, 28U, 21U, 0U, 31U, 26U, 0U, 30U, 18U, 25U, 29U, 15U, 0U, 29U, 30U, 15U, 26U, 29U, 39U, 0U, 35U, 25U, 31U, 41U, 22U, 22U, 0U, 17U, 15U, 30U, 0U, 2U, 0U, 15U, 34U, 30U, 28U, 11U, 0U, 29U, 30U, 28U, 15U, 24U, 17U, 30U, 18U, 0U, 26U, 15U, 28U, 0U, 24U, 19U, 17U, 18U, 30U, WINDOW_TEXT_END,
+};
+
 const UINT8 win_txt_appstore_bed[] = {
     17U, 28U, 15U, 11U, 30U, 0U, 12U, 31U, 35U, 0U, 44U, 0U, 35U, 25U, 31U, 41U, 22U, 22U, 0U, 17U, 15U, 30U, 0U, 2U, 1U, 0U, 15U, 34U, 30U, 28U, 11U, 0U, 18U, 26U, 0U, 26U, 15U, 28U, 0U, 24U, 19U, 17U, 18U, 30U, WINDOW_TEXT_END,
 };

@@ -380,11 +380,11 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.inventory[S_INVENTORY_COCAINE] = 49U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 49U;
-    //game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
-    //game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
+    game_state.inventory[S_INVENTORY_AMMO] = 0x10U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
-    game_state.balance = 1000U;
-    game_state.bank_balance = 900U;
+    game_state.balance = 8000U;
+    game_state.bank_balance = 3000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
     game_state.strength = 90U;
