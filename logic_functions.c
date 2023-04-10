@@ -1081,6 +1081,8 @@ void process_app_store_menu()
                 {
                     // Remove bed from options
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                    // Replace with menu item for minibar
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_MINIBAR;
 
                     main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
                 }
