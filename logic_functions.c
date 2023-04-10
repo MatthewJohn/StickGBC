@@ -1041,7 +1041,7 @@ void process_skater_menu()
  *
  * Handle menu item selection for appliance store
  */
-void process_appliance_store_menu()
+void process_app_store_menu()
 {
     if (menu_state.current_item_x == 0U)
     {
