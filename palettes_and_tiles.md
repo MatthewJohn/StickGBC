@@ -256,6 +256,8 @@
  44. NT
  45. PA
  46. Y
+ 47. R
+ 48. B
  
 
  98. Clock face
