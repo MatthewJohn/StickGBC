@@ -354,6 +354,14 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0x0U;
+    game_state.inventory[S_INVENTORY_BED] = 0x0U;
+    game_state.inventory[S_INVENTORY_TV] = 0x0U;
+    game_state.inventory[S_INVENTORY_PC] = 0x0U;
+    game_state.inventory[S_INVENTORY_DEEP_FREEZE] = 0x0U;
+    game_state.inventory[S_INVENTORY_SATELLITE] = 0x0U;
+    game_state.inventory[S_INVENTORY_TREADMILL] = 0x0U;
+    game_state.inventory[S_INVENTORY_STICKOPEDIA] = 0x0U;
+    game_state.inventory[S_INVENTORY_MINIBAR] = 0x0U;
 
     screen_state.screen_location_x = 0x10U;
     screen_state.screen_location_x_tiles = screen_state.screen_location_x >> 3;
@@ -1870,6 +1878,13 @@ void update_state()
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                 process_bank_menu();
+                ROM_BANK_RESET;
+            }
+            
+            else if (game_state.current_building == S_B_APPLIANCE_STORE)
+            {
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_appliance_store_menu();
                 ROM_BANK_RESET;
             }
         }

@@ -1035,6 +1035,26 @@ void process_skater_menu()
     }
 }
 
+
+/*
+ * process_appliance_store_menu
+ *
+ * Handle menu item selection for appliance store
+ */
+void process_appliance_store_menu()
+{
+    if (menu_state.current_item_x == 0U)
+    {
+        if (menu_state.current_item_y == 0U)
+        {
+            // Purchase bed
+            purchase_item(10U, S_INVENTORY_BED, 1U);
+            // Remove bed from options
+            menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
+        }
+    }
+}
+
 // Attempt to 'enter' a building if user is in
 // interaction zone
 void check_building_enter()

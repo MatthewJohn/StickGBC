@@ -19,6 +19,7 @@ void process_dealer_menu();
 void process_bar_menu();
 void process_hobo_menu();
 void process_bank_menu();
+void process_appliance_store_menu();
 void show_bank_withdraw();
 void show_bank_deposit();
 void show_bank_loan();
