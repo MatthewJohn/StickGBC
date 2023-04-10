@@ -442,6 +442,8 @@ void perform_robbery()
  */
 void process_house_menu()
 {
+    UINT8 hp_increase;
+    
      if (menu_state.current_item_y == 3U)
     {
         // Set intiial wakeup time
@@ -469,8 +471,14 @@ void process_house_menu()
         game_state.loan += ((game_state.loan * game_state.bank_rate) / 1000);
         game_state.bank_rate += ((sys_time % 10) - 5);
 
+        // Increase HP
+        hp_increase = 20U;
+        if (game_state.inventory[S_INVENTORY_BED] == 1U)
+        {
+            hp_increase += 10U;
+        }
         // 'Purchase food' to increase HP by 20
-        purchase_food(0U, 20U);
+        purchase_food(0U, hp_increase);
 
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
@@ -1048,9 +1056,15 @@ void process_app_store_menu()
         if (menu_state.current_item_y == 0U)
         {
             // Purchase bed
-            purchase_item(10U, S_INVENTORY_BED, 1U);
+            purchase_item(500U, S_INVENTORY_BED, 1U);
             // Remove bed from options
             menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
+            
+            main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
+            
+            // Regenerate menu
+            setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+            move_menu_to_exit();
         }
     }
 }

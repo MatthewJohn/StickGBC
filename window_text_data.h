@@ -50,6 +50,7 @@ extern const UINT8 win_txt_rank_incompetent[];
 extern const UINT8 win_txt_rank_wuss[];
 extern const UINT8 win_txt_rank_good_samaritan[];
 extern const UINT8 win_txt_general_unimplemented[];
+extern const UINT8 win_txt_appstore_bed[];
 extern const UINT8 win_txt_nli_vp[];
 extern const UINT8 win_txt_nli_exec[];
 extern const UINT8 win_txt_nli_ceo[];
