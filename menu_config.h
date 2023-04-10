@@ -107,6 +107,15 @@
 #define MENU_ITEM_INDEX_GET_LOAN 0x3CU
 #define MENU_ITEM_INDEX_REPAY_LOAN 0x3DU
 #define MENU_ITEM_INDEX_ROB_BANK 0x3EU
+#define MENU_ITEM_INDEX_INV_BULLETS 0x4FU
+#define MENU_ITEM_INDEX_BED 0x40U
+#define MENU_ITEM_INDEX_TV 0x41U
+#define MENU_ITEM_INDEX_PC 0x42U
+#define MENU_ITEM_INDEX_DEEP_FREEZE 0x43U
+#define MENU_ITEM_INDEX_STELLITE 0x44U
+#define MENU_ITEM_INDEX_TREADMILL 0x45U
+#define MENU_ITEM_INDEX_STICKOPEDIA 0x46U
+#define MENU_ITEM_INDEX_MINIBAR 0x47U
 
 // Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -158,6 +167,7 @@ extern menu_config_t menu_config_stats;
 extern menu_config_t menu_config_inventory;
 extern menu_config_t menu_config_bus_station;
 extern menu_config_t menu_config_bank;
+extern menu_config_t menu_config_appliance_store;
 
 
 // Methods for menu

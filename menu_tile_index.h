@@ -299,6 +299,30 @@
 #define MENU_TILE2_Y 0x2E
 #define MENU_TILE2_R 0x2F
 #define MENU_TILE2_B 0x30
+#define MENU_TILE2_BE 0x31
+#define MENU_TILE2_D 0x32
+#define MENU_TILE2_TV 0x33
+#define MENU_TILE2_PC 0x34
+#define MENU_TILE2_EP 0x35
+#define MENU_TILE2_FR 0x36
+#define MENU_TILE2_EE 0x37
+#define MENU_TILE2_ZE 0x38
+#define MENU_TILE2_SA 0x39
+//#define MENU_TILE2_TE 0x3A
+#define MENU_TILE2_IT 0x3B
+#define MENU_TILE2_E 0x3C
+//#define MENU_TILE2_ST 0x3D
+#define MENU_TILE2_K 0x3E
+#define MENU_TILE2_dOd 0x3F
+#define MENU_TILE2_PE 0x40
+#define MENU_TILE2_MI 0x41
+#define MENU_TILE2_NI 0x42
+#define MENU_TILE2_BA 0x43
+#define MENU_TILE2_EA 0x44
+#define MENU_TILE2_DM 0x45
+#define MENU_TILE2_IL 0x46
+#define MENU_TILE2_L 0x47
+
 
 #define MENU_TILE2_0 0x64
 #define MENU_TILE2_1 0x65

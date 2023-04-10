@@ -1085,6 +1085,12 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
     }
+    else if (game_state.current_building == S_B_APPLIANCE_STORE)
+    {
+        menu_config = &menu_config_appliance_store;
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 0U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
