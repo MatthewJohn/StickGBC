@@ -1664,7 +1664,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_TILE2_K,  // K
             MENU_TILE2_dOd,  // -o-
             MENU_TILE2_PE,  // PE
-            MENU_TILE2_DE, // DE
+            MENU_TILE2_DI, // DI
             // Row 2
             MENU_TILE_DOLLAR, // $
             MENU_TILE2_2, // 2
@@ -1684,7 +1684,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
         },
     },
 
-    // Stick-o-pedia
+    // Minibar
     {
         {
             MENU_TILE2_MI,  // MI

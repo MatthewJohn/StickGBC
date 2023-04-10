@@ -315,13 +315,14 @@
 #define MENU_TILE2_K 0x3E
 #define MENU_TILE2_dOd 0x3F
 #define MENU_TILE2_PE 0x40
-#define MENU_TILE2_MI 0x41
-#define MENU_TILE2_NI 0x42
-#define MENU_TILE2_BA 0x43
-#define MENU_TILE2_EA 0x44
-#define MENU_TILE2_DM 0x45
-#define MENU_TILE2_IL 0x46
-#define MENU_TILE2_L 0x47
+#define MENU_TILE2_DI 0x41
+#define MENU_TILE2_MI 0x42
+#define MENU_TILE2_NI 0x43
+#define MENU_TILE2_BA 0x44
+#define MENU_TILE2_EA 0x45
+#define MENU_TILE2_DM 0x46
+#define MENU_TILE2_IL 0x47
+#define MENU_TILE2_L 0x48
 
 
 #define MENU_TILE2_0 0x64
