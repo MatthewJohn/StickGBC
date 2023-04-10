@@ -18,6 +18,7 @@
 #include "main_map_boundaries.h"
 #include "main_game.h"
 #include "logic_functions.h"
+#include "cheat.h"
 
 #include "building_menu_tiles.h"
 #include "building_menu_tiles_2.h"
@@ -2031,6 +2032,7 @@ void main()
             wait_vbl_done();
 
             main_check_joy(ROM_BANK_DEFAULT);
+            check_cheat();
 
             update_ai_positions();
             update_state();

@@ -4,9 +4,10 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#ifndef GB_DEF
-#define GB_DEF
 
-#include <gb/gb.h>
-#include <types.h>
+// This code has been removed to keep cheats a surprise.
+// These were mainly implemented for CI smoke tests.
+void check_cheat() {
+    return;
+};
 

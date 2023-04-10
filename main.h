@@ -8,6 +8,7 @@
 #ifndef MAIN_DEF
 #define MAIN_DEF
 
+#include "gb.h"
 #include "screen_state.c"
 #include "game_state.h"
 #include "joy.h"
