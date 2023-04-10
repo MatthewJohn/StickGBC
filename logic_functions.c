@@ -1083,10 +1083,6 @@ void process_app_store_menu()
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                     main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
-
-                    // Regenerate menu
-                    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                    move_menu_to_exit();
                 }
                 else
                 {
@@ -1103,10 +1099,6 @@ void process_app_store_menu()
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                     main_show_window_text(&win_txt_appstore_mb, ROM_BANK_LOGIC_FUNCTIONS);
-
-                    // Regenerate menu
-                    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                    move_menu_to_exit();
                 }
                 else
                 {
@@ -1123,10 +1115,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_tv, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1142,10 +1130,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_df, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1161,10 +1145,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_tm, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1183,10 +1163,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_pc, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1202,10 +1178,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_SATELLITE_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_sat, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1221,10 +1193,6 @@ void process_app_store_menu()
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                 main_show_window_text(&win_txt_appstore_sop, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
             }
             else
             {
@@ -1232,6 +1200,9 @@ void process_app_store_menu()
             }
         }
     }
+    // Regenerate menu
+    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+    move_menu_to_exit();
 }
 
 // Attempt to 'enter' a building if user is in
