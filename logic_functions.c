@@ -455,12 +455,19 @@ void process_house_menu()
             game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
             game_state.hour -= S_HOUR_CAFFEINE_TIME_GAIN;
         }
-
+        
         // Increase strength if the treadmill is owned
         if (game_state.inventory[S_INVENTORY_TREADMILL] == 1U)
         {
             // Increase strength without cost or time loss
             main_increase_strength(0U, 0U, 1U, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+        
+        // Increase charm if the treadmill is owned
+        if (game_state.inventory[S_INVENTORY_MINIBAR] == 1U)
+        {
+            // Increase charm without cost or time loss
+            increase_charm(0U, 0U, 1U, ROM_BANK_LOGIC_FUNCTIONS);
         }
 
         // Check if alarm clock is owned
@@ -483,6 +490,11 @@ void process_house_menu()
         if (game_state.inventory[S_INVENTORY_BED] == 1U)
         {
             hp_increase += 10U;
+            
+            if (game_state.inventory[S_INVENTORY_DEEP_FREEZE] == 1U)
+            {
+                hp_increase += 10U;
+            }
         }
         // 'Purchase food' to increase HP by 20
         purchase_food(0U, hp_increase);
@@ -1060,19 +1072,46 @@ void process_app_store_menu()
 {
     if (menu_state.current_item_x == 0U)
     {
-        // Purchase bed
         if (menu_state.current_item_y == 0U)
         {
-            if (purchase_item(500U, S_INVENTORY_BED, 1U))
+            // Check if bed is the menu item
+            if (menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] == MENU_ITEM_INDEX_BED)
             {
-                // Remove bed from options
-                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
-
-                main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
-
-                // Regenerate menu
-                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
-                move_menu_to_exit();
+                if (purchase_item(500U, S_INVENTORY_BED, 1U))
+                {
+                    // Remove bed from options
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                    
+                    main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
+                    
+                    // Regenerate menu
+                    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                    move_menu_to_exit();
+                }
+                else
+                {
+                    main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+                }
+            }
+            // Otherwise, assume purchase of minibar
+            else
+            {
+                // Purchase minibar
+                if (purchase_item(5000U, S_INVENTORY_MINIBAR, 1U))
+                {
+                    // Remove from options
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                    
+                    main_show_window_text(&win_txt_appstore_mb, ROM_BANK_LOGIC_FUNCTIONS);
+                    
+                    // Regenerate menu
+                    setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                    move_menu_to_exit();
+                }
+                else
+                {
+                    main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+                }
             }
         }
         else if (menu_state.current_item_y == 1U)
@@ -1082,12 +1121,16 @@ void process_app_store_menu()
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_EMPTY;
-
+                
                 main_show_window_text(&win_txt_appstore_tv, ROM_BANK_LOGIC_FUNCTIONS);
-
+                
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
+            }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
             }
         }
         else if (menu_state.current_item_y == 2U)
@@ -1097,27 +1140,95 @@ void process_app_store_menu()
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_EMPTY;
-
+                
                 main_show_window_text(&win_txt_appstore_df, ROM_BANK_LOGIC_FUNCTIONS);
-
+                
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
             }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+            }
         }
         else if (menu_state.current_item_y == 3U)
         {
-            // Purchase TV
+            // Purchase Treadmill
             if (purchase_item(3500U, S_INVENTORY_TREADMILL, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_EMPTY;
-
+                
                 main_show_window_text(&win_txt_appstore_tm, ROM_BANK_LOGIC_FUNCTIONS);
-
+                
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
+            }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+            }
+        }
+    }
+    else if (menu_state.current_item_x == 1U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            // Purchase PC
+            if (purchase_item(2000U, S_INVENTORY_PC, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_pc, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+            }
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Purchase Satellite
+            if (purchase_item(3000U, S_INVENTORY_SATELLITE, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_SATELLITE_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_sat, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
+            }
+        }
+        else if (menu_state.current_item_y == 3U)
+        {
+            // Purchase stick-o-pedia
+            if (purchase_item(2000U, S_INVENTORY_STICKOPEDIA, 1U))
+            {
+                // Remove from options
+                menu_config_appliance_store.items[MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                
+                main_show_window_text(&win_txt_appstore_sop, ROM_BANK_LOGIC_FUNCTIONS);
+                
+                // Regenerate menu
+                setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
+                move_menu_to_exit();
+            }
+            else
+            {
+                main_show_window_text(&win_txt_appstore_mon, ROM_BANK_LOGIC_FUNCTIONS);
             }
         }
     }
@@ -1263,7 +1374,7 @@ void check_building_enter()
         game_state.current_building = S_B_BANK;
         setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
     }
-
+    
     else if (tile_itx == 0x6CD || tile_itx == 0x6CE)
     {
         game_state.current_building = S_B_APPLIANCE_STORE;
