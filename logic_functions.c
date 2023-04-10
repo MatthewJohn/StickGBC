@@ -443,7 +443,7 @@ void perform_robbery()
 void process_house_menu()
 {
     UINT8 hp_increase;
-    
+
      if (menu_state.current_item_y == 3U)
     {
         // Set intiial wakeup time
@@ -455,7 +455,7 @@ void process_house_menu()
             game_state.inventory[S_INVENTORY_CAFFEINE_PILLS] -= 1U;
             game_state.hour -= S_HOUR_CAFFEINE_TIME_GAIN;
         }
-        
+
         // Increase strength if the treadmill is owned
         if (game_state.inventory[S_INVENTORY_TREADMILL] == 1U)
         {
@@ -1067,9 +1067,9 @@ void process_app_store_menu()
             {
                 // Remove bed from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
-                
+
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
@@ -1082,9 +1082,9 @@ void process_app_store_menu()
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 main_show_window_text(&win_txt_appstore_tv, ROM_BANK_LOGIC_FUNCTIONS);
-                
+
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
@@ -1097,9 +1097,9 @@ void process_app_store_menu()
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 main_show_window_text(&win_txt_appstore_df, ROM_BANK_LOGIC_FUNCTIONS);
-                
+
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
@@ -1112,9 +1112,9 @@ void process_app_store_menu()
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 main_show_window_text(&win_txt_appstore_tm, ROM_BANK_LOGIC_FUNCTIONS);
-                
+
                 // Regenerate menu
                 setup_building_menu(1U, ROM_BANK_LOGIC_FUNCTIONS);
                 move_menu_to_exit();
@@ -1263,7 +1263,7 @@ void check_building_enter()
         game_state.current_building = S_B_BANK;
         setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
     }
-    
+
     else if (tile_itx == 0x6CD || tile_itx == 0x6CE)
     {
         game_state.current_building = S_B_APPLIANCE_STORE;

@@ -1880,7 +1880,7 @@ void update_state()
                 process_bank_menu();
                 ROM_BANK_RESET;
             }
-            
+
             else if (game_state.current_building == S_B_APPLIANCE_STORE)
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;

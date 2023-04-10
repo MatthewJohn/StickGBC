@@ -1487,7 +1487,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // BED
     {
         {
@@ -1515,7 +1515,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // TV
     {
         {
@@ -1543,7 +1543,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // PC
     {
         {
@@ -1571,7 +1571,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // DEEP FREEZE
     {
         {
@@ -1599,7 +1599,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // SATELLITE
     {
         {
@@ -1654,7 +1654,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Stick-o-pedia
     // @TODO Correct 'ia' on end of name
     {
@@ -1683,7 +1683,7 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Stick-o-pedia
     {
         {
