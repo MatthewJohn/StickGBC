@@ -278,6 +278,10 @@
  66. MI
  67. NI
  68. BA
+ 69. EA
+ 70. DM
+ 71. IL
+ 72. L
  
 
  98. Clock face
