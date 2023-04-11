@@ -209,7 +209,6 @@
  
  ## Building menu tiles (2)
 
-
  0. Background
  1. Border corner
  2. Border top
@@ -283,6 +282,16 @@
  70. DM
  71. IL
  72. L
+ 73. AP
+ 74. AR
+ 75. TM
+ 76. T
+ 77. HO
+ 78. US
+ 79. MA
+ 80. NS
+ 81. IO
+ 82. N
  
 
  98. Clock face

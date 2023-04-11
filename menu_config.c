@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x48U] = {
+const menu_config_item_t menu_config_items[0x4CU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1711,6 +1711,118 @@ const menu_config_item_t menu_config_items[0x48U] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
+    
+    // Apartment
+    {
+        {
+            MENU_TILE2_AP,
+            MENU_TILE2_AR,
+            MENU_TILE2_TM,
+            MENU_TILE2_EN,
+            MENU_TILE2_T,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_DOLLAR, // $
+            MENU_TILE2_2, // 2
+            MENU_TILE2_5, // 5
+            MENU_TILE2_K, // K
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+    },
+    
+    // Penthouse
+    {
+        {
+            MENU_TILE2_PE,
+            MENU_TILE2_NT,
+            MENU_TILE2_HO,
+            MENU_TILE2_US,
+            MENU_TILE2_E,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_DOLLAR, // $
+            MENU_TILE2_5, // 5
+            MENU_TILE2_0, // 0
+            MENU_TILE2_K, // K
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+    },
+    
+    // Mansion
+    {
+        {
+            MENU_TILE2_MA,
+            MENU_TILE2_NS,
+            MENU_TILE2_IO,
+            MENU_TILE2_N,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_DOLLAR, // $
+            MENU_TILE2_1, // 1
+            MENU_TILE2_0, // 0
+            MENU_TILE2_0, // 0
+            MENU_TILE2_K, // K
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+    },
+    
+    // Castle
+    {
+        {
+            MENU_TILE2_CA,
+            MENU_TILE2_ST,
+            MENU_TILE2_LE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE_DOLLAR, // $
+            MENU_TILE2_5, // 5
+            MENU_TILE2_0, // 0
+            MENU_TILE2_0, // 0
+            MENU_TILE2_K, // K
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_COST_PALETTE,
+            MENU_ITEM_NO_PALETTE,
+        },
+    },
 };
 
 const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
@@ -1935,6 +2047,19 @@ menu_config_t menu_config_appliance_store = {
         MENU_ITEM_INDEX_STELLITE,
         MENU_ITEM_INDEX_TREADMILL,
         MENU_ITEM_INDEX_STICKOPEDIA,
+    }
+};
+
+menu_config_t menu_config_real_estate = {
+    {
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EXIT,
+        MENU_ITEM_INDEX_APARTMENT,
+        MENU_ITEM_INDEX_PENTHOUSE,
+        MENU_ITEM_INDEX_MANSION,
+        MENU_ITEM_INDEX_CASTLE,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
     }
 };
 

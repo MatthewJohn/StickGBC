@@ -323,6 +323,16 @@
 #define MENU_TILE2_DM 0x46
 #define MENU_TILE2_IL 0x47
 #define MENU_TILE2_L 0x48
+#define MENU_TILE2_AP 0x49
+#define MENU_TILE2_AR 0x4A
+#define MENU_TILE2_TM 0x4B
+#define MENU_TILE2_T 0x4C
+#define MENU_TILE2_HO 0x4D
+#define MENU_TILE2_US 0x4E
+#define MENU_TILE2_MA 0x4F
+#define MENU_TILE2_NS 0x50
+#define MENU_TILE2_UI 0x51
+#define MENU_TILE2_N 0x52
 
 
 #define MENU_TILE2_0 0x64

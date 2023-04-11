@@ -116,6 +116,10 @@
 #define MENU_ITEM_INDEX_TREADMILL 0x45U
 #define MENU_ITEM_INDEX_STICKOPEDIA 0x46U
 #define MENU_ITEM_INDEX_MINIBAR 0x47U
+#define MENU_ITEM_INDEX_APARTMENT 0x48U
+#define MENU_ITEM_INDEX_PENTHOUSE 0x49U
+#define MENU_ITEM_INDEX_MANSION 0x4AU
+#define MENU_ITEM_INDEX_CASTLE 0x4BU
 
 // Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -133,6 +137,10 @@
 #define MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM 0x7U
 // Menu bar overwrites bed
 #define MENU_APPLIANCE_STORE_MINIBAR_ITEM 0x0U
+#define MENU_REAL_ESTATE_APARTMENT 0x2U
+#define MENU_REAL_ESTATE_PENTHOUSE 0x3U
+#define MENU_REAL_ESTATE_MANSION 0x4U
+#define MENU_REAL_ESTATE_CASTLE 0x5U
 
 // Value for current X/Y position to disable highlighting
 #define MENU_SELECTED_ITEM_DISABLED 0x8U
@@ -177,6 +185,7 @@ extern menu_config_t menu_config_inventory;
 extern menu_config_t menu_config_bus_station;
 extern menu_config_t menu_config_bank;
 extern menu_config_t menu_config_appliance_store;
+extern menu_config_t menu_config_real_estate;
 
 
 // Methods for menu

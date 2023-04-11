@@ -857,8 +857,9 @@ void process_bank_menu()
         }
         else if (menu_state.current_item_y == 2U)
         {
+            game_state.current_building = S_B_REAL_ESTATE;
             // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+//            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
             // Reload menu
             setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
         }
