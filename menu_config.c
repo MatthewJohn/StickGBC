@@ -2041,12 +2041,14 @@ menu_config_t menu_config_appliance_store = {
     {
         MENU_ITEM_INDEX_BED,  // MENU_ITEM_INDEX_MINIBAR
         MENU_ITEM_INDEX_EXIT,
-        MENU_ITEM_INDEX_TV,
-        MENU_ITEM_INDEX_PC,
-        MENU_ITEM_INDEX_DEEP_FREEZE,
-        MENU_ITEM_INDEX_STELLITE,
-        MENU_ITEM_INDEX_TREADMILL,
-        MENU_ITEM_INDEX_STICKOPEDIA,
+        // Hide all menu items, as they are
+        // added when realestate is purchased
+        MENU_ITEM_INDEX_EMPTY, // MENU_ITEM_INDEX_TV,
+        MENU_ITEM_INDEX_EMPTY, // MENU_ITEM_INDEX_PC,
+        MENU_ITEM_INDEX_EMPTY, //MENU_ITEM_INDEX_DEEP_FREEZE,
+        MENU_ITEM_INDEX_EMPTY, //MENU_ITEM_INDEX_STELLITE,
+        MENU_ITEM_INDEX_EMPTY, //MENU_ITEM_INDEX_TREADMILL,
+        MENU_ITEM_INDEX_EMPTY, //MENU_ITEM_INDEX_STICKOPEDIA,
     }
 };
 
