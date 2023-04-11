@@ -209,6 +209,7 @@
  
  ## Building menu tiles (2)
 
+
  0. Background
  1. Border corner
  2. Border top
@@ -216,7 +217,7 @@
  4. Ex
  5. it
  6. SE
- 7. LL
+ 7. UNUSED
  8.  G
  9. OO
  10. DS
@@ -267,10 +268,10 @@
  55. EE
  56. ZE
  57. SA
- 58. TE
+ 58. UNUSED
  59. IT
  60. E
- 61. ST
+ 61. UNUSED
  62. K
  63. -O-
  64. PE

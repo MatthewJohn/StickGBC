@@ -258,7 +258,7 @@
 
 
 #define MENU_TILE2_SE 0x06
-
+//#define MENU_TILE2_UNUSED1 0x07
 #define MENU_TILE2__G 0x08
 #define MENU_TILE2_OO 0x09
 #define MENU_TILE2_DS 0x0A
@@ -308,10 +308,10 @@
 #define MENU_TILE2_EE 0x37
 #define MENU_TILE2_ZE 0x38
 #define MENU_TILE2_SA 0x39
-//#define MENU_TILE2_TE 0x3A
+//#define MENU_TILE2_UNUSED 0x3A
 #define MENU_TILE2_IT 0x3B
 #define MENU_TILE2_E 0x3C
-//#define MENU_TILE2_ST 0x3D
+//#define MENU_TILE2_UNUSED 0x3D
 #define MENU_TILE2_K 0x3E
 #define MENU_TILE2_dOd 0x3F
 #define MENU_TILE2_PE 0x40
