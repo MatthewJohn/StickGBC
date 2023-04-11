@@ -1711,7 +1711,7 @@ const menu_config_item_t menu_config_items[0x4CU] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Apartment
     {
         {
@@ -1739,7 +1739,7 @@ const menu_config_item_t menu_config_items[0x4CU] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Penthouse
     {
         {
@@ -1767,7 +1767,7 @@ const menu_config_item_t menu_config_items[0x4CU] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Mansion
     {
         {
@@ -1795,7 +1795,7 @@ const menu_config_item_t menu_config_items[0x4CU] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
-    
+
     // Castle
     {
         {

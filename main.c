@@ -1894,7 +1894,7 @@ void update_state()
                 process_app_store_menu();
                 ROM_BANK_RESET;
             }
-            
+
             else if (game_state.current_building == S_B_REAL_ESTATE)
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
