@@ -18,6 +18,7 @@
 #include "main_map_boundaries.h"
 #include "main_game.h"
 #include "logic_functions.h"
+#include "cheat.h"
 
 #include "building_menu_tiles.h"
 #include "building_menu_tiles_2.h"
@@ -50,6 +51,8 @@
 #define DEBUG_JUMP_BUILDING_NUMBER 2
 #define DEBUG_BOUNDARIES 0
 #define DEBUG_DISABLE_AI_MOVEMENT 0
+#define DEBUG_IGNORE_BOUNDARIES 0
+#define DEBUG_SET_BACKGROUND_SKIP 0
 
 UBYTE * debug_address;
 
@@ -339,7 +342,7 @@ void setup_globals()
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
     screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
-    screen_state.displayed_buildings_2_x = 0U;
+    screen_state.displayed_buildings_2_x = SC_APPLIANCE_STORE;
     screen_state.displayed_buildings_2_y = SC_BANK;
 
     // Setup inventory items
@@ -352,6 +355,14 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SKATEBOARD] = 0x0U;
     game_state.inventory[S_INVENTORY_COCAINE] = 0x0U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0x0U;
+    game_state.inventory[S_INVENTORY_BED] = 0x0U;
+    game_state.inventory[S_INVENTORY_TV] = 0x0U;
+    game_state.inventory[S_INVENTORY_PC] = 0x0U;
+    game_state.inventory[S_INVENTORY_DEEP_FREEZE] = 0x0U;
+    game_state.inventory[S_INVENTORY_SATELLITE] = 0x0U;
+    game_state.inventory[S_INVENTORY_TREADMILL] = 0x0U;
+    game_state.inventory[S_INVENTORY_STICKOPEDIA] = 0x0U;
+    game_state.inventory[S_INVENTORY_MINIBAR] = 0x0U;
 
     screen_state.screen_location_x = 0x10U;
     screen_state.screen_location_x_tiles = screen_state.screen_location_x >> 3;
@@ -370,11 +381,11 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_SMOKES] = 0x1U;
     game_state.inventory[S_INVENTORY_COCAINE] = 49U;
     game_state.inventory[S_INVENTORY_BOTTLE_OF_BEER] = 49U;
-    //game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
-    //game_state.inventory[S_INVENTORY_AMMO] = 0x1U;
+    game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
+    game_state.inventory[S_INVENTORY_AMMO] = 0x10U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
-    game_state.balance = 1000U;
-    game_state.bank_balance = 900U;
+    game_state.balance = 8000U;
+    game_state.bank_balance = 3000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
     game_state.strength = 90U;
@@ -475,7 +486,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -512,7 +523,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -620,7 +631,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -652,7 +663,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -696,7 +707,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Random tile
@@ -728,7 +739,7 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
             ROM_BANK_RESET;
 
 #if IN_TESTING && DEBUG_BOUNDARIES
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, current_tile_itx))
                 // Forth palette
@@ -757,6 +768,10 @@ void check_boundary_hit() NONBANKED
     unsigned int new_y;
     unsigned int new_tile_itx;
 
+#if IN_TESTING && DEBUG_IGNORE_BOUNDARIES
+    return;
+#endif
+
     new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
     new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
 
@@ -771,7 +786,7 @@ void check_boundary_hit() NONBANKED
                 PIXEL_LOCATION_TO_TILE_COUNT(new_y)
             );
 
-            ROM_BANK_TILE_DATA_SWITCH;
+            ROM_BANK_BOUNDARY_DATA_SWITCH;
             // Check if new tile is a boundary
             if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
             {
@@ -1078,6 +1093,18 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_config = &menu_config_bank;
         menu_state.current_item_x = 0U;
         menu_state.current_item_y = 1U;
+    }
+    else if (game_state.current_building == S_B_REAL_ESTATE)
+    {
+        menu_config = &menu_config_real_estate;
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 0U;
+    }
+    else if (game_state.current_building == S_B_APPLIANCE_STORE)
+    {
+        menu_config = &menu_config_appliance_store;
+        menu_state.current_item_x = 1U;
+        menu_state.current_item_y = 0U;
     }
 
     HIDE_SPRITES;
@@ -1860,6 +1887,20 @@ void update_state()
                 process_bank_menu();
                 ROM_BANK_RESET;
             }
+
+            else if (game_state.current_building == S_B_APPLIANCE_STORE)
+            {
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_app_store_menu();
+                ROM_BANK_RESET;
+            }
+
+            else if (game_state.current_building == S_B_REAL_ESTATE)
+            {
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_rees_menu();
+                ROM_BANK_RESET;
+            }
         }
         else
         // If not pressing 'a', reset last_movement_time, so that
@@ -2004,6 +2045,7 @@ void main()
             wait_vbl_done();
 
             main_check_joy(ROM_BANK_DEFAULT);
+            check_cheat();
 
             update_ai_positions();
             update_state();
