@@ -1031,7 +1031,7 @@ void process_rees_menu()
             {
                 // Remove item from menu
                 menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 // Add computer to appliance store menu
                 if (game_state.inventory[S_INVENTORY_PC] == 0U)
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_PC;
@@ -1054,11 +1054,11 @@ void process_rees_menu()
                 // Remove item from menu
                 menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
                 menu_config_real_estate.items[MENU_REAL_ESTATE_PENTHOUSE_ITEM] = MENU_ITEM_INDEX_EMPTY;
-                
+
                 // Add computer to appliance store (apartment)
                 if (game_state.inventory[S_INVENTORY_PC] == 0U)
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_PC;
-                    
+
                 // Add tv to appliance store (penthouse)
                 if (game_state.inventory[S_INVENTORY_TV] == 0U)
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_TV;
