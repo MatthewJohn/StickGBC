@@ -107,6 +107,19 @@
 #define MENU_ITEM_INDEX_GET_LOAN 0x3CU
 #define MENU_ITEM_INDEX_REPAY_LOAN 0x3DU
 #define MENU_ITEM_INDEX_ROB_BANK 0x3EU
+#define MENU_ITEM_INDEX_INV_BULLETS 0x4FU
+#define MENU_ITEM_INDEX_BED 0x40U
+#define MENU_ITEM_INDEX_TV 0x41U
+#define MENU_ITEM_INDEX_PC 0x42U
+#define MENU_ITEM_INDEX_DEEP_FREEZE 0x43U
+#define MENU_ITEM_INDEX_STELLITE 0x44U
+#define MENU_ITEM_INDEX_TREADMILL 0x45U
+#define MENU_ITEM_INDEX_STICKOPEDIA 0x46U
+#define MENU_ITEM_INDEX_MINIBAR 0x47U
+#define MENU_ITEM_INDEX_APARTMENT 0x48U
+#define MENU_ITEM_INDEX_PENTHOUSE 0x49U
+#define MENU_ITEM_INDEX_MANSION 0x4AU
+#define MENU_ITEM_INDEX_CASTLE 0x4BU
 
 // Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -115,6 +128,20 @@
 #define MENU_PAWN_BULLETS_ITEM 0x0U
 #define MENU_PAWN_HAND_GUN_ITEM 0x2U
 #define MENU_BANK_ROB_ITEM 0x7U
+#define MENU_APPLIANCE_STORE_BED_ITEM 0x0U
+#define MENU_APPLIANCE_STORE_TV_ITEM 0x2U
+#define MENU_APPLIANCE_STORE_PC_ITEM 0x3U
+#define MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM 0x4U
+#define MENU_APPLIANCE_STORE_SATELLITE_ITEM 0x5U
+#define MENU_APPLIANCE_STORE_TREADMILL_ITEM 0x6U
+#define MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM 0x7U
+// Menu bar overwrites bed
+#define MENU_APPLIANCE_STORE_MINIBAR_ITEM 0x0U
+
+#define MENU_REAL_ESTATE_APARTMENT_ITEM 0x2U
+#define MENU_REAL_ESTATE_PENTHOUSE_ITEM 0x3U
+#define MENU_REAL_ESTATE_MANSION_ITEM 0x4U
+#define MENU_REAL_ESTATE_CASTLE_ITEM 0x5U
 
 // Value for current X/Y position to disable highlighting
 #define MENU_SELECTED_ITEM_DISABLED 0x8U
@@ -158,6 +185,8 @@ extern menu_config_t menu_config_stats;
 extern menu_config_t menu_config_inventory;
 extern menu_config_t menu_config_bus_station;
 extern menu_config_t menu_config_bank;
+extern menu_config_t menu_config_appliance_store;
+extern menu_config_t menu_config_real_estate;
 
 
 // Methods for menu

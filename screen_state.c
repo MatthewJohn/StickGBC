@@ -19,6 +19,7 @@
 #define SC_BUS 0x80U
 // displayed_buildings_2
 #define SC_BANK 0x01U
+#define SC_APPLIANCE_STORE 0x02U
 
 // Show/remove left-hand buildings when screen position passes this point
 #define SC_HOUSE_TRANSITION_X 0x12U
@@ -34,6 +35,8 @@
 #define SC_BUS_TRANSITION_X 0x1EU  // 0x30 - SCREEN_WIDTH_TILES (with a bit of jigging)
 #define SC_BUS_TRANSITION_Y_MIN 0x11U
 #define SC_BANK_TRANSITION_Y_MAX 0x0CU
+#define SC_APPLIANCE_STORE_TRANSITION_X 0x13U
+#define SC_APPLIANCE_STORE_TRANSITION_Y 0x09U
 
 #define SC_AI_SPRITE_COUNT 0x04U
 

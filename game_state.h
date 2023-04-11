@@ -37,6 +37,8 @@
 #define S_B_INVENTORY 0x0DU
 #define S_B_BUS_STATION 0x0E
 #define S_B_BANK 0x0F
+#define S_B_APPLIANCE_STORE 0x10
+#define S_B_REAL_ESTATE 0x11
 
 #define S_M_NO_SUBMENU 0x00U;
 #define S_M_WITHDRAW 0x01U;
@@ -48,7 +50,7 @@
 // but rely on the functionality to remove the item from the menu
 // after purchase
 #define S_MAX_INVENTORY_ITEM 99U
-#define S_INVENTORY_ITEM_COUNT 0xAU
+#define S_INVENTORY_ITEM_COUNT 0x16U
 
 // Inventory items array index
 #define S_INVENTORY_SMOKES 0x0U
@@ -61,6 +63,18 @@
 #define S_INVENTORY_COCAINE 0x7U
 #define S_INVENTORY_BOTTLE_OF_BEER 0x8U
 #define S_INVENTORY_AMMO 0x9U
+#define S_INVENTORY_BED 0xAU
+#define S_INVENTORY_TV 0xBU
+#define S_INVENTORY_PC 0xCU
+#define S_INVENTORY_DEEP_FREEZE 0xDU
+#define S_INVENTORY_SATELLITE 0xEU
+#define S_INVENTORY_TREADMILL 0xFU
+#define S_INVENTORY_STICKOPEDIA 0x10U
+#define S_INVENTORY_MINIBAR 0x11U
+#define S_INVENTORY_APARTMENT 0x12U
+#define S_INVENTORY_PENTHOUSE 0x13U
+#define S_INVENTORY_MANSION 0x14U
+#define S_INVENTORY_CASTLE 0x15U
 
 // Maximum intelligence/strenth
 #define S_MAX_INTELLIGENCE 999U
@@ -175,7 +189,7 @@ typedef struct {
 } ai_sprite;
 
 // Items hidden from inventory menu
-#define HIDDEN_ITEM_COUNT 1U
+#define HIDDEN_ITEM_COUNT 0xDU
 extern const UINT8 hidden_inventory_items[];
 
 #endif

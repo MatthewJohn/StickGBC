@@ -83,6 +83,15 @@ void load_bar()
     set_bkg_palette(PALETTE_SCRATCH_1, 1, &(scratch_palette_data[1U]));
 }
 
+void load_appliance_store()
+{
+    set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]));
+    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
+    scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
+    scratch_palette_data[0U][2U] = RGB(16U, 16U, 16U);
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
+}
+
 void load_house_car_sprite()
 {
     set_sprite_palette(CAR_SPRITE_PALETTE_INDEX, 4, house_car_palette);
@@ -212,6 +221,14 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     {
         load_bank();
     }
+
+    if (
+        screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE &&
+        screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE
+    )
+    {
+        load_appliance_store();
+    }
 }
 
 void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
@@ -291,8 +308,17 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     else if (screen_state->screen_location_x_tiles == SC_BAR_TRANSITION_X_MIN)
         screen_state->displayed_buildings_x &= ~SC_BAR;
 
+    // Bus
     if (screen_state->screen_location_x_tiles == SC_BUS_TRANSITION_X)
         screen_state->displayed_buildings_x &= ~SC_BUS;
+
+    // Load Appliance store
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_2_x |= SC_APPLIANCE_STORE;
+        if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE)
+            load_appliance_store();
+    }
 }
 void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
@@ -372,6 +398,10 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
         if (screen_state->displayed_buildings_y & SC_BUS)
             load_bus_station();
     }
+
+    // Unload Appliance store
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
+        screen_state->displayed_buildings_2_x &= ~SC_APPLIANCE_STORE;
 }
 void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
@@ -397,6 +427,7 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
             load_nli();
     }
 
+    // Bank
     if(screen_state->screen_location_y_tiles == SC_BANK_TRANSITION_Y_MAX)
     {
         screen_state->displayed_buildings_2_y |= SC_BANK;
@@ -404,11 +435,17 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
             load_bank();
     }
 
+    // Unload Bus
     if (screen_state->screen_location_y_tiles == SC_BUS_TRANSITION_Y_MIN)
         screen_state->displayed_buildings_y &= ~SC_BUS;
 
+    // Unload Bar
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state->displayed_buildings_y &= ~SC_BAR;
+
+    // Unload Appliance store
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+        screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE;
 
     // Check skater
     if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite->min_location_y >> 3U))
@@ -483,6 +520,14 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
         screen_state->displayed_buildings_y |= SC_BAR;
         if (screen_state->displayed_buildings_x & SC_BAR)
             load_bar();
+    }
+
+    // Load appliance store
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE)
+            load_appliance_store();
     }
 
     // Check skater

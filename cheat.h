@@ -4,9 +4,8 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#ifndef GB_DEF
-#define GB_DEF
 
-#include <gb/gb.h>
-#include <types.h>
+#ifndef CHEAT_DEF
+#define CHEAT_DEF 1
 
+void check_cheat();
