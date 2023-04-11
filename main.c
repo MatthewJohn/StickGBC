@@ -1894,6 +1894,13 @@ void update_state()
                 process_app_store_menu();
                 ROM_BANK_RESET;
             }
+            
+            else if (game_state.current_building == S_B_REAL_ESTATE)
+            {
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_rees_menu();
+                ROM_BANK_RESET;
+            }
         }
         else
         // If not pressing 'a', reset last_movement_time, so that

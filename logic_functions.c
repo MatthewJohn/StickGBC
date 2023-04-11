@@ -858,8 +858,6 @@ void process_bank_menu()
         else if (menu_state.current_item_y == 2U)
         {
             game_state.current_building = S_B_REAL_ESTATE;
-            // Unavailable
-//            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
             // Reload menu
             setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
         }
@@ -1015,6 +1013,54 @@ void show_bank_loan()
     game_state.sub_menu = S_M_NO_SUBMENU;
     main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
     setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+}
+
+/*
+ * process_real_estate_menu
+ *
+ * Process menu item selection for real estate
+ */
+void process_rees_menu()
+{
+    if (menu_state.current_item_x == 0U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            // Purchase apartment
+            if (purchase_item(25000U, S_INVENTORY_APARTMENT, 1U))
+            {
+                // Remove item from menu
+                menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
+            }
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Purchase mansion
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+    else if (menu_state.current_item_x == 1U)
+    {
+        if (menu_state.current_item_y == 1U)
+        {
+            // Purchase apartment
+            if (purchase_item(50000U, S_INVENTORY_PENTHOUSE, 1U))
+            {
+                // Remove item from menu
+                menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                menu_config_real_estate.items[MENU_REAL_ESTATE_PENTHOUSE_ITEM] = MENU_ITEM_INDEX_EMPTY;
+            }
+        }
+        else if (menu_state.current_item_y == 2U)
+        {
+            // Purchase castle
+            // Unavailable
+            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+        }
+    }
+    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+    move_menu_to_exit();
 }
 
 /*

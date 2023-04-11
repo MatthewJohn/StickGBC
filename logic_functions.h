@@ -23,5 +23,6 @@ void process_app_store_menu();
 void show_bank_withdraw();
 void show_bank_deposit();
 void show_bank_loan();
+void process_rees_menu();
 void process_skater_menu();
 void check_building_enter();
