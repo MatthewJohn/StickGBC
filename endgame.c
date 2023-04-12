@@ -64,7 +64,7 @@ void endgame(const UINT8* win_text)
     main_show_signed_number(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
 
     tile_data = MENU_TILE_DOLLAR;
-    current_x = main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
+    current_x = main_show_number(0xAU, 0xEU, 8, game_state.balance[0U], ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0xEU, 1, 1, &tile_data);
     current_x = main_show_number(0xAU, 0xFU, 8, game_state.bank_balance, ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0xFU, 1, 1, &tile_data);
