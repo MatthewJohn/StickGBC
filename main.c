@@ -54,6 +54,7 @@
 #define DEBUG_DISABLE_AI_MOVEMENT 0
 #define DEBUG_IGNORE_BOUNDARIES 0
 #define DEBUG_SET_BACKGROUND_SKIP 0
+#define DEBUG_SHOW_BAR_FIGHT 0
 
 UBYTE * debug_address;
 
@@ -2024,7 +2025,7 @@ void main()
         // it takes player to go through opening screen
         setup_globals();
 
-#if IN_TESTING
+#if IN_TESTING && DEBUG_SHOW_BAR_FIGHT
         ROM_BANK_BAR_FIGHT_SWITCH;
         enter_bar_fight();
         ROM_BANK_RESET;
