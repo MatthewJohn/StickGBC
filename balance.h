@@ -7,6 +7,6 @@
 
 #include "gb.h"
 
-BOOLEAN has_money(unsigned int amount_h, unsigned int amount_l);
-BOOLEAN remove_money(unsigned int amount_h, unsigned int amount_l);
-void add_money(unsigned int amount_h, unsigned int amount_l);
+BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l);
+BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l);
+void add_money(UINT16 amount_h, UINT16 amount_l);
