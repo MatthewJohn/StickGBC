@@ -9,6 +9,7 @@
 #include "logic_functions.h"
 #include "window_text_data.h"
 #include "main_map.h"
+#include "balance.h"
 
 typedef struct {
     UINT8 x;
@@ -115,12 +116,12 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     }
 
     // Check if user has enough money
-    if (! HAS_MONEY_P(cost))
+    if (! has_money(0U, cost))
     {
         main_show_window_text(&win_txt_bus_statn_no_mon, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
-    game_state->balance -= cost;
+    remove_money(0U, cost);
 
     // Set time of day to 24 hours
     game_state->hour = 24;
@@ -136,7 +137,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // If player hasn't got a gun or ammo, lose booze, cocaine and money
     if (game_state->inventory[S_INVENTORY_HAND_GUN] == 0U || game_state->inventory[S_INVENTORY_AMMO] == 0U)
     {
-        game_state->balance = 0;
+        game_state->balance[0U] = 0;
+        game_state->balance[1U] = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -162,7 +164,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     if ((100 + (sys_time % strength_modulus)) > game_state->strength)
     {
         // Lose cocaine, booze and money
-        game_state->balance = 0;
+        game_state->balance[0U] = 0;
+        game_state->balance[1U] = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -257,7 +260,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += offer;
+                add_money(0U, offer);
                 game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
             }
             no_deal = 0U;
@@ -309,7 +312,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += offer;
+                add_money(0U, offer);
                 game_state->inventory[S_INVENTORY_COCAINE] = 0U;
             }
             no_deal = 0U;
@@ -336,9 +339,9 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     // and currency is decimal, making very difficult
     // to do using bit shifting (and at least probably
     // less CPU intensive)
-    if (HAS_MONEY(cost))
+    if (has_money(0U, cost))
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
 
         // If new HP would exeed max HP, limit new HP to difference
         if (gained_hp >= (game_state.max_hp - game_state.hp))
@@ -364,9 +367,9 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item, UINT8 quantity)
     // to do using bit shifting (and at least probably
     // less CPU intensive)
 
-    if (HAS_MONEY(cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
+    if (has_money(0U, cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
         game_state.inventory[inventory_item] += quantity;
 
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -411,7 +414,7 @@ void perform_robbery()
     {
         // Add random amount up to 500
         amount_robbed = sys_time % 500U;
-        game_state.balance += amount_robbed;
+        add_money(0U, amount_robbed);
 
         // Update window
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -698,7 +701,7 @@ void process_hobo_menu()
 
     if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
     {
-        if (HAS_MONEY(10U))
+        if (has_money(0U, 10U))
         {
             if (game_state.hobo_given_money == 0U)
             {
@@ -713,7 +716,7 @@ void process_hobo_menu()
             }
             else  // Paying money and not getting charm
             {
-                game_state.balance -= 10U;
+                remove_money(0U, 10U);
                 main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
                 // Give 2 karma
@@ -907,7 +910,7 @@ void show_bank_withdraw()
     if (joypad_state.a_pressed)
     {
         game_state.bank_balance -= number_input.current_number;
-        game_state.balance += number_input.current_number;
+        add_money(0U, number_input.current_number);
     }
 
     // Reload original menu
@@ -925,7 +928,7 @@ void show_bank_deposit()
 {
     UBYTE tile_data[4];
     number_input_t number_input = {
-        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance[0U]
     };
 
     // Display 'Amount: ' on screen
@@ -940,7 +943,7 @@ void show_bank_deposit()
 
     if (joypad_state.a_pressed)
     {
-        game_state.balance -= number_input.current_number;
+        remove_money(0U, number_input.current_number);
         game_state.bank_balance += number_input.current_number;
     }
 
@@ -966,10 +969,10 @@ void show_bank_loan()
     // If currently have a loan, make the lower of either balance or loan amount
     if (game_state.loan != 0)
     {
-        if (game_state.balance < (UINT16)game_state.loan)
-            number_input.max_value = game_state.balance;
-        else
+        if (has_money(0U, (UINT16)game_state.loan))
             number_input.max_value = game_state.loan;
+        else
+            number_input.max_value = game_state.balance[0U];
 
         // Set current amount to highest amount to pay back
         number_input.current_number = number_input.max_value;
@@ -990,13 +993,13 @@ void show_bank_loan()
         // Repay loan
         if (game_state.loan != 0)
         {
-            game_state.balance -= number_input.current_number;
+            remove_money(0U, number_input.current_number);
             game_state.loan -= number_input.current_number;
         }
         else
         {
             // Get loan
-            game_state.balance += number_input.current_number;
+            add_money(0U, number_input.current_number);
             game_state.loan += number_input.current_number;
             game_state.loan_days = 25;
         }

@@ -173,7 +173,8 @@ void update_window()
 
     // BALANCE
     // Iterate over days passed
-    remainder = game_state.balance;
+    // @TODO update to show 64-bit balance
+    remainder = game_state.balance[0U];
 
     shown_symbol = 0U;
 

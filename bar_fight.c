@@ -13,6 +13,7 @@
 #include "window_text_data.h"
 #include "bar_fight.h"
 #include "main.h"
+#include "balance.h"
 
 #define BAR_FIGHT_TILE_SCRATCH 68U
 #define BAR_FIGHT_NUMERIC_TILE_START 63U
@@ -578,7 +579,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
         main_show_number(9, 0, 4, (unsigned int)amount_won, ROM_BANK_BAR_FIGHT);
 
         // Show win amount
-        game_state.balance += amount_won;
+        add_money(0U, amount_won);
         main_show_window_text(&win_txt_barfight_win2, ROM_BANK_BAR_FIGHT);
 
         // Redraw map after any window text

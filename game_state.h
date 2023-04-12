@@ -116,7 +116,7 @@ typedef struct {
     INT8 karma;
 
     // Money the user has.
-    unsigned int balance;
+    unsigned int balance[2];  /// Array of 2 x 32bit values, higher being MSB
     unsigned int bank_balance;
     UINT16 loan;
     UINT8 loan_days;

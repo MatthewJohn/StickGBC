@@ -71,7 +71,8 @@ void endgame(const UINT8* win_text)
     current_x = main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0x10U, 1, 1, &tile_data);
 
-    total_balance = game_state.balance;
+//    total_balance = game_state.balance;
+    total_balance = 0;
     total_balance += game_state.bank_balance;
     if (total_balance > game_state.loan)
     {
