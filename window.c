@@ -38,29 +38,32 @@ const unsigned short window_digit_b2d_lookup[9U][32U] = {
 
 UINT8 show_balance(UINT8 itx_x)
 {
-    UINT8 digit_itx = 0;
-    UINT8 bit_itx = 0;
-    UINT16 digit_to_display = 0;
-    UINT16 remainder = 0;
+    UINT16 digit_itx;
+    UINT16 bit_itx;
+    UINT16 balance_itx;
+    UINT16 digit_to_display;
+    UINT16 remainder;
     
+    remainder = 0U;
     for (digit_itx = 0; digit_itx != WINDOW_MAX_DIGITS_BALANCE; digit_itx ++)
     {
         digit_to_display = remainder;
         
         for (bit_itx = 0; bit_itx != BALANCE_BIT_LENGTH; bit_itx ++)
         {
+            balance_itx = bit_itx / 16U;
             // Check if the current bit (in lower or upper balance, depending on
             // current bit itx) is set
-            if (game_state.balance[bit_itx / 16U] & (1 << (bit_itx % 16U)))
+            if (((game_state.balance[balance_itx] & 1 << ((bit_itx % 16U))) >> (bit_itx % 16U)) == 1U)
             {
-                digit_to_display += window_digit_b2d_lookup[digit_itx][bit_itx];
+                digit_to_display = digit_to_display + window_digit_b2d_lookup[digit_itx][bit_itx];
             }
         }
         
         tile_data[0] = MENU_TILE_0 + (digit_to_display % 10U);
 
         // Display current digit
-        set_win_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
+        set_win_tiles(itx_x, 0U, 1, 1, &(tile_data));
 
         // Prepare for next digit
         itx_x -= 1U;
