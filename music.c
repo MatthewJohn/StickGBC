@@ -119,8 +119,19 @@ const UINT16 intro_music_chnl_n_notes[] = {
 music_channel_t intro_music_chnl_n;
 
 const UINT16 main_music_chnl2_notes[] = {
-    MUSIC_NOTE_C3,
+    MUSIC_NOTE_C2,
     MUSIC_WAIT(31U),
+
+    MUSIC_WAIT(18U),
+    MUSIC_NOTE_G2,
+    MUSIC_WAIT(13U),
+
+    MUSIC_NOTE_C3,
+    MUSIC_WAIT(15U),
+    MUSIC_NOTE_G2,
+    MUSIC_WAIT(15U),
+
+    MUSIC_WAIT(32U),
 };
 
 music_channel_t main_music_chnl_2;
