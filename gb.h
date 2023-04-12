@@ -9,4 +9,3 @@
 
 #include <gb/gb.h>
 #include <types.h>
-

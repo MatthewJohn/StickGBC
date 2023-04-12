@@ -4,7 +4,7 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-// Methods to manipulate 64-bit balance
+// Methods to manipulate 32-bit balance
 
 #include "main.h"
 #include "balance.h"
@@ -14,23 +14,23 @@
  *
  * Whether the player's balance exceeds a certain amount (or is high enough for a purchase)
  *
- * @param amount_h Upper 32-bit value of the amount to check
- * @param amount_l Lower 32-bit value of the amount to check
+ * @param amount_h Upper 16-bit value of the amount to check
+ * @param amount_l Lower 16-bit value of the amount to check
  *
  * @returns 1 if the user has enough balance. 0 if not.
  */
-BOOLEAN has_money(unsigned long amount_h, unsigned long amount_l)
+BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l)
 {
-    unsigned long remainder = amount_h;
+    UINT16 remainder = amount_h;
 
     // If lower balance doesn't contain enough,
-    // add 1 to required amount in higher long
+    // add 1 to required amount in higher int
     if (amount_l > game_state.balance[0U])
     {
         remainder = amount_h + 1U;
     }
     
-    // If higher balance long doesn't
+    // If higher balance int doesn't
     // contain enough, return 0
     if (remainder > game_state.balance[1U])
     {
@@ -43,25 +43,25 @@ BOOLEAN has_money(unsigned long amount_h, unsigned long amount_l)
 /*
  * remove_money
  *
- * Removes a 64-bit value from the player's balance
+ * Removes a 32-bit value from the player's balance
  *
- * @param amount_h Upper 32-bit value of the amount to remove
- * @param amount_l Lower 32-bit value of the amount to remove
+ * @param amount_h Upper 16-bit value of the amount to remove
+ * @param amount_l Lower 16-bit value of the amount to remove
  *
  * @returns 1 if the amount was removed. 0 if not.
  */
-BOOLEAN remove_money(unsigned long amount_h, unsigned long amount_l)
+BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l)
 {
-    unsigned long remainder = amount_h;
+    UINT16 remainder = amount_h;
 
     // If lower balance doesn't contain enough,
-    // add 1 to required amount in higher long
+    // add 1 to required amount in higher int
     if (amount_l > game_state.balance[0U])
     {
         remainder = amount_h + 1U;
     }
     
-    // If higher balance long doesn't
+    // If higher balance int doesn't
     // contain enough, return 0
     if (amount_h > game_state.balance[1U])
     {
@@ -92,14 +92,14 @@ BOOLEAN remove_money(unsigned long amount_h, unsigned long amount_l)
 /*
  * add_money
  *
- * Adds a 64-bit value to the player's balance
+ * Adds a 32-bit value to the player's balance
  *
- * @param amount_h Upper 32-bit value of the amount to add
- * @param amount_l Lower 32-bit value of the amount to add
+ * @param amount_h Upper 16-bit value of the amount to add
+ * @param amount_l Lower 16-bit value of the amount to add
  */
-void add_money(unsigned long amount_h, unsigned long amount_l)
+void add_money(UINT16 amount_h, UINT16 amount_l)
 {
-    unsigned long overflow = amount_h;
+    UINT16 overflow = amount_h;
 
     // Check for overflow in lower
     if (game_state.balance[0] != 0 && amount_l > (0xFFFFU - game_state.balance[0]))
@@ -116,7 +116,7 @@ void add_money(unsigned long amount_h, unsigned long amount_l)
         amount_l = 0xFFFFU - amount_l;
     }
 
-    // Increase lower long of balance
+    // Increase lower int of balance
     game_state.balance[0] += amount_l;
 
     // Check for overflow in higher
