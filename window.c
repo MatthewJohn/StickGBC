@@ -106,10 +106,15 @@ void show_balance(UINT8 itx_x)
             
             // Draw number
             tile_data[0] = MENU_TILE_0 + digit_tiles[digit_itx - 1];
-
-            // Display current digit
-            set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
         }
+        else
+        {
+            // Otherwise, blank tile
+            tile_data[0] = 0x00;
+        }
+        
+        // Display current tile
+        set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
     }
 }
 
