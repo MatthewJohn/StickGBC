@@ -102,7 +102,7 @@ void add_money(UINT16 amount_h, UINT16 amount_l)
     UINT16 overflow = amount_h;
 
     // Check for overflow in lower
-    if (game_state.balance[0] != 0 && amount_l > (0xFFFFU - game_state.balance[0]))
+    if ((game_state.balance[0] + amount_l) < game_state.balance[0])
     {
         // Check for possible overflow of amount_h
         if (overflow == 0xFFFFU)
@@ -120,7 +120,7 @@ void add_money(UINT16 amount_h, UINT16 amount_l)
     game_state.balance[0] += amount_l;
 
     // Check for overflow in higher
-    if (game_state.balance[1] != 0 && overflow > (0xFFFFU - game_state.balance[1]))
+    if ((game_state.balance[1] + overflow) < game_state.balance[1])
     {
         game_state.balance[0] = 0xFFFFU;
         game_state.balance[1] = 0xFFFFU;
