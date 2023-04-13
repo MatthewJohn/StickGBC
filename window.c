@@ -94,7 +94,7 @@ void show_balance(UINT8 itx_x)
     bit_mask = 0U;
     for (digit_itx = WINDOW_MAX_DIGITS_BALANCE; digit_itx != 0; digit_itx --)
     {
-        if (digit_tiles[digit_itx - 1] != 0 || bit_mask != 0)
+        if (digit_tiles[digit_itx - 1] != 0 || bit_mask != 0 || digit_itx == 1)
         {
             if (bit_mask == 0U)
             {
