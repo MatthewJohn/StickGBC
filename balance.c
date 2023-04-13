@@ -63,7 +63,7 @@ BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l)
 
     // If higher balance int doesn't
     // contain enough, return 0
-    if (amount_h > game_state.balance[1U])
+    if (remainder > game_state.balance[1U])
     {
         // Check for overflow
         return 0U;
