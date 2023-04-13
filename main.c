@@ -1986,11 +1986,13 @@ UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned 
  * 
  * Call show_balance with rom jumping
  */
-void main_show_balance(UINT8 itx_x, UINT8 itx_y, unsigned int return_bank)
+UINT8 main_show_balance(UINT8 itx_x, UINT8 itx_y, unsigned int return_bank)
 {
+    UINT8 return_val;
     ROM_BANK_BUILDING_MENU_SWITCH;
-    show_balance(itx_x, itx_y);
+    return_val = show_balance(itx_x, itx_y);
     SWITCH_ROM_MBC5(return_bank);
+    return return_val;
 }
 
 void main_show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value, unsigned int return_bank)

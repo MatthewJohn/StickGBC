@@ -43,8 +43,10 @@ const UINT8 window_digit_b2d_lookup[9U][32U] = {
  *
  * @param itx_x Starting X tile to write to
  * @param itx_y Tile Y index to display. If set to 0, tile will be written to window, otherwise to background
+ *
+ * @returns X location of dollar symbol
  */
-void show_balance(UINT8 itx_x, UINT8 itx_y)
+UINT8 show_balance(UINT8 itx_x, UINT8 itx_y)
 {
     // These must all be 16-bit digits, as this
     // causes incorrect calculations
@@ -53,6 +55,7 @@ void show_balance(UINT8 itx_x, UINT8 itx_y)
     UINT16 digit_to_display;
     UINT16 remainder;
     UINT16 bit_mask;
+    UINT8 dollar_itx_x;
     UINT8 digit_tiles[WINDOW_MAX_DIGITS_BALANCE];
 
     remainder = 0U;
@@ -102,11 +105,12 @@ void show_balance(UINT8 itx_x, UINT8 itx_y)
             if (bit_mask == 0U)
             {
                 // Draw dollar sign
+                dollar_itx_x = itx_x - digit_itx;
                 tile_data[0] = MENU_TILE_DOLLAR;
                 if (itx_y == 0U)
-                    set_win_tiles(itx_x - (digit_itx), 0U, 1, 1, &(tile_data[0]));
+                    set_win_tiles(dollar_itx_x, 0U, 1, 1, &(tile_data[0]));
                 else
-                    set_bkg_tiles(itx_x - (digit_itx), itx_y, 1, 1, &(tile_data[0]));
+                    set_bkg_tiles(dollar_itx_x, itx_y, 1, 1, &(tile_data[0]));
             }
             bit_mask = 1U;
 
@@ -125,6 +129,8 @@ void show_balance(UINT8 itx_x, UINT8 itx_y)
         else
             set_bkg_tiles(itx_x - (digit_itx - 1), itx_y, 1, 1, &(tile_data[0]));
     }
+    
+    return dollar_itx_x;
 }
 
 UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)

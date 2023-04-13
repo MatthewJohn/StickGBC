@@ -89,16 +89,18 @@ void endgame(const UINT8* win_text)
         game_state.balance[0] = 0xFFFF - (game_state.loan - game_state.balance[0]);
     }
     // Show balance in total amount
-    main_show_balance(0x12U, 0x11U, ROM_BANK_ENDGAME);
+    current_x = main_show_balance(0x12U, 0x11U, ROM_BANK_ENDGAME);
 
     if (negative_total)
     {
+        // If total is negative, overwrite dollar, replacing with
+        // dash and place dollar before
         tile_data = MENU_TILE_DASH;
         set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
         current_x -= 1U;
+        tile_data = MENU_TILE_DOLLAR;
+        set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
     }
-    tile_data = MENU_TILE_DOLLAR;
-    set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
 
     // Display rank
     rank_text = &win_txt_rank_hopeless;
