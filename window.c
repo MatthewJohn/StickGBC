@@ -36,8 +36,17 @@ const unsigned short window_digit_b2d_lookup[9U][32U] = {
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 0, 1},
 };
 
+/*
+ * show_balance
+ *
+ * Display full balance on-screen in window
+ *
+ * @param itx_x Starting X tile to write to
+ */
 UINT8 show_balance(UINT8 itx_x)
 {
+    // These must all be 16-bit digits, as this
+    // causes incorrect calculations
     UINT16 digit_itx;
     UINT16 bit_itx;
     UINT16 digit_to_display;
@@ -58,12 +67,16 @@ UINT8 show_balance(UINT8 itx_x)
             {
                 digit_to_display += window_digit_b2d_lookup[digit_itx][bit_itx];
             }
+
+            // If the end of first or second balance int has been reached,
+            // move back to masking first bit
             if (bit_itx == 15U || bit_itx == 31U)
             {
                 bit_mask = 1U;
             }
             else
             {
+                // Otherwise, push bit mask in by 1.
                 bit_mask <<= 1;
             }
         }
