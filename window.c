@@ -15,7 +15,7 @@
 #include "main.h"
 #include "menu_config.h"
 
-const unsigned short window_digit_b2d_lookup[9U][32U] = {
+const UINT8 window_digit_b2d_lookup[9U][32U] = {
   // digit 1
   {1, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8},
   // digit 2
