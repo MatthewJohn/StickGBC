@@ -53,12 +53,12 @@ void show_balance(UINT8 itx_x)
     UINT16 remainder;
     UINT16 bit_mask;
     UINT8 digit_tiles[WINDOW_MAX_DIGITS_BALANCE];
-    
+
     remainder = 0U;
     for (digit_itx = 0; digit_itx != WINDOW_MAX_DIGITS_BALANCE; digit_itx ++)
     {
         digit_to_display = remainder;
-        
+
         bit_mask = 1U;
         for (bit_itx = 0; bit_itx != BALANCE_BIT_LENGTH; bit_itx ++)
         {
@@ -83,11 +83,11 @@ void show_balance(UINT8 itx_x)
         }
 
         digit_tiles[digit_itx] = digit_to_display % 10;
-        
+
         remainder = digit_to_display / 10U;
     }
-    
-    
+
+
     // Iterate through each of the digits in reverse, until a non-0 value has been found
     // Re-use variables:
     // bit_mask - whether a digit has been found
@@ -105,7 +105,7 @@ void show_balance(UINT8 itx_x)
                 set_win_tiles(itx_x - (digit_itx), 0U, 1, 1, &(tile_data[0]));
             }
             bit_mask = 1U;
-            
+
             // Draw number
             tile_data[0] = MENU_TILE_0 + digit_tiles[digit_itx - 1];
         }
@@ -114,7 +114,7 @@ void show_balance(UINT8 itx_x)
             // Otherwise, blank tile
             tile_data[0] = 0x00;
         }
-        
+
         // Display current tile
         set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
     }

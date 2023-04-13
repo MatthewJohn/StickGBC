@@ -29,7 +29,7 @@ BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l)
     {
         remainder = amount_h + 1U;
     }
-    
+
     // If higher balance int doesn't
     // contain enough, return 0
     if (remainder > game_state.balance[1U])
@@ -60,7 +60,7 @@ BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l)
     {
         remainder = amount_h + 1U;
     }
-    
+
     // If higher balance int doesn't
     // contain enough, return 0
     if (amount_h > game_state.balance[1U])
