@@ -113,7 +113,10 @@ void add_money(UINT16 amount_h, UINT16 amount_l)
         }
 
         overflow += 1U;
-        amount_l = 0xFFFFU - amount_l;
+        // Make the lower amount the difference after the overflow and set lower balance
+        // to 0
+        amount_l = amount_l - (0xFFFFU - game_state.balance[0]);
+        game_state.balance[0] = 0U;
     }
 
     // Check for overflow in higher
