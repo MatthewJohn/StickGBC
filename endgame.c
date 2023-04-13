@@ -11,6 +11,7 @@
 #include "endgame_palette.h"
 #include "game_constants.h"
 #include "window_text.h"
+#include "balance.h"
 #include "endgame.h"
 #include "main.h"
 
@@ -70,20 +71,26 @@ void endgame(const UINT8* win_text)
     current_x = main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0x10U, 1, 1, &tile_data);
 
-//    total_balance = game_state.balance;
-    total_balance = 0;
-    total_balance += game_state.bank_balance;
-    if (total_balance > game_state.loan)
+    // Add bank balance to balance
+    add_money(0U, game_state.bank_balance);
+
+    // Check if user has enough money to cover loan
+    if (has_money(0U, game_state.loan))
     {
-        total_balance -= game_state.loan;
-        negative_total = 0;
+        remove_money(0U, game_state.loan);
+        negative_total = 0U;
     }
     else
     {
-        total_balance = game_state.loan - total_balance;
-        negative_total = 1;
+        // Has total NEGATIVE balance.
+        // Since loan is currently only 1 int long,
+        // set balance to loan - current balance
+        negative_total = 1U;
+        game_state.balance[0] = 0xFFFF - (game_state.loan - game_state.balance[0]);
     }
-    current_x = main_show_number(0xAU, 0x11U, 8, total_balance, ROM_BANK_ENDGAME);
+    // Show balance in total amount
+    main_show_balance(0x12U, 0x11U, ROM_BANK_ENDGAME);
+
     if (negative_total)
     {
         tile_data = MENU_TILE_DASH;
