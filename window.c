@@ -42,8 +42,9 @@ const UINT8 window_digit_b2d_lookup[9U][32U] = {
  * Display full balance on-screen in window
  *
  * @param itx_x Starting X tile to write to
+ * @param itx_y Tile Y index to display. If set to 0, tile will be written to window, otherwise to background
  */
-void show_balance(UINT8 itx_x)
+void show_balance(UINT8 itx_x, UINT8 itx_y)
 {
     // These must all be 16-bit digits, as this
     // causes incorrect calculations
@@ -102,7 +103,10 @@ void show_balance(UINT8 itx_x)
             {
                 // Draw dollar sign
                 tile_data[0] = MENU_TILE_DOLLAR;
-                set_win_tiles(itx_x - (digit_itx), 0U, 1, 1, &(tile_data[0]));
+                if (itx_y == 0U)
+                    set_win_tiles(itx_x - (digit_itx), 0U, 1, 1, &(tile_data[0]));
+                else
+                    set_bkg_tiles(itx_x - (digit_itx), itx_y, 1, 1, &(tile_data[0]));
             }
             bit_mask = 1U;
 
@@ -116,7 +120,10 @@ void show_balance(UINT8 itx_x)
         }
 
         // Display current tile
-        set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
+        if (itx_y == 0U)
+            set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
+        else
+            set_bkg_tiles(itx_x - (digit_itx - 1), itx_y, 1, 1, &(tile_data[0]));
     }
 }
 
@@ -277,7 +284,7 @@ void update_window()
     }
 
     // BALANCE
-    show_balance(5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE);
+    show_balance(5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE, 0U);
 
 
     // HP
