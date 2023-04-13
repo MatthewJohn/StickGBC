@@ -116,9 +116,6 @@ void add_money(UINT16 amount_h, UINT16 amount_l)
         amount_l = 0xFFFFU - amount_l;
     }
 
-    // Increase lower int of balance
-    game_state.balance[0] += amount_l;
-
     // Check for overflow in higher
     if ((game_state.balance[1] + overflow) < game_state.balance[1])
     {
@@ -126,6 +123,9 @@ void add_money(UINT16 amount_h, UINT16 amount_l)
         game_state.balance[1] = 0xFFFFU;
         return;
     }
+
+    // Increase lower int of balance
+    game_state.balance[0] += amount_l;
 
     game_state.balance[1] += overflow;
 }
