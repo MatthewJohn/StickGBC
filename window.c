@@ -43,7 +43,7 @@ const UINT8 window_digit_b2d_lookup[9U][32U] = {
  *
  * @param itx_x Starting X tile to write to
  */
-UINT8 show_balance(UINT8 itx_x)
+void show_balance(UINT8 itx_x)
 {
     // These must all be 16-bit digits, as this
     // causes incorrect calculations
@@ -111,8 +111,6 @@ UINT8 show_balance(UINT8 itx_x)
             set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
         }
     }
-
-    return itx_x;
 }
 
 UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
