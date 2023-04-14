@@ -1983,7 +1983,7 @@ UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned 
 
 /*
  * main_show_balance
- * 
+ *
  * Call show_balance with rom jumping
  */
 UINT8 main_show_balance(UINT8 itx_x, UINT8 itx_y, unsigned int return_bank)

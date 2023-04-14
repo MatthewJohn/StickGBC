@@ -134,7 +134,7 @@ UINT8 show_balance(UINT8 itx_x, UINT8 itx_y)
         else
             set_bkg_tiles(itx_x - (digit_itx - 1), itx_y, 1, 1, &(tile_data[0]));
     }
-    
+
     return dollar_itx_x;
 }
 
