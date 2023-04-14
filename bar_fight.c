@@ -560,7 +560,7 @@ void bf_do_damage(bar_fight_state_t* bar_fight_state, UINT8 attack_type)
 
     // If enemy will still have HP remaining,
     // update the value
-    if (bar_fight_state->enemy_hp < damage_amount || bar_fight_state->enemy_hp == damage_amount)
+    if ((bar_fight_state->enemy_hp - damage_amount) > bar_fight_state->enemy_hp || bar_fight_state->enemy_hp == damage_amount)
     {
         // Otherwise, set HP to 0 and end game
         bar_fight_state->enemy_hp = 0U;
