@@ -15,6 +15,129 @@
 #include "main.h"
 #include "menu_config.h"
 
+const UINT8 window_digit_b2d_lookup[11U][32U] = {
+  // digit 1
+  {1, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8, 6, 2, 4, 8},
+  // digit 2
+  {0, 0, 0, 0, 1, 3, 6, 2, 5, 1, 2, 4, 9, 9, 8, 6, 3, 7, 4, 8, 7, 5, 0, 0, 1, 3, 6, 2, 5, 1, 2, 4},
+  // digit 3
+  {0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 0, 0, 0, 1, 3, 7, 5, 0, 1, 2, 5, 1, 3, 6, 2, 4, 8, 7, 4, 9, 8, 6},
+  // digit 4
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 8, 6, 2, 5, 1, 2, 4, 8, 7, 4, 8, 7, 4, 8, 7, 5, 0, 1, 3},
+  // digit 5
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 6, 3, 6, 2, 4, 9, 9, 8, 7, 5, 0, 1, 3, 7, 4, 8},
+  // digit 6
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 0, 0, 1, 3, 7, 5, 1, 2, 4, 8, 7, 4},
+  // digit 7
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 8, 6, 3, 7, 4, 8, 6, 3, 7},
+  // digit 8
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 6, 3, 6, 3, 7, 4},
+  // digit 9
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 0, 1},
+  // digit 10
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2},
+  // digit 11
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+
+/*
+ * show_balance
+ *
+ * Display full balance on-screen in window
+ *
+ * @param itx_x Starting X tile to write to
+ * @param itx_y Tile Y index to display. If set to 0, tile will be written to window, otherwise to background
+ *
+ * @returns X location of dollar symbol
+ */
+UINT8 show_balance(UINT8 itx_x, UINT8 itx_y)
+{
+    // These must all be 16-bit digits, as this
+    // causes incorrect calculations
+    UINT16 digit_itx;
+    UINT16 bit_itx;
+    UINT16 digit_to_display;
+    UINT16 remainder;
+    UINT16 bit_mask;
+    UINT8 dollar_itx_x;
+    UINT8 digit_tiles[WINDOW_MAX_DIGITS_BALANCE];
+
+    remainder = 0U;
+    for (digit_itx = 0; digit_itx != WINDOW_MAX_DIGITS_BALANCE; digit_itx ++)
+    {
+        digit_to_display = remainder;
+
+        bit_mask = 1U;
+        for (bit_itx = 0; bit_itx != BALANCE_BIT_LENGTH; bit_itx ++)
+        {
+            // Check if the current bit (in lower or upper balance, depending on
+            // current bit itx) is set
+            if (game_state.balance[bit_itx / 16U] & bit_mask)
+            {
+                digit_to_display += window_digit_b2d_lookup[digit_itx][bit_itx];
+            }
+
+            // If the end of first or second balance int has been reached,
+            // move back to masking first bit
+            if (bit_itx == 15U || bit_itx == 31U)
+            {
+                bit_mask = 1U;
+            }
+            else
+            {
+                // Otherwise, push bit mask in by 1.
+                bit_mask <<= 1;
+            }
+        }
+
+        digit_tiles[digit_itx] = digit_to_display % 10;
+
+        remainder = digit_to_display / 10U;
+    }
+
+
+    // Iterate through each of the digits in reverse, until a non-0 value has been found
+    // Re-use variables:
+    // bit_mask - whether a digit has been found
+    bit_mask = 0U;
+    for (digit_itx = WINDOW_MAX_DIGITS_BALANCE; digit_itx != 0; digit_itx --)
+    {
+        // If the current digit is non-0, a digit has already been found
+        // or this is the last digit, process the digit to be displayed
+        if (digit_tiles[digit_itx - 1] != 0 || bit_mask != 0 || digit_itx == 1)
+        {
+            if (bit_mask == 0U)
+            {
+                // Draw dollar sign
+                dollar_itx_x = itx_x - digit_itx;
+                tile_data[0] = MENU_TILE_DOLLAR;
+                if (itx_y == 0U)
+                    set_win_tiles(dollar_itx_x, 0U, 1, 1, &(tile_data[0]));
+                else
+                    set_bkg_tiles(dollar_itx_x, itx_y, 1, 1, &(tile_data[0]));
+            }
+            bit_mask = 1U;
+
+            // Draw number
+            tile_data[0] = MENU_TILE_0 + digit_tiles[digit_itx - 1];
+        }
+        else
+        {
+            // Otherwise, blank tile
+            tile_data[0] = 0x00;
+        }
+
+        // Display current tile
+        if (itx_y == 0U)
+            set_win_tiles(itx_x - (digit_itx - 1), 0U, 1, 1, &(tile_data[0]));
+        else
+            set_bkg_tiles(itx_x - (digit_itx - 1), itx_y, 1, 1, &(tile_data[0]));
+    }
+
+    return dollar_itx_x;
+}
+
 UINT8 show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned int value)
 {
     UINT8 itx_x;
@@ -172,56 +295,7 @@ void update_window()
     }
 
     // BALANCE
-    // Iterate over days passed
-    remainder = game_state.balance;
-
-    shown_symbol = 0U;
-
-    // Start at WINDOW_MAX_DIGITS_DAYS + margin from left, days symbols, 1 padding and dollar symbol.
-    // Remove 1 as loop iterator starting at 1
-    itx_x = 5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE;
-
-    for (itx = 0; itx != WINDOW_MAX_DIGITS_BALANCE; itx ++)
-    {
-        // If on last iteration, update digit with remainder
-        if (remainder != 0U || current_digit != 0U)
-        {
-            if (itx == (WINDOW_MAX_DIGITS_BALANCE - 1U))
-            {
-                current_digit = remainder;
-            } else {
-                current_digit = remainder % 10U;
-
-                // Update remainder
-                remainder = remainder / 10U;
-            }
-        }
-
-        if (remainder == 0U && current_digit == 0U && itx != 0)
-        {
-            // Display dollar symbol, if not already shown
-            if (shown_symbol == 0U)
-            {
-                tile_data[0] = MENU_TILE_DOLLAR;
-                shown_symbol = 1U;
-            }
-            else
-            {
-                // Otherwise display blank tile
-                tile_data[0] = 0x00;
-            }
-        }
-        else
-        {
-            tile_data[0] = MENU_TILE_0 + current_digit;
-        }
-
-        // Display current digit
-        set_win_tiles(itx_x, 0U, 1, 1, &(tile_data[0]));
-
-        // Prepare for next digit
-        itx_x -= 1U;
-    }
+    show_balance(3U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE, 0U);
 
 
     // HP

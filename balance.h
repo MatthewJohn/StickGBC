@@ -4,8 +4,9 @@
  * http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
 
-#ifndef GB_DEF
-#define GB_DEF
 
-#include <gb/gb.h>
-#include <types.h>
+#include "gb.h"
+
+BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l);
+BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l);
+void add_money(UINT16 amount_h, UINT16 amount_l);

@@ -9,6 +9,7 @@
 #include "logic_functions.h"
 #include "window_text_data.h"
 #include "main_map.h"
+#include "balance.h"
 
 typedef struct {
     UINT8 x;
@@ -115,12 +116,12 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     }
 
     // Check if user has enough money
-    if (! HAS_MONEY_P(cost))
+    if (! has_money(0U, cost))
     {
         main_show_window_text(&win_txt_bus_statn_no_mon, ROM_BANK_LOGIC_FUNCTIONS);
         return;
     }
-    game_state->balance -= cost;
+    remove_money(0U, cost);
 
     // Set time of day to 24 hours
     game_state->hour = 24;
@@ -136,7 +137,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     // If player hasn't got a gun or ammo, lose booze, cocaine and money
     if (game_state->inventory[S_INVENTORY_HAND_GUN] == 0U || game_state->inventory[S_INVENTORY_AMMO] == 0U)
     {
-        game_state->balance = 0;
+        game_state->balance[0U] = 0;
+        game_state->balance[1U] = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -162,7 +164,8 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
     if ((100 + (sys_time % strength_modulus)) > game_state->strength)
     {
         // Lose cocaine, booze and money
-        game_state->balance = 0;
+        game_state->balance[0U] = 0;
+        game_state->balance[1U] = 0;
         game_state->inventory[S_INVENTORY_COCAINE] = 0;
         game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0;
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -257,7 +260,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += offer;
+                add_money(0U, offer);
                 game_state->inventory[S_INVENTORY_BOTTLE_OF_BEER] = 0U;
             }
             no_deal = 0U;
@@ -309,7 +312,7 @@ void bus_sell_goods(menu_state_t *menu_state, game_state_t *game_state)
 
             if (joypad_state.a_pressed)
             {
-                game_state->balance += offer;
+                add_money(0U, offer);
                 game_state->inventory[S_INVENTORY_COCAINE] = 0U;
             }
             no_deal = 0U;
@@ -336,9 +339,9 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
     // and currency is decimal, making very difficult
     // to do using bit shifting (and at least probably
     // less CPU intensive)
-    if (HAS_MONEY(cost))
+    if (has_money(0U, cost))
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
 
         // If new HP would exeed max HP, limit new HP to difference
         if (gained_hp >= (game_state.max_hp - game_state.hp))
@@ -355,8 +358,15 @@ void purchase_food(UINT8 cost, UINT8 gained_hp)
  * purchase_item
  *
  * Spent money and increase inventory count for item
+ *
+ * @param cost_h Higher 16-bit of cost of item.
+ * @param cost_l Lower 16-bit of cost of item.
+ * @param inventory_item Inventory Item Index
+ * @param quantity Quantity of item to be added to inventory after purchase
+ *
+ * @returns 1 If the item was successfully purchased. 0 if item could not afforded.
  */
-UINT8 purchase_item(unsigned int cost, UINT8 inventory_item, UINT8 quantity)
+UINT8 purchase_item(UINT16 cost_h, UINT16 cost_l, UINT8 inventory_item, UINT8 quantity)
 {
     // Breaking the rules using >=, but
     // only performed when buying an item
@@ -364,9 +374,9 @@ UINT8 purchase_item(unsigned int cost, UINT8 inventory_item, UINT8 quantity)
     // to do using bit shifting (and at least probably
     // less CPU intensive)
 
-    if (HAS_MONEY(cost) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
+    if (has_money(cost_h, cost_l) && game_state.inventory[inventory_item] != S_MAX_INVENTORY_ITEM)
     {
-        game_state.balance -= cost;
+        remove_money(cost_h, cost_l);
         game_state.inventory[inventory_item] += quantity;
 
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -411,7 +421,7 @@ void perform_robbery()
     {
         // Add random amount up to 500
         amount_robbed = sys_time % 500U;
-        game_state.balance += amount_robbed;
+        add_money(0U, amount_robbed);
 
         // Update window
         main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
@@ -568,11 +578,11 @@ void process_shop_menu()
     {
         if (menu_state.current_item_y == 1U)  // Smokes
         {
-            purchase_item(10U, S_INVENTORY_SMOKES, 1U);
+            purchase_item(0U, 10U, S_INVENTORY_SMOKES, 1U);
         }
         else if (menu_state.current_item_y == 2U)  // Caffeine Pills
         {
-            purchase_item(45U, S_INVENTORY_CAFFEINE_PILLS, 1U);
+            purchase_item(0U, 45U, S_INVENTORY_CAFFEINE_PILLS, 1U);
         }
         else if (menu_state.current_item_y == 3U)  // Rob
         {
@@ -591,7 +601,7 @@ void process_pawn_menu()
         if (menu_state.current_item_y == 0U)  // Bullets
         {
             // Attempt to purchase item
-            purchase_item(10U, S_INVENTORY_AMMO, 5U);
+            purchase_item(0U, 10U, S_INVENTORY_AMMO, 5U);
 
             // Add 'rob' to shop/bank menu if user owns over 9 bullets
             if (game_state.inventory[S_INVENTORY_AMMO] > 9U) {
@@ -602,7 +612,7 @@ void process_pawn_menu()
         else if (menu_state.current_item_y == 1U)  // Handgun
         {
             // Attempt to purchase item
-            if (purchase_item(400U, S_INVENTORY_HAND_GUN, 1U))
+            if (purchase_item(0U, 400U, S_INVENTORY_HAND_GUN, 1U))
             {
                 // Remove from menu, if successful and reload menu tiles
                 menu_config->items[MENU_PAWN_HAND_GUN_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -617,7 +627,7 @@ void process_pawn_menu()
         }
         else if (menu_state.current_item_y == 2U)  // Knife
         {
-            if (purchase_item(100U, S_INVENTORY_KNIFE, 1U))
+            if (purchase_item(0U, 100U, S_INVENTORY_KNIFE, 1U))
             {
                 menu_config->items[4U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -626,7 +636,7 @@ void process_pawn_menu()
         }
         else if (menu_state.current_item_y == 3U)  // Alarm Clock
         {
-            if (purchase_item(200U, S_INVENTORY_ALARM_CLOCK, 1U))
+            if (purchase_item(0U, 200U, S_INVENTORY_ALARM_CLOCK, 1U))
             {
                 menu_config->items[6U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -638,7 +648,7 @@ void process_pawn_menu()
     {
         if (menu_state.current_item_y == 1U)  // Cellphone
         {
-            if (purchase_item(200U, S_INVENTORY_CELL_PHONE, 1U))
+            if (purchase_item(0U, 200U, S_INVENTORY_CELL_PHONE, 1U))
             {
                 menu_config->items[3U] = MENU_ITEM_INDEX_EMPTY;
                 load_menu_tiles(ROM_BANK_LOGIC_FUNCTIONS);
@@ -652,7 +662,7 @@ void process_pawn_menu()
 void process_dealer_menu()
 {
     if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
-        purchase_item(400U, S_INVENTORY_COCAINE, 1U);
+        purchase_item(0U, 400U, S_INVENTORY_COCAINE, 1U);
 }
 
 void process_bar_menu()
@@ -678,7 +688,7 @@ void process_bar_menu()
     {
         if (menu_state.current_item_y == 1U)
         {
-            purchase_item(30U, S_INVENTORY_BOTTLE_OF_BEER, 1U);
+            purchase_item(0U, 30U, S_INVENTORY_BOTTLE_OF_BEER, 1U);
             // Enable give bottle of beer in hobo menu
             menu_config_hobo.items[5U] = MENU_ITEM_INDEX_GIVE_BEER;
         }
@@ -698,7 +708,7 @@ void process_hobo_menu()
 
     if (menu_state.current_item_x == 0U && menu_state.current_item_y == 2U)
     {
-        if (HAS_MONEY(10U))
+        if (has_money(0U, 10U))
         {
             if (game_state.hobo_given_money == 0U)
             {
@@ -713,7 +723,7 @@ void process_hobo_menu()
             }
             else  // Paying money and not getting charm
             {
-                game_state.balance -= 10U;
+                remove_money(0U, 10U);
                 main_update_window(ROM_BANK_LOGIC_FUNCTIONS);
 
                 // Give 2 karma
@@ -907,7 +917,7 @@ void show_bank_withdraw()
     if (joypad_state.a_pressed)
     {
         game_state.bank_balance -= number_input.current_number;
-        game_state.balance += number_input.current_number;
+        add_money(0U, number_input.current_number);
     }
 
     // Reload original menu
@@ -925,7 +935,7 @@ void show_bank_deposit()
 {
     UBYTE tile_data[4];
     number_input_t number_input = {
-        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance
+        0x07U, 0x0DU, 6, 0U, 0U, game_state.balance[0U]
     };
 
     // Display 'Amount: ' on screen
@@ -940,7 +950,7 @@ void show_bank_deposit()
 
     if (joypad_state.a_pressed)
     {
-        game_state.balance -= number_input.current_number;
+        remove_money(0U, number_input.current_number);
         game_state.bank_balance += number_input.current_number;
     }
 
@@ -966,10 +976,10 @@ void show_bank_loan()
     // If currently have a loan, make the lower of either balance or loan amount
     if (game_state.loan != 0)
     {
-        if (game_state.balance < (UINT16)game_state.loan)
-            number_input.max_value = game_state.balance;
-        else
+        if (has_money(0U, (UINT16)game_state.loan))
             number_input.max_value = game_state.loan;
+        else
+            number_input.max_value = game_state.balance[0U];
 
         // Set current amount to highest amount to pay back
         number_input.current_number = number_input.max_value;
@@ -990,13 +1000,13 @@ void show_bank_loan()
         // Repay loan
         if (game_state.loan != 0)
         {
-            game_state.balance -= number_input.current_number;
+            remove_money(0U, number_input.current_number);
             game_state.loan -= number_input.current_number;
         }
         else
         {
             // Get loan
-            game_state.balance += number_input.current_number;
+            add_money(0U, number_input.current_number);
             game_state.loan += number_input.current_number;
             game_state.loan_days = 25;
         }
@@ -1027,7 +1037,7 @@ void process_rees_menu()
         if (menu_state.current_item_y == 1U)
         {
             // Purchase apartment
-            if (purchase_item(25000U, S_INVENTORY_APARTMENT, 1U))
+            if (purchase_item(0U, 25000U, S_INVENTORY_APARTMENT, 1U))
             {
                 // Remove item from menu
                 menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1039,9 +1049,42 @@ void process_rees_menu()
         }
         else if (menu_state.current_item_y == 2U)
         {
-            // Purchase mansion
-            // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Purchase mansion - 100K
+            if (purchase_item(1U, 34465U, S_INVENTORY_MANSION, 1U))
+            {
+                // Remove item from menu
+                menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                menu_config_real_estate.items[MENU_REAL_ESTATE_PENTHOUSE_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                menu_config_real_estate.items[MENU_REAL_ESTATE_MANSION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+
+                // Add computer to appliance store (apartment)
+                if (game_state.inventory[S_INVENTORY_PC] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_PC;
+
+                // Add tv to appliance store (penthouse)
+                if (game_state.inventory[S_INVENTORY_TV] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_TV;
+
+                // Add freezer to appliance store (penthouse)
+                if (game_state.inventory[S_INVENTORY_DEEP_FREEZE] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_DEEP_FREEZE;
+
+                // Add satellite to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_SATELLITE] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_SATELLITE_ITEM] = MENU_ITEM_INDEX_SATELLITE;
+
+                // Add treadmill to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_TREADMILL] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_TREADMILL;
+
+                // Add stickopedia to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_STICKOPEDIA] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM] = MENU_ITEM_INDEX_STICKOPEDIA;
+
+                // Add minibar to appliance store (mansion), if bed has been purchased
+                if (game_state.inventory[S_INVENTORY_BED] == 1U && game_state.inventory[S_INVENTORY_MINIBAR] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_MINIBAR;
+            }
         }
     }
     else if (menu_state.current_item_x == 1U)
@@ -1049,7 +1092,7 @@ void process_rees_menu()
         if (menu_state.current_item_y == 1U)
         {
             // Purchase apartment
-            if (purchase_item(50000U, S_INVENTORY_PENTHOUSE, 1U))
+            if (purchase_item(0U, 50000U, S_INVENTORY_PENTHOUSE, 1U))
             {
                 // Remove item from menu
                 menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1140,14 +1183,14 @@ void process_app_store_menu()
             // Check if bed is the menu item
             if (menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] == MENU_ITEM_INDEX_BED)
             {
-                if (purchase_item(500U, S_INVENTORY_BED, 1U))
+                if (purchase_item(0U, 500U, S_INVENTORY_BED, 1U))
                 {
                     // Remove bed from options
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_BED_ITEM] = MENU_ITEM_INDEX_EMPTY;
 
                     // Replace with menu item for minibar,
                     // if castle is owned
-                    if (game_state.inventory[S_INVENTORY_CASTLE] == 1U)
+                    if (game_state.inventory[S_INVENTORY_MANSION] == 1U || game_state.inventory[S_INVENTORY_CASTLE] == 1U)
                         menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_MINIBAR;
 
                     main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
@@ -1161,7 +1204,7 @@ void process_app_store_menu()
             else
             {
                 // Purchase minibar
-                if (purchase_item(5000U, S_INVENTORY_MINIBAR, 1U))
+                if (purchase_item(0U, 5000U, S_INVENTORY_MINIBAR, 1U))
                 {
                     // Remove from options
                     menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1177,7 +1220,7 @@ void process_app_store_menu()
         else if (menu_state.current_item_y == 1U)
         {
             // Purchase TV
-            if (purchase_item(2500U, S_INVENTORY_TV, 1U))
+            if (purchase_item(0U, 2500U, S_INVENTORY_TV, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1192,7 +1235,7 @@ void process_app_store_menu()
         else if (menu_state.current_item_y == 2U)
         {
             // Purchase TV
-            if (purchase_item(2500U, S_INVENTORY_TV, 1U))
+            if (purchase_item(0U, 2500U, S_INVENTORY_TV, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1207,7 +1250,7 @@ void process_app_store_menu()
         else if (menu_state.current_item_y == 3U)
         {
             // Purchase Treadmill
-            if (purchase_item(3500U, S_INVENTORY_TREADMILL, 1U))
+            if (purchase_item(0U, 3500U, S_INVENTORY_TREADMILL, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1225,7 +1268,7 @@ void process_app_store_menu()
         if (menu_state.current_item_y == 1U)
         {
             // Purchase PC
-            if (purchase_item(2000U, S_INVENTORY_PC, 1U))
+            if (purchase_item(0U, 2000U, S_INVENTORY_PC, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1240,7 +1283,7 @@ void process_app_store_menu()
         else if (menu_state.current_item_y == 2U)
         {
             // Purchase Satellite
-            if (purchase_item(3000U, S_INVENTORY_SATELLITE, 1U))
+            if (purchase_item(0U, 3000U, S_INVENTORY_SATELLITE, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_SATELLITE_ITEM] = MENU_ITEM_INDEX_EMPTY;
@@ -1255,7 +1298,7 @@ void process_app_store_menu()
         else if (menu_state.current_item_y == 3U)
         {
             // Purchase stick-o-pedia
-            if (purchase_item(2000U, S_INVENTORY_STICKOPEDIA, 1U))
+            if (purchase_item(0U, 2000U, S_INVENTORY_STICKOPEDIA, 1U))
             {
                 // Remove from options
                 menu_config_appliance_store.items[MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM] = MENU_ITEM_INDEX_EMPTY;

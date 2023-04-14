@@ -43,6 +43,7 @@
 #include "joy.h"
 #include "window_text.h"
 #include "window_text_data.h"
+#include "balance.h"
 #include "music.h"
 
 #include "main.h"
@@ -54,6 +55,7 @@
 #define DEBUG_DISABLE_AI_MOVEMENT 0
 #define DEBUG_IGNORE_BOUNDARIES 0
 #define DEBUG_SET_BACKGROUND_SKIP 0
+#define DEBUG_SHOW_BAR_FIGHT 0
 
 UBYTE * debug_address;
 
@@ -302,7 +304,8 @@ void setup_globals()
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
     // Start with $100
-    game_state.balance = 100U;
+    game_state.balance[0] = 100U;
+    game_state.balance[1] = 0U;
     game_state.bank_balance = 0U;
     game_state.loan = 0U;
     game_state.loan_days = 0U;
@@ -385,7 +388,8 @@ void setup_globals()
     game_state.inventory[S_INVENTORY_HAND_GUN] = 0x1U;
     game_state.inventory[S_INVENTORY_AMMO] = 0x10U;
     game_state.inventory[S_INVENTORY_CELL_PHONE] = 0x1U;
-    game_state.balance = 8000U;
+    game_state.balance[0U] = 8000U;
+    game_state.balance[1U] = 0U;
     game_state.bank_balance = 3000U;
     game_state.max_hp = 100U;
     game_state.intelligence = 250U;
@@ -1199,12 +1203,12 @@ void decrease_hp(UINT8 decrease_amount)
 void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence)
 {
     if (
-        HAS_MONEY(cost) &&
+        has_money(0U, cost) &&
         game_state.intelligence != S_MAX_INTELLIGENCE &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
         game_state.hour += number_of_hours;
         game_state.intelligence += intelligence;
 
@@ -1219,12 +1223,12 @@ void increase_intelligence(UINT8 cost, UINT8 number_of_hours, UINT8 intelligence
 UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm, unsigned int return_bank)
 {
     if (
-        HAS_MONEY(cost) &&
+        has_money(0U, cost) &&
         game_state.charm != S_MAX_CHARM &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
         game_state.hour += number_of_hours;
         game_state.charm += charm;
 
@@ -1239,12 +1243,12 @@ UINT8 increase_charm(UINT8 cost, UINT8 number_of_hours, UINT8 charm, unsigned in
 void increase_strength(UINT8 cost, UINT8 number_of_hours, UINT8 strength)
 {
     if (
-        HAS_MONEY(cost) &&
+        has_money(0U, cost) &&
         game_state.strength != S_MAX_STRENGTH &&
         (S_HOURS_PER_DAY - game_state.hour) >= number_of_hours
     )
     {
-        game_state.balance -= cost;
+        remove_money(0U, cost);
         game_state.hour += number_of_hours;
         game_state.strength += strength;
         game_state.max_hp += strength;
@@ -1268,7 +1272,7 @@ void do_work(unsigned int pay_per_hour, unsigned int number_of_hours)
     if ((S_HOURS_PER_DAY - game_state.hour) >= number_of_hours)
     {
         // Increase balance and increase time of day
-        game_state.balance += (pay_per_hour * number_of_hours);
+        add_money(0U, (pay_per_hour * number_of_hours));
         game_state.hour += number_of_hours;
 
         modify_karma(1);
@@ -1981,6 +1985,20 @@ UINT8 main_show_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, unsigned 
     return return_val;
 }
 
+/*
+ * main_show_balance
+ *
+ * Call show_balance with rom jumping
+ */
+UINT8 main_show_balance(UINT8 itx_x, UINT8 itx_y, unsigned int return_bank)
+{
+    UINT8 return_val;
+    ROM_BANK_BUILDING_MENU_SWITCH;
+    return_val = show_balance(itx_x, itx_y);
+    SWITCH_ROM_MBC5(return_bank);
+    return return_val;
+}
+
 void main_show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 value, unsigned int return_bank)
 {
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -2031,7 +2049,7 @@ void main()
         // it takes player to go through opening screen
         setup_globals();
 
-#if IN_TESTING
+#if IN_TESTING && DEBUG_SHOW_BAR_FIGHT
         ROM_BANK_BAR_FIGHT_SWITCH;
         enter_bar_fight();
         ROM_BANK_RESET;
