@@ -11,12 +11,12 @@
 #include "endgame_palette.h"
 #include "game_constants.h"
 #include "window_text.h"
+#include "balance.h"
 #include "endgame.h"
 #include "main.h"
 
 void endgame(const UINT8* win_text)
 {
-    UINT16 total_balance = 0;
     BOOLEAN negative_total = 0;
     UBYTE tile_data;
     UINT8 current_x;
@@ -63,115 +63,149 @@ void endgame(const UINT8* win_text)
     // Write karma number
     main_show_signed_number(0x9U, 0xDU, 3, game_state.karma, ROM_BANK_ENDGAME);
 
+    main_show_balance(0x12U, 0xEU, ROM_BANK_ENDGAME);
     tile_data = MENU_TILE_DOLLAR;
-    current_x = main_show_number(0xAU, 0xEU, 8, game_state.balance, ROM_BANK_ENDGAME);
-    set_bkg_tiles(current_x, 0xEU, 1, 1, &tile_data);
     current_x = main_show_number(0xAU, 0xFU, 8, game_state.bank_balance, ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0xFU, 1, 1, &tile_data);
     current_x = main_show_number(0xAU, 0x10U, 8, game_state.loan, ROM_BANK_ENDGAME);
     set_bkg_tiles(current_x, 0x10U, 1, 1, &tile_data);
 
-    total_balance = game_state.balance;
-    total_balance += game_state.bank_balance;
-    if (total_balance > game_state.loan)
+    // Add bank balance to balance
+    add_money(0U, game_state.bank_balance);
+
+    // Check if user has enough money to cover loan
+    if (has_money(0U, game_state.loan))
     {
-        total_balance -= game_state.loan;
-        negative_total = 0;
+        remove_money(0U, game_state.loan);
+        negative_total = 0U;
     }
     else
     {
-        total_balance = game_state.loan - total_balance;
-        negative_total = 1;
+        // Has total NEGATIVE balance.
+        // Since loan is currently only 1 int long,
+        // set balance to loan - current balance
+        negative_total = 1U;
+        game_state.balance[0] = 0xFFFF - (game_state.loan - game_state.balance[0]);
     }
-    current_x = main_show_number(0xAU, 0x11U, 8, total_balance, ROM_BANK_ENDGAME);
+    // Show balance in total amount
+    current_x = main_show_balance(0x12U, 0x11U, ROM_BANK_ENDGAME);
+
     if (negative_total)
     {
+        // If total is negative, overwrite dollar, replacing with
+        // dash and place dollar before
         tile_data = MENU_TILE_DASH;
         set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
         current_x -= 1U;
+        tile_data = MENU_TILE_DOLLAR;
+        set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
     }
-    tile_data = MENU_TILE_DOLLAR;
-    set_bkg_tiles(current_x, 0x11U, 1, 1, &tile_data);
 
     // Display rank
     rank_text = &win_txt_rank_hopeless;
-    if (negative_total == 0 && total_balance > 0)
+    if (negative_total == 0 && has_money(0))
     {
         rank_text = &win_txt_rank_utter_failure;
 
-        if (total_balance > 100)
+        if (has_money(0U, 100U))
             rank_text = &win_txt_rank_loser;
-        if (total_balance > 500)
+        if (has_money(0U, 500U))
             rank_text = &win_txt_rank_incompetent;
 
         if (game_state.karma > 20)
         {
-            if (total_balance > 1000)
+            if (has_money(0U, 1000U))
                 rank_text = &win_txt_rank_wuss;
-            if (total_balance > 4000)
+            if (has_money(0U, 4000U))
                 rank_text = &win_txt_rank_girl_scout;
-            if (total_balance > 10000)
+            if (has_money(0U, 10000U))
                 rank_text = &win_txt_rank_boy_scout;
-//            if (total_balance > 250000)
-//                rank_text = &win_txt_rank_good_samaritan;
-//            if (total_balance > 100000)
-//                rank_text = &win_txt_rank_extraordinarily_good;
-//            if (total_balance > 1000000)
-//                rank_text = &win_txt_rank_selfless_millionaire;
-//            if (total_balance > 2000000)
-//                rank_text = &win_txt_rank_philanthropist;
-//            if (total_balance > 10000000)
-//                rank_text = &win_txt_rank_saint;
-//            if (total_balance > 100000000)
-//                rank_text = &win_txt_rank_apostle;
-//            if (total_balance > 1000000000)
-//                rank_text = &win_txt_rank_mr_dog;
+
+            // Check 100K (in real game, this is checked in reverse order
+            // and could never be achieved)
+            if (has_money(1U, 34464U))
+                rank_text = &win_txt_rank_extraordinarily_good;
+            // Check 250K
+            if (has_money(3U, 53392U))
+                rank_text = &win_txt_rank_good_samaritan;
+
+            // check 1M
+            if (has_money(15U, 16960U))
+                rank_text = &win_txt_rank_selfless_millionaire;
+            // Check 2M
+            if (has_money(30U, 33920U))
+                rank_text = &win_txt_rank_philanthropist;
+            // Check 10M
+            if (has_money(152U, 38528U))
+                rank_text = &win_txt_rank_saint;
+            // Check 100M
+            if (has_money(1525U, 57600U))
+                rank_text = &win_txt_rank_apostle;
+            // check 1B
+            if (has_money(15258U, 51712U))
+                rank_text = &win_txt_rank_mr_dog;
         }
         else if (game_state.karma < -20)
         {
-            if (total_balance > 1000)
+            if (has_money(0U, 1000U))
                 rank_text = &win_txt_rank_juvenile_delinquent;
-            if (total_balance > 4000)
+            if (has_money(0U, 4000U))
                 rank_text = &win_txt_rank_white_collar_criminal;
-            if (total_balance > 10000)
+            if (has_money(0U, 10000U))
                 rank_text = &win_txt_rank_petty_criminal;
-//            if (total_balance > 250000)
-//                rank_text = &win_txt_rank_car_jacker;
-//            if (total_balance > 100000)
-//                rank_text = &win_txt_rank_extraordinarily_evil;
-//            if (total_balance > 1000000)
-//                rank_text = &win_txt_rank_drug_lord;
-//            if (total_balance > 2000000)
-//                rank_text = &win_txt_rank_undeniably_wicked;
-//            if (total_balance > 10000000)
-//                rank_text = &win_txt_rank_genuine_hellraiser;
-//            if (total_balance > 100000000)
-//                rank_text = &win_txt_rank_seed_of_evil;
-//            if (total_balance > 1000000000)
-//                rank_text = &win_txt_rank_mr_natas;
+            // Check 100K (in real game, this is checked in reverse order
+            // and could never be achieved)
+            if (has_money(1U, 34464U))
+                rank_text = &win_txt_rank_extraordinarily_evil;
+            // Check 250K
+            if (has_money(3U, 53392U))
+                rank_text = &win_txt_rank_car_jacker;
+            // check 1M
+            if (has_money(15U, 16960U))
+                rank_text = &win_txt_rank_drug_lord;
+            // Check 2M
+            if (has_money(30U, 33920U))
+                rank_text = &win_txt_rank_undeniably_wicked;
+            // Check 10M
+            if (has_money(152U, 38528U))
+                rank_text = &win_txt_rank_genuine_hellraiser;
+            // Check 100M
+            if (has_money(1525U, 57600U))
+                rank_text = &win_txt_rank_seed_of_evil;
+            // check 1B
+            if (has_money(15258U, 51712U))
+                rank_text = &win_txt_rank_mr_natas;
         }
         else
         {
-            if (total_balance > 1000)
+            if (has_money(0U, 1000U))
                 rank_text = &win_txt_rank_novice;
-            if (total_balance > 4000)
+            if (has_money(0U, 4000U))
                 rank_text = &win_txt_rank_mediocre;
-            if (total_balance > 10000)
+            if (has_money(0U, 10000U))
                 rank_text = &win_txt_rank_exceptional;
-//            if (total_balance > 250000)
-//                rank_text = &win_txt_rank_extraordinary;
-//            if (total_balance > 100000)
-//                rank_text = &win_txt_rank_genius;
-//            if (total_balance > 1000000)
-//                rank_text = &win_txt_rank_millionaire;
-//            if (total_balance > 2000000)
-//                rank_text = &win_txt_rank_multimillionaire;
-//            if (total_balance > 10000000)
-//                rank_text = &win_txt_rank_demi_god;
-//            if (total_balance > 100000000)
-//                rank_text = &win_txt_rank_god;
-//            if (total_balance > 1000000000)
-//                rank_text = &win_txt_rank_billionaire_god;
+            // Check 100K (in real game, this is checked in reverse order
+            // and could never be achieved)
+            if (has_money(1U, 34464U))
+                rank_text = &win_txt_rank_genius;
+            // Check 250K
+            if (has_money(3U, 53392U))
+                rank_text = &win_txt_rank_extraordinary;
+            // check 1M
+            if (has_money(15U, 16960U))
+                rank_text = &win_txt_rank_millionaire;
+            // Check 2M
+            if (has_money(30U, 33920U))
+                rank_text = &win_txt_rank_multimillionaire;
+            // Check 10M
+            if (has_money(152U, 38528U))
+                rank_text = &win_txt_rank_demi_god;
+            // Check 100M
+            if (has_money(1525U, 57600U))
+                rank_text = &win_txt_rank_god;
+            // check 1B
+            if (has_money(15258U, 51712U))
+                rank_text = &win_txt_rank_billionaire_god;
         }
     }
 
