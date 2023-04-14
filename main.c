@@ -866,7 +866,9 @@ void setup_main_map()
     game_state.last_movement_time = sys_time;
 
     // Setup main music
+    ROM_BANK_MUSIC_SWITCH;
     play_main_music();
+    ROM_BANK_RESET;
 }
 
 /*
@@ -2013,6 +2015,13 @@ void main_enter_bar_fight(unsigned int return_bank) NONBANKED
     SWITCH_RAM_MBC5(return_bank);
 }
 
+void main_tick_music(unsigned int return_bank) NONBANKED
+{
+    ROM_BANK_MUSIC_SWITCH;
+    tick_music();
+    SWITCH_RAM_MBC5(return_bank);
+}
+
 void main()
 {
     debug_address = 0xFFFA;
@@ -2022,15 +2031,19 @@ void main()
 
     wait_vbl_done();
 
+    ROM_BANK_MUSIC_SWITCH;
     initialise_music();
+    ROM_BANK_RESET;
 
     while (1)
     {
         DISPLAY_OFF;
 
         // Setup intro musicn for splash screen
+        ROM_BANK_MUSIC_SWITCH;
         play_intro_music();
 //    play_main_music();
+        ROM_BANK_RESET;
 
         // Enter splash screen loop
         ROM_BANK_OPENING_SCREEN_SWITCH;
@@ -2072,7 +2085,7 @@ void main()
         {
             wait_vbl_done();
 
-            tick_music();
+            main_tick_music(ROM_BANK_DEFAULT);
 
             main_check_joy(ROM_BANK_DEFAULT);
             check_cheat();

@@ -58,7 +58,7 @@ void splash_screen_loop()
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {
         wait_vbl_done();
-        tick_music();
+        main_tick_music(ROM_BANK_OPENING_SCREEN);
 
         main_check_joy(ROM_BANK_OPENING_SCREEN);
     }
