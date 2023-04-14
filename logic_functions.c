@@ -1049,9 +1049,42 @@ void process_rees_menu()
         }
         else if (menu_state.current_item_y == 2U)
         {
-            // Purchase mansion
-            // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
+            // Purchase mansion - 100K
+            if (purchase_item(1U, 34465U, S_INVENTORY_MANSION, 1U))
+            {
+                // Remove item from menu
+                menu_config_real_estate.items[MENU_REAL_ESTATE_APARTMENT_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                menu_config_real_estate.items[MENU_REAL_ESTATE_PENTHOUSE_ITEM] = MENU_ITEM_INDEX_EMPTY;
+                menu_config_real_estate.items[MENU_REAL_ESTATE_MANSION_ITEM] = MENU_ITEM_INDEX_EMPTY;
+
+                // Add computer to appliance store (apartment)
+                if (game_state.inventory[S_INVENTORY_PC] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_PC_ITEM] = MENU_ITEM_INDEX_PC;
+
+                // Add tv to appliance store (penthouse)
+                if (game_state.inventory[S_INVENTORY_TV] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TV_ITEM] = MENU_ITEM_INDEX_TV;
+
+                // Add freezer to appliance store (penthouse)
+                if (game_state.inventory[S_INVENTORY_DEEP_FREEZE] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_DEEP_FREEZE_ITEM] = MENU_ITEM_INDEX_DEEP_FREEZE;
+
+                // Add satellite to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_SATELLITE] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_SATELLITE_ITEM] = MENU_ITEM_INDEX_SATELLITE;
+
+                // Add treadmill to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_TREADMILL] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_TREADMILL_ITEM] = MENU_ITEM_INDEX_TREADMILL;
+
+                // Add stickopedia to appliance store (mansion)
+                if (game_state.inventory[S_INVENTORY_STICKOPEDIA] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_STICKOPEDIA_ITEM] = MENU_ITEM_INDEX_STICKOPEDIA;
+
+                // Add minibar to appliance store (mansion), if bed has been purchased
+                if (game_state.inventory[S_INVENTORY_BED] == 1U && game_state.inventory[S_INVENTORY_MINIBAR] == 0U)
+                    menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_MINIBAR;
+            }
         }
     }
     else if (menu_state.current_item_x == 1U)
@@ -1157,7 +1190,7 @@ void process_app_store_menu()
 
                     // Replace with menu item for minibar,
                     // if castle is owned
-                    if (game_state.inventory[S_INVENTORY_CASTLE] == 1U)
+                    if (game_state.inventory[S_INVENTORY_MANSION] == 1U || game_state.inventory[S_INVENTORY_CASTLE] == 1U)
                         menu_config_appliance_store.items[MENU_APPLIANCE_STORE_MINIBAR_ITEM] = MENU_ITEM_INDEX_MINIBAR;
 
                     main_show_window_text(&win_txt_appstore_bed, ROM_BANK_LOGIC_FUNCTIONS);
