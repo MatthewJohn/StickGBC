@@ -2012,14 +2012,14 @@ void main_enter_bar_fight(unsigned int return_bank) NONBANKED
 {
     ROM_BANK_BAR_FIGHT_SWITCH;
     enter_bar_fight();
-    SWITCH_RAM_MBC5(return_bank);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void main_tick_music(unsigned int return_bank) NONBANKED
 {
     ROM_BANK_MUSIC_SWITCH;
     tick_music();
-    SWITCH_RAM_MBC5(return_bank);
+    SWITCH_ROM_MBC5(return_bank);
 }
 
 void main()
