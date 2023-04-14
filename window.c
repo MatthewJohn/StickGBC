@@ -295,7 +295,7 @@ void update_window()
     }
 
     // BALANCE
-    show_balance(5U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE, 0U);
+    show_balance(3U + WINDOW_MAX_DIGITS_DAYS + WINDOW_MAX_DIGITS_BALANCE, 0U);
 
 
     // HP
