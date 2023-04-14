@@ -19,7 +19,7 @@
  *
  * @returns 1 if the user has enough balance. 0 if not.
  */
-BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l)
+BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l) NONBANKED
 {
     UINT16 remainder = amount_h;
 
@@ -50,7 +50,7 @@ BOOLEAN has_money(UINT16 amount_h, UINT16 amount_l)
  *
  * @returns 1 if the amount was removed. 0 if not.
  */
-BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l)
+BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l) NONBANKED
 {
     UINT16 remainder = amount_h;
 
@@ -97,7 +97,7 @@ BOOLEAN remove_money(UINT16 amount_h, UINT16 amount_l)
  * @param amount_h Upper 16-bit value of the amount to add
  * @param amount_l Lower 16-bit value of the amount to add
  */
-void add_money(UINT16 amount_h, UINT16 amount_l)
+void add_money(UINT16 amount_h, UINT16 amount_l) NONBANKED
 {
     UINT16 overflow = amount_h;
 
