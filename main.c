@@ -299,7 +299,6 @@ void setup_globals()
     game_state.last_movement_time = 0x0U;
     // @TODO make sure display works after 999
     game_state.days_passed = 0U;
-    game_state.max_days = 30U;
     game_state.hour = S_HOUR_WAKEUP_NORMAL;
 
     // Start with $100
@@ -1142,7 +1141,7 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
  */
 void check_end_game() NONBANKED
 {
-    if (game_state.hp == 0 || game_state.days_passed >= game_state.max_days)
+    if (game_state.hp == 0 || (game_state.max_days != 0U && game_state.days_passed >= game_state.max_days))
     {
         // Show end game, passing reason for end game reason
         ROM_BANK_ENDGAME_SWITCH;

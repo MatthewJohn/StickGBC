@@ -459,3 +459,19 @@
  - 75 - applicance store sign 7
  - 76 - applicance store sign 8
  - 77 - applicance store sign 9
+ 
+## Opening screen
+
+### Tiles
+
+0 - 8 - buttons
+9 - 12 - Interact
+13 - 17 - skate/car
+18 - 20 - stats
+21 - 25 - Inventory
+26 - bracket
+27 - 36 - select game length
+37 - selection corner
+38 - selection top
+38 - selection left
+39 - 51 - length selection tiles
