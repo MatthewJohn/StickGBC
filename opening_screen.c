@@ -86,7 +86,7 @@ void opening_screen_loop()
     move_bkg(0, 0);
 
     // Load additional tiles required
-    set_bkg_data(8U, 19U, &(openingscreentiles[8U << 4]));
+    set_bkg_data(8U, 44U, &(openingscreentiles[8U << 4]));
 
     DISPLAY_ON;
 
