@@ -344,7 +344,7 @@ void setup_globals()
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
     screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
-    screen_state.displayed_buildings_2_x = SC_APPLIANCE_STORE;
+    screen_state.displayed_buildings_2_x = SC_APPLIANCE_STORE | SC_APPLIANCE_STORE_CASINO_SHARED;
     screen_state.displayed_buildings_2_y = SC_BANK;
 
     // Setup inventory items

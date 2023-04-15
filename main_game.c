@@ -86,9 +86,32 @@ void load_bar()
 void load_appliance_store()
 {
     set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]));
-    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
     scratch_palette_data[0U][2U] = RGB(16U, 16U, 16U);
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
+}
+
+/*
+ * load_appliance_casino
+ *
+ * Load shared palette colors for appliance store and casino
+ */
+void load_appliance_casino()
+{
+    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
+    // Outer buiding for appliance store and casino dice
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
+}
+
+void load_casino()
+{
+    set_bkg_data(78U, 8U, &(mainmaptiles[78U << 4]));
+    // Light blue
+    scratch_palette_data[0U][1U] = RGB(9U, 11U, 31U);
+    // Dice black
+    scratch_palette_data[0U][2U] = RGB(0U, 0U, 0U);
+    // Dark blue
+    scratch_palette_data[0U][2U] = RGB(0U, 3U, 28U);
     set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
 }
 
@@ -312,6 +335,14 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_x_tiles == SC_BUS_TRANSITION_X)
         screen_state->displayed_buildings_x &= ~SC_BUS;
 
+    // Load shared appliance store and casino palettes
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_2_x |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
+    }
+
     // Load Appliance store
     if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
     {
@@ -319,6 +350,15 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE)
             load_appliance_store();
     }
+    
+    // Load casino
+    if (screen_state->screen_location_x_tiles == SC_CASINO_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_2_x |= SC_CASINO;
+        if (screen_state->displayed_buildings_2_y & SC_CASINO)
+            load_casino();
+    }
+
 }
 void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
@@ -399,6 +439,14 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
             load_bus_station();
     }
 
+    // Unload shared appliance store and casino palettes
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_X)
+        screen_state->displayed_buildings_2_x &= ~SC_APPLIANCE_STORE_CASINO_SHARED;
+
+    // Unload casino
+    if (screen_state->screen_location_x_tiles == SC_CASINO_TRANSITION_X)
+        screen_state->displayed_buildings_2_x &= ~SC_CASINO;
+
     // Unload Appliance store
     if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
         screen_state->displayed_buildings_2_x &= ~SC_APPLIANCE_STORE;
@@ -443,9 +491,20 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state->displayed_buildings_y &= ~SC_BAR;
 
-    // Unload Appliance store
-    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+    // Load/unload Appliance store/casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y_MIN)
         screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE;
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y &= ~SC_CASINO;
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE)
+            load_appliance_store();
+    }
+
+    // Unload shared appliance store and casino palettes
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+        screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE_CASINO_SHARED;
 
     // Check skater
     if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite->min_location_y >> 3U))
@@ -522,12 +581,35 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
             load_bar();
     }
 
-    // Load appliance store
-    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+    // Load shared appliance store and casino palettes
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
+    }
+
+    // Load/unload appliance store/casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE;
+        screen_state->displayed_buildings_2_y |= SC_CASINO;
+        if (screen_state->displayed_buildings_2_x & SC_CASINO)
+            load_casino();
+    }
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y_MIN)
     {
         screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE;
         if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE)
             load_appliance_store();
+    }
+
+    // Load casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
     }
 
     // Check skater
