@@ -62,9 +62,85 @@ void splash_screen_loop()
     }
 }
 
+/* opening_screen_update_selection
+ * 
+ * Checks joypad input to update selected option
+ * and redraws tile selection palettes.
+ *
+ * @param Currently selected option
+ *
+ * @returns new selected option index
+ */
+UINT8 opening_scrn_update_sel(UINT8 selected_option)
+{
+    UINT8 itx;
+    UINT8 tile_itx_x;
+    UINT8 tile_itx_y;
+    unsigned char original_data;
+
+    if (joypad_state.travel_x == 1)
+    {
+        // Set first bit to 1
+        selected_option |= 1U;
+    }
+    if (joypad_state.travel_x == -1)
+    {
+        // Set first bit to 0 (mask second bit)
+        selected_option &= 0x2U;
+    }
+    if (joypad_state.travel_y == 1)
+    {
+        // Set second bit to 1
+        selected_option |= 2U;
+    }
+    if (joypad_state.travel_y == -1)
+    {
+        // Set second bit to 0 (mask first bit)
+        selected_option &= 0x1U;
+    }
+    
+    // Update palette for selection options
+    VBK_REG = 1;
+    for (itx = 0; itx != 4; itx ++)
+    {
+        for (tile_itx_x = 0; tile_itx_x != 6; tile_itx_x ++)
+        {
+            for (tile_itx_y = 0; tile_itx_y != 3; tile_itx_y ++)
+            {
+                get_bkg_tiles(
+                    2U + ((itx / 2) * 10U) + tile_itx_x,
+                    8U + ((itx % 2) * 5U) + tile_itx_y,
+                    1U,
+                    1U,
+                    &original_data
+                );
+                // Set palette to 0
+                original_data &= 0xF8;
+                if (itx == selected_option)
+                {
+                    // Increment palette to 1
+                    original_data += 1U;
+                }
+                set_bkg_tiles(
+                    2U + ((itx / 2) * 10U) + tile_itx_x,
+                    8U + ((itx % 2) * 5U) + tile_itx_y,
+                    1U,
+                    1U,
+                    &original_data
+                );
+            }
+        }
+    }
+    VBK_REG = 0;
+    
+    return selected_option;
+}
 
 void opening_screen_loop()
 {
+    BOOLEAN last_input_had_input;
+    UINT8 selected_option = 0;
+
     DISPLAY_OFF;
 
     screen_state.background_color_palette = opening_screen_palette;
@@ -90,12 +166,33 @@ void opening_screen_loop()
 
     DISPLAY_ON;
 
+    // Set joypad state to no input
     joypad_state.a_pressed = 0U;
     joypad_state.start_pressed = 0U;
+    joypad_state.travel_x = 0;
+    joypad_state.travel_y = 0;
+    last_input_had_input = 0U;
+    // Set initial option to 30 days
+    selected_option = 1U;
+    opening_scrn_update_sel(selected_option);
 
     // Wait for user to press A or START
     while (joypad_state.a_pressed == 0U && joypad_state.start_pressed == 0U)
     {
+        // Check for user changing selection
+        if (joypad_state.travel_x != 0 || joypad_state.travel_y != 0)
+        {
+            // Only update if they've just pressed the button
+            if (last_input_had_input == 0U)
+            {
+                selected_option = opening_scrn_update_sel(selected_option);
+            }
+        }
+        else
+        {
+            last_input_had_input = 0U;
+        }
+
         wait_vbl_done();
 
         main_check_joy(ROM_BANK_OPENING_SCREEN);
