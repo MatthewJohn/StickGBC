@@ -63,7 +63,7 @@ void splash_screen_loop()
 }
 
 /* opening_screen_update_selection
- * 
+ *
  * Checks joypad input to update selected option
  * and redraws tile selection palettes.
  *
@@ -98,7 +98,7 @@ UINT8 opening_scrn_update_sel(UINT8 selected_option)
         // Set second bit to 0 (mask first bit)
         selected_option &= 0x1U;
     }
-    
+
     // Update palette for selection options
     VBK_REG = 1;
     for (itx = 0; itx != 4; itx ++)
@@ -132,7 +132,7 @@ UINT8 opening_scrn_update_sel(UINT8 selected_option)
         }
     }
     VBK_REG = 0;
-    
+
     return selected_option;
 }
 
@@ -197,7 +197,7 @@ void opening_screen_loop()
 
         main_check_joy(ROM_BANK_OPENING_SCREEN);
     }
-    
+
     // Update game_state max_days based on selected input
     if (selected_option == 0U)
     {
