@@ -108,8 +108,8 @@ UINT8 opening_scrn_update_sel(UINT8 selected_option)
             for (tile_itx_y = 0; tile_itx_y != 3; tile_itx_y ++)
             {
                 get_bkg_tiles(
-                    2U + ((itx / 2) * 10U) + tile_itx_x,
-                    8U + ((itx % 2) * 5U) + tile_itx_y,
+                    2U + ((itx % 2) * 10U) + tile_itx_x,
+                    8U + ((itx / 2) * 5U) + tile_itx_y,
                     1U,
                     1U,
                     &original_data
@@ -122,8 +122,8 @@ UINT8 opening_scrn_update_sel(UINT8 selected_option)
                     original_data += 1U;
                 }
                 set_bkg_tiles(
-                    2U + ((itx / 2) * 10U) + tile_itx_x,
-                    8U + ((itx % 2) * 5U) + tile_itx_y,
+                    2U + ((itx % 2) * 10U) + tile_itx_x,
+                    8U + ((itx / 2) * 5U) + tile_itx_y,
                     1U,
                     1U,
                     &original_data
