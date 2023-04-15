@@ -11,7 +11,7 @@
     * 2 - Black text NLI sign/pawn shop door handle
     * 3 - Pavement Inner
  2.
-    * 0 - Green - Grass/Hobo background
+    * 0 - Green - Grass/Hobo background/casino entrance
     * 1 - Orange - Hobo/Bar beer sign
     * 2 - Black - Hobo/Bar beer sign
     * 3 - Pale (slight green) - Bar beer sign/tree leaves
@@ -20,9 +20,9 @@
     * 1 - 
     * 2 - 
     * 3 -
- 4. scratch for building 0 - bus/appliance_store
+ 4. scratch for building 0 - bus/appliance_store/casino (1, 2, 3)/casino_dice (4)
  5. scratch for building 1 - bus station/Bar/Bank
- 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI/Casino
+ 6. scratch for building 2 - shop (0 + 1 + 2 + 3)/NLI
  7. scratch for building 3 - mcstick (0 + 1 + 2)/castle/university/pawn shop wall + grafitti (color 0+1+4)
 
 ## Tile Palette Building Menu
@@ -459,6 +459,15 @@
  - 75 - applicance store sign 7
  - 76 - applicance store sign 8
  - 77 - applicance store sign 9
+ - 78 - casino light base tile
+ - 79 - casino dice 1
+ - 80 - casino diagonal roof
+ - 81 - casino dice 2
+ - 82 - casino dice 3
+ - 83 - casino dice 4
+ - 84 - casino path inner 1
+ - 85 - casino path inner 2
+ - 86 - casino path outer
  
 ## Opening screen
 
