@@ -21,8 +21,6 @@
  * Main palette
  * Main tiles
  * Background
- * Boundaries
- * Background tile colours
  * Main game (functions to load main map/tiles)
  * main_game.c
 
@@ -41,6 +39,8 @@
  * Endgame tiles
  * Endgame map
  * Endgame palette
+ * Boundaries
+ * Background time colours
 
 ## 8
  * window_text.c - window status text and functions

@@ -279,8 +279,9 @@ void update_background_color()
     UWORD palette_data[4];
 
     // Copy palette 1
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_TIME_COLORS_SWITCH;
     palette_data[0U] = background_time_colors[game_state.hour],
+    ROM_BANK_TILE_DATA_SWITCH;
     palette_data[1U] = main_map_palette[1U];
     palette_data[2U] = main_map_palette[2U];
     palette_data[3U] = main_map_palette[3U];
