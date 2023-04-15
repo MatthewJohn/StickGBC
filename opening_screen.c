@@ -197,4 +197,22 @@ void opening_screen_loop()
 
         main_check_joy(ROM_BANK_OPENING_SCREEN);
     }
+    
+    // Update game_state max_days based on selected input
+    if (selected_option == 0U)
+    {
+        game_state.max_days = 15U;
+    }
+    else if (selected_option == 1U)
+    {
+        game_state.max_days = 30U;
+    }
+    else if (selected_option == 2U)
+    {
+        game_state.max_days = 100U;
+    }
+    else if (selected_option == 3U)
+    {
+        game_state.max_days = 0U;
+    }
 }
