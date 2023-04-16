@@ -22,12 +22,12 @@ const UWORD house_car_palette[4] = {
 
 void load_house()
 {
-    set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+    main_set_bkg_data(13, 1, &(mainmaptiles[13 << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
 }
 
 void load_restaurant()
 {
-    set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+    main_set_bkg_data(15, 2, &(mainmaptiles[15 << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Set palette data
     word_data[0] = RGB(0, 0, 0);
     word_data[1] = RGB(31, 22, 8);
@@ -38,7 +38,7 @@ void load_restaurant()
 
 void load_shop()
 {
-    set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+    main_set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     word_data[0] = RGB(31, 21, 5);
     word_data[1] = RGB(1, 0, 2);
     word_data[2] = RGB(4, 20, 0);
@@ -48,7 +48,7 @@ void load_shop()
 
 void load_pawn()
 {
-    set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+    main_set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[3U][0U] = RGB(10U, 1U, 16U);
     scratch_palette_data[3U][1U] = RGB(31U, 31U, 31U);
     scratch_palette_data[3U][3U] = RGB(15U, 6U, 31U);
@@ -57,7 +57,7 @@ void load_pawn()
 
 void load_university()
 {
-    set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+    main_set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[3U][0U] = RGB(15U, 19U, 0U);
     scratch_palette_data[3U][1U] = RGB(31U, 22U, 8U);
     scratch_palette_data[3U][2U] = RGB(31U, 13U, 2U);
@@ -67,7 +67,7 @@ void load_university()
 
 void load_nli()
 {
-    set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+    main_set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[2U][0U] = RGB(6U, 6U, 6U);
     scratch_palette_data[2U][1U] = RGB(7U, 3U, 1U);
     set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[2U]));
@@ -75,7 +75,7 @@ void load_nli()
 
 void load_bar()
 {
-    set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
+    main_set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[1U][0U] = RGB(1U, 14U, 1U);
     scratch_palette_data[1U][1U] = RGB(10U, 8U, 1U);
     scratch_palette_data[1U][2U] = RGB(31U, 1U, 1U);
@@ -85,7 +85,7 @@ void load_bar()
 
 void load_appliance_store()
 {
-    set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]));
+    main_set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
     scratch_palette_data[0U][2U] = RGB(16U, 16U, 16U);
     set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
@@ -105,7 +105,7 @@ void load_appliance_casino()
 
 void load_casino()
 {
-    set_bkg_data(78U, 8U, &(mainmaptiles[78U << 4]));
+    main_set_bkg_data(78U, 8U, &(mainmaptiles[78U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Light blue
     scratch_palette_data[0U][1U] = RGB(9U, 11U, 31U);
     // Dice black
@@ -135,7 +135,7 @@ void load_road_car_sprite()
  */
 void load_bus_station()
 {
-    set_bkg_data(52U, 9U, &(mainmaptiles[52U << 4]));
+    main_set_bkg_data(52U, 9U, &(mainmaptiles[52U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Bus palette
     scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
@@ -158,9 +158,9 @@ void load_bus_station()
 void load_bank()
 {
     // Tile for top windows
-    set_bkg_data(18U, 1U, &(mainmaptiles[18U << 4]));
+    main_set_bkg_data(18U, 1U, &(mainmaptiles[18U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Main tiles for bank
-    set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]));
+    main_set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[1U][0U] = RGB(11U, 2U, 1U);
     scratch_palette_data[1U][1U] = RGB(1U, 0U, 0U);
     scratch_palette_data[1U][2U] = RGB(26U, 26U, 0U);

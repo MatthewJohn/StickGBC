@@ -322,6 +322,8 @@ void bf_update_text(bar_fight_state_t* bar_fight_state)
 void bf_load_basic_map(bar_fight_state_t* bar_fight_state)
 {
     set_background_tiles(
+        ROM_BANK_BAR_FIGHT,
+        ROM_BANK_BAR_FIGHT,
         ROM_BANK_BAR_FIGHT,  // Load tiles from this ROM bank
         ROM_BANK_BAR_FIGHT  // Return to the ROM bank for this function
     );

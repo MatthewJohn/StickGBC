@@ -425,7 +425,7 @@ void main_set_bkg_data(UINT8 start_index, UINT8 cnt, unsigned char *data_ptr, UI
     SWITCH_ROM_MBC5(return_bank);
 }
 
-void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank) NONBANKED
+void set_background_tiles(unsigned int map_data_bank, unsigned int tile_data_bank, unsigned int palette_data_bank, unsigned int return_bank) NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -441,10 +441,11 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
     max_y = screen_state.draw_offset_y + screen_state.draw_max_y;
 
     // Load color palette
-    SWITCH_ROM_MBC5(tile_data_bank);
+    SWITCH_ROM_MBC5(palette_data_bank);
     set_bkg_palette(0, 8, screen_state.background_color_palette);
 
     VBK_REG = 0;
+    SWITCH_ROM_MBC5(tile_data_bank);
     set_bkg_data(0, 8, screen_state.background_tiles);
 
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -485,7 +486,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            SWITCH_ROM_MBC5(tile_data_bank);
+            SWITCH_ROM_MBC5(map_data_bank);
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
@@ -510,7 +511,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
             VBK_REG = 1;
 
-            SWITCH_ROM_MBC5(tile_data_bank);
+            SWITCH_ROM_MBC5(map_data_bank);
             // Lookup tile palette from background tile map
             tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -835,7 +836,7 @@ void setup_main_map()
     screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
     screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
-    set_background_tiles(ROM_BANK_TILE_DATA, 1U);
+    set_background_tiles(ROM_BANK_TILE_DATA, ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
     ROM_BANK_RESET;
@@ -847,10 +848,11 @@ void setup_main_map()
     );
 
     // Load additional tiles required for main map
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_MAIN_MAP_TILESET_SWITCH;
     set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
+    ROM_BANK_TILE_DATA_SWITCH;
     load_building_tile_data(&screen_state, &house_car_sprite, &road_car_sprite);
 
     ROM_BANK_RESET;
@@ -1113,7 +1115,7 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
 
     HIDE_SPRITES;
     // Reload background tiles
-    set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
+    set_background_tiles(ROM_BANK_BUILDING_MENU, ROM_BANK_BUILDING_MENU, ROM_BANK_BUILDING_MENU, 1U);
 
     // Scroll to top-left
     move_bkg(0, 0);

@@ -19,8 +19,6 @@
 
  * Main map
  * Main palette
- * Main tiles
- * Background
  * Main game (functions to load main map/tiles)
  * main_game.c
 
@@ -29,6 +27,7 @@
  * Joy config
  
  ## 7
+ * Main map tiles
  * Opening screen tiles
  * Opening screen map
  * Opening screen palette
