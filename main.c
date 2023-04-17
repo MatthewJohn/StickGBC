@@ -44,6 +44,7 @@
 #include "window_text.h"
 #include "window_text_data.h"
 #include "balance.h"
+#include "casino.h"
 
 #include "main.h"
 
@@ -1855,7 +1856,7 @@ void update_state()
             }
             else if (game_state.current_building == S_B_CASINO)
             {
-                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                ROM_BANK_CASINO_SWITCH;
                 process_casino_menu();
                 ROM_BANK_RESET;
             }

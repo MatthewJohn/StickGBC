@@ -770,35 +770,6 @@ void process_hobo_menu()
 }
 
 /*
- * process_casino_menu
- *
- * Process menu selection for casino
- */
-void process_casino_menu()
-{
-    if (menu_state.current_item_x == 0U)
-    {
-        if (menu_state.current_item_y == 0U)  // Slots
-        {
-            // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
-        }
-        else if (menu_state.current_item_y == 1U)  // Blackjack
-        {
-            // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
-        }
-        else if (menu_state.current_item_y == 2U)  // Roulette
-        {
-            // Unavailable
-            main_show_window_text(&win_txt_general_unimplemented, ROM_BANK_LOGIC_FUNCTIONS);
-        }
-    }
-    setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
-    move_menu_to_exit();
-}
-
-/*
  * number_entry
  *
  * Allow user to select a number using directional keys

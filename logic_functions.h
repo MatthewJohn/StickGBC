@@ -26,4 +26,3 @@ void show_bank_loan();
 void process_rees_menu();
 void process_skater_menu();
 void check_building_enter();
-void process_casino_menu();
