@@ -39,6 +39,7 @@
 #define S_B_BANK 0x0F
 #define S_B_APPLIANCE_STORE 0x10
 #define S_B_REAL_ESTATE 0x11
+#define S_B_CASINO 0x12
 
 #define S_M_NO_SUBMENU 0x00U;
 #define S_M_WITHDRAW 0x01U;

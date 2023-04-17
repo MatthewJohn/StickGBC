@@ -366,7 +366,7 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE)
             load_appliance_store();
     }
-    
+
     // Load casino
     if (screen_state->screen_location_x_tiles == SC_CASINO_TRANSITION_X)
     {

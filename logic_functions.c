@@ -1463,6 +1463,13 @@ void check_building_enter()
         setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
     }
 
+    // Casino
+    else if (tile_itx == 0xD0DU || tile_itx == 0xD55U)
+    {
+        game_state.current_building = S_B_CASINO;
+        setup_building_menu(2U, ROM_BANK_LOGIC_FUNCTIONS);
+    }
+
 #if IN_TESTING && DEBUG_JUMP_BUILDING
     else
     {
