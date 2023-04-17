@@ -1066,6 +1066,12 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_state.current_item_x = 1U;
         menu_state.current_item_y = 0U;
     }
+    else if (game_state.current_building == S_B_CASINO)
+    {
+        menu_config = &menu_config_casino;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 0U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
@@ -1845,6 +1851,12 @@ void update_state()
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                 process_rees_menu();
+                ROM_BANK_RESET;
+            }
+            else if (game_state.current_building == S_B_CASINO)
+            {
+                ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
+                process_casino_menu();
                 ROM_BANK_RESET;
             }
         }

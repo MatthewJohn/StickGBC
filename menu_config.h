@@ -120,6 +120,9 @@
 #define MENU_ITEM_INDEX_PENTHOUSE 0x49U
 #define MENU_ITEM_INDEX_MANSION 0x4AU
 #define MENU_ITEM_INDEX_CASTLE 0x4BU
+#define MENU_ITEM_INDEX_PLAY_SLOTS 0x4CU
+#define MENU_ITEM_INDEX_PLAY_BLACKJACK 0x4DU
+#define MENU_ITEM_INDEX_PLAY_ROULETTE 0x4EU
 
 // Menu item indexes
 #define MENU_NLI_PROMOTION_ITEM 0x05U
@@ -187,6 +190,7 @@ extern menu_config_t menu_config_bus_station;
 extern menu_config_t menu_config_bank;
 extern menu_config_t menu_config_appliance_store;
 extern menu_config_t menu_config_real_estate;
+extern menu_config_t menu_config_casino;
 
 
 // Methods for menu
