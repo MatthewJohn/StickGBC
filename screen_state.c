@@ -41,7 +41,7 @@
 // Transition for casino/applicane store-specific tiles
 #define SC_APPLIANCE_STORE_TRANSITION_X 0x13U
 #define SC_APPLIANCE_STORE_TRANSITION_Y_MIN 0x09U
-#define SC_APPLIANCE_STORE_CASINO_TRANSITION_Y 0x1DU
+#define SC_APPLIANCE_STORE_CASINO_TRANSITION_Y 0x1AU
 #define SC_CASINO_TRANSITION_X 0x1EU
 
 // Transition for shared appliance store/casio palettes
