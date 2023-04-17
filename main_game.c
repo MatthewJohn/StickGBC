@@ -105,7 +105,7 @@ void load_appliance_casino()
 
 void load_casino()
 {
-    main_set_bkg_data(78U, 8U, &(mainmaptiles[78U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
+    main_set_bkg_data(78U, 9U, &(mainmaptiles[78U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Light blue
     scratch_palette_data[0U][1U] = RGB(9U, 11U, 31U);
     // Dice black
