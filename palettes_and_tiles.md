@@ -292,7 +292,15 @@
  80. NS
  81. IO
  82. N
- 
+ 83. PL
+ 84. AY
+ 85. _S
+ 86. _B
+ 87. _R
+ 88. TS
+ 89. CK
+ 90. JA
+ 91. TT
 
  98. Clock face
  99. Colon
