@@ -10,3 +10,4 @@ void show_signed_number(UINT8 start_x, UINT8 start_y, UINT8 max_digits, INT8 val
 UINT8 update_window();
 void setup_window();
 UINT8 show_balance(UINT8 itx_x, UINT8 itx_y);
+void show_stats_screen();

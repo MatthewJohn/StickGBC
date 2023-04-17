@@ -1293,24 +1293,6 @@ void do_nli_work()
     }
 }
 
-// Show stats screen
-void show_stats_screen() NONBANKED
-{
-    game_state.current_building = S_B_STATS;
-    setup_building_menu(1U, ROM_BANK_DEFAULT);
-
-    // Update tiles for each of the stats to display the current values
-
-    // Intelligence
-    ROM_BANK_BUILDING_MENU_SWITCH;
-    // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
-    show_number(3U, 6U, 3U, game_state.intelligence);
-    show_number(11U, 6U, 3U, game_state.strength);
-    show_number(3U, 9U, 3U, game_state.charm);
-    show_signed_number(11U, 9U, 3U, game_state.karma);
-    ROM_BANK_RESET;
-}
-
 BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
 {
     UINT8 menu_item_itx = 0;
@@ -1629,7 +1611,9 @@ void update_state()
         }
 
         else if (joypad_state.select_pressed) {
+            ROM_BANK_BUILDING_MENU_SWITCH;
             show_stats_screen();
+            ROM_BANK_RESET;
         }
 
         else if (joypad_state.start_pressed) {
