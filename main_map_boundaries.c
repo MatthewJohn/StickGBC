@@ -7,6 +7,9 @@
 #pragma bank=7
 
 #include <gb/gb.h>
+#include "main.h"
+#include "game_constants.h"
+#include "main_map.h"
 
 const UBYTE MAIN_MAP_BOUNDARIES[] = {
     // Each row  of map is 8.75 bytes. Each row in this array ends with any leading tiles form next map row.
@@ -98,3 +101,38 @@ const UBYTE MAIN_MAP_BOUNDARIES[] = {
     0x00, 0x00, 0x00, 0xE0, 0xFF, 0x07, 0x00, 0x00, 0x00,
 
 };
+
+// Check if next position will hit a boundary
+void check_boundary_hit()
+{
+    unsigned int new_x;
+    unsigned int new_y;
+    unsigned int new_tile_itx;
+
+#if IN_TESTING && DEBUG_IGNORE_BOUNDARIES
+    return;
+#endif
+
+    new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
+    new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
+
+    // Check if traveling to new tile
+    if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
+        (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
+        (joypad_state.travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
+        (joypad_state.travel_y == -1 && (new_y & 0x07U) == 0x07U))
+    {
+            new_tile_itx = X_Y_TO_TILE_INDEX(
+                PIXEL_LOCATION_TO_TILE_COUNT(new_x),
+                PIXEL_LOCATION_TO_TILE_COUNT(new_y)
+            );
+
+            // Check if new tile is a boundary
+            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
+            {
+                // Reset travel directions, acting as if user is not moving.
+                joypad_state.travel_x = 0;
+                joypad_state.travel_y = 0;
+            }
+    }
+}

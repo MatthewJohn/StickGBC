@@ -8,3 +8,4 @@
 #include "gb/gb.h"
 
 extern const UBYTE MAIN_MAP_BOUNDARIES[];
+void check_boundary_hit();

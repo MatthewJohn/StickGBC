@@ -47,15 +47,6 @@
 
 #include "main.h"
 
-// Debug definitions
-#define DEBUG_JUMP_BUILDING 0
-#define DEBUG_JUMP_BUILDING_NUMBER 2
-#define DEBUG_BOUNDARIES 0
-#define DEBUG_DISABLE_AI_MOVEMENT 0
-#define DEBUG_IGNORE_BOUNDARIES 0
-#define DEBUG_SET_BACKGROUND_SKIP 0
-#define DEBUG_SHOW_BAR_FIGHT 0
-
 UBYTE * debug_address;
 
 // Temporary storege for transfer of tile data and tile data vram1 data
@@ -766,43 +757,6 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
     }
 }
 
-// Check if next position will hit a boundary
-void check_boundary_hit() NONBANKED
-{
-    unsigned int new_x;
-    unsigned int new_y;
-    unsigned int new_tile_itx;
-
-#if IN_TESTING && DEBUG_IGNORE_BOUNDARIES
-    return;
-#endif
-
-    new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
-    new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
-
-    // Check if traveling to new tile
-    if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
-        (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
-        (joypad_state.travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
-        (joypad_state.travel_y == -1 && (new_y & 0x07U) == 0x07U))
-    {
-            new_tile_itx = X_Y_TO_TILE_INDEX(
-                PIXEL_LOCATION_TO_TILE_COUNT(new_x),
-                PIXEL_LOCATION_TO_TILE_COUNT(new_y)
-            );
-
-            ROM_BANK_BOUNDARY_DATA_SWITCH;
-            // Check if new tile is a boundary
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
-            {
-                // Reset travel directions, acting as if user is not moving.
-                joypad_state.travel_x = 0;
-                joypad_state.travel_y = 0;
-            }
-            ROM_BANK_RESET;
-    }
-}
-
 // Setup globals to draw main map
 void setup_main_map()
 {
@@ -1494,7 +1448,9 @@ void update_state()
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
+        ROM_BANK_BOUNDARY_DATA_SWITCH;
         check_boundary_hit();
+        ROM_BANK_RESET;
 
         // Check if player is hurt and just decrease wait time
         if (player_sprite.current_pause != 0)
