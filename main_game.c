@@ -246,11 +246,27 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     }
 
     if (
+        screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED &&
+        screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE_CASINO_SHARED
+    )
+    {
+        load_appliance_casino();
+    }
+
+    if (
         screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE &&
         screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE
     )
     {
         load_appliance_store();
+    }
+
+    if (
+        screen_state->displayed_buildings_2_x & SC_CASINO &&
+        screen_state->displayed_buildings_2_y & SC_CASINO
+    )
+    {
+        load_casino();
     }
 }
 
