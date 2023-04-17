@@ -40,7 +40,6 @@ const UINT8 window_digit_b2d_lookup[11U][32U] = {
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-
 /*
  * show_balance
  *
@@ -400,3 +399,22 @@ void setup_window()
     move_win(7, (SCREEN_HEIGHT_TILES - 2U) << 3);
 }
 
+/*
+ * show_stats_screen
+ *
+ * Show game statistics screen
+ */
+void show_stats_screen()
+{
+    game_state.current_building = S_B_STATS;
+    setup_building_menu(1U, ROM_BANK_BUILDING_MENU);
+
+    // Update tiles for each of the stats to display the current values
+
+    // Intelligence
+    // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
+    show_number(3U, 6U, 3U, game_state.intelligence);
+    show_number(11U, 6U, 3U, game_state.strength);
+    show_number(3U, 9U, 3U, game_state.charm);
+    show_signed_number(11U, 9U, 3U, game_state.karma);
+}

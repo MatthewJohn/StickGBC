@@ -333,7 +333,15 @@
 #define MENU_TILE2_NS 0x50
 #define MENU_TILE2_IO 0x51
 #define MENU_TILE2_N 0x52
-
+#define MENU_TILE2_PL 0x53
+#define MENU_TILE2_AY 0x54
+#define MENU_TILE2__S 0x55
+#define MENU_TILE2__B 0x56
+#define MENU_TILE2__R 0x57
+#define MENU_TILE2_TS 0x58
+#define MENU_TILE2_CK 0x59
+#define MENU_TILE2_JA 0x5A
+#define MENU_TILE2_TT 0x5B
 
 #define MENU_TILE2_0 0x64
 #define MENU_TILE2_1 0x65

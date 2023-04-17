@@ -38,11 +38,17 @@
 #define ROM_BANK_ENDGAME_SWITCH SWITCH_ROM_MBC5(ROM_BANK_ENDGAME)
 #define ROM_BANK_BAR_FIGHT 2
 #define ROM_BANK_BAR_FIGHT_SWITCH SWITCH_ROM_MBC5(ROM_BANK_BAR_FIGHT)
+#define ROM_BANK_TIME_COLORS 7
+#define ROM_BANK_TIME_COLORS_SWITCH SWITCH_ROM_MBC5(ROM_BANK_TIME_COLORS)
+#define ROM_BANK_MAIN_MAP_TILESET 7
+#define ROM_BANK_MAIN_MAP_TILESET_SWITCH SWITCH_ROM_MBC5(ROM_BANK_MAIN_MAP_TILESET)
+#define ROM_BANK_CASINO 4
+#define ROM_BANK_CASINO_SWITCH SWITCH_ROM_MBC5(ROM_BANK_CASINO)
 
 #define DAY_TIME_REMAINING (S_HOURS_PER_DAY - game_state.hour)
 
 void main_check_joy(unsigned int return_bank);
-void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank);
+void set_background_tiles(unsigned int map_data_bank, unsigned int tile_data_bank, unsigned int palette_data_bank, unsigned int return_bank);
 void main_show_window_text(UINT8 *text, unsigned int return_bank);
 void main_show_window_text_xy(UINT8 itx_x, UINT8 itx_y, UINT8 *text, unsigned int return_bank);
 void main_update_window(unsigned int return_bank);

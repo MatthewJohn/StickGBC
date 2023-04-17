@@ -22,12 +22,12 @@ const UWORD house_car_palette[4] = {
 
 void load_house()
 {
-    set_bkg_data(13, 1, &(mainmaptiles[13 << 4]));
+    main_set_bkg_data(13, 1, &(mainmaptiles[13 << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
 }
 
 void load_restaurant()
 {
-    set_bkg_data(15, 2, &(mainmaptiles[15 << 4]));
+    main_set_bkg_data(15, 2, &(mainmaptiles[15 << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Set palette data
     word_data[0] = RGB(0, 0, 0);
     word_data[1] = RGB(31, 22, 8);
@@ -38,7 +38,7 @@ void load_restaurant()
 
 void load_shop()
 {
-    set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]));
+    main_set_bkg_data(18U, 5U, &(mainmaptiles[18U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     word_data[0] = RGB(31, 21, 5);
     word_data[1] = RGB(1, 0, 2);
     word_data[2] = RGB(4, 20, 0);
@@ -48,7 +48,7 @@ void load_shop()
 
 void load_pawn()
 {
-    set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]));
+    main_set_bkg_data(23U, 4U, &(mainmaptiles[23U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[3U][0U] = RGB(10U, 1U, 16U);
     scratch_palette_data[3U][1U] = RGB(31U, 31U, 31U);
     scratch_palette_data[3U][3U] = RGB(15U, 6U, 31U);
@@ -57,7 +57,7 @@ void load_pawn()
 
 void load_university()
 {
-    set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]));
+    main_set_bkg_data(27U, 3U, &(mainmaptiles[27U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[3U][0U] = RGB(15U, 19U, 0U);
     scratch_palette_data[3U][1U] = RGB(31U, 22U, 8U);
     scratch_palette_data[3U][2U] = RGB(31U, 13U, 2U);
@@ -67,7 +67,7 @@ void load_university()
 
 void load_nli()
 {
-    set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]));
+    main_set_bkg_data(30U, 9U, &(mainmaptiles[30U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[2U][0U] = RGB(6U, 6U, 6U);
     scratch_palette_data[2U][1U] = RGB(7U, 3U, 1U);
     set_bkg_palette(PALETTE_SCRATCH_2, 1, &(scratch_palette_data[2U]));
@@ -75,7 +75,7 @@ void load_nli()
 
 void load_bar()
 {
-    set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]));
+    main_set_bkg_data(39U, 13U, &(mainmaptiles[39U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[1U][0U] = RGB(1U, 14U, 1U);
     scratch_palette_data[1U][1U] = RGB(10U, 8U, 1U);
     scratch_palette_data[1U][2U] = RGB(31U, 1U, 1U);
@@ -85,10 +85,33 @@ void load_bar()
 
 void load_appliance_store()
 {
-    set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]));
-    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
+    main_set_bkg_data(67U, 11U, &(mainmaptiles[67U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
     scratch_palette_data[0U][2U] = RGB(16U, 16U, 16U);
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
+}
+
+/*
+ * load_appliance_casino
+ *
+ * Load shared palette colors for appliance store and casino
+ */
+void load_appliance_casino()
+{
+    scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
+    // Outer buiding for appliance store and casino dice
+    set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
+}
+
+void load_casino()
+{
+    main_set_bkg_data(78U, 9U, &(mainmaptiles[78U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
+    // Light blue
+    scratch_palette_data[0U][1U] = RGB(9U, 11U, 31U);
+    // Dice black
+    scratch_palette_data[0U][2U] = RGB(0U, 0U, 0U);
+    // Dark blue
+    scratch_palette_data[0U][3U] = RGB(0U, 3U, 28U);
     set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
 }
 
@@ -112,7 +135,7 @@ void load_road_car_sprite()
  */
 void load_bus_station()
 {
-    set_bkg_data(52U, 9U, &(mainmaptiles[52U << 4]));
+    main_set_bkg_data(52U, 9U, &(mainmaptiles[52U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Bus palette
     scratch_palette_data[0U][0U] = RGB(31U, 31U, 31U);
     scratch_palette_data[0U][1U] = RGB(0U, 0U, 0U);
@@ -135,9 +158,9 @@ void load_bus_station()
 void load_bank()
 {
     // Tile for top windows
-    set_bkg_data(18U, 1U, &(mainmaptiles[18U << 4]));
+    main_set_bkg_data(18U, 1U, &(mainmaptiles[18U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     // Main tiles for bank
-    set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]));
+    main_set_bkg_data(61U, 6U, &(mainmaptiles[61U << 4]), ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA);
     scratch_palette_data[1U][0U] = RGB(11U, 2U, 1U);
     scratch_palette_data[1U][1U] = RGB(1U, 0U, 0U);
     scratch_palette_data[1U][2U] = RGB(26U, 26U, 0U);
@@ -223,11 +246,27 @@ void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_
     }
 
     if (
+        screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED &&
+        screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE_CASINO_SHARED
+    )
+    {
+        load_appliance_casino();
+    }
+
+    if (
         screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE &&
         screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE
     )
     {
         load_appliance_store();
+    }
+
+    if (
+        screen_state->displayed_buildings_2_x & SC_CASINO &&
+        screen_state->displayed_buildings_2_y & SC_CASINO
+    )
+    {
+        load_casino();
     }
 }
 
@@ -312,6 +351,14 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
     if (screen_state->screen_location_x_tiles == SC_BUS_TRANSITION_X)
         screen_state->displayed_buildings_x &= ~SC_BUS;
 
+    // Load shared appliance store and casino palettes
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_2_x |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
+    }
+
     // Load Appliance store
     if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
     {
@@ -319,6 +366,15 @@ void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprit
         if (screen_state->displayed_buildings_2_y & SC_APPLIANCE_STORE)
             load_appliance_store();
     }
+
+    // Load casino
+    if (screen_state->screen_location_x_tiles == SC_CASINO_TRANSITION_X)
+    {
+        screen_state->displayed_buildings_2_x |= SC_CASINO;
+        if (screen_state->displayed_buildings_2_y & SC_CASINO)
+            load_casino();
+    }
+
 }
 void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite)
 {
@@ -399,6 +455,14 @@ void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_spri
             load_bus_station();
     }
 
+    // Unload shared appliance store and casino palettes
+    if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_X)
+        screen_state->displayed_buildings_2_x &= ~SC_APPLIANCE_STORE_CASINO_SHARED;
+
+    // Unload casino
+    if (screen_state->screen_location_x_tiles == SC_CASINO_TRANSITION_X)
+        screen_state->displayed_buildings_2_x &= ~SC_CASINO;
+
     // Unload Appliance store
     if (screen_state->screen_location_x_tiles == SC_APPLIANCE_STORE_TRANSITION_X)
         screen_state->displayed_buildings_2_x &= ~SC_APPLIANCE_STORE;
@@ -443,9 +507,20 @@ void load_buildings_y_up(screen_state_t *screen_state, ai_sprite *skater_sprite,
     if (screen_state->screen_location_y_tiles == SC_BAR_TRANSITION_Y)
         screen_state->displayed_buildings_y &= ~SC_BAR;
 
-    // Unload Appliance store
-    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+    // Load/unload Appliance store/casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y_MIN)
         screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE;
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y &= ~SC_CASINO;
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE)
+            load_appliance_store();
+    }
+
+    // Unload shared appliance store and casino palettes
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+        screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE_CASINO_SHARED;
 
     // Check skater
     if ((screen_state->screen_location_y_tiles + SCREEN_HEIGHT_TILES) == (skater_sprite->min_location_y >> 3U))
@@ -522,12 +597,35 @@ void load_buildings_y_down(screen_state_t *screen_state, ai_sprite *skater_sprit
             load_bar();
     }
 
-    // Load appliance store
-    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y)
+    // Load shared appliance store and casino palettes
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
+    }
+
+    // Load/unload appliance store/casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y &= ~SC_APPLIANCE_STORE;
+        screen_state->displayed_buildings_2_y |= SC_CASINO;
+        if (screen_state->displayed_buildings_2_x & SC_CASINO)
+            load_casino();
+    }
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_TRANSITION_Y_MIN)
     {
         screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE;
         if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE)
             load_appliance_store();
+    }
+
+    // Load casino
+    if (screen_state->screen_location_y_tiles == SC_APPLIANCE_STORE_CASINO_SHARED_TRANSITION_Y)
+    {
+        screen_state->displayed_buildings_2_y |= SC_APPLIANCE_STORE_CASINO_SHARED;
+        if (screen_state->displayed_buildings_2_x & SC_APPLIANCE_STORE_CASINO_SHARED)
+            load_appliance_casino();
     }
 
     // Check skater

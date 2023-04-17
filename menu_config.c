@@ -13,7 +13,7 @@
 
 // MENU ITEMS
 
-const menu_config_item_t menu_config_items[0x4CU] = {
+const menu_config_item_t menu_config_items[0x4FU] = {
     // Exit
     {
         MENU_BLANK_ITEM,
@@ -1823,6 +1823,75 @@ const menu_config_item_t menu_config_items[0x4CU] = {
             MENU_ITEM_NO_PALETTE,
         },
     },
+
+    // Slots
+    {
+        {
+            MENU_TILE2_PL,
+            MENU_TILE2_AY,
+            MENU_TILE2__S,
+            MENU_TILE2_LO,
+            MENU_TILE2_TS,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Blackjack
+    {
+        {
+            MENU_TILE2_PL,
+            MENU_TILE2_AY,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE2__B,
+            MENU_TILE2_LA,
+            MENU_TILE2_CK,
+            MENU_TILE2_JA,
+            MENU_TILE2_CK,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
+
+    // Roulette
+    {
+        {
+            MENU_TILE2_PL,
+            MENU_TILE2_AY,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            MENU_ITEM_NO_TILE,
+            // Row 2
+            MENU_TILE2__R,
+            MENU_TILE2_OU,
+            MENU_TILE2_LE,
+            MENU_TILE2_TT,
+            MENU_TILE2_E,
+            MENU_ITEM_NO_TILE,
+        },
+        {
+            MENU_ITEM_NO_PALETTE_ROW,
+            MENU_ITEM_NO_PALETTE_ROW,
+        },
+    },
 };
 
 const UINT8 inventory_menu_item_map[S_INVENTORY_ITEM_COUNT] = {
@@ -2064,6 +2133,20 @@ menu_config_t menu_config_real_estate = {
         MENU_ITEM_INDEX_EMPTY,
     }
 };
+
+menu_config_t menu_config_casino = {
+    {
+        MENU_ITEM_INDEX_PLAY_SLOTS,
+        MENU_ITEM_INDEX_EXIT,
+        MENU_ITEM_INDEX_PLAY_BLACKJACK,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_PLAY_ROULETTE,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+        MENU_ITEM_INDEX_EMPTY,
+    }
+};
+
 
 
 // Update palette for currently selected menu item

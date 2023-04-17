@@ -5,7 +5,4 @@
  */
 
 
-#include "gb/gb.h"
-
-extern const UBYTE MAIN_MAP_BOUNDARIES[];
-void check_boundary_hit();
+void process_casino_menu();

@@ -44,17 +44,9 @@
 #include "window_text.h"
 #include "window_text_data.h"
 #include "balance.h"
+#include "casino.h"
 
 #include "main.h"
-
-// Debug definitions
-#define DEBUG_JUMP_BUILDING 0
-#define DEBUG_JUMP_BUILDING_NUMBER 2
-#define DEBUG_BOUNDARIES 0
-#define DEBUG_DISABLE_AI_MOVEMENT 0
-#define DEBUG_IGNORE_BOUNDARIES 0
-#define DEBUG_SET_BACKGROUND_SKIP 0
-#define DEBUG_SHOW_BAR_FIGHT 0
 
 UBYTE * debug_address;
 
@@ -279,8 +271,9 @@ void update_background_color()
     UWORD palette_data[4];
 
     // Copy palette 1
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_TIME_COLORS_SWITCH;
     palette_data[0U] = background_time_colors[game_state.hour],
+    ROM_BANK_TILE_DATA_SWITCH;
     palette_data[1U] = main_map_palette[1U];
     palette_data[2U] = main_map_palette[2U];
     palette_data[3U] = main_map_palette[3U];
@@ -344,7 +337,7 @@ void setup_globals()
     // and those that are displayed on start of game.
     screen_state.displayed_buildings_x = SC_HOUSE | SC_RESTAURANT | SC_SHOP | SC_PAWN;
     screen_state.displayed_buildings_y = SC_HOUSE | SC_UNIVERSITY | SC_NLI;
-    screen_state.displayed_buildings_2_x = SC_APPLIANCE_STORE;
+    screen_state.displayed_buildings_2_x = SC_APPLIANCE_STORE | SC_APPLIANCE_STORE_CASINO_SHARED | SC_CASINO;
     screen_state.displayed_buildings_2_y = SC_BANK;
 
     // Setup inventory items
@@ -424,7 +417,7 @@ void main_set_bkg_data(UINT8 start_index, UINT8 cnt, unsigned char *data_ptr, UI
     SWITCH_ROM_MBC5(return_bank);
 }
 
-void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank) NONBANKED
+void set_background_tiles(unsigned int map_data_bank, unsigned int tile_data_bank, unsigned int palette_data_bank, unsigned int return_bank) NONBANKED
 {
     // @TODO Fix the increment
     //unsigned long current_tile_itx = FRAME_BUFFER_TILE_POS_X + (FRAME_BUFFER_TILE_POS_Y * mainmapWidth);
@@ -440,10 +433,11 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
     max_y = screen_state.draw_offset_y + screen_state.draw_max_y;
 
     // Load color palette
-    SWITCH_ROM_MBC5(tile_data_bank);
+    SWITCH_ROM_MBC5(palette_data_bank);
     set_bkg_palette(0, 8, screen_state.background_color_palette);
 
     VBK_REG = 0;
+    SWITCH_ROM_MBC5(tile_data_bank);
     set_bkg_data(0, 8, screen_state.background_tiles);
 
     ROM_BANK_BUILDING_MENU_SWITCH;
@@ -484,7 +478,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
             current_tile_data_itx = current_tile_itx * 2;
             current_tile_palette_itx = current_tile_data_itx + 1;
 
-            SWITCH_ROM_MBC5(tile_data_bank);
+            SWITCH_ROM_MBC5(map_data_bank);
             tile_data[0] = screen_state.background_tile_map[current_tile_data_itx] & 0x7F;
             ROM_BANK_RESET;
 
@@ -509,7 +503,7 @@ void set_background_tiles(unsigned int tile_data_bank, unsigned int return_bank)
 
             VBK_REG = 1;
 
-            SWITCH_ROM_MBC5(tile_data_bank);
+            SWITCH_ROM_MBC5(map_data_bank);
             // Lookup tile palette from background tile map
             tile_data[0] = screen_state.background_tile_map[current_tile_palette_itx] & 0x07;
 
@@ -764,43 +758,6 @@ void move_background(signed int move_x, signed int move_y) NONBANKED
     }
 }
 
-// Check if next position will hit a boundary
-void check_boundary_hit() NONBANKED
-{
-    unsigned int new_x;
-    unsigned int new_y;
-    unsigned int new_tile_itx;
-
-#if IN_TESTING && DEBUG_IGNORE_BOUNDARIES
-    return;
-#endif
-
-    new_x = game_state.user_pos_x + (signed int)joypad_state.travel_x;
-    new_y = game_state.user_pos_y + (signed int)joypad_state.travel_y;
-
-    // Check if traveling to new tile
-    if ((joypad_state.travel_x == 1 && (new_x & 0x07U) == 0x00U) ||
-        (joypad_state.travel_x == -1 && (new_x & 0x07U) == 0x07U) ||
-        (joypad_state.travel_y == 1 && (new_y & 0x07U) == 0x00U) ||
-        (joypad_state.travel_y == -1 && (new_y & 0x07U) == 0x07U))
-    {
-            new_tile_itx = X_Y_TO_TILE_INDEX(
-                PIXEL_LOCATION_TO_TILE_COUNT(new_x),
-                PIXEL_LOCATION_TO_TILE_COUNT(new_y)
-            );
-
-            ROM_BANK_BOUNDARY_DATA_SWITCH;
-            // Check if new tile is a boundary
-            if (TILE_INDEX_BIT_MAP_VALUE(MAIN_MAP_BOUNDARIES, new_tile_itx))
-            {
-                // Reset travel directions, acting as if user is not moving.
-                joypad_state.travel_x = 0;
-                joypad_state.travel_y = 0;
-            }
-            ROM_BANK_RESET;
-    }
-}
-
 // Setup globals to draw main map
 void setup_main_map()
 {
@@ -834,7 +791,7 @@ void setup_main_map()
     screen_state.draw_max_x = BACKGROUND_BUFFER_SIZE_X;
     screen_state.draw_max_y = BACKGROUND_BUFFER_SIZE_Y;
 
-    set_background_tiles(ROM_BANK_TILE_DATA, 1U);
+    set_background_tiles(ROM_BANK_TILE_DATA, ROM_BANK_MAIN_MAP_TILESET, ROM_BANK_TILE_DATA, 1U);
     ROM_BANK_SPRITE_SWITCH;
     setup_sprites(&player_sprite, &skater_sprite, &dealer_sprite, &house_car_sprite, &road_car_sprite);
     ROM_BANK_RESET;
@@ -846,10 +803,11 @@ void setup_main_map()
     );
 
     // Load additional tiles required for main map
-    ROM_BANK_TILE_DATA_SWITCH;
+    ROM_BANK_MAIN_MAP_TILESET_SWITCH;
     set_bkg_data(8U, 5U, &(mainmaptiles[8U << 4]));
 
     // Load currently displayed buildings
+    ROM_BANK_TILE_DATA_SWITCH;
     load_building_tile_data(&screen_state, &house_car_sprite, &road_car_sprite);
 
     ROM_BANK_RESET;
@@ -1109,10 +1067,16 @@ void setup_building_menu(UINT8 menu_number, unsigned int return_bank) NONBANKED
         menu_state.current_item_x = 1U;
         menu_state.current_item_y = 0U;
     }
+    else if (game_state.current_building == S_B_CASINO)
+    {
+        menu_config = &menu_config_casino;
+        menu_state.current_item_x = 0U;
+        menu_state.current_item_y = 0U;
+    }
 
     HIDE_SPRITES;
     // Reload background tiles
-    set_background_tiles(ROM_BANK_BUILDING_MENU, 1U);
+    set_background_tiles(ROM_BANK_BUILDING_MENU, ROM_BANK_BUILDING_MENU, ROM_BANK_BUILDING_MENU, 1U);
 
     // Scroll to top-left
     move_bkg(0, 0);
@@ -1336,24 +1300,6 @@ void do_nli_work()
     }
 }
 
-// Show stats screen
-void show_stats_screen() NONBANKED
-{
-    game_state.current_building = S_B_STATS;
-    setup_building_menu(1U, ROM_BANK_DEFAULT);
-
-    // Update tiles for each of the stats to display the current values
-
-    // Intelligence
-    ROM_BANK_BUILDING_MENU_SWITCH;
-    // MENU_ITEM_SCREEN_OFFSET_LEFT, MENU_ITEM_SCREEN_OFFSET_TOP + 3U (for second item)
-    show_number(3U, 6U, 3U, game_state.intelligence);
-    show_number(11U, 6U, 3U, game_state.strength);
-    show_number(3U, 9U, 3U, game_state.charm);
-    show_signed_number(11U, 9U, 3U, game_state.karma);
-    ROM_BANK_RESET;
-}
-
 BOOLEAN is_menu_item_hidden(UINT8 menu_item_index)
 {
     UINT8 menu_item_itx = 0;
@@ -1491,7 +1437,9 @@ void update_state()
 
     if (game_state.current_building == S_B_NO_BUILDING)
     {
+        ROM_BANK_BOUNDARY_DATA_SWITCH;
         check_boundary_hit();
+        ROM_BANK_RESET;
 
         // Check if player is hurt and just decrease wait time
         if (player_sprite.current_pause != 0)
@@ -1670,7 +1618,9 @@ void update_state()
         }
 
         else if (joypad_state.select_pressed) {
+            ROM_BANK_BUILDING_MENU_SWITCH;
             show_stats_screen();
+            ROM_BANK_RESET;
         }
 
         else if (joypad_state.start_pressed) {
@@ -1902,6 +1852,12 @@ void update_state()
             {
                 ROM_BANK_LOGIC_FUNCTIONS_SWITCH;
                 process_rees_menu();
+                ROM_BANK_RESET;
+            }
+            else if (game_state.current_building == S_B_CASINO)
+            {
+                ROM_BANK_CASINO_SWITCH;
+                process_casino_menu();
                 ROM_BANK_RESET;
             }
         }

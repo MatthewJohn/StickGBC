@@ -34,6 +34,8 @@ void splash_screen_loop()
     screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     set_background_tiles(
+        ROM_BANK_OPENING_SCREEN,
+        ROM_BANK_OPENING_SCREEN,
         ROM_BANK_OPENING_SCREEN,  // Load tiles from this ROM bank
         ROM_BANK_OPENING_SCREEN  // Return to the ROM bank for this function
     );
@@ -154,6 +156,8 @@ void opening_screen_loop()
     screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     set_background_tiles(
+        ROM_BANK_OPENING_SCREEN,
+        ROM_BANK_OPENING_SCREEN,
         ROM_BANK_OPENING_SCREEN,  // Load tiles from this ROM bank
         ROM_BANK_OPENING_SCREEN  // Return to the ROM bank for this function
     );

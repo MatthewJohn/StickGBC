@@ -18,6 +18,8 @@ void load_university();
 void load_nli();
 void load_bar();
 void load_appliance_store();
+void load_casino();
+void load_appliance_casino();
 void load_building_tile_data(screen_state_t *screen_state, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite);
 void load_buildings_x_left(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite);
 void load_buildings_x_right(screen_state_t *screen_state, ai_sprite *skater_sprite, ai_sprite *dealer_sprite, ai_sprite *house_car_sprite, ai_sprite *road_car_sprite);

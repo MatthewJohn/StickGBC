@@ -41,6 +41,8 @@ void endgame(const UINT8* win_text)
     screen_state.draw_max_y = SCREEN_HEIGHT_TILES;
 
     set_background_tiles(
+        ROM_BANK_ENDGAME,
+        ROM_BANK_ENDGAME,
         ROM_BANK_ENDGAME,  // Load tiles from this ROM bank
         ROM_BANK_ENDGAME  // Return to the ROM bank for this function
     );
