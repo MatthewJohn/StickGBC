@@ -1869,7 +1869,7 @@ const menu_config_item_t menu_config_items[0x4FU] = {
             MENU_ITEM_NO_PALETTE_ROW,
         },
     },
-    
+
     // Roulette
     {
         {
