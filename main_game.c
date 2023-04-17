@@ -111,7 +111,7 @@ void load_casino()
     // Dice black
     scratch_palette_data[0U][2U] = RGB(0U, 0U, 0U);
     // Dark blue
-    scratch_palette_data[0U][2U] = RGB(0U, 3U, 28U);
+    scratch_palette_data[0U][3U] = RGB(0U, 3U, 28U);
     set_bkg_palette(PALETTE_SCRATCH_0, 1, &(scratch_palette_data[0U]));
 }
 
